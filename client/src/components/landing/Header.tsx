@@ -28,38 +28,40 @@ function normalizeAriaText(input: string) {
 const NAV_ITEMS: NavItem[] = [
   { labelKey: "nav.flight", href: "/flight" },
   { labelKey: "Premium Hotel", href: "/hotel" },
+  { labelKey: "Hotel", href: "/hotel" },
+  { labelKey: "nav.taxi_package", href: "/taxi-package" },
  
-  {
-    labelKey: "nav.holiday_packages",
-    href: "#",
-    menu: [
-      { labelKey: "nav.national_tour_packages", href: "/national-tour-packages" },
-      { labelKey: "nav.international_tour_packages", href: "/international-tour-packages" },
-    ],
-  },
-  {
-    labelKey: "nav.accommodation",
-    href: "#",
-    menu: [
-      { labelKey: "nav.homestay", href: "#" },
-      { labelKey: "nav.airbnb", href: "#" },
-      { labelKey: "nav.villa", href: "#" },
-      { labelKey: "nav.guest_house", href: "#" },
-      { labelKey: "nav.house_board", href: "#" },
-      { labelKey: "nav.hostels", href: "#" },
-      { labelKey: "nav.resorts", href: "#" },
-    ],
-  },
-  {
-    labelKey: "nav.transport",
-    href: "#",
-    menu: [
-      { labelKey: "nav.taxi_package", href: "/taxi-package" },
-      { labelKey: "nav.cabs", href: "/cabs" },
-      { labelKey: "nav.tour_bus", href: "/tour-bus" },
-      { labelKey: "nav.train", href: "/train/search" },
-    ],
-  },
+  // {
+  //   labelKey: "nav.holiday_packages",
+  //   href: "#",
+  //   menu: [
+  //     { labelKey: "nav.national_tour_packages", href: "/national-tour-packages" },
+  //     { labelKey: "nav.international_tour_packages", href: "/international-tour-packages" },
+  //   ],
+  // },
+  // {
+  //   labelKey: "nav.accommodation",
+  //   href: "#",
+  //   menu: [
+  //     { labelKey: "nav.homestay", href: "#" },
+  //     { labelKey: "nav.airbnb", href: "#" },
+  //     { labelKey: "nav.villa", href: "#" },
+  //     { labelKey: "nav.guest_house", href: "#" },
+  //     { labelKey: "nav.house_board", href: "#" },
+  //     { labelKey: "nav.hostels", href: "#" },
+  //     { labelKey: "nav.resorts", href: "#" },
+  //   ],
+  // },
+  // {
+  //   labelKey: "nav.transport",
+  //   href: "#",
+  //   menu: [
+  //     { labelKey: "nav.taxi_package", href: "/taxi-package" },
+  //     { labelKey: "nav.cabs", href: "/cabs" },
+  //     { labelKey: "nav.tour_bus", href: "/tour-bus" },
+  //     { labelKey: "nav.train", href: "/train/search" },
+  //   ],
+  // },
   {
     labelKey: "nav.cruise",
     href: "#",
@@ -68,32 +70,32 @@ const NAV_ITEMS: NavItem[] = [
       { labelKey: "nav.general_cruise", href: "/cruise" },
     ],
   },
-   {
-    labelKey: "nav.train",
-    href: "/train/search",
-    menu: [
-      { labelKey: "nav.search", href: "/train/search" },
-      { labelKey: "nav.tickets", href: "/train/tickets" },
-      { labelKey: "nav.change_request", href: "/train/change-request" },
-      { labelKey: "nav.file_tdr_online", href: "/train/file-tdr-online" },
-    ],
-  },
-  { labelKey: "nav.bus", href: "/bus" },
-  { labelKey: "nav.events", href: "/events" },
-  {
-    labelKey: "nav.visa_consultancy",
-    href: "#",
-    menu: [
-      { labelKey: "nav.pr_visa", href: "/visa/pr-visa" },
-      { labelKey: "nav.work_visa", href: "/visa/work-visa" },
-      { labelKey: "nav.investor_visa", href: "/visa/investor-visa" },
-      { labelKey: "nav.study_visa", href: "/visa/study-visa" },
-      { labelKey: "nav.visit_visa", href: "/visa/visit-visa" },
-      { labelKey: "nav.tourist_visa", href: "#" },
-    ],
-  },
-  { labelKey: "nav.insurance", href: "/insurance" },
-  { labelKey: "nav.offers", href: "/offers" },
+  //  {
+  //   labelKey: "nav.train",
+  //   href: "/train/search",
+  //   menu: [
+  //     { labelKey: "nav.search", href: "/train/search" },
+  //     { labelKey: "nav.tickets", href: "/train/tickets" },
+  //     { labelKey: "nav.change_request", href: "/train/change-request" },
+  //     { labelKey: "nav.file_tdr_online", href: "/train/file-tdr-online" },
+  //   ],
+  // },
+  // { labelKey: "nav.bus", href: "/bus" },
+  // { labelKey: "nav.events", href: "/events" },
+  // {
+  //   labelKey: "nav.visa_consultancy",
+  //   href: "#",
+  //   menu: [
+  //     { labelKey: "nav.pr_visa", href: "/visa/pr-visa" },
+  //     { labelKey: "nav.work_visa", href: "/visa/work-visa" },
+  //     { labelKey: "nav.investor_visa", href: "/visa/investor-visa" },
+  //     { labelKey: "nav.study_visa", href: "/visa/study-visa" },
+  //     { labelKey: "nav.visit_visa", href: "/visa/visit-visa" },
+  //     { labelKey: "nav.tourist_visa", href: "#" },
+  //   ],
+  // },
+  { labelKey: "Life insurance", href: "/insurance" },
+  // { labelKey: "nav.offers", href: "/offers" },
 ];
 
 const COUNTRIES = [
@@ -183,6 +185,15 @@ function NavIcon({ labelKey, className }: { labelKey: string; className?: string
           <path d="M9 8h2M13 8h2M9 12h2M13 12h2M9 16h2M13 16h2" />
         </svg>
       );
+
+      case "Hotel":
+      return (
+        <svg {...common}>
+          <path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16" />
+          <path d="M4 21h16" />
+          <path d="M9 8h2M13 8h2M9 12h2M13 12h2M9 16h2M13 16h2" />
+        </svg>
+      );
     case "nav.train":
       return (
         <svg {...common}>
@@ -209,7 +220,7 @@ function NavIcon({ labelKey, className }: { labelKey: string; className?: string
           <path d="M7 10V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" />
         </svg>
       );
-    case "nav.transport":
+    case "nav.taxi_package":
       return (
         <svg {...common}>
           <path d="M5 17h14" />
@@ -250,7 +261,7 @@ function NavIcon({ labelKey, className }: { labelKey: string; className?: string
           <path d="M9 16h6" />
         </svg>
       );
-    case "nav.insurance":
+    case "Life insurance":
       return (
         <svg {...common}>
           <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
@@ -465,7 +476,7 @@ export default function Header() {
 
       <div className="border-b border-slate-100 bg-white">
         <div className="mx-auto st-header-main-nav-inner max-w-7xl px-4 py-3 sm:px-6">
-          <Logo />
+          <Logo variant="header" />
           <nav className="hidden lg:block justify-self-center">
             <ul className="flex items-end gap-1 text-ink">
               {NAV_ITEMS.map((item) => (
@@ -976,7 +987,7 @@ const MEGA_DESCRIPTIONS: Record<string, string> = {
   "nav.homestay": "Live local, stay homely",
   "nav.airbnb": "Unique stays worldwide",
   "nav.villa": "Private luxury villas",
-  "nav.guest_house": "Cozy guest accommodations",
+  "nav.guest_house": "Cozy guest accommodation",
   "nav.house_board": "Floating stays on water",
   "nav.hostels": "Budget-friendly social stays",
   "nav.resorts": "Premium resort experiences",
