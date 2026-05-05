@@ -127,6 +127,9 @@ export interface FareQuoteResult {
   /** True for LCC airlines (IndiGo, SpiceJet, etc.) — determines whether
    *  the booking flow calls /Ticket directly or /Book then /Ticket. */
   isLCC: boolean;
+  /** Guideline §14: when true, GST details must be passed on the lead passenger
+   *  in the Book/Ticket request. */
+  isGSTMandatory: boolean;
   /** Per-pax-type aggregates from TBO FareBreakdown.
    *  Must be passed to book/ticket so each passenger receives the correct Fare node. */
   fareBreakdown: TboFareBreakdown[];
@@ -185,6 +188,7 @@ export async function tboFareQuote(
       isPriceChanged,
       isTimeChanged,
       isLCC: result.IsLCC,
+      isGSTMandatory: result.IsGSTMandatory ?? false,
       fareBreakdown: result.FareBreakdown ?? [],
       updatedOffer: resultToOffer(result),
     };

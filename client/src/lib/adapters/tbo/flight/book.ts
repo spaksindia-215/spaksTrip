@@ -7,6 +7,14 @@ import type { TboFlightBookResponse, TboPassengerRequest, TboFare, TboFareBreakd
 
 // ─── Input types ──────────────────────────────────────────────────────────────
 
+export interface GSTDetails {
+  companyName: string;
+  gstNumber: string;
+  companyAddress: string;
+  companyContactNumber: string;
+  companyEmail: string;
+}
+
 export interface BookingPassenger {
   type: "ADT" | "CHD" | "INF";
   title: string;               // "Mr" | "Mrs" | "Ms" | "Mstr" | "Miss"
@@ -25,6 +33,8 @@ export interface BookingPassenger {
   phone?: string;
   meal?: string;
   seat?: string;
+  /** Guideline §14: required on lead pax when FareQuote returns IsGSTMandatory=true. */
+  gst?: GSTDetails;
 }
 
 export interface TboBookFlightInput {
@@ -48,6 +58,8 @@ export interface TboBookFlightOutput {
   bookingId: number;
   pnr: string;
   isPriceChanged: boolean;
+  /** Present for domestic return dual-PNR: inbound leg booking result. */
+  returnLeg?: { bookingId: number; pnr: string };
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -116,13 +128,18 @@ export function buildPassengerFare(
  * Maps a BookingPassenger to the TBO wire format.
  * Exported so tboLccTicket can reuse the same passenger-building logic.
  * Caller is responsible for setting Email and ContactNo on the lead passenger.
+ *
+ * Guideline §6/§7: LCC ADT/CHD must always carry Baggage/MealDynamic/SeatDynamic
+ * as arrays (never null). INF passengers must not have these fields at all.
+ * Non-LCC passengers never use these array fields.
  */
 export function mapPassenger(
   p: BookingPassenger,
   isLead: boolean,
   fareBreakdown: TboFareBreakdown[],
+  isLCC = false,
 ): TboPassengerRequest {
-  return {
+  const passenger: TboPassengerRequest = {
     Title: p.title,
     FirstName: p.firstName,
     LastName: p.lastName,
@@ -139,16 +156,24 @@ export function mapPassenger(
     ContactNo: "",   // populated by caller for lead pax
     Email: "",       // populated by caller for lead pax
     IsLeadPax: isLead,
-    GSTCompanyAddress: "",
-    GSTCompanyContactNumber: "",
-    GSTCompanyName: "",
-    GSTNumber: "",
-    GSTCompanyEmail: "",
+    // Guideline §14: GST fields populated only on lead pax when gst details provided;
+    // all other passengers must have these as empty strings, not null.
+    GSTCompanyAddress: (isLead && p.gst?.companyAddress) ? p.gst.companyAddress : "",
+    GSTCompanyContactNumber: (isLead && p.gst?.companyContactNumber) ? p.gst.companyContactNumber : "",
+    GSTCompanyName: (isLead && p.gst?.companyName) ? p.gst.companyName : "",
+    GSTNumber: (isLead && p.gst?.gstNumber) ? p.gst.gstNumber : "",
+    GSTCompanyEmail: (isLead && p.gst?.companyEmail) ? p.gst.companyEmail : "",
     Fare: buildPassengerFare(fareBreakdown, PAX_TYPE[p.type]),
-    Baggage: [],
-    MealDynamic: [],
-    SeatDynamic: [],
   };
+
+  // Guideline §6/§7: LCC ADT/CHD get empty arrays; INF must have none at all.
+  if (isLCC && p.type !== "INF") {
+    passenger.Baggage = [];
+    passenger.MealDynamic = [];
+    passenger.SeatDynamic = [];
+  }
+
+  return passenger;
 }
 
 // ─── Public ───────────────────────────────────────────────────────────────────
@@ -159,7 +184,7 @@ export async function tboBookFlight(input: TboBookFlightInput): Promise<TboBookF
 
   const doBook = async (token: string): Promise<TboBookFlightOutput> => {
     const passengers: TboPassengerRequest[] = input.passengers.map((p, i) => {
-      const mapped = mapPassenger(p, i === 0, input.fareBreakdown);
+      const mapped = mapPassenger(p, i === 0, input.fareBreakdown, false);
       if (i === 0) {
         mapped.Email = input.contactEmail;
         mapped.ContactNo = input.contactPhone;

@@ -13,7 +13,7 @@ import Checkbox from "@/components/ui/Checkbox";
 import Radio from "@/components/ui/Radio";
 import { useBookingStore } from "@/state/bookingStore";
 import { useToast } from "@/components/ui/Toast";
-import type { Traveler, TravelerType } from "@/state/bookingStore";
+import type { Traveler, TravelerType, GSTInfo } from "@/state/bookingStore";
 
 type FormTraveler = Omit<Traveler, "id"> & { id: string };
 
@@ -58,7 +58,7 @@ function TravelerInner() {
   const router = useRouter();
   const sp = useSearchParams();
   const toast = useToast();
-  const { current, setTravelers, setContact, setAddOns, advanceStatus } = useBookingStore();
+  const { current, setTravelers, setContact, setAddOns, setGST, advanceStatus } = useBookingStore();
 
   const initial = useMemo(() => {
     if (!current) return [];
@@ -74,6 +74,10 @@ function TravelerInner() {
   const [phone, setPhone] = useState(current?.contact.phone ?? "");
   const [addInsurance, setAddInsurance] = useState(false);
   const [addSeats, setAddSeats] = useState(false);
+  const [gst, setLocalGST] = useState<GSTInfo>({
+    companyName: "", gstNumber: "", companyAddress: "",
+    companyContactNumber: "", companyEmail: "",
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -99,6 +103,14 @@ function TravelerInner() {
     }
     if (!/.+@.+\..+/.test(email)) e.email = "Enter a valid email";
     if (phone.replace(/\D/g, "").length < 10) e.phone = "Enter a valid phone";
+    // Guideline §14: when GST is mandatory, all 5 fields are required.
+    if (current.isGSTMandatory) {
+      if (!gst.companyName.trim()) e["gst.companyName"] = "Company name required";
+      if (!gst.gstNumber.trim()) e["gst.gstNumber"] = "GST number required";
+      if (!gst.companyAddress.trim()) e["gst.companyAddress"] = "Company address required";
+      if (!gst.companyContactNumber.trim()) e["gst.companyContactNumber"] = "Contact number required";
+      if (!/.+@.+\..+/.test(gst.companyEmail)) e["gst.companyEmail"] = "Enter a valid company email";
+    }
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -110,9 +122,13 @@ function TravelerInner() {
     }
     setTravelers(travelers);
     setContact({ email, phone, countryCode: "+91" });
+    // Guideline §14: persist GST only when mandatory.
+    if (current.isGSTMandatory) setGST(gst);
+    // Guideline §6: baggage and seat cannot be taken for infant passengers.
+    const eligibleForSeat = travelers.filter((t) => t.type !== "INF").length;
     setAddOns({
       insurance: addInsurance ? 199 * travelers.length : 0,
-      seats: addSeats ? 349 * travelers.length : 0,
+      seats: addSeats ? 349 * eligibleForSeat : 0,
     });
     advanceStatus("PAYMENT");
     router.push(`/flight/${encodeURIComponent(current.offer.id)}/payment?${sp.toString()}`);
@@ -254,13 +270,65 @@ function TravelerInner() {
                   />
                   <AddOnRow
                     title="Preferred seat selection"
-                    price="₹349 / traveller"
-                    desc="Choose your exact seat across legs."
+                    price="₹349 / adult & child"
+                    desc="Choose your exact seat across legs. Not applicable for infants."
                     checked={addSeats}
                     onChange={setAddSeats}
                   />
                 </div>
               </section>
+
+              {current.isGSTMandatory && (
+                <section className="rounded-xl bg-white border border-border-soft p-5 shadow-[var(--shadow-xs)]">
+                  <h2 className="text-[16px] font-bold text-ink mb-1">GST details</h2>
+                  <p className="text-[12px] text-ink-muted mb-4">
+                    Required by the airline for this fare. Enter your company GST information.
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <Input
+                        label="Company name"
+                        value={gst.companyName}
+                        onChange={(e) => setLocalGST((g) => ({ ...g, companyName: e.target.value }))}
+                        error={errors["gst.companyName"]}
+                        placeholder="Acme Pvt Ltd"
+                      />
+                      <Input
+                        label="GST number"
+                        value={gst.gstNumber}
+                        onChange={(e) => setLocalGST((g) => ({ ...g, gstNumber: e.target.value.toUpperCase() }))}
+                        error={errors["gst.gstNumber"]}
+                        placeholder="22AAAAA0000A1Z5"
+                      />
+                    </div>
+                    <Input
+                      label="Company address"
+                      value={gst.companyAddress}
+                      onChange={(e) => setLocalGST((g) => ({ ...g, companyAddress: e.target.value }))}
+                      error={errors["gst.companyAddress"]}
+                      placeholder="123, MG Road, Bengaluru"
+                    />
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <Input
+                        label="Company contact number"
+                        type="tel"
+                        value={gst.companyContactNumber}
+                        onChange={(e) => setLocalGST((g) => ({ ...g, companyContactNumber: e.target.value }))}
+                        error={errors["gst.companyContactNumber"]}
+                        placeholder="+91 80xxxxxxxx"
+                      />
+                      <Input
+                        label="Company email"
+                        type="email"
+                        value={gst.companyEmail}
+                        onChange={(e) => setLocalGST((g) => ({ ...g, companyEmail: e.target.value }))}
+                        error={errors["gst.companyEmail"]}
+                        placeholder="accounts@acme.com"
+                      />
+                    </div>
+                  </div>
+                </section>
+              )}
             </div>
 
             <aside className="flex flex-col gap-4">

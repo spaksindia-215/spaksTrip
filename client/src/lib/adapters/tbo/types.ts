@@ -165,6 +165,7 @@ export interface TboFlightResult {
   IsPassportRequiredAtBook: boolean;
   IsPassportRequiredAtTicket: boolean;
   GSTINNo: string | null;
+  IsGSTMandatory: boolean;
   IsHoldAllowed: boolean;
   IsAlPriceChangeAllowed: boolean;
   TicketAdvisory: string;
@@ -277,9 +278,10 @@ export interface TboPassengerRequest {
   GSTNumber: string;
   GSTCompanyEmail: string;
   Fare: TboFare;
-  Baggage: TboPassengerSSR[];
-  MealDynamic: TboPassengerSSR[];
-  SeatDynamic: TboPassengerSSR[];
+  // Optional: LCC ADT/CHD must send [] (never null); INF must omit entirely (§6/§7).
+  Baggage?: TboPassengerSSR[];
+  MealDynamic?: TboPassengerSSR[];
+  SeatDynamic?: TboPassengerSSR[];
 }
 
 export interface TboPassengerResponse {

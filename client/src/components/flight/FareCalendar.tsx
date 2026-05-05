@@ -1,8 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { formatWeekday, formatDayMonth } from "@/lib/format";
 import type { CabinClass } from "@/lib/mock/flights";
+
+type FareDay = {
+  totalFare: number;
+  isLowestFareOfMonth: boolean;
+};
 
 type Props = {
   from: string;
@@ -22,19 +27,71 @@ function buildDates(center: string): string[] {
   });
 }
 
+function toMonth(date: string): string {
+  return date.slice(0, 7); // "YYYY-MM"
+}
+
+function formatFare(n: number): string {
+  if (n >= 1_00_000) return `₹${(n / 1_00_000).toFixed(1)}L`;
+  if (n >= 1_000) return `₹${Math.round(n / 1_000)}K`;
+  return `₹${n}`;
+}
+
 export default function FareCalendar({ from, to, cabin, depart, onDateChange }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const days = useMemo(() => {
-    void from;
-    void to;
-    void cabin;
-    return buildDates(depart).map((date) => ({ date }));
-  }, [from, to, cabin, depart]);
+  const days = useMemo(() => buildDates(depart), [depart]);
 
-  // Scroll active date into view after loading
+  const [fares, setFares] = useState<Map<string, FareDay>>(new Map());
+  const [loading, setLoading] = useState(false);
+  // Track which month we've loaded to avoid redundant fetches
+  const loadedMonthRef = useRef<string>("");
+
+  // Months visible in the current 15-day window (may span two months)
+  const visibleMonths = useMemo(() => {
+    const seen = new Set<string>();
+    for (const d of days) seen.add(toMonth(d));
+    return [...seen];
+  }, [days]);
+
+  useEffect(() => {
+    // Re-fetch whenever route, cabin, or visible month window changes
+    const key = `${from}|${to}|${cabin}|${visibleMonths.join(",")}`;
+    if (loadedMonthRef.current === key) return;
+    if (!from || !to || from === to) return;
+
+    loadedMonthRef.current = key;
+    setLoading(true);
+
+    // Fetch all visible months in parallel
+    Promise.all(
+      visibleMonths.map((month) =>
+        fetch("/api/flights/calendar-fare", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ from, to, cabin, month }),
+        })
+          .then((r) => r.json())
+          .then((json) => (json.success ? (json.data as FareDay & { date: string }[]) : []))
+          .catch(() => [] as (FareDay & { date: string })[]),
+      ),
+    ).then((results) => {
+      setFares((prev) => {
+        const next = new Map(prev);
+        for (const days of results) {
+          for (const day of days) {
+            next.set(day.date, { totalFare: day.totalFare, isLowestFareOfMonth: day.isLowestFareOfMonth });
+          }
+        }
+        return next;
+      });
+      setLoading(false);
+    });
+  }, [from, to, cabin, visibleMonths]);
+
+  // Scroll active date into view after render
   useEffect(() => {
     if (!scrollRef.current) return;
-    const idx = days.findIndex((d) => d.date === depart);
+    const idx = days.findIndex((d) => d === depart);
     const el = scrollRef.current.children[idx] as HTMLElement | undefined;
     el?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
   }, [days, depart]);
@@ -49,37 +106,58 @@ export default function FareCalendar({ from, to, cabin, depart, onDateChange }: 
           role="list"
           aria-label="Fare calendar — select a date"
         >
-          {days.map((day) => {
-            const active = day.date === depart;
+          {days.map((date) => {
+            const active = date === depart;
+            const fare = fares.get(date);
+            const isLowest = fare?.isLowestFareOfMonth ?? false;
+
             return (
               <button
-                key={day.date}
+                key={date}
                 type="button"
                 aria-pressed={active}
-                aria-label={`${formatWeekday(day.date)} ${formatDayMonth(day.date)}`}
-                onClick={() => !active && onDateChange(day.date)}
+                aria-label={`${formatWeekday(date)} ${formatDayMonth(date)}${fare ? ` ₹${fare.totalFare}` : ""}`}
+                onClick={() => !active && onDateChange(date)}
                 className={[
-                  "shrink-0 snap-start w-[88px] flex flex-col items-center gap-0.5 rounded-lg border py-2.5 px-1 transition-all",
+                  "shrink-0 snap-start w-22 flex flex-col items-center gap-0.5 rounded-lg border py-2.5 px-1 transition-all",
                   active
                     ? "border-brand-600 bg-brand-50"
                     : "border-transparent hover:border-border-soft hover:bg-surface-muted cursor-pointer",
                 ].join(" ")}
               >
                 <span className={`text-[11px] font-semibold ${active ? "text-brand-600" : "text-ink-muted"}`}>
-                  {formatWeekday(day.date)}
+                  {formatWeekday(date)}
                 </span>
                 <span className={`text-[13px] font-bold leading-tight ${active ? "text-brand-700" : "text-ink"}`}>
-                  {formatDayMonth(day.date)}
+                  {formatDayMonth(date)}
                 </span>
-                <span className={`text-[10px] font-semibold ${active ? "text-brand-600" : "text-ink-muted"}`}>
-                  Select date
-                </span>
+                {loading && !fare ? (
+                  <span className="mt-0.5 h-3.5 w-10 rounded bg-gray-200 animate-pulse" />
+                ) : fare ? (
+                  <span
+                    className={`text-[10px] font-semibold leading-tight ${
+                      active
+                        ? "text-brand-600"
+                        : isLowest
+                          ? "text-green-600"
+                          : "text-ink-muted"
+                    }`}
+                  >
+                    {formatFare(fare.totalFare)}
+                    {isLowest && !active && (
+                      <span className="ml-0.5 text-[8px] align-super text-green-500">↓</span>
+                    )}
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-ink-muted">—</span>
+                )}
               </button>
             );
           })}
         </div>
         <div className="pb-2 text-[10px] text-ink-muted">
-          Browse nearby dates. Prices load from live search results after you select a departure day.
+          Fares shown are indicative for 1 adult. Select a date to search live inventory.
+          <span className="ml-2 text-green-600">↓ lowest this month</span>
         </div>
       </div>
     </div>

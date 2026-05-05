@@ -249,25 +249,60 @@ export async function tboSearchFlights(
     const traceId = data.Response.TraceId ?? "";
     const rawResults = data.Response.Results;
 
-    // HTML response shape: Results is a 2D array (Results[][]). Flatten one level
-    // so we handle both nested and accidentally-flat shapes uniformly.
-    const flatResults: TboFlightResult[] = Array.isArray(rawResults)
-      ? (rawResults as unknown[]).flat() as TboFlightResult[]
+    // TBO domestic return: Results is Results[0][]=OB, Results[1][]=IB.
+    // One-way: Results[0][] only. We detect by checking if [1] is a non-empty array.
+    const resultsArray = Array.isArray(rawResults) ? rawResults as unknown[] : [];
+    const obResults: TboFlightResult[] = Array.isArray(resultsArray[0])
+      ? resultsArray[0] as TboFlightResult[]
+      : resultsArray as TboFlightResult[];
+    const ibResults: TboFlightResult[] = (isRoundTrip && Array.isArray(resultsArray[1]) && (resultsArray[1] as unknown[]).length > 0)
+      ? resultsArray[1] as TboFlightResult[]
       : [];
 
-    if (flatResults.length === 0) {
+    if (obResults.length === 0) {
       console.log("[TBO] Flight Search returned 0 results");
       return { offers: [], minPrice: 0, maxPrice: 0 };
     }
 
+    // Cache traceIds for all result indexes.
+    for (const r of [...obResults, ...ibResults]) {
+      if (r?.ResultIndex && traceId) storeTrace(r.ResultIndex, traceId);
+    }
+
     const offers: FlightOffer[] = [];
-    for (const result of flatResults) {
-      if (!result?.ResultIndex) continue;
-      if (traceId) storeTrace(result.ResultIndex, traceId);
-      try {
-        offers.push(mapResult(result));
-      } catch (err) {
-        logError("Flight Search mapResult", err, { resultIndex: result.ResultIndex });
+
+    if (ibResults.length > 0) {
+      // Domestic return: pair each OB with each IB result, combine price.
+      for (const ob of obResults) {
+        if (!ob?.ResultIndex) continue;
+        for (const ib of ibResults) {
+          if (!ib?.ResultIndex) continue;
+          try {
+            const obOffer = mapResult(ob);
+            const ibOffer = mapResult(ib);
+            offers.push({
+              ...obOffer,
+              // Combined price — both legs are booked under one selection.
+              basePrice: obOffer.basePrice + ibOffer.basePrice,
+              returnResultIndex: ib.ResultIndex,
+              returnSegments: ibOffer.segments,
+            });
+          } catch (err) {
+            logError("Flight Search mapResult (return pair)", err, {
+              ob: ob.ResultIndex, ib: ib.ResultIndex,
+            });
+          }
+        }
+      }
+    } else {
+      // One-way or international return (single ResultIndex per offer).
+      for (const result of obResults) {
+        if (!result?.ResultIndex) continue;
+        try {
+          offers.push(mapResult(result));
+        } catch (err) {
+          logError("Flight Search mapResult", err, { resultIndex: result.ResultIndex });
+        }
       }
     }
 
