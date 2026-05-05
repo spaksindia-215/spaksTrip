@@ -220,21 +220,66 @@ export interface TboFareRuleResponse {
 
 // ─── SSR ─────────────────────────────────────────────────────────────────────
 
-export interface TboSSRDetail {
+// LCC — Baggage option returned in Baggage[][] (outer = segment, inner = choices)
+export interface TboBaggageSSROption {
+  AirlineCode: string;
+  FlightNumber: string;
+  WayType: number;         // 1=Segment, 2=FullJourney
+  Code: string;
+  Description: number;     // 1=Included, 2=Direct/Purchase, 3=Imported, 4=Upgrade
+  Weight: number;          // kg
+  Currency: string;
+  Price: number;
+  Origin: string;
+  Destination: string;
+  Text?: string;
+}
+
+// LCC — Meal option returned in MealDynamic[][] (outer = segment, inner = choices)
+export interface TboMealDynamicOption {
+  AirlineCode: string;
+  FlightNumber: string;
+  WayType: number;
+  Code: string;
+  Description: number;     // 1=Included, 2=Direct, 3=Imported
+  AirlineDescription: string;
+  Quantity: number;
+  Currency: string;
+  Price: number;
+  Origin: string;
+  Destination: string;
+}
+
+// LCC — individual seat in the SeatDynamic map
+export interface TboSeatItem {
+  AirlineCode: string;
+  FlightNumber: string;
+  CraftType: string;
+  Origin: string;
+  Destination: string;
+  AvailablityType: number;  // 0=NotSet, 1=Open, 3=Reserved, 4=Blocked, 5=NoSeat
+  Description: number;      // 1=Included, 2=Purchase
+  Code: string;
+  RowNo: string;
+  SeatNo: string | null;
+  SeatType: number;         // 1=Window, 2=Aisle, 3=Middle
+  SeatWayType: number;
+  Compartment: number;
+  Deck: number;
+  Currency: string;
+  Price: number;
+}
+
+// Non-LCC — meal code + description list
+export interface TboMealOption {
   Code: string;
   Description: string;
-  AirlineDescription: string;
-  Amount: number;
 }
 
-export interface TboSegmentSSRData {
-  SegmentIndex: number;
-  SSRDetails: TboSSRDetail[];
-}
-
-export interface TboSSRData {
-  key: string;  // passenger key
-  SegmentSSRDatas: TboSegmentSSRData[];
+// Non-LCC — seat preference code + description
+export interface TboSeatPreferenceOption {
+  Code: string;
+  Description: string;
 }
 
 export interface TboSSRResponse {
@@ -242,17 +287,62 @@ export interface TboSSRResponse {
     ResponseStatus: number;
     Error: TboError;
     TraceId: string;
-    SSRDatas: TboSSRData[] | null;
+    // LCC arrays-of-arrays: outer index = trip segment, inner = available choices
+    Baggage?: TboBaggageSSROption[][];
+    MealDynamic?: TboMealDynamicOption[][];
+    SeatDynamic?: Array<{
+      SegmentSeat: Array<{
+        RowSeats: Array<{
+          Seats: TboSeatItem[];
+        }>;
+      }>;
+    }>;
+    SpecialServices?: Array<{
+      SegmentSpecialService: Array<{
+        SSRService: Array<{
+          Origin: string;
+          Destination: string;
+          Code: string;
+          Price: number;
+          Currency: string;
+        }>;
+      }>;
+    }>;
+    // Non-LCC fields
+    Meal?: TboMealOption[];
+    SeatPreference?: TboSeatPreferenceOption[];
   };
 }
 
 // ─── Book (Flight) ────────────────────────────────────────────────────────────
 
-export interface TboPassengerSSR {
+// LCC Baggage item sent in Passengers[].Baggage[] — mirrors SSR Baggage response shape.
+export interface TboLccBaggageItem {
   Code: string;
-  Amount: number;
-  Description: string;
-  SegmentIndicator: number;
+  Weight: number;
+  Price: number;
+  Currency: string;
+  Origin: string;
+  Destination: string;
+  AirlineCode: string;
+  FlightNumber: string;
+  WayType: number;
+  Description: number;  // 1=Included, 2=Direct/Purchase
+}
+
+// LCC Meal item sent in Passengers[].MealDynamic[] — mirrors SSR MealDynamic response shape.
+export interface TboLccMealItem {
+  Code: string;
+  AirlineDescription: string;
+  Price: number;
+  Currency: string;
+  Origin: string;
+  Destination: string;
+  AirlineCode: string;
+  FlightNumber: string;
+  WayType: number;
+  Quantity: number;
+  Description: number;  // 1=Included, 2=Direct, 3=Imported
 }
 
 export interface TboPassengerRequest {
@@ -278,10 +368,13 @@ export interface TboPassengerRequest {
   GSTNumber: string;
   GSTCompanyEmail: string;
   Fare: TboFare;
-  // Optional: LCC ADT/CHD must send [] (never null); INF must omit entirely (§6/§7).
-  Baggage?: TboPassengerSSR[];
-  MealDynamic?: TboPassengerSSR[];
-  SeatDynamic?: TboPassengerSSR[];
+  // LCC SSR: ADT/CHD must send [] minimum; INF must omit entirely (§6/§7).
+  Baggage?: TboLccBaggageItem[];
+  MealDynamic?: TboLccMealItem[];
+  SeatDynamic?: TboLccBaggageItem[];  // same shape accepted by TBO for seat dynamic
+  // Non-LCC SSR: passed as a single object (not array).
+  Meal?: { Code: string; Description: string };
+  Seat?: { Code: string; Description: string };
 }
 
 export interface TboPassengerResponse {

@@ -13,9 +13,14 @@ import Checkbox from "@/components/ui/Checkbox";
 import Radio from "@/components/ui/Radio";
 import { useBookingStore } from "@/state/bookingStore";
 import { useToast } from "@/components/ui/Toast";
-import type { Traveler, TravelerType, GSTInfo } from "@/state/bookingStore";
+import type { Traveler, TravelerType, GSTInfo, TravelerSSR } from "@/state/bookingStore";
+import { fetchSSR } from "@/services/flights";
+import type { SSRResult } from "@/services/flights";
 
 type FormTraveler = Omit<Traveler, "id"> & { id: string };
+
+// SSR pick state — one entry per traveler id
+type SSRPick = { baggageCode: string; mealCode: string };
 
 const TITLES_ADULT = ["Mr", "Ms", "Mrs"] as const;
 const TITLES_CHILD = ["Mstr", "Miss"] as const;
@@ -58,7 +63,7 @@ function TravelerInner() {
   const router = useRouter();
   const sp = useSearchParams();
   const toast = useToast();
-  const { current, setTravelers, setContact, setAddOns, setGST, advanceStatus } = useBookingStore();
+  const { current, setTravelers, setContact, setAddOns, setGST, setSSRSelections, advanceStatus } = useBookingStore();
 
   const initial = useMemo(() => {
     if (!current) return [];
@@ -73,26 +78,58 @@ function TravelerInner() {
   const [email, setEmail] = useState(current?.contact.email ?? "");
   const [phone, setPhone] = useState(current?.contact.phone ?? "");
   const [addInsurance, setAddInsurance] = useState(false);
-  const [addSeats, setAddSeats] = useState(false);
   const [gst, setLocalGST] = useState<GSTInfo>({
     companyName: "", gstNumber: "", companyAddress: "",
     companyContactNumber: "", companyEmail: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // SSR state
+  const [ssrData, setSsrData] = useState<SSRResult | null>(null);
+  const [ssrLoading, setSsrLoading] = useState(false);
+  // Per-traveler SSR picks: { [travelerId]: { baggageCode, mealCode } }
+  const [ssrPicks, setSsrPicks] = useState<Record<string, SSRPick>>({});
+
   useEffect(() => {
     if (!current) {
       router.replace("/flight");
-    } else if (travelers.length === 0) {
-      setLocalTravelers(initial);
+      return;
     }
+    if (travelers.length === 0) setLocalTravelers(initial);
   }, [current, initial, router, travelers.length]);
+
+  // Fetch SSR once after mount, using FareQuote traceId for serverless correctness.
+  useEffect(() => {
+    if (!current) return;
+    setSsrLoading(true);
+    fetchSSR(current.offer.id, current.fareQuoteTraceId)
+      .then((data) => setSsrData(data))
+      .catch(() => {
+        // SSR is optional — silently degrade; the ticket request will still work without SSR.
+      })
+      .finally(() => setSsrLoading(false));
+    // Run once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!current) return null;
 
-  const update = (id: string, patch: Partial<FormTraveler>) => {
+  const isLCC = current.isLCC;
+
+  // Available baggage options for LCC — first segment (index 0)
+  const baggageOptions = isLCC ? (ssrData?.baggage?.[0] ?? []) : [];
+  // Available meal options — first segment for LCC, full list for Non-LCC
+  const mealDynamicOptions = isLCC ? (ssrData?.mealDynamic?.[0] ?? []) : [];
+  const nonLCCMealOptions = !isLCC ? (ssrData?.meals ?? []) : [];
+
+  const getPick = (id: string): SSRPick =>
+    ssrPicks[id] ?? { baggageCode: "", mealCode: "" };
+
+  const setPick = (id: string, patch: Partial<SSRPick>) =>
+    setSsrPicks((prev) => ({ ...prev, [id]: { ...getPick(id), ...patch } }));
+
+  const update = (id: string, patch: Partial<FormTraveler>) =>
     setLocalTravelers((list) => list.map((t) => (t.id === id ? { ...t, ...patch } : t)));
-  };
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -122,17 +159,64 @@ function TravelerInner() {
     }
     setTravelers(travelers);
     setContact({ email, phone, countryCode: "+91" });
-    // Guideline §14: persist GST only when mandatory.
     if (current.isGSTMandatory) setGST(gst);
-    // Guideline §6: baggage and seat cannot be taken for infant passengers.
-    const eligibleForSeat = travelers.filter((t) => t.type !== "INF").length;
+
+    // Build TravelerSSR[] from ssrPicks + ssrData for book/ticket request.
+    const selections: TravelerSSR[] = travelers.map((t) => {
+      const pick = getPick(t.id);
+      const sel: TravelerSSR = { travelerId: t.id };
+
+      // Guideline §6: baggage not available for infants.
+      if (t.type !== "INF" && pick.baggageCode && isLCC) {
+        const opt = baggageOptions.find((b) => b.code === pick.baggageCode);
+        if (opt) {
+          sel.baggage = {
+            code: opt.code,
+            weight: opt.weight,
+            price: opt.price,
+            origin: opt.origin,
+            destination: opt.destination,
+            airlineCode: opt.airlineCode,
+            flightNumber: opt.flightNumber,
+            wayType: opt.wayType,
+          };
+        }
+      }
+
+      if (pick.mealCode) {
+        if (isLCC) {
+          const opt = mealDynamicOptions.find((m) => m.code === pick.mealCode);
+          if (opt) sel.meal = {
+            code: opt.code, description: opt.description, price: opt.price,
+            origin: opt.origin, destination: opt.destination,
+            airlineCode: opt.airlineCode, flightNumber: opt.flightNumber,
+          };
+        } else {
+          const opt = nonLCCMealOptions.find((m) => m.code === pick.mealCode);
+          if (opt) sel.meal = { code: opt.code, description: opt.description, price: 0 };
+        }
+      }
+
+      return sel;
+    });
+    setSSRSelections(selections);
+
+    // Tally SSR add-on costs for the price summary.
+    const ssrBaggageCost = selections.reduce((sum, s) => sum + (s.baggage?.price ?? 0), 0);
+    const ssrMealCost = selections.reduce((sum, s) => sum + (s.meal?.price ?? 0), 0);
     setAddOns({
       insurance: addInsurance ? 199 * travelers.length : 0,
-      seats: addSeats ? 349 * eligibleForSeat : 0,
+      baggage: ssrBaggageCost,
+      meals: ssrMealCost,
+      seats: 0,
     });
+
     advanceStatus("PAYMENT");
     router.push(`/flight/${encodeURIComponent(current.offer.id)}/payment?${sp.toString()}`);
   };
+
+  const hasSsrOptions =
+    baggageOptions.length > 0 || mealDynamicOptions.length > 0 || nonLCCMealOptions.length > 0;
 
   return (
     <div className="min-h-screen flex flex-col bg-surface-muted">
@@ -144,7 +228,7 @@ function TravelerInner() {
             <div className="flex flex-col gap-4">
               <ItinerarySummary offer={current.offer} compact />
 
-              <section className="rounded-xl bg-white border border-border-soft p-5 shadow-[var(--shadow-xs)]">
+              <section className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
                 <h2 className="text-[16px] font-bold text-ink mb-1">Traveller details</h2>
                 <p className="text-[12px] text-ink-muted mb-4">
                   Names must match government-issued ID exactly.
@@ -233,7 +317,84 @@ function TravelerInner() {
                 </div>
               </section>
 
-              <section className="rounded-xl bg-white border border-border-soft p-5 shadow-[var(--shadow-xs)]">
+              {/* SSR section — shown only when options are available */}
+              {(hasSsrOptions || ssrLoading) && (
+                <section className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
+                  <div className="flex items-center justify-between mb-1">
+                    <h2 className="text-[16px] font-bold text-ink">Meals & extras</h2>
+                    {ssrLoading && (
+                      <span className="text-[12px] text-ink-muted animate-pulse">Loading options…</span>
+                    )}
+                  </div>
+                  <p className="text-[12px] text-ink-muted mb-4">
+                    {isLCC
+                      ? "Select extra baggage or a meal for each passenger. Charges are added at booking."
+                      : "Meal preference is indicative — subject to airline availability."}
+                  </p>
+
+                  <div className="flex flex-col gap-5">
+                    {travelers.map((t) => {
+                      const pick = getPick(t.id);
+                      const canHaveBaggage = isLCC && t.type !== "INF" && baggageOptions.length > 0;
+                      // Guideline §6: only Meal is available for infants.
+                      const canHaveMeal =
+                        (isLCC && mealDynamicOptions.length > 0) ||
+                        (!isLCC && nonLCCMealOptions.length > 0);
+                      if (!canHaveBaggage && !canHaveMeal) return null;
+
+                      return (
+                        <div key={t.id} className="pb-4 border-b last:border-b-0 border-border-soft">
+                          <div className="text-[13px] font-semibold text-ink mb-3">
+                            {t.type === "ADT" ? "Adult" : t.type === "CHD" ? "Child" : "Infant"}{" "}
+                            — {t.firstName || "Passenger"} {t.lastName}
+                          </div>
+                          <div className="grid sm:grid-cols-2 gap-3">
+                            {canHaveBaggage && (
+                              <SSRSelect
+                                label="Extra baggage"
+                                value={pick.baggageCode}
+                                onChange={(v) => setPick(t.id, { baggageCode: v })}
+                                options={baggageOptions.map((b) => ({
+                                  value: b.code,
+                                  label: b.weight === 0
+                                    ? "No extra baggage"
+                                    : `+${b.weight} kg${b.price > 0 ? ` — ₹${b.price.toLocaleString("en-IN")}` : " (Included)"}`,
+                                }))}
+                              />
+                            )}
+                            {canHaveMeal && isLCC && (
+                              <SSRSelect
+                                label="Meal"
+                                value={pick.mealCode}
+                                onChange={(v) => setPick(t.id, { mealCode: v })}
+                                options={mealDynamicOptions.map((m) => ({
+                                  value: m.code,
+                                  label: m.code === "NoMeal"
+                                    ? "No meal"
+                                    : `${m.description}${m.price > 0 ? ` — ₹${m.price.toLocaleString("en-IN")}` : ""}`,
+                                }))}
+                              />
+                            )}
+                            {canHaveMeal && !isLCC && (
+                              <SSRSelect
+                                label="Meal preference"
+                                value={pick.mealCode}
+                                onChange={(v) => setPick(t.id, { mealCode: v })}
+                                options={[
+                                  { value: "", label: "No preference" },
+                                  ...nonLCCMealOptions.map((m) => ({ value: m.code, label: m.description })),
+                                ]}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              )}
+
+              <section className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
                 <h2 className="text-[16px] font-bold text-ink mb-1">Contact information</h2>
                 <p className="text-[12px] text-ink-muted mb-4">
                   Your booking confirmation will be sent here.
@@ -258,7 +419,7 @@ function TravelerInner() {
                 </div>
               </section>
 
-              <section className="rounded-xl bg-white border border-border-soft p-5 shadow-[var(--shadow-xs)]">
+              <section className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
                 <h2 className="text-[16px] font-bold text-ink mb-3">Add-ons</h2>
                 <div className="flex flex-col gap-3">
                   <AddOnRow
@@ -268,18 +429,11 @@ function TravelerInner() {
                     checked={addInsurance}
                     onChange={setAddInsurance}
                   />
-                  <AddOnRow
-                    title="Preferred seat selection"
-                    price="₹349 / adult & child"
-                    desc="Choose your exact seat across legs. Not applicable for infants."
-                    checked={addSeats}
-                    onChange={setAddSeats}
-                  />
                 </div>
               </section>
 
               {current.isGSTMandatory && (
-                <section className="rounded-xl bg-white border border-border-soft p-5 shadow-[var(--shadow-xs)]">
+                <section className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
                   <h2 className="text-[16px] font-bold text-ink mb-1">GST details</h2>
                   <p className="text-[12px] text-ink-muted mb-4">
                     Required by the airline for this fare. Enter your company GST information.
@@ -341,6 +495,36 @@ function TravelerInner() {
         </div>
       </main>
       <Footer />
+    </div>
+  );
+}
+
+function SSRSelect({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: Array<{ value: string; label: string }>;
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-[13px] font-medium text-ink-soft">{label}</label>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="h-11 rounded-md border border-border bg-white px-3 text-[14px] font-medium text-ink outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+      >
+        {!options.some((o) => o.value === "") && (
+          <option value="">— Select —</option>
+        )}
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
     </div>
   );
 }

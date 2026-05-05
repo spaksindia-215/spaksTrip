@@ -5,6 +5,8 @@ import {
 } from "@/lib/mock/flights";
 import { searchAirports, type Airport } from "@/lib/mock/airports";
 import { jitter, sleep } from "./delay";
+import type { TboFareBreakdown } from "@/lib/adapters/tbo/types";
+import type { FlightBooking } from "@/state/bookingStore";
 
 // TBO is the only data source for flights. Fallback inventory has been removed.
 // All calls go through Next.js /api/flights/* routes which proxy to the TBO B2B API
@@ -101,6 +103,8 @@ export type FareQuoteResult = {
   isGSTMandatory: boolean;
   isPriceChanged: boolean;
   totalFare: number;
+  /** Per-pax-type fare data — must be passed in the Book/Ticket fare nodes. */
+  fareBreakdown: TboFareBreakdown[];
   updatedOffer?: FlightOffer;
 };
 
@@ -122,6 +126,129 @@ export async function fetchFareQuote(
     throw new Error(json?.error ?? `FareQuote failed (HTTP ${res.status})`);
   }
   return json.data as FareQuoteResult;
+}
+
+export type { SSRResult, BaggageOption, MealDynamicOption, SeatOption, NonLCCMealOption, SeatPreferenceOption } from "@/lib/adapters/tbo/flight/ssr";
+
+export async function fetchSSR(resultIndex: string, traceId?: string): Promise<import("@/lib/adapters/tbo/flight/ssr").SSRResult> {
+  const params = new URLSearchParams();
+  if (traceId) params.set("traceId", traceId);
+  const qs = params.size > 0 ? `?${params.toString()}` : "";
+  const url = `/api/flights/${encodeURIComponent(resultIndex)}/ssr${qs}`;
+  const res = await fetch(url);
+  const json = await res.json().catch(() => null);
+  if (!res.ok || !json?.success) {
+    throw new Error(json?.error ?? `SSR fetch failed (HTTP ${res.status})`);
+  }
+  return json.data;
+}
+
+export type BookingResult = {
+  pnr: string;
+  bookingId: number;
+  returnPnr?: string;
+  returnBookingId?: number;
+  ticketNumbers?: string[];
+};
+
+// Builds the passengers payload for Book/Ticket from the persisted booking state.
+// Does not import from server-only book.ts — shapes the same JSON the route expects.
+function buildPassengers(booking: FlightBooking): unknown[] {
+  return booking.travelers.map((t) => {
+    const ssr = booking.ssrSelections.find((s) => s.travelerId === t.id);
+    const pax: Record<string, unknown> = {
+      type: t.type,
+      title: t.title,
+      firstName: t.firstName,
+      lastName: t.lastName,
+      gender: t.gender,
+      dob: t.dob ?? "2000-01-01",
+      addressLine1: "N/A",
+      city: "N/A",
+      nationality: t.nationality ?? "IN",
+    };
+    if (t.passport) pax.passport = t.passport;
+    if (booking.isGSTMandatory && booking.gst) pax.gst = booking.gst;
+
+    if (booking.isLCC && t.type !== "INF") {
+      pax.baggageSSR = ssr?.baggage
+        ? [{ code: ssr.baggage.code, weight: ssr.baggage.weight, price: ssr.baggage.price,
+             origin: ssr.baggage.origin, destination: ssr.baggage.destination,
+             airlineCode: ssr.baggage.airlineCode, flightNumber: ssr.baggage.flightNumber,
+             wayType: ssr.baggage.wayType }]
+        : [];
+      pax.mealSSR = ssr?.meal?.origin
+        ? [{ code: ssr.meal.code, description: ssr.meal.description, price: ssr.meal.price,
+             origin: ssr.meal.origin, destination: ssr.meal.destination,
+             airlineCode: ssr.meal.airlineCode, flightNumber: ssr.meal.flightNumber }]
+        : [];
+    } else if (!booking.isLCC && ssr?.meal) {
+      pax.mealCode = ssr.meal.code;
+      pax.mealDescription = ssr.meal.description;
+    }
+
+    return pax;
+  });
+}
+
+export async function submitBooking(booking: FlightBooking): Promise<BookingResult> {
+  const passengers = buildPassengers(booking);
+  const base = {
+    resultIndex: booking.offer.id,
+    traceId: booking.fareQuoteTraceId,
+    fareBreakdown: booking.fareBreakdown,
+    passengers,
+    contactEmail: booking.contact.email,
+    contactPhone: booking.contact.phone,
+  };
+
+  if (booking.isLCC) {
+    const res = await fetch("/api/flights/ticket", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isLCC: true, ...base }),
+    });
+    const json = await res.json().catch(() => null);
+    if (!res.ok || !json?.success) throw new Error(json?.error ?? "Ticket issuance failed");
+    return {
+      pnr: json.data.pnr,
+      bookingId: json.data.bookingId,
+      returnPnr: json.data.returnLeg?.pnr,
+      returnBookingId: json.data.returnLeg?.bookingId,
+      ticketNumbers: json.data.ticketNumbers,
+    };
+  }
+
+  // Non-LCC: Book → get BookingId → Ticket
+  const bookRes = await fetch("/api/flights/book", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(base),
+  });
+  const bookJson = await bookRes.json().catch(() => null);
+  if (!bookRes.ok || !bookJson?.success) throw new Error(bookJson?.error ?? "Booking failed");
+
+  const { bookingId, returnLeg: bookReturnLeg } = bookJson.data as {
+    bookingId: number; returnLeg?: { bookingId: number; pnr: string };
+  };
+  const ticketBody: Record<string, unknown> = { isLCC: false, bookingId };
+  if (bookReturnLeg?.bookingId) ticketBody.returnBookingId = bookReturnLeg.bookingId;
+
+  const ticketRes = await fetch("/api/flights/ticket", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(ticketBody),
+  });
+  const ticketJson = await ticketRes.json().catch(() => null);
+  if (!ticketRes.ok || !ticketJson?.success) throw new Error(ticketJson?.error ?? "Ticket issuance failed");
+
+  return {
+    pnr: ticketJson.data.pnr,
+    bookingId,
+    returnPnr: ticketJson.data.returnLeg?.pnr ?? bookReturnLeg?.pnr,
+    returnBookingId: bookReturnLeg?.bookingId,
+    ticketNumbers: ticketJson.data.ticketNumbers,
+  };
 }
 
 export async function searchAirportOptions(q: string): Promise<Airport[]> {

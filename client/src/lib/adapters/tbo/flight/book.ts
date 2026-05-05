@@ -31,10 +31,25 @@ export interface BookingPassenger {
   nationality?: string;        // ISO-2, defaults "IN"
   email?: string;
   phone?: string;
-  meal?: string;
-  seat?: string;
   /** Guideline §14: required on lead pax when FareQuote returns IsGSTMandatory=true. */
   gst?: GSTDetails;
+  /** LCC: per-segment baggage selections (Guideline §7). */
+  baggageSSR?: Array<{
+    code: string; weight: number; price: number; currency?: string;
+    origin: string; destination: string; airlineCode: string;
+    flightNumber: string; wayType: number;
+  }>;
+  /** LCC: per-segment meal selections. */
+  mealSSR?: Array<{
+    code: string; description?: string; price: number; currency?: string;
+    origin: string; destination: string; airlineCode: string; flightNumber: string;
+  }>;
+  /** Non-LCC: meal preference code. */
+  mealCode?: string;
+  mealDescription?: string;
+  /** Non-LCC: seat preference code. */
+  seatCode?: string;
+  seatDescription?: string;
 }
 
 export interface TboBookFlightInput {
@@ -166,11 +181,31 @@ export function mapPassenger(
     Fare: buildPassengerFare(fareBreakdown, PAX_TYPE[p.type]),
   };
 
-  // Guideline §6/§7: LCC ADT/CHD get empty arrays; INF must have none at all.
+  // Guideline §6/§7: LCC ADT/CHD carry SSR arrays; INF must have none at all.
   if (isLCC && p.type !== "INF") {
-    passenger.Baggage = [];
-    passenger.MealDynamic = [];
+    passenger.Baggage = (p.baggageSSR ?? []).map((b) => ({
+      Code: b.code, Weight: b.weight, Price: b.price,
+      Currency: b.currency ?? "INR",
+      Origin: b.origin, Destination: b.destination,
+      AirlineCode: b.airlineCode, FlightNumber: b.flightNumber,
+      WayType: b.wayType, Description: 0,
+    }));
+    passenger.MealDynamic = (p.mealSSR ?? []).map((m) => ({
+      Code: m.code, AirlineDescription: m.description ?? "",
+      Price: m.price, Currency: m.currency ?? "INR",
+      Origin: m.origin, Destination: m.destination,
+      AirlineCode: m.airlineCode, FlightNumber: m.flightNumber,
+      WayType: 1, Quantity: 1, Description: 0,
+    }));
     passenger.SeatDynamic = [];
+  }
+
+  // Non-LCC: meal and seat preference codes (Guideline §8).
+  if (!isLCC && p.mealCode) {
+    passenger.Meal = { Code: p.mealCode, Description: p.mealDescription ?? "" };
+  }
+  if (!isLCC && p.seatCode) {
+    passenger.Seat = { Code: p.seatCode, Description: p.seatDescription ?? "" };
   }
 
   return passenger;

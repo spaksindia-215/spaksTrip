@@ -3,22 +3,134 @@ import { withRetry, tboBase, tboApiUrl } from "../auth";
 import { assertTboSuccess, TboFareExpiredError } from "../errors";
 import { getTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
-import type { TboSSRResponse } from "../types";
+import type {
+  TboSSRResponse,
+  TboBaggageSSROption,
+  TboMealDynamicOption,
+  TboSeatItem,
+} from "../types";
 
-export interface SSROption {
+// ─── Result types (frontend-facing) ──────────────────────────────────────────
+
+export interface BaggageOption {
+  code: string;
+  weight: number;      // kg; 0 = "no baggage"
+  price: number;
+  currency: string;
+  origin: string;
+  destination: string;
+  airlineCode: string;
+  flightNumber: string;
+  wayType: number;
+  description: number; // 1=Included, 2=Purchase
+  text?: string;
+}
+
+export interface MealDynamicOption {
+  code: string;
+  description: string; // AirlineDescription from TBO
+  price: number;
+  currency: string;
+  origin: string;
+  destination: string;
+  airlineCode: string;
+  flightNumber: string;
+}
+
+export interface SeatOption {
+  code: string;
+  rowNo: string;
+  seatNo: string | null;
+  seatType: number;         // 1=Window, 2=Aisle, 3=Middle
+  availabilityType: number; // 1=Open, 3=Reserved/occupied, 4=Blocked
+  price: number;
+  currency: string;
+  origin: string;
+  destination: string;
+  description: number;      // 1=Included, 2=Purchase
+}
+
+export interface NonLCCMealOption {
   code: string;
   description: string;
-  amount: number;
-  segmentIndex: number;
+}
+
+export interface SeatPreferenceOption {
+  code: string;
+  description: string;
 }
 
 export interface SSRResult {
-  meals: SSROption[];
-  seats: SSROption[];
+  // LCC — one inner array per trip segment
+  baggage: BaggageOption[][];
+  mealDynamic: MealDynamicOption[][];
+  // Flat list of bookable seats per segment (AvailablityType === 1 or not 0/4/5)
+  seatMap: SeatOption[][];
+  // Non-LCC
+  meals: NonLCCMealOption[];
+  seatPreferences: SeatPreferenceOption[];
 }
 
-// SSR codes prefixed with "ML" are meals; "SD" are dynamic seats.
-// TBO does not always return both — handle empty arrays gracefully.
+// ─── Mappers ──────────────────────────────────────────────────────────────────
+
+function mapBaggageSegment(segment: TboBaggageSSROption[]): BaggageOption[] {
+  return segment.map((b) => ({
+    code: b.Code,
+    weight: b.Weight ?? 0,
+    price: b.Price ?? 0,
+    currency: b.Currency,
+    origin: b.Origin,
+    destination: b.Destination,
+    airlineCode: b.AirlineCode,
+    flightNumber: b.FlightNumber,
+    wayType: b.WayType,
+    description: b.Description,
+    text: b.Text,
+  }));
+}
+
+function mapMealSegment(segment: TboMealDynamicOption[]): MealDynamicOption[] {
+  return segment.map((m) => ({
+    code: m.Code,
+    description: m.AirlineDescription || m.Code,
+    price: m.Price ?? 0,
+    currency: m.Currency,
+    origin: m.Origin,
+    destination: m.Destination,
+    airlineCode: m.AirlineCode,
+    flightNumber: m.FlightNumber,
+  }));
+}
+
+function flattenSeatSegment(
+  seatGroup: { SegmentSeat: Array<{ RowSeats: Array<{ Seats: TboSeatItem[] }> }> },
+): SeatOption[] {
+  const seats: SeatOption[] = [];
+  for (const seg of seatGroup.SegmentSeat ?? []) {
+    for (const row of seg.RowSeats ?? []) {
+      for (const seat of row.Seats ?? []) {
+        // Skip "NoSeat" placeholder rows and hard-blocked seats (AvailablityType 4 or 5)
+        if (!seat.Code || seat.Code === "NoSeat") continue;
+        if (seat.AvailablityType === 4 || seat.AvailablityType === 5) continue;
+        seats.push({
+          code: seat.Code,
+          rowNo: seat.RowNo,
+          seatNo: seat.SeatNo,
+          seatType: seat.SeatType,
+          availabilityType: seat.AvailablityType,
+          price: seat.Price ?? 0,
+          currency: seat.Currency,
+          origin: seat.Origin,
+          destination: seat.Destination,
+          description: seat.Description,
+        });
+      }
+    }
+  }
+  return seats;
+}
+
+// ─── Main export ──────────────────────────────────────────────────────────────
 
 export async function tboGetSSR(
   resultIndex: string,
@@ -53,28 +165,16 @@ export async function tboGetSSR(
     if (!res.ok) throw new Error(`TBO SSR HTTP ${res.status}`);
     assertTboSuccess(data.Response?.Error);
 
-    const meals: SSROption[] = [];
-    const seats: SSROption[] = [];
+    const r = data.Response;
 
-    for (const passengerData of data.Response?.SSRDatas ?? []) {
-      for (const segData of passengerData.SegmentSSRDatas ?? []) {
-        for (const detail of segData.SSRDetails ?? []) {
-          const option: SSROption = {
-            code: detail.Code,
-            description: detail.Description || detail.AirlineDescription || detail.Code,
-            amount: detail.Amount,
-            segmentIndex: segData.SegmentIndex,
-          };
-          // TBO uses "MEAL" or "ML" prefix for meals, "SD" for seat dynamic
-          if (detail.Code.startsWith("ML") || detail.Code.startsWith("MEAL")) {
-            meals.push(option);
-          } else if (detail.Code.startsWith("SD") || detail.Code.startsWith("SEAT")) {
-            seats.push(option);
-          }
-        }
-      }
-    }
-
-    return { meals, seats };
+    return {
+      // LCC fields — default to empty arrays when airline doesn't support them
+      baggage: (r.Baggage ?? []).map(mapBaggageSegment),
+      mealDynamic: (r.MealDynamic ?? []).map(mapMealSegment),
+      seatMap: (r.SeatDynamic ?? []).map(flattenSeatSegment),
+      // Non-LCC fields
+      meals: (r.Meal ?? []).map((m) => ({ code: m.Code, description: m.Description })),
+      seatPreferences: (r.SeatPreference ?? []).map((s) => ({ code: s.Code, description: s.Description })),
+    };
   });
 }
