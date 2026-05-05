@@ -12,6 +12,7 @@ import Button from "@/components/ui/Button";
 import Accordion from "@/components/ui/Accordion";
 import { useBookingStore } from "@/state/bookingStore";
 import { useToast } from "@/components/ui/Toast";
+import { fetchFareQuote } from "@/services/flights";
 
 export default function FlightReviewPage() {
   return (
@@ -37,7 +38,7 @@ function PageFallback() {
 function ReviewInner() {
   const router = useRouter();
   const sp = useSearchParams();
-  const { current, advanceStatus } = useBookingStore();
+  const { current, advanceStatus, setGSTMandatory } = useBookingStore();
   const toast = useToast();
 
   useEffect(() => {
@@ -49,7 +50,20 @@ function ReviewInner() {
 
   if (!current) return null;
 
-  const onContinue = () => {
+  const onContinue = async () => {
+    // Call FareQuote to get the latest price and, crucially, IsGSTMandatory (§14).
+    // For LCC domestic return, pass both OB and IB indexes so TBO prices both legs
+    // in one call (Guideline §6 special return).
+    try {
+      const quote = await fetchFareQuote(
+        current.offer.id,
+        undefined,
+        current.offer.returnResultIndex,
+      );
+      setGSTMandatory(quote.isGSTMandatory);
+    } catch {
+      // Non-fatal: if FareQuote fails here the traveler page will catch it at booking time.
+    }
     advanceStatus("TRAVELER");
     router.push(`/flight/${encodeURIComponent(current.offer.id)}/traveler?${sp.toString()}`);
   };

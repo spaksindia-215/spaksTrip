@@ -18,7 +18,15 @@ export async function GET(
     // where the server-side traceCache may not survive across function instances.
     const traceId = req.nextUrl.searchParams.get("traceId") ?? undefined;
 
-    const result = await tboFareQuote(decodeURIComponent(id), traceId);
+    // Guideline §6 (LCC special return): when the outbound and inbound ResultIndexes
+    // are passed together, FareQuote must receive them as a single comma-separated
+    // value ("OB4,IB4") so TBO prices both legs in one call.
+    const returnId = req.nextUrl.searchParams.get("returnId") ?? undefined;
+    const resultIndex = returnId
+      ? `${decodeURIComponent(id)},${decodeURIComponent(returnId)}`
+      : decodeURIComponent(id);
+
+    const result = await tboFareQuote(resultIndex, traceId);
     return NextResponse.json({ success: true, data: result });
   } catch (e) {
     if (e instanceof TboFareExpiredError) {

@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       if (!body.contactEmail) return err("contactEmail is required.", 400);
       if (!body.contactPhone) return err("contactPhone is required.", 400);
 
-      const input: LccTicketInput = {
+      const obInput: LccTicketInput = {
         isLCC: true,
         resultIndex: body.resultIndex,
         traceId: body.traceId ?? undefined,
@@ -31,8 +31,21 @@ export async function POST(request: NextRequest) {
         preferredCurrency: body.preferredCurrency ?? "INR",
       };
 
-      const ticketResult = await tboIssueTicket(input);
+      const ticketResult = await tboIssueTicket(obInput);
       const detail = await pollFlightBookingDetail(ticketResult.bookingId);
+
+      // Domestic return dual-PNR: ticket the inbound leg independently.
+      let returnLeg: { bookingId: number; pnr: string } | undefined;
+      if (body.returnResultIndex) {
+        const ibInput: LccTicketInput = {
+          ...obInput,
+          resultIndex: body.returnResultIndex,
+          traceId: body.returnTraceId ?? body.traceId ?? undefined,
+          fareBreakdown: body.returnFareBreakdown ?? body.fareBreakdown,
+        };
+        const ibResult = await tboIssueTicket(ibInput);
+        returnLeg = { bookingId: ibResult.bookingId, pnr: ibResult.pnr };
+      }
 
       return NextResponse.json({
         success: true,
@@ -41,6 +54,7 @@ export async function POST(request: NextRequest) {
           pnr: ticketResult.pnr || detail.pnr,
           ticketNumbers: ticketResult.ticketNumbers,
           bookingStatus: detail.bookingStatus,
+          ...(returnLeg ? { returnLeg } : {}),
         },
       });
     }
@@ -52,9 +66,17 @@ export async function POST(request: NextRequest) {
       return err("bookingId is required for non-LCC ticket.", 400);
     }
 
-    const input: NonLccTicketInput = { isLCC: false, bookingId };
-    const ticketResult = await tboIssueTicket(input);
+    const obInput: NonLccTicketInput = { isLCC: false, bookingId };
+    const ticketResult = await tboIssueTicket(obInput);
     const detail = await pollFlightBookingDetail(bookingId);
+
+    // Domestic return dual-PNR: ticket the inbound booking.
+    let returnLeg: { bookingId: number; pnr: string } | undefined;
+    if (body.returnBookingId) {
+      const ibInput: NonLccTicketInput = { isLCC: false, bookingId: Number(body.returnBookingId) };
+      const ibResult = await tboIssueTicket(ibInput);
+      returnLeg = { bookingId: ibResult.bookingId, pnr: ibResult.pnr };
+    }
 
     return NextResponse.json({
       success: true,
@@ -63,6 +85,7 @@ export async function POST(request: NextRequest) {
         pnr: ticketResult.pnr || detail.pnr,
         ticketNumbers: ticketResult.ticketNumbers,
         bookingStatus: detail.bookingStatus,
+        ...(returnLeg ? { returnLeg } : {}),
       },
     });
   } catch (e) {

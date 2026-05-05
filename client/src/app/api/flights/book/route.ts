@@ -9,7 +9,7 @@ function err(message: string, status: number) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body: TboBookFlightInput = await request.json();
+    const body: TboBookFlightInput & { returnResultIndex?: string; returnTraceId?: string; returnFareBreakdown?: TboBookFlightInput["fareBreakdown"] } = await request.json();
 
     if (!body?.resultIndex) return err("resultIndex is required.", 400);
     if (!body?.passengers?.length) return err("At least one passenger is required.", 400);
@@ -18,8 +18,27 @@ export async function POST(request: NextRequest) {
       return err("fareBreakdown is required (from FareQuote response).", 400);
     }
 
-    const result = await tboBookFlight(body);
-    return NextResponse.json({ success: true, data: result });
+    // Book outbound leg.
+    const obResult = await tboBookFlight(body);
+
+    // Domestic return dual-PNR (Guideline §5): book inbound leg independently.
+    if (body.returnResultIndex) {
+      const ibResult = await tboBookFlight({
+        ...body,
+        resultIndex: body.returnResultIndex,
+        traceId: body.returnTraceId ?? body.traceId,
+        fareBreakdown: body.returnFareBreakdown ?? body.fareBreakdown,
+      });
+      return NextResponse.json({
+        success: true,
+        data: {
+          ...obResult,
+          returnLeg: { bookingId: ibResult.bookingId, pnr: ibResult.pnr },
+        },
+      });
+    }
+
+    return NextResponse.json({ success: true, data: obResult });
   } catch (e) {
     if (e instanceof TboFareExpiredError) {
       return err("Fare has expired. Please search again.", 410);

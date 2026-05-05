@@ -94,6 +94,36 @@ export async function getFlight(id: string): Promise<FlightOffer | null> {
   return json.data?.updatedOffer ?? null;
 }
 
+export type FareQuoteResult = {
+  traceId: string;
+  isLCC: boolean;
+  /** Guideline §14: when true, GST details must be collected from the lead passenger. */
+  isGSTMandatory: boolean;
+  isPriceChanged: boolean;
+  totalFare: number;
+  updatedOffer?: FlightOffer;
+};
+
+export async function fetchFareQuote(
+  resultIndex: string,
+  traceId?: string,
+  returnResultIndex?: string,
+): Promise<FareQuoteResult> {
+  const params = new URLSearchParams();
+  if (traceId) params.set("traceId", traceId);
+  // Guideline §6 (LCC special return): pass returnId so the route concatenates
+  // "ob,ib" before calling TBO FareQuote with both legs in one request.
+  if (returnResultIndex) params.set("returnId", returnResultIndex);
+  const qs = params.size > 0 ? `?${params.toString()}` : "";
+  const url = `/api/flights/${encodeURIComponent(resultIndex)}/fare-quote${qs}`;
+  const res = await fetch(url);
+  const json = await res.json().catch(() => null);
+  if (!res.ok || !json?.success) {
+    throw new Error(json?.error ?? `FareQuote failed (HTTP ${res.status})`);
+  }
+  return json.data as FareQuoteResult;
+}
+
 export async function searchAirportOptions(q: string): Promise<Airport[]> {
   // Airport autocomplete uses local IATA data — TBO does not expose a faster lookup.
   await sleep(jitter(120, 60));

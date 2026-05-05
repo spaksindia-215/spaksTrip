@@ -28,6 +28,14 @@ export type ContactInfo = {
   countryCode: string;
 };
 
+export type GSTInfo = {
+  companyName: string;
+  gstNumber: string;
+  companyAddress: string;
+  companyContactNumber: string;
+  companyEmail: string;
+};
+
 export type FlightBooking = {
   id: string;             // PNR-like id
   offer: FlightOffer;
@@ -40,9 +48,14 @@ export type FlightBooking = {
   fees: number;
   addOns: { meals: number; seats: number; baggage: number; insurance: number };
   status: "CART" | "TRAVELER" | "PAYMENT" | "CONFIRMED";
+  /** Guideline §14: true when FareQuote returns IsGSTMandatory — UI must collect GST. */
+  isGSTMandatory: boolean;
+  gst?: GSTInfo;
   createdAt: string;
   confirmedAt?: string;
   bookingReference?: string;
+  /** Present for domestic return: PNR for the inbound leg (dual-PNR flow). */
+  returnBookingReference?: string;
 };
 
 type State = {
@@ -55,8 +68,10 @@ type Actions = {
   setTravelers: (t: Traveler[]) => void;
   setContact: (c: ContactInfo) => void;
   setAddOns: (a: Partial<FlightBooking["addOns"]>) => void;
+  setGSTMandatory: (mandatory: boolean) => void;
+  setGST: (gst: GSTInfo) => void;
   advanceStatus: (s: FlightBooking["status"]) => void;
-  confirm: (ref: string) => void;
+  confirm: (ref: string, returnRef?: string) => void;
   clearCurrent: () => void;
 };
 
@@ -92,6 +107,7 @@ export const useBookingStore = create<State & Actions>()(
             taxes,
             fees,
             status: "CART",
+            isGSTMandatory: false,
             createdAt: new Date().toISOString(),
           },
         });
@@ -108,9 +124,13 @@ export const useBookingStore = create<State & Actions>()(
           const { taxes, fees, total } = computeTotals(s.current.offer, s.current.fareFamily, s.current.pax);
           return { current: { ...s.current, addOns, taxes, fees, totalPrice: total + add } };
         }),
+      setGSTMandatory: (mandatory) =>
+        set((s) => (s.current ? { current: { ...s.current, isGSTMandatory: mandatory } } : s)),
+      setGST: (gst) =>
+        set((s) => (s.current ? { current: { ...s.current, gst } } : s)),
       advanceStatus: (status) =>
         set((s) => (s.current ? { current: { ...s.current, status } } : s)),
-      confirm: (ref) =>
+      confirm: (ref, returnRef?) =>
         set((s) => {
           if (!s.current) return s;
           const done: FlightBooking = {
@@ -118,6 +138,7 @@ export const useBookingStore = create<State & Actions>()(
             status: "CONFIRMED",
             confirmedAt: new Date().toISOString(),
             bookingReference: ref,
+            ...(returnRef ? { returnBookingReference: returnRef } : {}),
           };
           return { current: done, bookings: [done, ...s.bookings].slice(0, 30) };
         }),

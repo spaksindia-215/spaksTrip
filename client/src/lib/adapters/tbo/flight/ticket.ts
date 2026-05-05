@@ -102,7 +102,7 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
 
   return withRetry(async (token) => {
     const passengers = input.passengers.map((p, i) => {
-      const mapped = mapPassenger(p, i === 0, input.fareBreakdown);
+      const mapped = mapPassenger(p, i === 0, input.fareBreakdown, true);
       if (i === 0) {
         mapped.Email = input.contactEmail;
         mapped.ContactNo = input.contactPhone;
