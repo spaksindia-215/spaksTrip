@@ -9,6 +9,10 @@ type FareDay = {
   isLowestFareOfMonth: boolean;
 };
 
+type FareCalendarDay = FareDay & {
+  date: string;
+};
+
 type Props = {
   from: string;
   to: string;
@@ -71,8 +75,8 @@ export default function FareCalendar({ from, to, cabin, depart, onDateChange }: 
           body: JSON.stringify({ from, to, cabin, month }),
         })
           .then((r) => r.json())
-          .then((json) => (json.success ? (json.data as FareDay & { date: string }[]) : []))
-          .catch(() => [] as (FareDay & { date: string })[]),
+          .then((json): FareCalendarDay[] => (json.success ? (json.data as FareCalendarDay[]) : []))
+          .catch((): FareCalendarDay[] => []),
       ),
     ).then((results) => {
       setFares((prev) => {
