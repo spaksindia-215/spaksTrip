@@ -4,9 +4,44 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { FlightOffer, FareFamily } from "@/lib/mock/flights";
 import type { PaxCounts } from "./flightSearchStore";
+import type { TboFareBreakdown } from "@/lib/adapters/tbo/types";
 
 export type TravelerType = "ADT" | "CHD" | "INF";
 export type Gender = "M" | "F";
+
+/** SSR selections for one traveler (persisted for book/ticket request). */
+export type TravelerSSR = {
+  travelerId: string;
+  /** Selected baggage option (code + price needed for TBO ticket request). */
+  baggage?: {
+    code: string;
+    weight: number;
+    price: number;
+    origin: string;
+    destination: string;
+    airlineCode: string;
+    flightNumber: string;
+    wayType: number;
+  };
+  /** Selected meal — for LCC includes price and routing; for Non-LCC price is 0. */
+  meal?: {
+    code: string;
+    description: string;
+    price: number;
+    /** LCC only: required to build MealDynamic wire format for Ticket request. */
+    origin?: string;
+    destination?: string;
+    airlineCode?: string;
+    flightNumber?: string;
+  };
+  /** Selected seat code from the seat map. */
+  seat?: {
+    code: string;
+    price: number;
+    origin: string;
+    destination: string;
+  };
+};
 
 export type Traveler = {
   id: string;
@@ -18,8 +53,6 @@ export type Traveler = {
   dob: string | null;       // YYYY-MM-DD
   passport?: string;
   nationality?: string;
-  meal?: string;
-  seat?: string;
 };
 
 export type ContactInfo = {
@@ -50,6 +83,14 @@ export type FlightBooking = {
   status: "CART" | "TRAVELER" | "PAYMENT" | "CONFIRMED";
   /** Guideline §14: true when FareQuote returns IsGSTMandatory — UI must collect GST. */
   isGSTMandatory: boolean;
+  /** True for LCC airlines — determines whether booking calls /Ticket directly or /Book then /Ticket. */
+  isLCC: boolean;
+  /** Per-pax-type fare data from FareQuote — required when building the Book/Ticket request. */
+  fareBreakdown: TboFareBreakdown[];
+  /** TBO TraceId echoed from FareQuote response — must be passed to all subsequent TBO calls. */
+  fareQuoteTraceId?: string;
+  /** Per-traveler SSR selections (baggage / meal / seat) — passed to book/ticket request. */
+  ssrSelections: TravelerSSR[];
   gst?: GSTInfo;
   createdAt: string;
   confirmedAt?: string;
@@ -69,6 +110,9 @@ type Actions = {
   setContact: (c: ContactInfo) => void;
   setAddOns: (a: Partial<FlightBooking["addOns"]>) => void;
   setGSTMandatory: (mandatory: boolean) => void;
+  /** Persist the key outputs of a FareQuote call so they're available for book/ticket. */
+  setFareQuoteData: (data: { isGSTMandatory: boolean; isLCC: boolean; fareBreakdown: TboFareBreakdown[]; traceId: string; updatedOffer?: FlightOffer }) => void;
+  setSSRSelections: (selections: TravelerSSR[]) => void;
   setGST: (gst: GSTInfo) => void;
   advanceStatus: (s: FlightBooking["status"]) => void;
   confirm: (ref: string, returnRef?: string) => void;
@@ -108,6 +152,9 @@ export const useBookingStore = create<State & Actions>()(
             fees,
             status: "CART",
             isGSTMandatory: false,
+            isLCC: false,
+            fareBreakdown: [],
+            ssrSelections: [],
             createdAt: new Date().toISOString(),
           },
         });
@@ -126,6 +173,27 @@ export const useBookingStore = create<State & Actions>()(
         }),
       setGSTMandatory: (mandatory) =>
         set((s) => (s.current ? { current: { ...s.current, isGSTMandatory: mandatory } } : s)),
+      setSSRSelections: (selections) =>
+        set((s) => (s.current ? { current: { ...s.current, ssrSelections: selections } } : s)),
+      setFareQuoteData: ({ isGSTMandatory, isLCC, fareBreakdown, traceId, updatedOffer }) =>
+        set((s) => {
+          if (!s.current) return s;
+          const offer = updatedOffer ?? s.current.offer;
+          const { taxes, fees, total } = computeTotals(offer, s.current.fareFamily, s.current.pax);
+          return {
+            current: {
+              ...s.current,
+              offer,
+              isGSTMandatory,
+              isLCC,
+              fareBreakdown,
+              fareQuoteTraceId: traceId,
+              totalPrice: total,
+              taxes,
+              fees,
+            },
+          };
+        }),
       setGST: (gst) =>
         set((s) => (s.current ? { current: { ...s.current, gst } } : s)),
       advanceStatus: (status) =>

@@ -13,6 +13,7 @@ import Accordion from "@/components/ui/Accordion";
 import { useBookingStore } from "@/state/bookingStore";
 import { useToast } from "@/components/ui/Toast";
 import { fetchFareQuote } from "@/services/flights";
+import { useState } from "react";
 
 export default function FlightReviewPage() {
   return (
@@ -38,8 +39,9 @@ function PageFallback() {
 function ReviewInner() {
   const router = useRouter();
   const sp = useSearchParams();
-  const { current, advanceStatus, setGSTMandatory } = useBookingStore();
+  const { current, advanceStatus, setFareQuoteData } = useBookingStore();
   const toast = useToast();
+  const [quoting, setQuoting] = useState(false);
 
   useEffect(() => {
     if (!current) {
@@ -51,19 +53,38 @@ function ReviewInner() {
   if (!current) return null;
 
   const onContinue = async () => {
-    // Call FareQuote to get the latest price and, crucially, IsGSTMandatory (§14).
-    // For LCC domestic return, pass both OB and IB indexes so TBO prices both legs
-    // in one call (Guideline §6 special return).
+    setQuoting(true);
     try {
+      // Call FareQuote to re-price the itinerary and capture IsGSTMandatory (§14),
+      // FareBreakdown (needed for book/ticket fare nodes), and TraceId.
+      // For LCC domestic return, OB+IB are priced in one call (Guideline §6).
       const quote = await fetchFareQuote(
         current.offer.id,
         undefined,
         current.offer.returnResultIndex,
       );
-      setGSTMandatory(quote.isGSTMandatory);
+
+      setFareQuoteData({
+        isGSTMandatory: quote.isGSTMandatory,
+        isLCC: quote.isLCC,
+        fareBreakdown: quote.fareBreakdown,
+        traceId: quote.traceId,
+        updatedOffer: quote.updatedOffer,
+      });
+
+      if (quote.isPriceChanged) {
+        toast.push({
+          title: "Fare updated",
+          description: `The price changed to ₹${(quote.totalFare ?? quote.updatedOffer?.basePrice ?? 0).toLocaleString("en-IN")}. Please review before continuing.`,
+          tone: "warn",
+        });
+        setQuoting(false);
+        return;
+      }
     } catch {
-      // Non-fatal: if FareQuote fails here the traveler page will catch it at booking time.
+      // Non-fatal: if FareQuote fails the book/ticket call will surface the error.
     }
+    setQuoting(false);
     advanceStatus("TRAVELER");
     router.push(`/flight/${encodeURIComponent(current.offer.id)}/traveler?${sp.toString()}`);
   };
@@ -92,8 +113,8 @@ function ReviewInner() {
             </div>
             <aside className="flex flex-col gap-4">
               <PriceBreakdown booking={current} />
-              <Button variant="accent" size="lg" onClick={onContinue} fullWidth>
-                Continue to travellers
+              <Button variant="accent" size="lg" onClick={onContinue} loading={quoting} fullWidth>
+                {quoting ? "Checking fare…" : "Continue to travellers"}
               </Button>
               <div className="rounded-xl bg-success-50 text-success-700 text-[12px] font-medium px-4 py-3 flex items-start gap-2">
                 <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden className="mt-0.5 shrink-0">

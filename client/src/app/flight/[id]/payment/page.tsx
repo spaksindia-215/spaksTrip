@@ -12,7 +12,7 @@ import Input from "@/components/ui/Input";
 import Radio from "@/components/ui/Radio";
 import { useBookingStore } from "@/state/bookingStore";
 import { useToast } from "@/components/ui/Toast";
-import { sleep } from "@/services/delay";
+import { submitBooking } from "@/services/flights";
 
 type Method = "card" | "upi" | "netbanking" | "wallet";
 
@@ -77,11 +77,16 @@ function PaymentInner() {
       return;
     }
     setProcessing(true);
-    await sleep(1400);
-    const ref = `SPX${Math.floor(Math.random() * 900000 + 100000)}`;
-    confirm(ref);
-    toast.push({ title: "Payment successful", description: `PNR ${ref}`, tone: "success" });
-    router.push(`/flight/${encodeURIComponent(current.offer.id)}/confirmation?${sp.toString()}`);
+    try {
+      const result = await submitBooking(current);
+      confirm(result.pnr, result.returnPnr);
+      toast.push({ title: "Booking confirmed", description: `PNR: ${result.pnr}`, tone: "success" });
+      router.push(`/flight/${encodeURIComponent(current.offer.id)}/confirmation?${sp.toString()}`);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Booking failed. Please try again.";
+      toast.push({ title: "Booking failed", description: msg, tone: "warn" });
+      setProcessing(false);
+    }
   };
 
   const METHODS: Array<{ v: Method; label: string; icon: React.ReactNode }> = [
