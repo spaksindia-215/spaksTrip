@@ -346,28 +346,6 @@ export default function Header() {
 
           <div className="hidden items-center gap-4 sm:flex">
             <div className="flex items-center gap-4 border-r border-white/15 pr-4">
-              <a
-                href="tel:+919220328072"
-                aria-label="Call +91 922 032 8072"
-                className="group/phone inline-flex items-center text-white/85 transition-colors duration-200 hover:text-white"
-              >
-                <span className="grid h-9 w-9 place-items-center rounded-full bg-white/10 ring-1 ring-white/15 transition-all duration-200 group-hover/phone:scale-105 group-hover/phone:bg-white/15">
-                  <svg
-                    viewBox="0 0 24 24"
-                    width={17}
-                    height={17}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.8}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden
-                  >
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92Z" />
-                  </svg>
-                </span>
-                <span className="sr-only">+91 922 032 8072</span>
-              </a>
               <SelectDropdown
                 label={t("header.country")}
                 options={COUNTRIES.map((c) => ({ value: c, label: c }))}
@@ -471,13 +449,38 @@ export default function Header() {
             ) : (
               <LoginPill label="Login / Register" href="/auth" />
             )}
+
+            <motion.a
+              href="tel:+919220328072"
+              aria-label="Call +91 922 032 8072"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.94 }}
+              className="group/phone inline-flex items-center text-white/85 transition-colors duration-200 hover:text-white ml-2"
+            >
+              <span className="grid h-12 w-12 place-items-center rounded-full bg-white/10 ring-1 ring-white/15 transition-all duration-200 group-hover/phone:scale-110 group-hover/phone:bg-white/15">
+                <svg
+                  viewBox="0 0 24 24"
+                  width={22}
+                  height={22}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.8}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92Z" />
+                </svg>
+              </span>
+              <span className="sr-only">+91 922 032 8072</span>
+            </motion.a>
           </div>
         </div>
       </div>
 
       <div className="border-b border-slate-100 bg-white">
         <div className="mx-auto st-header-main-nav-inner max-w-7xl px-4 py-3 sm:px-6">
-          <nav className="hidden lg:block justify-self-center">
+          <nav className="hidden lg:block flex-1 justify-center">
             <ul className="flex items-end gap-1 text-ink">
               {NAV_ITEMS.map((item) => (
                 <motion.li

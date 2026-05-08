@@ -593,16 +593,31 @@ export interface TboStaticHotelDetailsResponse {
 
 // ─── TBOHolidays TBOHotelCodeList ─────────────────────────────────────────────
 
+// HotelRating is a string enum from TBO ("OneStar".."FiveStar", "All").
+export type TboHotelRatingEnum =
+  | "OneStar"
+  | "TwoStar"
+  | "ThreeStar"
+  | "FourStar"
+  | "FiveStar"
+  | "All"
+  | (string & {});
+
 export interface TboHotelCodeListItem {
   HotelCode: string;
   HotelName: string;
-  HotelRating?: number;
+  HotelRating?: TboHotelRatingEnum;
+  Latitude?: string;
+  Longitude?: string;
   Address?: string;
+  Attractions?: string;
   CityCode?: string;
   CityName?: string;
   CountryName?: string;
   CountryCode?: string;
   Description?: string;
+  FaxNumber?: string;
+  HotelFacilities?: string;
   Images?: string[];
 }
 

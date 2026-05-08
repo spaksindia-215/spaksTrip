@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   title: "SpaksTrip — Flights, Hotels, Holidays & More",
   description:
     "Book flights, hotels, holiday packages, visas and more. Powered by SpaksTrip.",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export const viewport: Viewport = {
