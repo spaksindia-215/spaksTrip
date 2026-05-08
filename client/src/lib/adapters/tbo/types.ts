@@ -557,3 +557,57 @@ export interface TboHotelBookingDetailResponse {
     HotelBookingDetail: TboHotelBookingDetail | null;
   };
 }
+
+// ─── TBOHolidays Static Hoteldetails ──────────────────────────────────────────
+// Endpoint: POST {TBO_HOLIDAYS_HOTEL_API_URL}/Hoteldetails (Basic Auth)
+
+export interface TboStaticHotelDetail {
+  HotelCode: string;
+  HotelName: string;
+  Description?: string;
+  HotelFacilities?: string[];
+  // Per docs Attractions can be an object map of "1)" → "...html blob..."
+  // or sometimes a plain string. Keep loose.
+  Attractions?: Record<string, string> | string;
+  Images?: string[];
+  Address?: string;
+  PinCode?: string;
+  CityId?: string;
+  CountryName?: string;
+  PhoneNumber?: string;
+  FaxNumber?: string;
+  Map?: string; // "lat|long"
+  HotelRating?: number;
+  CityName?: string;
+  CountryCode?: string;
+  CheckInTime?: string;
+  CheckOutTime?: string;
+  RoomID?: string[];
+}
+
+export interface TboStaticHotelDetailsResponse {
+  Status?: { Code: number; Description: string };
+  HotelDetails?: TboStaticHotelDetail[];
+  Error?: TboError;
+}
+
+// ─── TBOHolidays TBOHotelCodeList ─────────────────────────────────────────────
+
+export interface TboHotelCodeListItem {
+  HotelCode: string;
+  HotelName: string;
+  HotelRating?: number;
+  Address?: string;
+  CityCode?: string;
+  CityName?: string;
+  CountryName?: string;
+  CountryCode?: string;
+  Description?: string;
+  Images?: string[];
+}
+
+export interface TboHotelCodeListResponse {
+  Status?: { Code: number; Description: string };
+  Hotels?: TboHotelCodeListItem[];
+  Error?: TboError;
+}

@@ -95,6 +95,14 @@ export type Hotel = {
   reviews: HotelReview[];
   lowestPrice: number;
   propertyType: "hotel" | "resort" | "boutique" | "budget" | "apartment";
+  description?: string;
+  attractions?: string[];
+  phoneNumber?: string;
+  faxNumber?: string;
+  checkInTime?: string;
+  checkOutTime?: string;
+  latitude?: number;
+  longitude?: number;
 };
 
 export type HotelSearchInput = {

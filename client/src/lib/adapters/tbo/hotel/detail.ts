@@ -3,8 +3,13 @@ import { withRetry, tboBase, tboApiUrl } from "../auth";
 import { assertTboSuccess } from "../errors";
 import { getTrace, storeTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
-import type { TboHotelDetailResponse, TboRoomDetail } from "../types";
+import type { TboHotelDetailResponse, TboRoomDetail, TboStaticHotelDetail } from "../types";
 import type { Hotel, Room, Amenity } from "@/lib/mock/hotels";
+import {
+  tboGetStaticHotelDetails,
+  parseLatLong,
+  parseAttractions,
+} from "./staticHotelDetails";
 
 // ─── Shared helpers (mirrors hotel/search.ts) ─────────────────────────────────
 
@@ -80,6 +85,57 @@ function mapRoom(r: TboRoomDetail): Room {
 
 // ─── Public ───────────────────────────────────────────────────────────────────
 
+function mergeStaticDetails(hotel: Hotel, s: TboStaticHotelDetail): Hotel {
+  const merged: Hotel = { ...hotel };
+
+  if (s.Description && !merged.description) merged.description = s.Description;
+
+  const attractions = parseAttractions(s.Attractions);
+  if (attractions.length > 0) merged.attractions = attractions;
+
+  if (s.Images && s.Images.length > 0) {
+    const seen = new Set(merged.images);
+    for (const img of s.Images) {
+      if (img && !seen.has(img)) {
+        merged.images.push(img);
+        seen.add(img);
+      }
+    }
+  }
+
+  if (s.PhoneNumber) merged.phoneNumber = s.PhoneNumber;
+  if (s.FaxNumber) merged.faxNumber = s.FaxNumber;
+  if (s.CheckInTime) merged.checkInTime = s.CheckInTime;
+  if (s.CheckOutTime) merged.checkOutTime = s.CheckOutTime;
+
+  const coords = parseLatLong(s.Map);
+  if (coords) {
+    merged.latitude = coords.lat;
+    merged.longitude = coords.lng;
+  }
+
+  if (s.Address && (!merged.address || merged.address.length < s.Address.length)) {
+    merged.address = s.Address;
+  }
+  if (s.CityName && !merged.city) merged.city = s.CityName;
+  if (s.CountryName && !merged.country) merged.country = s.CountryName;
+
+  if (s.HotelFacilities && s.HotelFacilities.length > 0) {
+    const extra = mapAmenities(s.HotelFacilities);
+    merged.amenities = Array.from(new Set([...merged.amenities, ...extra]));
+  }
+
+  if (
+    typeof s.HotelRating === "number" &&
+    s.HotelRating >= 2 &&
+    s.HotelRating <= 5
+  ) {
+    merged.starRating = s.HotelRating as Hotel["starRating"];
+  }
+
+  return merged;
+}
+
 export async function tboGetHotelDetail(
   hotelCode: string,
   checkIn: string,
@@ -146,7 +202,7 @@ export async function tboGetHotelDetail(
 
     const starRating = Math.max(2, Math.min(5, h.HotelRating)) as Hotel["starRating"];
 
-    return {
+    const baseHotel: Hotel = {
       id: h.HotelCode,
       name: h.HotelName,
       chain: undefined,
@@ -157,7 +213,7 @@ export async function tboGetHotelDetail(
       city: h.CityId ?? "",
       country: "",
       address: h.HotelAddress,
-      images: h.Images ?? [],
+      images: [...(h.Images ?? [])],
       amenities: mapAmenities([
         ...(h.Amenities ?? []),
         ...(h.HotelFacilities ?? []),
@@ -167,5 +223,17 @@ export async function tboGetHotelDetail(
       lowestPrice,
       propertyType: "hotel",
     };
+
+    // Best-effort enrichment from TBOHolidays static Hoteldetails. Failures
+    // here must not break the pricing-bearing detail response — log + return
+    // the unmerged hotel.
+    let staticDetail: TboStaticHotelDetail | null = null;
+    try {
+      staticDetail = await tboGetStaticHotelDetails(h.HotelCode);
+    } catch (err) {
+      logError("Static Hoteldetails (enrichment)", err);
+    }
+
+    return staticDetail ? mergeStaticDetails(baseHotel, staticDetail) : baseHotel;
   });
 }
