@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/Toast";
 import { useHotelSearchStore } from "@/state/hotelSearchStore";
 import { toIsoDate } from "@/lib/format";
 import DestinationField from "./DestinationField";
+import CitySelector from "./CitySelector";
 import RoomsGuestsPopover from "./RoomsGuestsPopover";
 
 export default function HotelSearchForm() {
@@ -19,6 +20,9 @@ export default function HotelSearchForm() {
   } = useHotelSearchStore();
 
   const [submitting, setSubmitting] = useState(false);
+  const [selectedCity, setSelectedCity] = useState<{ code: string; name: string } | null>(
+    destination?.kind === "country" ? destination.city ?? null : null
+  );
 
   const dateRange: DateRange = {
     from: checkIn ? new Date(checkIn) : null,
@@ -51,17 +55,17 @@ export default function HotelSearchForm() {
 
     if (destination.kind === "country") {
       params.set("country", destination.code);
-      if (destination.city) {
-        params.set("city", destination.city.code);
-        params.set("cityName", destination.city.name);
+      if (selectedCity) {
+        params.set("city", selectedCity.code);
+        params.set("cityName", selectedCity.name);
       }
-      const label = destination.city
-        ? `${destination.city.name}, ${destination.name}`
+      const label = selectedCity
+        ? `${selectedCity.name}, ${destination.name}`
         : destination.name;
       pushRecent({
-        id: `country-${destination.code}-${destination.city?.code ?? ""}-${checkIn}`,
+        id: `country-${destination.code}-${selectedCity?.code ?? ""}-${checkIn}`,
         label: `${label} · ${checkIn}`,
-        cityCode: destination.city?.code ?? destination.code,
+        cityCode: selectedCity?.code ?? destination.code,
         when: new Date().toISOString(),
       });
     } else {
@@ -79,8 +83,23 @@ export default function HotelSearchForm() {
 
   return (
     <div className="rounded-2xl bg-white p-5 shadow-(--shadow-lg) md:p-6">
-      <div className="grid gap-3 md:grid-cols-[1fr_1.4fr_1fr] lg:grid-cols-[1.2fr_1.5fr_1fr_auto]">
-        <DestinationField value={destination} onChange={setDestination} />
+      <div className="grid gap-3 md:grid-cols-[1fr_1fr_1.4fr_1fr] lg:grid-cols-[1fr_1fr_1.5fr_1fr_auto]">
+        <DestinationField 
+          value={destination} 
+          onChange={(dest) => {
+            setDestination(dest);
+            // Reset city when country changes
+            if (dest?.kind === "country") {
+              setSelectedCity(null);
+            }
+          }} 
+        />
+        <CitySelector
+          countryCode={destination?.kind === "country" ? destination.code : null}
+          countryName={destination?.kind === "country" ? destination.name : null}
+          selectedCity={selectedCity}
+          onChange={setSelectedCity}
+        />
         <div className="flex flex-col gap-1">
           <span className="text-[12px] font-medium text-ink-muted">Check-in — Check-out</span>
           <DateRangePicker
