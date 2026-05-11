@@ -1,14 +1,14 @@
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import BackToTop from "@/components/landing/BackToTop";
-import PrivacyPolicyLanding from "@/components/privacy/PrivacyPolicyLanding";
+import HelpLanding from "@/components/help/HelpLanding";
 
-export default function PrivacyPolicyPage() {
+export default function HelpPage() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
       <main>
-        <PrivacyPolicyLanding />
+        <HelpLanding />
       </main>
       <Footer />
       <BackToTop />
