@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useTranslate } from "@tolgee/react";
 import SectionHeading from "./SectionHeading";
 import { useCountryLocale } from "@/state/localeStore";
@@ -25,61 +25,113 @@ const HOTELS: Hotel[] = [
   { city: "Paris",     image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80", basePrice: 11000 },
 ];
 
+function getSlidePositions(element: HTMLDivElement) {
+  const containerLeft = element.getBoundingClientRect().left;
+
+  return Array.from(element.children).map((child) => {
+    const slide = child as HTMLElement;
+    return slide.getBoundingClientRect().left - containerLeft + element.scrollLeft;
+  });
+}
+
+function getNearestSlide(element: HTMLDivElement) {
+  const positions = getSlidePositions(element);
+
+  return positions.reduce(
+    (nearest, position, index) => {
+      const distance = Math.abs(position - element.scrollLeft);
+      return distance < nearest.distance ? { distance, index } : nearest;
+    },
+    { distance: Number.POSITIVE_INFINITY, index: 0 },
+  ).index;
+}
+
 export default function TopHotelDeals() {
   const { t } = useTranslate();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<number | null>(null);
   const [page, setPage] = useState(0);
 
-  // total slides (move 1 card at a time)
-  const pageCount = HOTELS.length - 1;
+  const pageCount = HOTELS.length;
+
+  const syncPage = useCallback(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+
+    setPage(getNearestSlide(element));
+  }, []);
 
   useEffect(() => {
     const element = scrollRef.current;
     if (!element) return;
 
     const onScroll = () => {
-      setPage(Math.round(element.scrollLeft / (element.clientWidth / 2)));
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+      frameRef.current = requestAnimationFrame(syncPage);
     };
 
     element.addEventListener("scroll", onScroll, { passive: true });
-    return () => element.removeEventListener("scroll", onScroll);
+    syncPage();
+
+    const resizeObserver = new ResizeObserver(syncPage);
+    resizeObserver.observe(element);
+
+    return () => {
+      element.removeEventListener("scroll", onScroll);
+      resizeObserver.disconnect();
+
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    };
+  }, [syncPage]);
+
+  const scrollToPage = useCallback((index: number) => {
+    const element = scrollRef.current;
+    if (!element) return;
+
+    const positions = getSlidePositions(element);
+    const nextIndex = Math.max(0, Math.min(index, positions.length - 1));
+
+    element.scrollTo({
+      left: positions[nextIndex],
+      behavior: "smooth",
+    });
   }, []);
 
   const scrollCards = (direction: "left" | "right") => {
     const element = scrollRef.current;
     if (!element) return;
 
-    element.scrollBy({
-      left: direction === "left" ? -(element.clientWidth / 2) : element.clientWidth / 2,
-      behavior: "smooth",
-    });
+    const currentPage = getNearestSlide(element);
+    scrollToPage(currentPage + (direction === "left" ? -1 : 1));
   };
 
-  const scrollToPage = (index: number) => {
-    const element = scrollRef.current;
-    if (!element) return;
+  const handleTrackKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      scrollCards("left");
+    }
 
-    element.scrollTo({
-      left: index * (element.clientWidth / 2),
-      behavior: "smooth",
-    });
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      scrollCards("right");
+    }
   };
 
   return (
-    <section className="py-20">
-      <div className="w-full px-10">
+    <section className="py-14 sm:py-16 lg:py-20">
+      <div className="w-full px-4 sm:px-6 lg:px-10">
         <SectionHeading
           title={t("hotel.top_deals")}
           subtitle={t("hotel.top_choices_subtitle")}
         />
 
         {/* SLIDER */}
-        <div className="relative mt-12 w-full">
+        <div className="relative mt-8 w-full sm:mt-10 lg:mt-12">
           <button
             type="button"
             aria-label={t("landing.scroll_left")}
             onClick={() => scrollCards("left")}
-            className="absolute -left-4 top-1/2 z-10 -translate-y-1/2 grid h-11 w-11 place-items-center rounded-full bg-white text-zinc-700 shadow-md ring-1 ring-black/5 hover:bg-zinc-50"
+            className="absolute left-2 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white text-zinc-700 shadow-md ring-1 ring-black/5 hover:bg-zinc-50 lg:-left-4"
           >
             <Chevron direction="left" />
           </button>
@@ -87,19 +139,23 @@ export default function TopHotelDeals() {
             type="button"
             aria-label={t("landing.scroll_right")}
             onClick={() => scrollCards("right")}
-            className="absolute -right-4 top-1/2 z-10 -translate-y-1/2 grid h-11 w-11 place-items-center rounded-full bg-white text-zinc-700 shadow-md ring-1 ring-black/5 hover:bg-zinc-50"
+            className="absolute right-2 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white text-zinc-700 shadow-md ring-1 ring-black/5 hover:bg-zinc-50 lg:-right-4"
           >
             <Chevron direction="right" />
           </button>
           <div
             ref={scrollRef}
-            className="flex w-full overflow-x-auto scroll-smooth"
-            style={{ scrollbarWidth: "none" }}
+            role="region"
+            aria-label={t("hotel.top_deals")}
+            aria-roledescription="carousel"
+            tabIndex={0}
+            onKeyDown={handleTrackKeyDown}
+            className="flex w-full touch-pan-x snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {HOTELS.map((h) => (
               <div
                 key={h.city}
-                className="w-1/2 flex-shrink-0 flex justify-center px-6"
+                className="flex min-w-0 flex-[0_0_92%] snap-center justify-center px-1 sm:flex-[0_0_76%] sm:px-3 md:flex-[0_0_50%] md:px-4 lg:px-6"
               >
                 <HotelCard hotel={h} />
               </div>
@@ -108,12 +164,13 @@ export default function TopHotelDeals() {
         </div>
 
         {/* DOTS */}
-        <div className="mt-8 flex items-center justify-center gap-2">
+        <div className="mt-6 flex items-center justify-center gap-2 sm:mt-8">
           {Array.from({ length: pageCount }).map((_, i) => (
             <button
               key={i}
               type="button"
               aria-label={t("landing.hotel_deals_page", { n: i + 1 })}
+              aria-current={i === page ? "true" : undefined}
               onClick={() => scrollToPage(i)}
               className={`h-2 rounded-full transition-all ${
                 i === page ? "w-8 bg-[#E0382E]" : "w-2 bg-zinc-300"
@@ -134,7 +191,7 @@ function HotelCard({ hotel }: { hotel: Hotel }) {
   return (
     <a
       href="#"
-      className="group relative block h-[460px] w-full  overflow-hidden rounded-xl"
+      className="group relative block h-[340px] w-full overflow-hidden rounded-xl sm:h-[400px] md:h-[430px] lg:h-[460px]"
       aria-label={t("landing.explore_hotels_in", { city: hotel.city })}
     >
       <img

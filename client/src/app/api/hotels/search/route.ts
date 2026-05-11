@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { tboSearchHotels } from "@/lib/adapters/tbo/hotel/search";
+import { tboSearchHotelsHolidays } from "@/lib/adapters/tbo/hotel/searchHolidays";
 import { TboNoResultsError, TboError } from "@/lib/adapters/tbo/errors";
 import type { HotelSearchInput } from "@/lib/mock/hotels";
 
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     if (!body?.checkIn || !body?.checkOut) return err("checkIn and checkOut are required.", 400);
     if (body.checkIn >= body.checkOut) return err("checkOut must be after checkIn.", 400);
 
-    const result = await tboSearchHotels(body);
+    const result = await tboSearchHotelsHolidays(body);
     return NextResponse.json({ success: true, data: result });
   } catch (e) {
     const stack = e instanceof Error ? e.stack : String(e);

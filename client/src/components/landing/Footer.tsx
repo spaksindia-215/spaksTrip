@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>
-            <Logo variant="footer" />
+            <Logo variant="footer" className="h-10 w-auto"/>
             <p className="mt-6 max-w-md text-[15px] leading-relaxed text-zinc-500">
               {t("footer.about_text")}
             </p>

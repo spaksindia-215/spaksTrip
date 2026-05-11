@@ -8,13 +8,10 @@ function err(message: string, status: number) {
 
 export async function GET(request: NextRequest) {
   const cityCode = request.nextUrl.searchParams.get("cityCode");
-  const detailed = request.nextUrl.searchParams.get("detailed") === "true";
   if (!cityCode) return err("cityCode query param is required.", 400);
 
   try {
-    const hotels = await tboGetHotelCodeListByCity(cityCode, {
-      isDetailedResponse: detailed,
-    });
+    const hotels = await tboGetHotelCodeListByCity(cityCode);
     return NextResponse.json({ success: true, data: { hotels } });
   } catch (e) {
     const stack = e instanceof Error ? e.stack : String(e);

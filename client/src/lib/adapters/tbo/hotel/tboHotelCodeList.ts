@@ -26,27 +26,22 @@ function basicAuthHeader(): string {
 const CACHE_TTL_MS = 15 * 24 * 60 * 60 * 1000;
 const cache = new Map<string, { fetchedAt: number; hotels: TboHotelCodeListItem[] }>();
 
-export interface TboHotelCodeListOptions {
-  isDetailedResponse?: boolean;
-}
-
 export async function tboGetHotelCodeListByCity(
   cityCode: string,
-  options: TboHotelCodeListOptions = {},
 ): Promise<TboHotelCodeListItem[]> {
   const code = String(cityCode).trim();
   if (!code) throw new Error("cityCode is required");
 
-  const isDetailedResponse = options.isDetailedResponse ?? false;
-  const key = `${code}|${isDetailedResponse ? 1 : 0}`;
-
-  const cached = cache.get(key);
+  const cached = cache.get(code);
   if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
     return cached.hotels;
   }
 
   const url = `${TBO_HOLIDAYS_URL}/TBOHotelCodeList`;
-  const reqBody = { CityCode: code, IsDetailedResponse: isDetailedResponse };
+  // Per TBO docs the only request field is CityCode. Sending any extra field
+  // (e.g. IsDetailedResponse) triggers HTTP 200 with Status.Code 400
+  // "Invalid Request". Hotel metadata is always included by default.
+  const reqBody = { CityCode: code };
 
   logRequest("TBO HotelCodeList", url, reqBody);
 
@@ -94,7 +89,7 @@ export async function tboGetHotelCodeListByCity(
   const hotels = data.Hotels ?? [];
   if (hotels.length === 0) throw new TboNoResultsError();
 
-  cache.set(key, { fetchedAt: Date.now(), hotels });
+  cache.set(code, { fetchedAt: Date.now(), hotels });
   console.log(`[TBO] TBOHotelCodeList(${code}) returned ${hotels.length} hotels`);
   return hotels;
 }
