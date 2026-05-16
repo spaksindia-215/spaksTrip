@@ -1,14 +1,25 @@
 import { Response, CookieOptions } from "express";
-import { isProd } from "../config/env";
+import { env, isProd } from "../config/env";
 
 const ACCESS_MAX_AGE_MS = 15 * 60 * 1000;
 const REFRESH_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 const REFRESH_PATH = "/api/auth";
 
+function isLocalhostOrigin(origin: string): boolean {
+  try {
+    const { hostname } = new URL(origin);
+    return hostname === "localhost" || hostname === "127.0.0.1";
+  } catch {
+    return false;
+  }
+}
+
+const shouldUseCrossSiteCookies = isProd || !isLocalhostOrigin(env.clientOrigin);
+
 const baseOptions: CookieOptions = {
   httpOnly: true,
-  secure: isProd,
-  sameSite: isProd ? "none" : "lax",
+  secure: shouldUseCrossSiteCookies,
+  sameSite: shouldUseCrossSiteCookies ? "none" : "lax",
   path: "/",
 };
 
