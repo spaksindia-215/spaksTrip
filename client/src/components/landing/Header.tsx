@@ -439,6 +439,7 @@ export default function Header() {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const [hoveredDesktopMenu, setHoveredDesktopMenu] = useState<string | null>(null);
   const [openDropdown, setOpenDropdown] = useState<OpenDropdown>(null);
   const utilityBarRef = useRef<HTMLDivElement>(null);
   const user = useAuthStore((state) => state.user);
@@ -635,24 +636,47 @@ export default function Header() {
       <div className="border-b border-slate-100 bg-white">
         <div className="mx-auto st-header-main-nav-inner max-w-7xl px-4 py-3 sm:px-6">
           <nav className="hidden lg:block flex-1 -ml-4 justify-center">
-            <ul className="flex items-end gap-0 text-ink">
+            <ul className="flex items-end gap-4 text-ink">
               {NAV_ITEMS.map((item) => (
                 <motion.li
                   key={item.labelKey}
                   className={cn(
-                    "group/nav relative",
+                    "group/nav relative inline-flex",
                     item.menu && "z-0 hover:z-20",
                   )}
                   initial="rest"
-                  animate="rest"
-                  whileHover="hover"
+                  animate={item.menu && hoveredDesktopMenu === item.labelKey ? "hover" : "rest"}
                   whileTap={{ scale: 0.97 }}
                   variants={{ rest: { scale: 1 }, hover: { scale: 1.04 } }}
                   transition={{ type: "spring", stiffness: 400, damping: 26 }}
+                  onMouseLeave={() => {
+                    if (item.menu) {
+                      setHoveredDesktopMenu((current) =>
+                        current === item.labelKey ? null : current,
+                      );
+                    }
+                  }}
+                  onBlur={(event) => {
+                    if (item.menu && !event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                      setHoveredDesktopMenu((current) =>
+                        current === item.labelKey ? null : current,
+                      );
+                    }
+                  }}
                 >
                   <Link
                     href={item.href}
-                    className="relative flex min-w-[50px] flex-col items-center gap-0 rounded-2xl px-1.5 py-1.5 text-center transition-colors duration-200 hover:bg-blue-50/70 group-hover/nav:text-brand-700"
+                    onMouseEnter={() => {
+                      if (item.menu) {
+                        setHoveredDesktopMenu(item.labelKey);
+                      }
+                    }}
+                    onFocus={() => {
+                      if (item.menu) {
+                        setHoveredDesktopMenu(item.labelKey);
+                      }
+                    }}
+                    className="relative inline-flex flex-col items-center gap-0 rounded-2xl p-0 text-center transition-colors duration-200 hover:bg-blue-50/70 group-hover/nav:text-brand-700"
                   >
                     <span className="grid h-5 w-5 place-items-center rounded-xl text-brand-600 transition-transform duration-200 group-hover/nav:scale-110">
                       <NavIcon labelKey={item.labelKey} className="h-[15px] w-[15px]" />
@@ -1215,11 +1239,7 @@ function MegaMenu({
 
   return (
     <motion.div
-      variants={{
-        rest: { pointerEvents: "none" as const },
-        hover: { pointerEvents: "auto" as const },
-      }}
-      className={cn("absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2", widthClass)}
+      className={cn("pointer-events-none absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2", widthClass)}
     >
       <motion.div
         role="menu"
