@@ -7,6 +7,20 @@ function err(message: string, status: number) {
   return NextResponse.json({ success: false, error: message }, { status });
 }
 
+function emptySearchOk(message: string) {
+  return NextResponse.json({
+    success: true,
+    data: {
+      hotels: [],
+      minPrice: 0,
+      maxPrice: 0,
+    },
+    hotels: [],
+    count: 0,
+    message,
+  });
+}
+
 export async function POST(request: NextRequest) {
   let body: HotelSearchInput | null = null;
 
@@ -19,6 +33,9 @@ export async function POST(request: NextRequest) {
     if (body.checkIn >= body.checkOut) return err("checkOut must be after checkIn.", 400);
 
     const result = await tboSearchHotelsHolidays(body);
+    if (result.hotels.length === 0) {
+      return emptySearchOk("No hotels found for the selected dates.");
+    }
     return NextResponse.json({ success: true, data: result });
   } catch (e) {
     const stack = e instanceof Error ? e.stack : String(e);
@@ -27,7 +44,7 @@ export async function POST(request: NextRequest) {
     console.error("  stack:", stack);
 
     if (e instanceof TboNoResultsError) {
-      return err("No hotels found for the selected criteria.", 404);
+      return emptySearchOk("No hotels found for the selected dates.");
     }
     if (e instanceof TboError) {
       return err(`TBO error (${e.code}): ${e.message}`, 502);

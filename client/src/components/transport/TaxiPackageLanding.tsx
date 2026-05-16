@@ -169,10 +169,10 @@ export default function TaxiPackageLanding() {
             </p>
           </div>
           <Link
-            href="/taxi-package/add-your-taxi"
+            href="/taxi-package/list-your-taxi"
             className="inline-flex shrink-0 items-center rounded-xl bg-[var(--brand-600)] px-6 py-3 text-[13px] font-bold text-white transition-opacity hover:opacity-90"
           >
-            Add Your Taxi →
+            List Your Taxi
           </Link>
         </div>
       </section>

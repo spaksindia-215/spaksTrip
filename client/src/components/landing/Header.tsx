@@ -30,72 +30,106 @@ const NAV_ITEMS: NavItem[] = [
   { labelKey: "Premium Hotel", href: "/hotel" },
   { labelKey: "Hotel", href: "/hotel" },
   { labelKey: "nav.taxi_package", href: "/taxi-package" },
- 
-  // {
-  //   labelKey: "nav.holiday_packages",
-  //   href: "#",
-  //   menu: [
-  //     { labelKey: "nav.national_tour_packages", href: "/national-tour-packages" },
-  //     { labelKey: "nav.international_tour_packages", href: "/international-tour-packages" },
-  //   ],
-  // },
-  // {
-  //   labelKey: "nav.accommodation",
-  //   href: "#",
-  //   menu: [
-  //     { labelKey: "nav.homestay", href: "#" },
-  //     { labelKey: "nav.airbnb", href: "#" },
-  //     { labelKey: "nav.villa", href: "#" },
-  //     { labelKey: "nav.guest_house", href: "#" },
-  //     { labelKey: "nav.house_board", href: "#" },
-  //     { labelKey: "nav.hostels", href: "#" },
-  //     { labelKey: "nav.resorts", href: "#" },
-  //   ],
-  // },
-  // {
-  //   labelKey: "nav.transport",
-  //   href: "#",
-  //   menu: [
-  //     { labelKey: "nav.taxi_package", href: "/taxi-package" },
-  //     { labelKey: "nav.cabs", href: "/cabs" },
-  //     { labelKey: "nav.tour_bus", href: "/tour-bus" },
-  //     { labelKey: "nav.train", href: "/train/search" },
-  //   ],
-  // },
+  {
+    labelKey: "nav.holiday_packages",
+    href: "#",
+    menu: [
+      { labelKey: "nav.national_tour_packages", href: "/national-tour-packages" },
+      { labelKey: "nav.international_tour_packages", href: "/international-tour-packages" },
+    ],
+  },
+  {
+    labelKey: "nav.accommodation",
+    href: "#",
+    menu: [
+      { labelKey: "nav.homestay", href: "#" },
+      { labelKey: "nav.airbnb", href: "#" },
+      { labelKey: "nav.villa", href: "#" },
+      { labelKey: "nav.guest_house", href: "#" },
+      { labelKey: "nav.house_board", href: "#" },
+      { labelKey: "nav.hostels", href: "#" },
+      { labelKey: "nav.resorts", href: "#" },
+    ],
+  },
+  {
+    labelKey: "nav.transport",
+    href: "#",
+    menu: [
+      { labelKey: "nav.taxi_package", href: "/taxi-package" },
+      { labelKey: "nav.cabs", href: "/cabs" },
+      { labelKey: "nav.tour_bus", href: "/tour-bus" },
+      { labelKey: "nav.train", href: "/train/search" },
+    ],
+  },
   {
     labelKey: "nav.cruise",
     href: "#",
     menu: [
-      { labelKey: "nav.cruise_for_andaman", href: "#" },
+      { labelKey: "nav.cruise_for_andaman", href: "/cruise/andaman" },
       { labelKey: "nav.general_cruise", href: "/cruise" },
     ],
   },
-  //  {
-  //   labelKey: "nav.train",
-  //   href: "/train/search",
-  //   menu: [
-  //     { labelKey: "nav.search", href: "/train/search" },
-  //     { labelKey: "nav.tickets", href: "/train/tickets" },
-  //     { labelKey: "nav.change_request", href: "/train/change-request" },
-  //     { labelKey: "nav.file_tdr_online", href: "/train/file-tdr-online" },
-  //   ],
-  // },
-  // { labelKey: "nav.bus", href: "/bus" },
-  // { labelKey: "nav.events", href: "/events" },
-  // {
-  //   labelKey: "nav.visa_consultancy",
-  //   href: "#",
-  //   menu: [
-  //     { labelKey: "nav.pr_visa", href: "/visa/pr-visa" },
-  //     { labelKey: "nav.work_visa", href: "/visa/work-visa" },
-  //     { labelKey: "nav.investor_visa", href: "/visa/investor-visa" },
-  //     { labelKey: "nav.study_visa", href: "/visa/study-visa" },
-  //     { labelKey: "nav.visit_visa", href: "/visa/visit-visa" },
-  //     { labelKey: "nav.tourist_visa", href: "#" },
-  //   ],
-  // },
+  {
+    labelKey: "nav.train",
+    href: "/train/search",
+    menu: [
+      { labelKey: "nav.search", href: "/train/search" },
+      { labelKey: "nav.tickets", href: "/train/tickets" },
+      { labelKey: "nav.change_request", href: "/train/change-request" },
+      { labelKey: "nav.file_tdr_online", href: "/train/file-tdr-online" },
+    ],
+  },
+  {
+    labelKey: "Rail Europe",
+    href: "#",
+    menu: [
+      { labelKey: "Search Trains", href: "/rail-europe" },
+      { labelKey: "Bookings", href: "/rail-europe/bookings" },
+    ],
+  },
+  {
+    labelKey: "SightSeeing",
+    href: "#",
+    menu: [
+      { labelKey: "Search Activities", href: "/sightseeing" },
+      { labelKey: "My Bookings", href: "/sightseeing/bookings" },
+    ],
+  },
+  {
+    labelKey: "Transfer",
+    href: "#",
+    menu: [
+      { labelKey: "Airport Transfer", href: "/transfer" },
+      { labelKey: "Bookings", href: "/transfer/bookings" },
+    ],
+  },
+  {
+    labelKey: "Self-Drive",
+    href: "#",
+    menu: [
+      { labelKey: "Search Cars", href: "/self-drive" },
+      { labelKey: "Bookings", href: "/self-drive/bookings" },
+    ],
+  },
+  { labelKey: "Queues", href: "/queues" },
+  { labelKey: "Accounts", href: "/accounts" },
+  { labelKey: "Reports", href: "/reports" },
+  { labelKey: "Admin", href: "/admin" },
+  { labelKey: "GST", href: "/gst" },
+  { labelKey: "Islandhopper", href: "/islandhopper" },
+  {
+    labelKey: "nav.visa_consultancy",
+    href: "#",
+    menu: [
+      { labelKey: "nav.pr_visa", href: "/visa/pr-visa" },
+      { labelKey: "nav.work_visa", href: "/visa/work-visa" },
+      { labelKey: "nav.investor_visa", href: "/visa/investor-visa" },
+      { labelKey: "nav.study_visa", href: "/visa/study-visa" },
+      { labelKey: "nav.visit_visa", href: "/visa/visit-visa" },
+      { labelKey: "nav.tourist_visa", href: "#" },
+    ],
+  },
   { labelKey: "Life insurance", href: "/insurance" },
-  // { labelKey: "nav.offers", href: "/offers" },
 ];
 
 const COUNTRIES = [
@@ -159,6 +193,19 @@ const megaItemVariants: Variants = {
   }),
 };
 
+function renderTopLevelNavLabel(label: string) {
+  const words = label.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 2) {
+    return (
+      <span className="flex flex-col items-center leading-[1.05]">
+        <span>{words[0]}</span>
+        <span>{words[1]}</span>
+      </span>
+    );
+  }
+  return <span className="whitespace-nowrap">{label}</span>;
+}
+
 function NavIcon({ labelKey, className }: { labelKey: string; className?: string }) {
   const common = {
     viewBox: "0 0 24 24",
@@ -220,6 +267,16 @@ function NavIcon({ labelKey, className }: { labelKey: string; className?: string
           <path d="M7 10V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" />
         </svg>
       );
+    case "nav.transport":
+      return (
+        <svg {...common}>
+          <path d="M4 16h16" />
+          <path d="M6 16V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v7" />
+          <path d="M8 7l1.2-2h5.6L16 7" />
+          <circle cx="8.5" cy="17.5" r="1.5" />
+          <circle cx="15.5" cy="17.5" r="1.5" />
+        </svg>
+      );
     case "nav.taxi_package":
       return (
         <svg {...common}>
@@ -266,6 +323,103 @@ function NavIcon({ labelKey, className }: { labelKey: string; className?: string
         <svg {...common}>
           <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
           <path d="M9 12l2 2 4-4" />
+        </svg>
+      );
+    case "Islandhopper":
+      return (
+        <svg {...common}>
+          <path d="M4 18c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0" />
+          <path d="M9 18v-6" />
+          <path d="M9 12c2-1.2 3-2.8 3.5-5" />
+          <path d="M9 12c-1.8-1.1-3-2.5-3.5-4.5" />
+          <path d="M9 10.5c2.1-.8 4.3-.8 6.4 0" />
+        </svg>
+      );
+    case "Rail Europe":
+      return (
+        <svg {...common}>
+          <rect x="5" y="3" width="14" height="14" rx="2" />
+          <path d="M5 10h14" />
+          <circle cx="9" cy="13.5" r="1" />
+          <circle cx="15" cy="13.5" r="1" />
+          <path d="M7 21l2-3M17 21l-2-3" />
+          <path d="M9 6h6" />
+        </svg>
+      );
+    case "SightSeeing":
+      return (
+        <svg {...common}>
+          <circle cx="8" cy="12" r="3.5" />
+          <circle cx="16" cy="12" r="3.5" />
+          <path d="M11.5 12h1" />
+          <path d="M5.5 9.5 4 7m14.5 2.5L20 7" />
+          <path d="M8 15.5v2M16 15.5v2" />
+        </svg>
+      );
+    case "Transfer":
+      return (
+        <svg {...common}>
+          <path d="M4 16h16" />
+          <path d="M6 16V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8" />
+          <path d="M9 10h6" />
+          <circle cx="8.5" cy="17.5" r="1.5" />
+          <circle cx="15.5" cy="17.5" r="1.5" />
+        </svg>
+      );
+    case "Self-Drive":
+      return (
+        <svg {...common}>
+          <path d="M5 16h14" />
+          <path d="M5 16l1.5-5a2 2 0 0 1 2-1.5h7a2 2 0 0 1 2 1.5L19 16" />
+          <path d="M9 9.5V7.8M15 9.5V7.8" />
+          <circle cx="8" cy="17" r="1.5" />
+          <circle cx="16" cy="17" r="1.5" />
+        </svg>
+      );
+    case "Services":
+      return (
+        <svg {...common}>
+          <path d="M10.5 4.5 9.7 6.8a1 1 0 0 1-.6.6l-2.3.8 2.3.8a1 1 0 0 1 .6.6l.8 2.3.8-2.3a1 1 0 0 1 .6-.6l2.3-.8-2.3-.8a1 1 0 0 1-.6-.6l-.8-2.3Z" />
+          <path d="M16.5 11.5 15.9 13a1 1 0 0 1-.6.6l-1.5.6 1.5.6a1 1 0 0 1 .6.6l.6 1.5.6-1.5a1 1 0 0 1 .6-.6l1.5-.6-1.5-.6a1 1 0 0 1-.6-.6l-.6-1.5Z" />
+          <path d="M5 19h6" />
+          <path d="M13 19h6" />
+        </svg>
+      );
+    case "Queues":
+      return (
+        <svg {...common}>
+          <rect x="5" y="4" width="14" height="16" rx="2" />
+          <path d="M8 8h8M8 12h8M8 16h5" />
+        </svg>
+      );
+    case "Accounts":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="8" r="3" />
+          <path d="M5 19a7 7 0 0 1 14 0" />
+        </svg>
+      );
+    case "Reports":
+      return (
+        <svg {...common}>
+          <path d="M7 3h7l3 3v15H7z" />
+          <path d="M14 3v4h4" />
+          <path d="M10 17v-4M14 17V9" />
+        </svg>
+      );
+    case "Admin":
+      return (
+        <svg {...common}>
+          <path d="M12 3l7 3v5c0 4.2-2.8 7-7 10-4.2-3-7-5.8-7-10V6z" />
+          <path d="M12 9v6M9 12h6" />
+        </svg>
+      );
+    case "GST":
+      return (
+        <svg {...common}>
+          <path d="M7 3h8l3 3v15H7z" />
+          <path d="M15 3v4h4" />
+          <path d="M10 10h5M10 14h4M10 18h6" />
         </svg>
       );
     case "nav.offers":
@@ -480,8 +634,8 @@ export default function Header() {
 
       <div className="border-b border-slate-100 bg-white">
         <div className="mx-auto st-header-main-nav-inner max-w-7xl px-4 py-3 sm:px-6">
-          <nav className="hidden lg:block flex-1 justify-center">
-            <ul className="flex items-end gap-1 text-ink">
+          <nav className="hidden lg:block flex-1 -ml-4 justify-center">
+            <ul className="flex items-end gap-0 text-ink">
               {NAV_ITEMS.map((item) => (
                 <motion.li
                   key={item.labelKey}
@@ -498,18 +652,18 @@ export default function Header() {
                 >
                   <Link
                     href={item.href}
-                    className="relative flex min-w-[72px] flex-col items-center gap-1 rounded-2xl px-3 py-2 text-center transition-colors duration-200 hover:bg-blue-50/70 group-hover/nav:text-brand-700"
+                    className="relative flex min-w-[50px] flex-col items-center gap-0 rounded-2xl px-1.5 py-1.5 text-center transition-colors duration-200 hover:bg-blue-50/70 group-hover/nav:text-brand-700"
                   >
-                    <span className="grid h-7 w-7 place-items-center rounded-xl text-brand-600 transition-transform duration-200 group-hover/nav:scale-110">
-                      <NavIcon labelKey={item.labelKey} className="h-[22px] w-[22px]" />
+                    <span className="grid h-5 w-5 place-items-center rounded-xl text-brand-600 transition-transform duration-200 group-hover/nav:scale-110">
+                      <NavIcon labelKey={item.labelKey} className="h-[15px] w-[15px]" />
                     </span>
-                    <span className="inline-flex items-center gap-0.5 text-[12.5px] font-semibold leading-tight tracking-tight text-ink/85 transition-colors group-hover/nav:text-brand-700">
-                      <span className="whitespace-nowrap">{t(item.labelKey)}</span>
+                    <span className="inline-flex items-center gap-0 text-[10px] font-semibold leading-tight tracking-tight text-ink/85 transition-colors group-hover/nav:text-brand-700">
+                      {renderTopLevelNavLabel(t(item.labelKey))}
                       {item.menu ? (
                         <svg
                           viewBox="0 0 24 24"
-                          width={11}
-                          height={11}
+                          width={10}
+                          height={10}
                           fill="none"
                           stroke="currentColor"
                           strokeWidth={2.4}
@@ -524,7 +678,7 @@ export default function Header() {
                     </span>
                     <motion.span
                       aria-hidden
-                      className="pointer-events-none absolute inset-x-3 -bottom-[1px] h-[2px] origin-center rounded-full bg-gradient-to-r from-brand-500 to-brand-700"
+                      className="pointer-events-none absolute inset-x-1.5 -bottom-[1px] h-[2px] origin-center rounded-full bg-gradient-to-r from-brand-500 to-brand-700"
                       variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
                       transition={{ duration: 0.28, ease: [0.35, 1, 0.36, 1] }}
                     />
@@ -1009,6 +1163,22 @@ const MEGA_DESCRIPTIONS: Record<string, string> = {
   "nav.study_visa": "Study abroad assistance",
   "nav.visit_visa": "Short-term visit visas",
   "nav.tourist_visa": "Tourist visa processing",
+  Transfer: "Airport and city transfer bookings",
+  SightSeeing: "Tours and local experience tickets",
+  "Self-Drive": "Rental cars for flexible road trips",
+  "Rail Europe": "Cross-border European train booking",
+  Queues: "Monitor pending tasks and workflows",
+  Accounts: "Billing, deposits, and ledgers",
+  Reports: "Operational and sales reporting",
+  Admin: "Portal controls and configuration",
+  GST: "Tax documents and GST tools",
+  "Search Trains": "Find international rail routes quickly",
+  Bookings: "View and manage confirmed reservations",
+  "Search Activities": "Browse tours and attraction tickets",
+  "My Bookings": "Manage your sightseeing reservations",
+  "Airport Transfer": "Book point-to-point airport rides",
+  "Search Cars": "Find self-drive cars by destination",
+  "nav.offers": "Promotions and limited-time deals",
 };
 
 function MegaItemIcon({ labelKey, className }: { labelKey: string; className?: string }) {
@@ -1063,7 +1233,7 @@ function MegaMenu({
         <div className="flex items-center justify-between border-b border-slate-100 bg-gradient-to-r from-blue-50/60 to-transparent px-5 py-3">
           <div className="flex items-center gap-2.5">
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-white text-brand-600 shadow-sm ring-1 ring-slate-200/70">
-              <NavIcon labelKey={parentKey} className="h-[18px] w-[18px]" />
+              <NavIcon labelKey={parentKey} className="h-[16px] w-[16px]" />
             </span>
             <div>
               <p className="text-[13px] font-semibold text-ink">{t(parentKey)}</p>

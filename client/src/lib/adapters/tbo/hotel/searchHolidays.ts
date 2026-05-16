@@ -14,8 +14,7 @@ import type { TboHotelCodeListItem, TboHotelRatingEnum } from "../types";
 // public test creds used for static-data endpoints.
 
 const TBO_HOLIDAYS_URL =
-  process.env.TBO_HOLIDAYS_HOTEL_API_URL?.replace(/\/$/, "") ??
-  "http://api.tbotechnology.in/TBOHolidays_HotelAPI";
+  (process.env.TBO_HOLIDAYS_SEARCH_URL ?? process.env.TBO_HOLIDAYS_HOTEL_API_URL ?? "https://affiliate.tektravels.com/HotelAPI").replace(/\/$/, "");
 
 function basicAuthHeader(): string {
   const user = process.env.TBO_HOLIDAYS_USER_NAME;
@@ -56,6 +55,12 @@ interface TboHolidaysHotelSearchResponse {
   HotelResult?: TboHolidaysSearchHotel[];
   Error?: { ErrorCode: number; ErrorMessage: string };
 }
+
+type TboHotelSearchResult = {
+  hotels: Hotel[];
+  minPrice: number;
+  maxPrice: number;
+};
 
 const AMENITY_KEYWORDS: Array<[string[], Amenity]> = [
   [["wi-fi", "wifi", "internet", "wireless"], "wifi"],
@@ -169,14 +174,29 @@ function buildHotel(
   };
 }
 
+function emptyHotelSearchResult(): TboHotelSearchResult {
+  return {
+    hotels: [],
+    minPrice: 0,
+    maxPrice: 0,
+  };
+}
+
 export async function tboSearchHotelsHolidays(
   input: HotelSearchInput,
-): Promise<{ hotels: Hotel[]; minPrice: number; maxPrice: number }> {
+): Promise<TboHotelSearchResult> {
   // Step 1: Hotel codes for the city (cached 15 days). Detailed=true so we get
   // hotel name/address/rating in the same call — search response itself only
   // returns prices keyed by HotelCode.
-  const codeList = await tboGetHotelCodeListByCity(input.cityCode);
-  if (codeList.length === 0) throw new TboNoResultsError();
+  let codeList: TboHotelCodeListItem[];
+  try {
+    codeList = await tboGetHotelCodeListByCity(input.cityCode);
+  } catch (error) {
+    if (error instanceof TboNoResultsError) {
+      return emptyHotelSearchResult();
+    }
+    throw error;
+  }
 
   const metaByCode = new Map<string, TboHotelCodeListItem>();
   for (const item of codeList) metaByCode.set(item.HotelCode, item);
@@ -195,7 +215,7 @@ export async function tboSearchHotelsHolidays(
     ChildrenAges: [] as number[],
   }));
 
-  const url = `${TBO_HOLIDAYS_URL}/HotelSearch`;
+  const url = `${TBO_HOLIDAYS_URL}/Search`;
   const auth = basicAuthHeader();
   const batchResults: TboHolidaysSearchHotel[] = [];
 
@@ -265,7 +285,7 @@ export async function tboSearchHotelsHolidays(
     if (data.HotelResult) batchResults.push(...data.HotelResult);
   }
 
-  if (batchResults.length === 0) throw new TboNoResultsError();
+  if (batchResults.length === 0) return emptyHotelSearchResult();
 
   // Step 4: Merge prices with metadata.
   const cityName = codeList[0]?.CityName ?? "";
@@ -274,7 +294,7 @@ export async function tboSearchHotelsHolidays(
     .map((h) => buildHotel(h, metaByCode.get(h.HotelCode), cityName, countryName))
     .filter((h) => h.rooms.length > 0);
 
-  if (hotels.length === 0) throw new TboNoResultsError();
+  if (hotels.length === 0) return emptyHotelSearchResult();
 
   const prices = hotels.map((h) => h.lowestPrice).filter((p) => p > 0);
   return {
