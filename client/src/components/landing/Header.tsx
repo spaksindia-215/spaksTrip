@@ -485,7 +485,10 @@ export default function Header() {
               {NAV_ITEMS.map((item) => (
                 <motion.li
                   key={item.labelKey}
-                  className="group/nav relative"
+                  className={cn(
+                    "group/nav relative",
+                    item.menu && "z-0 hover:z-20",
+                  )}
                   initial="rest"
                   animate="rest"
                   whileHover="hover"
@@ -1042,71 +1045,76 @@ function MegaMenu({
 
   return (
     <motion.div
-      role="menu"
       variants={{
-        rest: { opacity: 0, y: 10, scale: 0.98, pointerEvents: "none" as const },
-        hover: { opacity: 1, y: 0, scale: 1, pointerEvents: "auto" as const },
+        rest: { pointerEvents: "none" as const },
+        hover: { pointerEvents: "auto" as const },
       }}
-      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-      className={cn(
-        "absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 overflow-hidden rounded-2xl border border-slate-200/70 bg-white/95 shadow-[0_24px_60px_-15px_rgba(15,23,42,0.28)] backdrop-blur-xl ring-1 ring-black/5",
-        widthClass,
-      )}
+      className={cn("absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2", widthClass)}
     >
-      <div className="flex items-center justify-between border-b border-slate-100 bg-gradient-to-r from-blue-50/60 to-transparent px-5 py-3">
-        <div className="flex items-center gap-2.5">
-          <span className="grid h-8 w-8 place-items-center rounded-xl bg-white text-brand-600 shadow-sm ring-1 ring-slate-200/70">
-            <NavIcon labelKey={parentKey} className="h-[18px] w-[18px]" />
-          </span>
-          <div>
-            <p className="text-[13px] font-semibold text-ink">{t(parentKey)}</p>
-            <p className="text-[11px] text-ink-soft">Explore options</p>
+      <motion.div
+        role="menu"
+        variants={{
+          rest: { opacity: 0, y: 10, scale: 0.98 },
+          hover: { opacity: 1, y: 0, scale: 1 },
+        }}
+        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+        className="pointer-events-auto overflow-hidden rounded-2xl border border-slate-200/70 bg-white/95 shadow-[0_24px_60px_-15px_rgba(15,23,42,0.28)] backdrop-blur-xl ring-1 ring-black/5"
+      >
+        <div className="flex items-center justify-between border-b border-slate-100 bg-gradient-to-r from-blue-50/60 to-transparent px-5 py-3">
+          <div className="flex items-center gap-2.5">
+            <span className="grid h-8 w-8 place-items-center rounded-xl bg-white text-brand-600 shadow-sm ring-1 ring-slate-200/70">
+              <NavIcon labelKey={parentKey} className="h-[18px] w-[18px]" />
+            </span>
+            <div>
+              <p className="text-[13px] font-semibold text-ink">{t(parentKey)}</p>
+              <p className="text-[11px] text-ink-soft">Explore options</p>
+            </div>
           </div>
         </div>
-      </div>
-      <ul className={cn("grid gap-1 p-3", gridClass)}>
-        {items.map((m, i) => (
-          <motion.li
-            key={m.labelKey}
-            custom={i}
-            variants={megaItemVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <Link
-              href={m.href}
-              role="menuitem"
-              className="group/mi flex items-start gap-3 rounded-xl p-3 transition-all duration-200 hover:bg-blue-50"
+        <ul className={cn("grid gap-1 p-3", gridClass)}>
+          {items.map((m, i) => (
+            <motion.li
+              key={m.labelKey}
+              custom={i}
+              variants={megaItemVariants}
+              initial="hidden"
+              animate="visible"
             >
-              <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-50 text-brand-600 ring-1 ring-slate-100 transition-all duration-200 group-hover/mi:bg-white group-hover/mi:text-brand-700 group-hover/mi:ring-brand-200">
-                <MegaItemIcon labelKey={m.labelKey} className="h-[18px] w-[18px]" />
-              </span>
-              <span className="flex min-w-0 flex-col">
-                <span className="text-[13.5px] font-semibold text-ink transition-colors group-hover/mi:text-brand-700">
-                  {t(m.labelKey)}
-                </span>
-                <span className="mt-0.5 line-clamp-1 text-[11.5px] text-ink-soft">
-                  {MEGA_DESCRIPTIONS[m.labelKey] ?? "Discover more"}
-                </span>
-              </span>
-              <svg
-                viewBox="0 0 24 24"
-                width={14}
-                height={14}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2.2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-                className="ml-auto self-center text-slate-300 transition-all duration-200 group-hover/mi:translate-x-0.5 group-hover/mi:text-brand-600"
+              <Link
+                href={m.href}
+                role="menuitem"
+                className="group/mi flex items-start gap-3 rounded-xl p-3 transition-all duration-200 hover:bg-blue-50"
               >
-                <polyline points="9 6 15 12 9 18" />
-              </svg>
-            </Link>
-          </motion.li>
-        ))}
-      </ul>
+                <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-50 text-brand-600 ring-1 ring-slate-100 transition-all duration-200 group-hover/mi:bg-white group-hover/mi:text-brand-700 group-hover/mi:ring-brand-200">
+                  <MegaItemIcon labelKey={m.labelKey} className="h-[18px] w-[18px]" />
+                </span>
+                <span className="flex min-w-0 flex-col">
+                  <span className="text-[13.5px] font-semibold text-ink transition-colors group-hover/mi:text-brand-700">
+                    {t(m.labelKey)}
+                  </span>
+                  <span className="mt-0.5 line-clamp-1 text-[11.5px] text-ink-soft">
+                    {MEGA_DESCRIPTIONS[m.labelKey] ?? "Discover more"}
+                  </span>
+                </span>
+                <svg
+                  viewBox="0 0 24 24"
+                  width={14}
+                  height={14}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2.2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                  className="ml-auto self-center text-slate-300 transition-all duration-200 group-hover/mi:translate-x-0.5 group-hover/mi:text-brand-600"
+                >
+                  <polyline points="9 6 15 12 9 18" />
+                </svg>
+              </Link>
+            </motion.li>
+          ))}
+        </ul>
+      </motion.div>
     </motion.div>
   );
 }
