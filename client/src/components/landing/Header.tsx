@@ -1239,7 +1239,7 @@ function MegaMenu({
 
   return (
     <motion.div
-      className={cn("pointer-events-none absolute left-1/2 top-full z-50 -translate-x-1/2 pt-2", widthClass)}
+      className={cn("pointer-events-none absolute left-1/2 top-full z-50 -translate-x-1/2 pt-0", widthClass)}
     >
       <motion.div
         role="menu"
