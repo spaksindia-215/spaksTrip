@@ -33,16 +33,16 @@ export default function Footer() {
             title={t("footer.important_links")}
             links={[
               { label: t("footer.privacy_policy"), href: "/privacy_policy" },
-              { label: t("footer.terms_conditions"), href: "#" },
-              { label: t("footer.refund_policy"), href: "#" },
+              { label: t("footer.terms_conditions"), href: "/terms_conditions" },
+              { label: t("footer.refund_policy"), href: "/refund_policy" },
             ]}
           />
           <FooterColumn
             title={t("footer.quick_links")}
             links={[
-              { label: t("nav.flight"), href: "#" },
-              { label: t("footer.partner_login"), href: "#" },
-              { label: t("footer.contact_us"), href: "#" },
+              { label: t("nav.flight"), href: "/flight" },
+              { label: t("footer.partner_login"), href: "/auth" },
+              { label: t("footer.contact_us"), href: "/help" },
             ]}
           />
 
