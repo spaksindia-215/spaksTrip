@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
@@ -12,6 +12,19 @@ import { formatINR } from "@/lib/format";
 import { useHotelBookingStore, type HotelGuest } from "@/state/hotelBookingStore";
 import { useToast } from "@/components/ui/Toast";
 import { useParams } from "next/navigation";
+
+function buildGuestList(roomCount: number, existingGuests: HotelGuest[] = []): HotelGuest[] {
+  if (existingGuests.length > 0) {
+    return existingGuests.map((guest) => ({
+      firstName: guest.firstName ?? "",
+      lastName: guest.lastName ?? "",
+    }));
+  }
+  return Array.from({ length: roomCount }, () => ({
+    firstName: "",
+    lastName: "",
+  }));
+}
 
 export default function HotelGuestPage() {
   return (
@@ -38,23 +51,29 @@ function GuestInner() {
   const router = useRouter();
   const toast = useToast();
   const { current, setGuests, setContact, setAddOns } = useHotelBookingStore();
+  const initializedBookingIdRef = useRef<string | null>(null);
 
   const roomCount = current?.rooms ?? 1;
 
-  const [guests, setLocalGuests] = useState<HotelGuest[]>(
-    current?.guests.length
-      ? current.guests
-      : Array.from({ length: roomCount }, () => ({ firstName: "", lastName: "" })),
+  const [guests, setLocalGuests] = useState<HotelGuest[]>(() =>
+    buildGuestList(roomCount, current?.guests ?? []),
   );
-  const [email, setEmail] = useState(current?.contact.email ?? "");
-  const [phone, setPhone] = useState(current?.contact.phone ?? "");
-  const [breakfast, setBreakfast] = useState(current?.addOns.breakfast ?? false);
-  const [insurance, setInsurance] = useState(current?.addOns.insurance ?? false);
+  const [email, setEmail] = useState(() => current?.contact.email ?? "");
+  const [phone, setPhone] = useState(() => current?.contact.phone ?? "");
+  const [breakfast, setBreakfast] = useState(() => current?.addOns.breakfast ?? false);
+  const [insurance, setInsurance] = useState(() => current?.addOns.insurance ?? false);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!current) router.replace("/hotel");
   }, [current, router]);
+
+  useEffect(() => {
+    if (!current) return;
+    if (initializedBookingIdRef.current === current.id) return;
+    initializedBookingIdRef.current = current.id;
+    setLocalGuests(buildGuestList(current.rooms, current.guests));
+  }, [current?.id]);
 
   if (!current) return null;
 
@@ -104,12 +123,14 @@ function GuestInner() {
                       <p className="text-[13px] font-semibold text-ink-muted">Room {i + 1} — Primary Guest</p>
                       <div className="grid sm:grid-cols-2 gap-3">
                         <Input
+                          id={`guest-first-name-${i}`}
                           label="First Name"
                           value={g.firstName}
                           onChange={(e) => updateGuest(i, "firstName", e.target.value)}
                           placeholder="As on ID"
                         />
                         <Input
+                          id={`guest-last-name-${i}`}
                           label="Last Name"
                           value={g.lastName}
                           onChange={(e) => updateGuest(i, "lastName", e.target.value)}

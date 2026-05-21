@@ -58,11 +58,11 @@ function HotelDetailInner() {
   const [activeImg, setActiveImg] = useState(0);
 
   useEffect(() => {
-    getHotel(decodeURIComponent(id)).then((h) => {
+    getHotel(decodeURIComponent(id), { checkIn, checkOut, rooms, adults, children }).then((h) => {
       setHotel(h);
       setLoading(false);
     });
-  }, [id]);
+  }, [id, checkIn, checkOut, rooms, adults, children]);
 
   const onSelectRoom = (room: Room) => {
     if (!hotel) return;

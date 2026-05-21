@@ -1,92 +1,92 @@
 import "server-only";
-import { withRetry, tboBase, tboApiUrl } from "../auth";
-import { assertTboSuccess } from "../errors";
-import { getTrace, storeTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
-import type { TboHotelDetailResponse, TboRoomDetail, TboStaticHotelDetail } from "../types";
-import type { Hotel, Room, Amenity } from "@/lib/mock/hotels";
+import { assertTboSuccess } from "../errors";
 import {
   tboGetStaticHotelDetails,
   parseLatLong,
   parseAttractions,
 } from "./staticHotelDetails";
+import {
+  basicAuthHeader,
+  mapAmenities,
+  mapRoomType,
+  mapBedType,
+  mapCancelPolicies,
+  type TboSearchCancelPolicy,
+} from "./hotelUtils";
+import type { TboStaticHotelDetail } from "../types";
+import type { Hotel, Room } from "@/lib/mock/hotels";
 
-// ─── Shared helpers (mirrors hotel/search.ts) ─────────────────────────────────
+const TBO_HOLIDAYS_URL = (
+  process.env.TBO_HOLIDAYS_SEARCH_URL ??
+  process.env.TBO_HOLIDAYS_HOTEL_API_URL ??
+  "https://affiliate.tektravels.com/HotelAPI"
+).replace(/\/$/, "");
 
-const AMENITY_KEYWORDS: Array<[string[], Amenity]> = [
-  [["wi-fi", "wifi", "internet", "wireless"], "wifi"],
-  [["pool", "swimming"], "pool"],
-  [["gym", "fitness", "health club"], "gym"],
-  [["spa"], "spa"],
-  [["restaurant", "dining"], "restaurant"],
-  [["bar", "lounge"], "bar"],
-  [["parking", "car park"], "parking"],
-  [["air condition", "air-condition", "ac ", "hvac"], "ac"],
-  [["breakfast"], "breakfast"],
-  [["pet"], "pet_friendly"],
-  [["business center", "business centre", "conference"], "business_center"],
-  [["shuttle", "airport transfer", "airport transport"], "airport_shuttle"],
-  [["beach"], "beach_access"],
-  [["rooftop"], "rooftop"],
-];
+// ─── Raw TBO search shapes ────────────────────────────────────────────────────
 
-function mapAmenities(raw: string[]): Amenity[] {
-  const found = new Set<Amenity>();
-  for (const str of raw) {
-    const lower = str.toLowerCase();
-    for (const [kws, amenity] of AMENITY_KEYWORDS) {
-      if (kws.some((kw) => lower.includes(kw))) {
-        found.add(amenity);
-        break;
-      }
-    }
-  }
-  return Array.from(found);
+type TboDetailCancelPolicy = TboSearchCancelPolicy;
+
+interface TboDetailSearchRoom {
+  BookingCode: string;
+  Name?: string[];
+  DayRates?: Array<Array<{ BasePrice: number }>>;
+  TotalFare: number;
+  TotalTax?: number;
+  Inclusion?: string;
+  RoomPromotion?: string[][];
+  CancelPolicies?: TboDetailCancelPolicy[];
+  MealType?: string;
+  IsRefundable: boolean;
+  RoomID?: string[];
 }
 
-function mapRoomType(name: string): Room["type"] {
-  const lower = name.toLowerCase();
-  if (lower.includes("suite")) return "suite";
-  if (lower.includes("villa")) return "villa";
-  if (lower.includes("deluxe") || lower.includes("superior") || lower.includes("premium"))
-    return "deluxe";
-  return "standard";
+interface TboDetailSearchHotel {
+  HotelCode: string;
+  Rooms: TboDetailSearchRoom[];
 }
 
-function mapBedType(name: string): Room["bedType"] {
-  const lower = name.toLowerCase();
-  if (lower.includes("king")) return "king";
-  if (lower.includes("queen")) return "queen";
-  if (lower.includes("twin") || lower.includes("double")) return "double";
-  if (lower.includes("single")) return "single";
-  return "double";
+interface TboDetailSearchResponse {
+  Status?: { Code: number; Description: string };
+  HotelResult?: TboDetailSearchHotel[];
+  Error?: { ErrorCode: number; ErrorMessage: string };
 }
 
-function toTboDate(yyyymmdd: string): string {
-  const [y, m, d] = yyyymmdd.split("-");
-  return `${d}/${m}/${y}`;
-}
-
-function mapRoom(r: TboRoomDetail): Room {
+function mapRoom(r: TboDetailSearchRoom): Room {
+  const name = r.Name?.[0] ?? "Room";
+  const nightlyRate = r.DayRates?.[0]?.[0]?.BasePrice;
+  const roomPromotion = r.RoomPromotion?.flat().filter(Boolean);
   return {
-    id: r.RoomTypeCode,
-    name: r.RoomTypeName,
-    type: mapRoomType(r.RoomTypeName),
+    id: r.BookingCode,
+    name,
+    type: mapRoomType(name),
     maxOccupancy: 2,
-    bedType: mapBedType(r.RoomTypeName),
+    bedType: mapBedType(name),
     sizeSqm: 0,
-    basePrice: r.Price.OfferedPrice,
-    amenities: mapAmenities(r.Inclusion ?? []),
+    basePrice: r.TotalFare,
+    amenities: r.Inclusion ? mapAmenities([r.Inclusion]) : [],
     refundable: r.IsRefundable,
-    breakfast: r.WithBreakfast,
+    breakfast: (r.MealType ?? "").toLowerCase().includes("breakfast"),
     seatsLeft: 5,
+    totalFare: r.TotalFare,
+    totalTax: r.TotalTax,
+    nightlyRate: Number.isFinite(nightlyRate) ? nightlyRate : undefined,
+    cancelPolicies: mapCancelPolicies(r.CancelPolicies),
+    roomPromotion: roomPromotion && roomPromotion.length > 0 ? roomPromotion : undefined,
+    roomId: r.RoomID,
+    mealType: r.MealType,
   };
 }
 
-// ─── Public ───────────────────────────────────────────────────────────────────
+// ─── Static enrichment ────────────────────────────────────────────────────────
 
 function mergeStaticDetails(hotel: Hotel, s: TboStaticHotelDetail): Hotel {
   const merged: Hotel = { ...hotel };
+
+  // Name: static details is authoritative when the base name is the raw code
+  if (s.HotelName && (!merged.name || merged.name === hotel.id)) {
+    merged.name = s.HotelName;
+  }
 
   if (s.Description && !merged.description) merged.description = s.Description;
 
@@ -125,16 +125,14 @@ function mergeStaticDetails(hotel: Hotel, s: TboStaticHotelDetail): Hotel {
     merged.amenities = Array.from(new Set([...merged.amenities, ...extra]));
   }
 
-  if (
-    typeof s.HotelRating === "number" &&
-    s.HotelRating >= 2 &&
-    s.HotelRating <= 5
-  ) {
+  if (typeof s.HotelRating === "number" && s.HotelRating >= 2 && s.HotelRating <= 5) {
     merged.starRating = s.HotelRating as Hotel["starRating"];
   }
 
   return merged;
 }
+
+// ─── Public ───────────────────────────────────────────────────────────────────
 
 export async function tboGetHotelDetail(
   hotelCode: string,
@@ -144,96 +142,95 @@ export async function tboGetHotelDetail(
   children: number,
   rooms: number,
 ): Promise<Hotel | null> {
-  // TraceId may be present from search; if not, detail call still works without it
-  const traceId = getTrace(hotelCode) ?? "";
+  const roomCount = Math.max(1, rooms);
+  const paxRooms = Array.from({ length: roomCount }, () => ({
+    Adults: Math.max(1, Math.ceil(adults / roomCount)),
+    Children: Math.max(0, Math.ceil(children / roomCount)),
+    ChildrenAges: [] as number[],
+  }));
 
-  return withRetry(async (token) => {
-    const url = tboApiUrl("HotelAPI/Hotel/GetHotelInfo");
-    const reqBody = {
-      ...tboBase(token),
-      ...(traceId ? { TraceId: traceId } : {}),
-      HotelCode: hotelCode,
-      CheckInDate: toTboDate(checkIn),
-      CheckOutDate: toTboDate(checkOut),
-      GuestNationality: "IN",
-      NoOfRooms: rooms,
-      RoomGuests: Array.from({ length: rooms }, () => ({
-        NoOfAdults: Math.ceil(adults / rooms),
-        NoOfChild: Math.ceil(children / rooms),
-        ChildAge: [],
-      })),
-      PreferredCurrencyCode: "INR",
-      IsDetailedResponse: true,
-    };
-    logRequest("Hotel Detail", url, { ...reqBody, TokenId: "***" });
+  const url = `${TBO_HOLIDAYS_URL}/Search`;
+  const reqBody = {
+    CheckIn: checkIn,
+    CheckOut: checkOut,
+    HotelCodes: hotelCode,
+    GuestNationality: "IN",
+    PaxRooms: paxRooms,
+    IsDetailedResponse: false,
+    ResponseTime: 23,
+  };
 
-    let res: Response;
-    try {
-      res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(reqBody),
-      });
-    } catch (err) {
-      logError("Hotel Detail", err);
-      throw err;
-    }
+  logRequest("Hotel Detail (Search)", url, reqBody);
 
-    const text = await res.text();
-    let data: TboHotelDetailResponse;
-    try { data = JSON.parse(text); }
-    catch { throw new Error(`TBO HotelDetail non-JSON (HTTP ${res.status}): ${text.slice(0, 200)}`); }
-
-    logResponse("Hotel Detail", res.status, data);
-    if (!res.ok) throw new Error(`TBO HotelDetails HTTP ${res.status}`);
-    assertTboSuccess(data.GetHotelDetailsResponse?.Error);
-
-    const h = data.GetHotelDetailsResponse?.HotelDetails;
-    if (!h) return null;
-
-    const newTraceId = data.GetHotelDetailsResponse?.TraceId;
-    if (newTraceId) storeTrace(hotelCode, newTraceId);
-
-    const roomList: Room[] = (h.RoomDetails ?? []).map(mapRoom);
-    const lowestPrice =
-      roomList.length > 0
-        ? Math.min(...roomList.map((r) => r.basePrice))
-        : h.Price.OfferedPriceRoundedOff;
-
-    const starRating = Math.max(2, Math.min(5, h.HotelRating)) as Hotel["starRating"];
-
-    const baseHotel: Hotel = {
-      id: h.HotelCode,
-      name: h.HotelName,
-      chain: undefined,
-      starRating,
-      reviewScore: 0,
-      reviewCount: 0,
-      reviewLabel: "",
-      city: h.CityId ?? "",
-      country: "",
-      address: h.HotelAddress,
-      images: [...(h.Images ?? [])],
-      amenities: mapAmenities([
-        ...(h.Amenities ?? []),
-        ...(h.HotelFacilities ?? []),
-      ]),
-      rooms: roomList,
-      reviews: [],
-      lowestPrice,
-      propertyType: "hotel",
-    };
-
-    // Best-effort enrichment from TBOHolidays static Hoteldetails. Failures
-    // here must not break the pricing-bearing detail response — log + return
-    // the unmerged hotel.
-    let staticDetail: TboStaticHotelDetail | null = null;
-    try {
-      staticDetail = await tboGetStaticHotelDetails(h.HotelCode);
-    } catch (err) {
-      logError("Static Hoteldetails (enrichment)", err);
-    }
-
-    return staticDetail ? mergeStaticDetails(baseHotel, staticDetail) : baseHotel;
+  const fetchSearch = fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: basicAuthHeader(),
+    },
+    body: JSON.stringify(reqBody),
+    cache: "no-store",
+  }).catch((err) => {
+    logError("Hotel Detail (Search)", err);
+    throw err;
   });
+
+  const fetchStatic = tboGetStaticHotelDetails(hotelCode).catch((err) => {
+    logError("Static Hoteldetails (enrichment)", err);
+    return null;
+  });
+
+  const [res, staticDetail] = await Promise.all([fetchSearch, fetchStatic]);
+
+  const text = await res.text();
+  let data: TboDetailSearchResponse;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error(
+      `TBO Hotel Detail non-JSON (HTTP ${res.status}) from ${url}: ${text.slice(0, 200)}`,
+    );
+  }
+
+  logResponse("Hotel Detail (Search)", res.status, {
+    Status: data.Status,
+    HotelResultCount: data.HotelResult?.length ?? 0,
+  });
+
+  if (!res.ok) throw new Error(`TBO Hotel Detail HTTP ${res.status}`);
+  assertTboSuccess(data.Error);
+
+  // Status 201 means no results for this hotel/date combination
+  if (data.Status && data.Status.Code !== 200) {
+    return null;
+  }
+
+  const hotelResult = data.HotelResult?.find((h) => h.HotelCode === hotelCode);
+  if (!hotelResult || hotelResult.Rooms.length === 0) return null;
+
+  const roomList = hotelResult.Rooms.map(mapRoom);
+  const lowestPrice =
+    roomList.length > 0 ? Math.min(...roomList.map((r) => r.basePrice)) : 0;
+
+  const baseHotel: Hotel = {
+    id: hotelCode,
+    name: hotelCode,
+    chain: undefined,
+    starRating: 3,
+    reviewScore: 0,
+    reviewCount: 0,
+    reviewLabel: "",
+    city: "",
+    country: "",
+    address: "",
+    images: [],
+    amenities: [],
+    rooms: roomList,
+    reviews: [],
+    lowestPrice,
+    propertyType: "hotel",
+  };
+
+  return staticDetail ? mergeStaticDetails(baseHotel, staticDetail) : baseHotel;
 }

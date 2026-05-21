@@ -32,7 +32,7 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
       ) : null}
       <div
         className={cn(
-          "flex items-center gap-2 rounded-md bg-white border transition-colors",
+          "flex items-center gap-2 rounded-md bg-white border transition-colors cursor-text",
           "focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-500/20",
           invalid ? "border-danger-500" : "border-border",
           SIZE_STYLES[sizeVariant],
@@ -43,7 +43,7 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
           ref={ref}
           id={id}
           aria-invalid={invalid || undefined}
-          className="flex-1 min-w-0 bg-transparent outline-none placeholder:text-ink-subtle text-ink"
+          className="flex-1 min-w-0 h-full bg-transparent outline-none placeholder:text-ink-subtle text-ink"
           {...rest}
         />
         {trailing ? <span className="text-ink-muted">{trailing}</span> : null}

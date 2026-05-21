@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
+import { AIRPORTS } from "@/lib/mock/airports";
 
 export type Destination =
   | {
@@ -27,16 +28,142 @@ let countriesCache: Country[] | null = null;
 let countriesPromise: Promise<Country[]> | null = null;
 const citiesCache = new Map<string, City[]>();
 const citiesPromises = new Map<string, Promise<City[]>>();
+const COUNTRIES_API_URL = "/api/hotels/countries";
+const FALLBACK_COUNTRIES: Country[] = Array.from(
+  new Map(
+    AIRPORTS.map((airport) => [
+      airport.countryCode.toUpperCase(),
+      { Code: airport.countryCode.toUpperCase(), Name: airport.country },
+    ]),
+  ).values(),
+).sort((a, b) => a.Name.localeCompare(b.Name));
+
+async function parseCountriesResponse(response: Response): Promise<CountriesResponse> {
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: Failed to fetch countries`);
+  }
+
+  const contentType = response.headers.get("content-type");
+  if (!contentType?.toLowerCase().includes("application/json")) {
+    const text = await response.text();
+    console.error("[DestinationField] Non-JSON countries response", {
+      url: response.url || COUNTRIES_API_URL,
+      status: response.status,
+      contentType,
+      preview: text.slice(0, 500),
+    });
+    throw new Error("Country list unavailable right now");
+  }
+
+  let payload: unknown;
+  try {
+    payload = (await response.json()) as unknown;
+  } catch (error) {
+    console.error("[DestinationField] Failed to parse countries JSON", {
+      url: response.url || COUNTRIES_API_URL,
+      status: response.status,
+      contentType,
+      error,
+    });
+    throw new Error("Invalid country list response");
+  }
+
+  if (!payload || typeof payload !== "object") {
+    console.error("[DestinationField] Invalid countries payload", payload);
+    throw new Error("Invalid country list response");
+  }
+
+  return payload as CountriesResponse;
+}
+
+async function parseCitiesResponse(
+  response: Response,
+  countryCode: string,
+): Promise<CitiesResponse | { success: true; data: { cities: City[] } }> {
+  if (response.status === 404) {
+    console.warn("[DestinationField] No cities returned for country", {
+      countryCode,
+      url: response.url || `/api/hotels/cities?country=${encodeURIComponent(countryCode)}`,
+      status: response.status,
+    });
+    return { success: true, data: { cities: [] } };
+  }
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: Failed to fetch cities`);
+  }
+
+  const contentType = response.headers.get("content-type");
+  if (!contentType?.toLowerCase().includes("application/json")) {
+    const text = await response.text();
+    console.error("[DestinationField] Non-JSON cities response", {
+      countryCode,
+      url: response.url || `/api/hotels/cities?country=${encodeURIComponent(countryCode)}`,
+      status: response.status,
+      contentType,
+      preview: text.slice(0, 500),
+    });
+    throw new Error("City list unavailable right now");
+  }
+
+  let payload: unknown;
+  try {
+    payload = (await response.json()) as unknown;
+  } catch (error) {
+    console.error("[DestinationField] Failed to parse cities JSON", {
+      countryCode,
+      url: response.url || `/api/hotels/cities?country=${encodeURIComponent(countryCode)}`,
+      status: response.status,
+      contentType,
+      error,
+    });
+    throw new Error("Invalid city list response");
+  }
+
+  if (!payload || typeof payload !== "object") {
+    console.error("[DestinationField] Invalid cities payload", {
+      countryCode,
+      payload,
+    });
+    throw new Error("Invalid city list response");
+  }
+
+  return payload as CitiesResponse;
+}
 
 function loadCountries(): Promise<Country[]> {
   if (countriesCache) return Promise.resolve(countriesCache);
   if (countriesPromise) return countriesPromise;
-  countriesPromise = fetch("/api/hotels/countries")
-    .then((r) => r.json() as Promise<CountriesResponse>)
+  countriesPromise = fetch(COUNTRIES_API_URL)
+    .then(parseCountriesResponse)
     .then((j) => {
+      if (!("success" in j)) {
+        console.error("[DestinationField] Missing success flag in countries response", j);
+        throw new Error("Invalid country list response");
+      }
       if (!j.success) throw new Error(j.error);
+      if (!Array.isArray(j.data?.countries)) {
+        console.error("[DestinationField] Missing countries array in response", j);
+        throw new Error("Invalid country list response");
+      }
       countriesCache = j.data.countries;
       return countriesCache;
+    })
+    .catch((error) => {
+      console.error("[DestinationField] Error loading countries", {
+        url: COUNTRIES_API_URL,
+        message: error instanceof Error ? error.message : String(error),
+        error,
+      });
+      if (FALLBACK_COUNTRIES.length > 0) {
+        console.warn("[DestinationField] Using fallback country list", {
+          count: FALLBACK_COUNTRIES.length,
+          reason: error instanceof Error ? error.message : String(error),
+        });
+        countriesCache = FALLBACK_COUNTRIES;
+        return countriesCache;
+      }
+      throw error;
     })
     .finally(() => {
       countriesPromise = null;
@@ -51,11 +178,33 @@ function loadCities(countryCode: string): Promise<City[]> {
   const inflight = citiesPromises.get(key);
   if (inflight) return inflight;
   const p = fetch(`/api/hotels/cities?country=${encodeURIComponent(key)}`)
-    .then((r) => r.json() as Promise<CitiesResponse>)
+    .then((r) => parseCitiesResponse(r, key))
     .then((j) => {
+      if (!("success" in j)) {
+        console.error("[DestinationField] Missing success flag in cities response", {
+          countryCode: key,
+          response: j,
+        });
+        throw new Error("Invalid city list response");
+      }
       if (!j.success) throw new Error(j.error);
+      if (!Array.isArray(j.data?.cities)) {
+        console.error("[DestinationField] Missing cities array in response", {
+          countryCode: key,
+          response: j,
+        });
+        throw new Error("Invalid city list response");
+      }
       citiesCache.set(key, j.data.cities);
       return j.data.cities;
+    })
+    .catch((error) => {
+      console.error("[DestinationField] Error loading cities", {
+        countryCode: key,
+        message: error instanceof Error ? error.message : String(error),
+        error,
+      });
+      throw error;
     })
     .finally(() => {
       citiesPromises.delete(key);
