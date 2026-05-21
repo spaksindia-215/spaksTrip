@@ -9,7 +9,7 @@ import { TboNoResultsError } from "../errors";
 
 const TBO_HOLIDAYS_URL =
   process.env.TBO_HOLIDAYS_HOTEL_API_URL?.replace(/\/$/, "") ??
-  "http://api.tbotechnology.in/TBOHolidays_HotelAPI";
+  "https://api.tbotechnology.in/TBOHolidays_HotelAPI";
 
 const STATIC_API_USER = "TBOStaticAPITest";
 const STATIC_API_PASS = "Tbo@11530818";

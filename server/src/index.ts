@@ -1,7 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { env } from "./config/env";
+import { env, isProd } from "./config/env";
 import { connectDb } from "./config/db";
 import authRoutes from "./routes/auth.routes";
 import partnerRoutes from "./routes/partner.routes";
@@ -12,10 +12,15 @@ async function main(): Promise<void> {
 
   const app = express();
 
+  // Trust Railway's reverse proxy so req.ip and secure flag are accurate
+  if (isProd) app.set("trust proxy", 1);
+
   app.use(
     cors({
       origin: env.clientOrigin,
       credentials: true,
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
     }),
   );
   app.use(express.json({ limit: "1mb" }));

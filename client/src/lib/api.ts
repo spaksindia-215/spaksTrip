@@ -1,5 +1,3 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:4000";
-
 type JsonPrimitive = string | number | boolean | null;
 type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
 type JsonBody = JsonValue | Record<string, unknown>;
@@ -19,9 +17,12 @@ export class ApiError extends Error {
   }
 }
 
+// Relative paths so the browser calls the Next.js proxy routes on the same
+// origin (Vercel), which forwards to Railway and re-stamps the cookies onto
+// the Vercel domain. This allows server components to read auth cookies via
+// cookies().
 function buildUrl(path: string): string {
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return new URL(normalizedPath, API_BASE).toString();
+  return path.startsWith("/") ? path : `/${path}`;
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
