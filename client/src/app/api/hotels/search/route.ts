@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tboSearchHotelsHolidays } from "@/lib/adapters/tbo/hotel/searchHolidays";
 import { TboNoResultsError, TboError } from "@/lib/adapters/tbo/errors";
-import type { HotelSearchInput } from "@/lib/mock/hotels";
+import type { HotelSearchInput, SearchFilters } from "@/lib/mock/hotels";
 
 function err(message: string, status: number) {
   return NextResponse.json({ success: false, error: message }, { status });
@@ -32,7 +32,19 @@ export async function POST(request: NextRequest) {
     if (!body?.checkIn || !body?.checkOut) return err("checkIn and checkOut are required.", 400);
     if (body.checkIn >= body.checkOut) return err("checkOut must be after checkIn.", 400);
 
-    const result = await tboSearchHotelsHolidays(body);
+    const input: HotelSearchInput = {
+      cityCode: body.cityCode,
+      checkIn: body.checkIn,
+      checkOut: body.checkOut,
+      rooms: body.rooms ?? 1,
+      adults: body.adults ?? 1,
+      children: body.children ?? 0,
+      guestNationality: body.guestNationality,
+      isDetailedResponse: body.isDetailedResponse,
+      filters: body.filters as SearchFilters | undefined,
+    };
+
+    const result = await tboSearchHotelsHolidays(input);
     if (result.hotels.length === 0) {
       return emptySearchOk("No hotels found for the selected dates.");
     }

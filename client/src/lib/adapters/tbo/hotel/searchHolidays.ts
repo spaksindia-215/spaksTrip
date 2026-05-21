@@ -2,7 +2,15 @@ import "server-only";
 import { logRequest, logResponse, logError } from "../log";
 import { assertTboSuccess, TboNoResultsError } from "../errors";
 import { tboGetHotelCodeListByCity } from "./tboHotelCodeList";
-import type { Hotel, Room, HotelSearchInput, Amenity } from "@/lib/mock/hotels";
+import {
+  basicAuthHeader,
+  mapAmenities,
+  mapRoomType,
+  mapBedType,
+  mapCancelPolicies,
+  type TboSearchCancelPolicy,
+} from "./hotelUtils";
+import type { Hotel, Room, HotelSearchInput } from "@/lib/mock/hotels";
 import type { TboHotelCodeListItem, TboHotelRatingEnum } from "../types";
 
 // TBOHolidays HotelSearch — POST {base}/HotelSearch (Basic Auth, agency creds).
@@ -16,32 +24,39 @@ import type { TboHotelCodeListItem, TboHotelRatingEnum } from "../types";
 const TBO_HOLIDAYS_URL =
   (process.env.TBO_HOLIDAYS_SEARCH_URL ?? process.env.TBO_HOLIDAYS_HOTEL_API_URL ?? "https://affiliate.tektravels.com/HotelAPI").replace(/\/$/, "");
 
-function basicAuthHeader(): string {
-  const user = process.env.TBO_HOLIDAYS_USER_NAME;
-  const pass = process.env.TBO_HOLIDAYS_PASSWORD;
-  if (!user || !pass) {
-    throw new Error(
-      "TBO Holidays agency credentials missing. Set TBO_HOLIDAYS_USER_NAME and TBO_HOLIDAYS_PASSWORD in .env.local",
-    );
-  }
-  return "Basic " + Buffer.from(`${user}:${pass}`).toString("base64");
-}
-
 // TBO won't accept arbitrarily large code lists in one HotelSearch call.
 // 200 per batch is a safe ceiling; first page of results is also capped to
 // keep dev-mode latency reasonable.
 const HOTEL_CODES_PER_BATCH = 200;
 const MAX_HOTELS_PER_SEARCH = 200;
 
+type TboCancelPolicy = TboSearchCancelPolicy;
+
+interface TboSupplement {
+  Index: number;
+  Type: string;
+  Description: string;
+  Price: number;
+  Currency: string;
+}
+
 interface TboHolidaysSearchRoom {
   BookingCode: string;
   Name?: string[];
+  // DayRates: outer array = rooms, inner array = days, each with BasePrice
+  DayRates?: Array<Array<{ BasePrice: number }>>;
   TotalFare: number;
   TotalTax?: number;
+  ExtraGuestCharges?: number;
+  RecommendedSellingRate?: string;
   Inclusion?: string;
+  RoomPromotion?: string[][];
+  CancelPolicies?: TboCancelPolicy[];
   MealType?: string;
   IsRefundable: boolean;
   WithTransfers?: boolean;
+  Supplements?: TboSupplement[][];
+  RoomID?: string[];
 }
 
 interface TboHolidaysSearchHotel {
@@ -62,55 +77,12 @@ type TboHotelSearchResult = {
   maxPrice: number;
 };
 
-const AMENITY_KEYWORDS: Array<[string[], Amenity]> = [
-  [["wi-fi", "wifi", "internet", "wireless"], "wifi"],
-  [["pool", "swimming"], "pool"],
-  [["gym", "fitness", "health club"], "gym"],
-  [["spa"], "spa"],
-  [["restaurant", "dining"], "restaurant"],
-  [["bar", "lounge"], "bar"],
-  [["parking", "car park"], "parking"],
-  [["air condition", "air-condition"], "ac"],
-  [["breakfast"], "breakfast"],
-  [["pet"], "pet_friendly"],
-  [["business center", "business centre"], "business_center"],
-  [["shuttle", "airport transfer"], "airport_shuttle"],
-];
-
-function mapAmenities(raw: string[]): Amenity[] {
-  const found = new Set<Amenity>();
-  for (const s of raw) {
-    const lower = s.toLowerCase();
-    for (const [kws, amenity] of AMENITY_KEYWORDS) {
-      if (kws.some((kw) => lower.includes(kw))) {
-        found.add(amenity);
-        break;
-      }
-    }
-  }
-  return Array.from(found);
-}
-
-function mapRoomType(name: string): Room["type"] {
-  const lower = name.toLowerCase();
-  if (lower.includes("suite")) return "suite";
-  if (lower.includes("villa")) return "villa";
-  if (lower.includes("deluxe") || lower.includes("superior") || lower.includes("premium"))
-    return "deluxe";
-  return "standard";
-}
-
-function mapBedType(name: string): Room["bedType"] {
-  const lower = name.toLowerCase();
-  if (lower.includes("king")) return "king";
-  if (lower.includes("queen")) return "queen";
-  if (lower.includes("twin") || lower.includes("double")) return "double";
-  if (lower.includes("single")) return "single";
-  return "double";
-}
-
 function mapSearchRoom(r: TboHolidaysSearchRoom): Room {
   const name = r.Name?.[0] ?? "Room";
+  // Per-night base rate: first day of DayRates for the first room dimension
+  const nightlyRate = r.DayRates?.[0]?.[0]?.BasePrice;
+  // Flatten all room-promotion strings from the nested array
+  const roomPromotion = r.RoomPromotion?.flat().filter(Boolean);
   return {
     id: r.BookingCode,
     name,
@@ -123,6 +95,14 @@ function mapSearchRoom(r: TboHolidaysSearchRoom): Room {
     refundable: r.IsRefundable,
     breakfast: (r.MealType ?? "").toLowerCase().includes("breakfast"),
     seatsLeft: 5,
+    // TBO-specific enrichments
+    totalFare: r.TotalFare,
+    totalTax: r.TotalTax,
+    nightlyRate: Number.isFinite(nightlyRate) ? nightlyRate : undefined,
+    cancelPolicies: mapCancelPolicies(r.CancelPolicies),
+    roomPromotion: roomPromotion && roomPromotion.length > 0 ? roomPromotion : undefined,
+    roomId: r.RoomID,
+    mealType: r.MealType,
   };
 }
 
@@ -223,15 +203,23 @@ export async function tboSearchHotelsHolidays(
   for (let i = 0; i < candidateCodes.length; i += HOTEL_CODES_PER_BATCH) {
     const batch = candidateCodes.slice(i, i + HOTEL_CODES_PER_BATCH);
     const batchNum = Math.floor(i / HOTEL_CODES_PER_BATCH) + 1;
+    const f = input.filters;
     const reqBody = {
       CheckIn: input.checkIn,
       CheckOut: input.checkOut,
       HotelCodes: batch.join(","),
-      GuestNationality: "IN",
-      PreferredCurrencyCode: "INR",
+      GuestNationality: input.guestNationality ?? "IN",
       PaxRooms: paxRooms,
-      IsDetailedResponse: false,
+      IsDetailedResponse: input.isDetailedResponse ?? false,
       ResponseTime: 23,
+      ...(f && {
+        Filters: {
+          Refundable: f.refundable ?? false,
+          NoOfRooms: f.noOfRooms ?? 0,
+          MealType: f.mealType ?? null,
+          StarRating: f.starRating ?? null,
+        },
+      }),
     };
 
     logRequest(`HotelSearch (batch ${batchNum})`, url, {

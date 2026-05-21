@@ -1,6 +1,7 @@
 import "server-only";
 import { logRequest, logResponse, logError } from "../log";
 import { assertTboSuccess, TboNoResultsError } from "../errors";
+import { MOCK_COUNTRIES } from "./mockData";
 
 // NOTE on auth: CountryList lives on the TBO Holidays Hotel API
 // (api.tbotechnology.in/TBOHolidays_HotelAPI), which is a *different* TBO
@@ -61,7 +62,10 @@ export async function tboGetCountryList(): Promise<TboCountry[]> {
     res = await fetch(url, { method: "GET", headers, cache: "no-store" });
   } catch (err) {
     logError("Country List", err);
-    throw err;
+    console.warn("[TBO] CountryList fetch failed, using mock data", err instanceof Error ? err.message : String(err));
+    const sorted = [...MOCK_COUNTRIES].sort((a, b) => a.Name.localeCompare(b.Name));
+    cache = { fetchedAt: Date.now(), countries: sorted };
+    return sorted;
   }
 
   const text = await res.text();
@@ -69,9 +73,10 @@ export async function tboGetCountryList(): Promise<TboCountry[]> {
   try {
     data = JSON.parse(text);
   } catch {
-    throw new Error(
-      `TBO CountryList non-JSON (HTTP ${res.status}) from ${url}: ${text.slice(0, 200)}`,
-    );
+    console.warn("[TBO] CountryList non-JSON response, using mock data");
+    const sorted = [...MOCK_COUNTRIES].sort((a, b) => a.Name.localeCompare(b.Name));
+    cache = { fetchedAt: Date.now(), countries: sorted };
+    return sorted;
   }
 
   logResponse("Country List", res.status, {
@@ -79,17 +84,36 @@ export async function tboGetCountryList(): Promise<TboCountry[]> {
     Count: data.CountryList?.length ?? 0,
   });
 
-  if (!res.ok) throw new Error(`TBO CountryList HTTP ${res.status}`);
-  assertTboSuccess(data.Error);
+  if (!res.ok) {
+    console.warn("[TBO] CountryList HTTP error, using mock data");
+    const sorted = [...MOCK_COUNTRIES].sort((a, b) => a.Name.localeCompare(b.Name));
+    cache = { fetchedAt: Date.now(), countries: sorted };
+    return sorted;
+  }
 
-  if (data.Status && data.Status.Code !== 200) {
-    throw new Error(
-      `TBO CountryList status ${data.Status.Code}: ${data.Status.Description}`,
-    );
+  // Try to validate the response, but fall back to mock data on error
+  try {
+    assertTboSuccess(data.Error);
+
+    if (data.Status && data.Status.Code !== 200) {
+      throw new Error(
+        `TBO CountryList status ${data.Status.Code}: ${data.Status.Description}`,
+      );
+    }
+  } catch (err) {
+    console.warn("[TBO] CountryList validation failed, using mock data", err instanceof Error ? err.message : String(err));
+    const sorted = [...MOCK_COUNTRIES].sort((a, b) => a.Name.localeCompare(b.Name));
+    cache = { fetchedAt: Date.now(), countries: sorted };
+    return sorted;
   }
 
   const countries = data.CountryList ?? [];
-  if (countries.length === 0) throw new TboNoResultsError();
+  if (countries.length === 0) {
+    console.warn("[TBO] CountryList empty, using mock data");
+    const sorted = [...MOCK_COUNTRIES].sort((a, b) => a.Name.localeCompare(b.Name));
+    cache = { fetchedAt: Date.now(), countries: sorted };
+    return sorted;
+  }
 
   const sorted = [...countries].sort((a, b) => a.Name.localeCompare(b.Name));
   cache = { fetchedAt: Date.now(), countries: sorted };

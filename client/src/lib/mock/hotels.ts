@@ -54,6 +54,13 @@ export function searchCities(q: string): City[] {
   ).slice(0, 8);
 }
 
+export type CancelPolicy = {
+  index: string;
+  fromDate: string;
+  chargeType: string;
+  cancellationCharge: number;
+};
+
 export type Room = {
   id: string;
   name: string;
@@ -66,6 +73,14 @@ export type Room = {
   refundable: boolean;
   breakfast: boolean;
   seatsLeft: number;
+  // TBO-specific fields from Search response
+  totalFare?: number;
+  totalTax?: number;
+  nightlyRate?: number;
+  cancelPolicies?: CancelPolicy[];
+  roomPromotion?: string[];
+  roomId?: string[];
+  mealType?: string;
 };
 
 export type HotelReview = {
@@ -105,6 +120,13 @@ export type Hotel = {
   longitude?: number;
 };
 
+export type SearchFilters = {
+  refundable?: boolean;
+  mealType?: "All" | "WithMeal" | "RoomOnly" | null;
+  noOfRooms?: number;
+  starRating?: number | null;
+};
+
 export type HotelSearchInput = {
   cityCode: string;
   checkIn: string;
@@ -112,6 +134,9 @@ export type HotelSearchInput = {
   rooms: number;
   adults: number;
   children: number;
+  guestNationality?: string;
+  isDetailedResponse?: boolean;
+  filters?: SearchFilters;
 };
 
 const HOTEL_NAMES = [
