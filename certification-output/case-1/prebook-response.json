@@ -1,0 +1,124 @@
+{
+  "Status": {
+    "Code": 200,
+    "Description": "Successful"
+  },
+  "HotelResult": [
+    {
+      "HotelCode": "1031455",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Classic Double Room,1 Twin Bed"
+          ],
+          "BookingCode": "1031455!TB!1!TB!62271611-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Room Only",
+          "DayRates": [
+            [
+              {
+                "BasePrice": 1446.21
+              }
+            ]
+          ],
+          "TotalFare": 1519.1,
+          "TotalTax": 72.89,
+          "NetAmount": 1519.3491967210002,
+          "NetTax": 73.13737327099994,
+          "RoomPromotion": [
+            "Book early and save"
+          ],
+          "CancelPolicies": [
+            {
+              "FromDate": "22-05-2026 00:00:00",
+              "ChargeType": "Fixed",
+              "CancellationCharge": 0
+            },
+            {
+              "FromDate": "29-05-2026 00:00:00",
+              "ChargeType": "Percentage",
+              "CancellationCharge": 100
+            }
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "Amenities": [
+            "Non-Smoking",
+            "Digital TV service",
+            "Soundproofed rooms",
+            "Change of bed sheets (on request)",
+            "Laptop-friendly workspace",
+            "Separate dining area",
+            "Ceiling fan",
+            "Daily housekeeping",
+            "Free WiFi",
+            "Change of towels (on request)",
+            "Desk",
+            "WiFi speed - 100+ Mbps (good for 1–2 people or up to 6 devices)",
+            "Towels provided",
+            "Premium TV channels",
+            "Bedsheets provided",
+            "Soap",
+            "Toilet paper",
+            "Shower only",
+            "Wireless internet access",
+            "TV size measurement: inch",
+            "Slippers",
+            "Private bathroom",
+            "Air conditioning",
+            "TV size: 43",
+            "LCD TV",
+            "Free bottled water"
+          ],
+          "LastCancellationDeadline": "28-05-2026 23:59:59",
+          "PriceBreakUp": [
+            {
+              "RoomRate": 1458.628387,
+              "RoomTax": 72.88904199999995,
+              "AgentCommission": 12.41656355,
+              "TaxBreakup": [
+                {
+                  "TaxType": "Tax_TDS",
+                  "TaxableAmount": 12.41656355,
+                  "TaxPercentage": 2,
+                  "TaxAmount": 0.248331271
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "RateConditions": [
+        "Early check out will attract full cancellation charge unless otherwise specified",
+        "CheckIn Time-Begin: 12:00 PM ",
+        " CheckIn Time-End: anytime",
+        "CheckOut Time: 11:00 AM",
+        "CheckIn Instructions: &lt;ul&gt;  &lt;li&gt;Extra-person charges may apply and vary depending on property policy&lt;/li&gt;&lt;li&gt;Government-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges&lt;/li&gt;&lt;li&gt;Special requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed&lt;/li&gt;&lt;li&gt;This property only accepts cash&lt;/li&gt;  &lt;/ul&gt; ",
+        " Special Instructions : This property offers transfers from the airport (surcharges may apply). To arrange pick-up, guests must contact the property 24 hours prior to arrival, using the contact information on the booking confirmation. Front desk staff will greet guests on arrival at the property. Information provided by the property may be translated using automated translation tools.",
+        "Minimum CheckIn Age : 18",
+        "Optional Fees: &lt;ul&gt; &lt;li&gt;Airport shuttle fee: INR 700 per vehicle (maximum occupancy 4)&lt;/li&gt;&lt;li&gt;Airport shuttle fee per child: INR 300 (from 7 to 17 years old)&lt;/li&gt; &lt;li&gt;Housekeeping is available for an additional fee&lt;/li&gt;&lt;/ul&gt; &lt;p&gt;The above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. &lt;/p&gt;",
+        "Cards Accepted: Debit cards not accepted,Cash,Cash-only property",
+        "Pets not allowed,Professional property host/manager,No cribs (infant beds) available,No rollaway/extra beds available,No elevators"
+      ]
+    }
+  ],
+  "ValidationInfo": {
+    "PanMandatory": false,
+    "PassportMandatory": false,
+    "CorporateBookingAllowed": false,
+    "PanCountRequired": 0,
+    "SamePaxNameAllowed": true,
+    "SpaceAllowed": true,
+    "SpecialCharAllowed": false,
+    "PaxNameMinLength": 1,
+    "PaxNameMaxLength": 50,
+    "CharLimit": true,
+    "PackageFare": false,
+    "PackageDetailsMandatory": false,
+    "DepartureDetailsMandatory": false,
+    "GSTAllowed": false,
+    "CrpPANMandatory": false,
+    "IsAgencyOwnPANAllowed": false
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "Status": {
+    "Code": 200,
+    "Description": "Successful"
+  },
+  "HotelResult": [
+    {
+      "HotelCode": "1031465",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Luxury Room",
+            "Luxury Room"
+          ],
+          "BookingCode": "1031465!TB!1!TB!24da7e58-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "FOOD namp; BEVERAGE DISCOUNT 10%,PARKING,WELCOME DRINK,EXPRESS CHECK-IN,FREE WIFI,DRINKING WATER,FREE FITNESS CENTER ACCESS,Extra Bed",
+          "DayRates": [
+            [
+              {
+                "BasePrice": 7559.27
+              }
+            ],
+            [
+              {
+                "BasePrice": 7559.27
+              }
+            ]
+          ],
+          "TotalFare": 18657.9,
+          "TotalTax": 3539.36,
+          "NetAmount": 18691.496421080003,
+          "NetTax": 3572.953035080002,
+          "RoomPromotion": [
+            "Limited Time Offer. Price includes 10% discount!",
+            "Limited Time Offer. Price includes 10% discount!"
+          ],
+          "CancelPolicies": [
+            {
+              "FromDate": "22-05-2026 00:00:00",
+              "ChargeType": "Fixed",
+              "CancellationCharge": 0
+            },
+            {
+              "FromDate": "21-06-2026 00:00:00",
+              "ChargeType": "Percentage",
+              "CancellationCharge": 100
+            }
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "LastCancellationDeadline": "20-06-2026 23:59:59",
+          "PriceBreakUp": [
+            {
+              "RoomRate": 8399.19077,
+              "RoomTax": 1769.678136000001,
+              "AgentCommission": 839.919077,
+              "TaxBreakup": [
+                {
+                  "TaxType": "Tax_TDS",
+                  "TaxableAmount": 839.919077,
+                  "TaxPercentage": 2,
+                  "TaxAmount": 16.79838154
+                }
+              ]
+            },
+            {
+              "RoomRate": 8399.19077,
+              "RoomTax": 1769.678136000001,
+              "AgentCommission": 839.919077,
+              "TaxBreakup": [
+                {
+                  "TaxType": "Tax_TDS",
+                  "TaxableAmount": 839.919077,
+                  "TaxPercentage": 2,
+                  "TaxAmount": 16.79838154
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "RateConditions": [
+        "Early check out will attract full cancellation charge unless otherwise specified",
+        "Remark :Guests must provide a valid form of government regulated identification (eg. passport, ID card, driver’s license, etc.) upon check-in. nlt;br/ngt; The hotel reserves the right of admission. Accommodation can be denied to guests posing as a couple if suitable proof of identification is not presented at check-in. nlt;brngt;nlt;brngt;The hotel reserves the right of admission for local residents. Accommodation can be denied to guests residing within the city. All forms of local ID are not valid. nlt;br/ngt; Please note that any changes in tax structure due to government policies will result in revised taxes, which will be applicable to all reservations and will be charged additionally during check out.Children 2 - 8 year(s) : Stay for free if using existing bedding."
+      ]
+    }
+  ],
+  "ValidationInfo": {
+    "PanMandatory": false,
+    "PassportMandatory": false,
+    "CorporateBookingAllowed": false,
+    "PanCountRequired": 0,
+    "SamePaxNameAllowed": true,
+    "SpaceAllowed": true,
+    "SpecialCharAllowed": false,
+    "PaxNameMinLength": 1,
+    "PaxNameMaxLength": 50,
+    "CharLimit": true,
+    "PackageFare": false,
+    "PackageDetailsMandatory": false,
+    "DepartureDetailsMandatory": false,
+    "GSTAllowed": false,
+    "CrpPANMandatory": false,
+    "IsAgencyOwnPANAllowed": false
+  }
+}

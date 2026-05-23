@@ -1,0 +1,61 @@
+{
+  "BookingCode": "1027991!TB!1!TB!e64ccf94-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+  "IsVoucherBooking": true,
+  "GuestNationality": "IN",
+  "EndUserIp": "1.1.1.1",
+  "NetAmount": 30264.657475910004,
+  "RequestedBookingMode": 5,
+  "HotelRoomsDetails": [
+    {
+      "HotelPassenger": [
+        {
+          "Title": "Mr",
+          "FirstName": "John",
+          "MiddleName": "",
+          "LastName": "Smith",
+          "Email": "test@spakstrip.com",
+          "Phoneno": "9999999999",
+          "PaxType": 1,
+          "LeadPassenger": true,
+          "Age": 30,
+          "PassportNo": null,
+          "PassportIssueDate": null,
+          "PassportExpDate": null,
+          "PAN": "AAAPA0001B",
+          "PaxId": 0,
+          "GSTCompanyName": null,
+          "GSTNumber": null,
+          "GSTCompanyEmail": null,
+          "GSTCompanyAddress": null,
+          "GSTCompanyContactNumber": null
+        }
+      ]
+    },
+    {
+      "HotelPassenger": [
+        {
+          "Title": "Mr",
+          "FirstName": "John",
+          "MiddleName": "",
+          "LastName": "Smith",
+          "Email": "test@spakstrip.com",
+          "Phoneno": "9999999999",
+          "PaxType": 1,
+          "LeadPassenger": true,
+          "Age": 30,
+          "PassportNo": null,
+          "PassportIssueDate": null,
+          "PassportExpDate": null,
+          "PAN": "AAAPA0001B",
+          "PaxId": 0,
+          "GSTCompanyName": null,
+          "GSTNumber": null,
+          "GSTCompanyEmail": null,
+          "GSTCompanyAddress": null,
+          "GSTCompanyContactNumber": null
+        }
+      ]
+    }
+  ],
+  "ClientReferenceId": "CERT-CASE-7-1779511833804"
+}

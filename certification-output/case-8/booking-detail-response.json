@@ -1,0 +1,357 @@
+{
+  "GetBookingDetailResult": {
+    "TBOReferenceNo": "TBIXY3UXLQ",
+    "VoucherStatus": true,
+    "ResponseStatus": 1,
+    "Error": {
+      "ErrorCode": 0,
+      "ErrorMessage": ""
+    },
+    "TraceId": "fcb82e7f-5662-11f1-80ca-d2b16b9afa66",
+    "Status": 1,
+    "HotelBookingStatus": "Confirmed",
+    "ConfirmationNo": "2014917938",
+    "BookingRefNo": "2016566286",
+    "BookingId": 2132122,
+    "IsPriceChanged": false,
+    "IsCancellationPolicyChanged": false,
+    "Rooms": [
+      {
+        "AdultCount": 1,
+        "AvailabilityType": "NotAvailable",
+        "ChildAge": [
+          9,
+          6
+        ],
+        "ChildCount": 2,
+        "HotelPassenger": [
+          {
+            "Age": 30,
+            "Email": "test@spakstrip.com",
+            "FileDocument": null,
+            "FirstName": "Robert",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Johnson",
+            "LeadPassenger": true,
+            "MiddleName": null,
+            "PAN": "AAAPA0001B",
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273679,
+            "PaxType": 1,
+            "Phoneno": "9999999999",
+            "Title": "Mr"
+          },
+          {
+            "Age": 9,
+            "Email": null,
+            "FileDocument": null,
+            "FirstName": "Emma",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Smith",
+            "LeadPassenger": false,
+            "MiddleName": null,
+            "PAN": "AAAPA0002B",
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273680,
+            "PaxType": 2,
+            "Phoneno": null,
+            "Title": "Mstr"
+          },
+          {
+            "Age": 6,
+            "Email": null,
+            "FileDocument": null,
+            "FirstName": "Liam",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Smith",
+            "LeadPassenger": false,
+            "MiddleName": null,
+            "PAN": "AAAPA0003B",
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273681,
+            "PaxType": 2,
+            "Phoneno": null,
+            "Title": "Mstr"
+          }
+        ],
+        "RequireAllPaxDetails": false,
+        "RoomId": 202124,
+        "RoomStatus": 0,
+        "RoomIndex": 1,
+        "RoomTypeCode": "3087387|v1",
+        "RoomDescription": "Superior Room -- 2 Bed",
+        "RoomTypeName": "Superior Room -- 2 Bed",
+        "RatePlanCode": "575371|9999999|v1_CgEtEMwCGi4KHTIwMjYtMDYtMjJUMDA6MDA6MDAuMDAwKzA3OjAwEAEY3w0gAigDMgIGCTgCIgIIAQ==_C",
+        "RatePlan": 0,
+        "IsPerStay": true,
+        "PriceBreakUp": {
+          "CurrencyCode": "INR",
+          "RoomRate": 7654.2,
+          "RoomTax": 1354.38,
+          "RoomExtraGuestCharges": 0,
+          "RoomChildCharges": 0,
+          "ServiceFee": 0,
+          "AgentCommission": 765.42,
+          "TaxBreakup": [
+            {
+              "TaxType": "Tax_CGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_IGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_SGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TCS",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TDS",
+              "TaxAmount": 15.31
+            }
+          ]
+        },
+        "RoomPromotion": null,
+        "Amenities": [],
+        "SmokingPreference": "NoPreference",
+        "BedTypes": [],
+        "Supplements": [],
+        "LastCancellationDate": "2026-06-20T23:59:59",
+        "CancelPolicies": [
+          {
+            "CancellationCharge": 0,
+            "ChargeType": 1,
+            "Currency": "INR",
+            "FromDate": "22/05/2026 00:00:00",
+            "ToDate": "20/06/2026 23:59:59"
+          },
+          {
+            "CancellationCharge": 100,
+            "ChargeType": 2,
+            "Currency": "INR",
+            "FromDate": "21/06/2026 00:00:00",
+            "ToDate": "21/06/2026 23:59:59"
+          },
+          {
+            "CancellationCharge": 100,
+            "ChargeType": 2,
+            "Currency": "INR",
+            "FromDate": "23/06/2026 00:00:00",
+            "NoShowPolicy": true,
+            "ToDate": "23/06/2026 00:00:00"
+          }
+        ],
+        "CancellationPolicies": null,
+        "LastVoucherDate": "2026-06-20T23:59:59",
+        "CancellationPolicy": "Superior Room -- 2 Bed#^#No cancellation charge, If cancelled between 22-May-2026 00:00:00 and 20-Jun-2026 23:59:59.|100.00% of total amount will be charged, If cancelled between 21-Jun-2026 00:00:00 and 21-Jun-2026 23:59:59.|100.00% of total amount will be charged, If cancelled between 23-Jun-2026 00:00:00 and 23-Jun-2026 00:00:00.|#!#",
+        "Inclusion": "PARKING,WELCOME DRINK,COFFEE namp; TEA,EXPRESS CHECK-IN,FREE WIFI,DRINKING WATER,FREE FITNESS CENTER ACCESS,Extra Bed"
+      },
+      {
+        "AdultCount": 2,
+        "AvailabilityType": "NotAvailable",
+        "ChildCount": 0,
+        "HotelPassenger": [
+          {
+            "Age": 28,
+            "Email": "test@spakstrip.com",
+            "FileDocument": null,
+            "FirstName": "Sarah",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Johnson",
+            "LeadPassenger": true,
+            "MiddleName": null,
+            "PAN": "AAAPA0001B",
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273682,
+            "PaxType": 1,
+            "Phoneno": "9999999999",
+            "Title": "Mrs"
+          },
+          {
+            "Age": 30,
+            "Email": null,
+            "FileDocument": null,
+            "FirstName": "Michael",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Johnson",
+            "LeadPassenger": false,
+            "MiddleName": null,
+            "PAN": "AAAPA0002B",
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273683,
+            "PaxType": 1,
+            "Phoneno": null,
+            "Title": "Mr"
+          }
+        ],
+        "RequireAllPaxDetails": false,
+        "RoomId": 202125,
+        "RoomStatus": 0,
+        "RoomIndex": 2,
+        "RoomTypeCode": "3087387|v1",
+        "RoomDescription": "Superior Room -- 2 Bed",
+        "RoomTypeName": "Superior Room -- 2 Bed",
+        "RatePlanCode": "575371|9999999|v1_CgEtEMwCGi4KHTIwMjYtMDYtMjJUMDA6MDA6MDAuMDAwKzA3OjAwEAEY3w0gAigDMgIGCTgCIgIIAQ==_C",
+        "RatePlan": 0,
+        "IsPerStay": true,
+        "PriceBreakUp": {
+          "CurrencyCode": "INR",
+          "RoomRate": 7654.2,
+          "RoomTax": 1354.38,
+          "RoomExtraGuestCharges": 0,
+          "RoomChildCharges": 0,
+          "ServiceFee": 0,
+          "AgentCommission": 765.42,
+          "TaxBreakup": [
+            {
+              "TaxType": "Tax_CGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_IGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_SGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TCS",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TDS",
+              "TaxAmount": 15.31
+            }
+          ]
+        },
+        "RoomPromotion": null,
+        "Amenities": [],
+        "SmokingPreference": "NoPreference",
+        "BedTypes": [],
+        "Supplements": [],
+        "LastCancellationDate": "2026-06-20T23:59:59",
+        "CancelPolicies": [
+          {
+            "CancellationCharge": 0,
+            "ChargeType": 1,
+            "Currency": "INR",
+            "FromDate": "22/05/2026 00:00:00",
+            "ToDate": "20/06/2026 23:59:59"
+          },
+          {
+            "CancellationCharge": 100,
+            "ChargeType": 2,
+            "Currency": "INR",
+            "FromDate": "21/06/2026 00:00:00",
+            "ToDate": "21/06/2026 23:59:59"
+          },
+          {
+            "CancellationCharge": 100,
+            "ChargeType": 2,
+            "Currency": "INR",
+            "FromDate": "23/06/2026 00:00:00",
+            "NoShowPolicy": true,
+            "ToDate": "23/06/2026 00:00:00"
+          }
+        ],
+        "CancellationPolicies": null,
+        "LastVoucherDate": "2026-06-20T23:59:59",
+        "CancellationPolicy": "Superior Room -- 2 Bed#^#No cancellation charge, If cancelled between 22-May-2026 00:00:00 and 20-Jun-2026 23:59:59.|100.00% of total amount will be charged, If cancelled between 21-Jun-2026 00:00:00 and 21-Jun-2026 23:59:59.|100.00% of total amount will be charged, If cancelled between 23-Jun-2026 00:00:00 and 23-Jun-2026 00:00:00.|#!#",
+        "Inclusion": "PARKING,WELCOME DRINK,COFFEE namp; TEA,EXPRESS CHECK-IN,FREE WIFI,DRINKING WATER,FREE FITNESS CENTER ACCESS,Extra Bed"
+      }
+    ],
+    "NetAmount": 16516.94,
+    "NetTax": 2739.38,
+    "RateConditions": [
+      "Early check out will attract full cancellation charge unless otherwise specified",
+      "Children 2 - 12 year(s) : Stay for free if using existing bedding.",
+      "Extra person charges may apply at check-in, as per the property's policy."
+    ],
+    "AgentRemarks": "",
+    "BookingSource": "Agoda",
+    "BookingStatus": 2,
+    "CreditNoteGSTIN": null,
+    "GSTIN": null,
+    "GuestNationality": "IN",
+    "HotelItineraryTracking": {
+      "CampaignId": null,
+      "CampaignName": null,
+      "IsLovedByIndians": false,
+      "IsSelectedFromSimilar": false,
+      "ItineraryTrackingJson": null,
+      "SearchType": 1
+    },
+    "HotelPolicyDetail": null,
+    "IntHotelPassportDetails": null,
+    "InvoiceAmount": 16517,
+    "InvoiceCreatedOn": "2026-05-23T04:53:33",
+    "InvoiceNo": "MW/2627/5848",
+    "IsCorporate": false,
+    "LastCancellationDeadline": "2026-06-20T23:59:59",
+    "PostBookingRequestDetails": [],
+    "HotelConfirmationNo": null,
+    "HotelCode": "297838",
+    "HotelId": 175955,
+    "HotelName": "Grand Howard Hotel Bangkok",
+    "TBOHotelCode": "1018364",
+    "StarRating": 4,
+    "AddressLine1": "50 Charoen-Raj Road, Bangkhol, Bangkoleam",
+    "AddressLine2": "",
+    "CountryCode": "TH",
+    "Latitude": "13.702007",
+    "Longitude": "100.515959",
+    "City": "Bangkok",
+    "CityId": 144092,
+    "CheckInDate": "2026-06-22T00:00:00",
+    "InitialCheckInDate": "2026-06-22T00:00:00",
+    "CheckOutDate": "2026-06-23T00:00:00",
+    "InitialCheckOutDate": "2026-06-23T00:00:00",
+    "LastCancellationDate": "2026-06-20T23:59:59",
+    "LastVoucherDate": "2026-06-20T23:59:59",
+    "NoOfRooms": 2,
+    "BookingDate": "2026-05-23T04:53:33",
+    "SpecialRequest": "",
+    "IsDomestic": false,
+    "BookingAllowedForRoamer": true
+  }
+}

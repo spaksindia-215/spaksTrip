@@ -1,0 +1,119 @@
+TBO Hotel Certification - Case 6
+============================================================
+Case Name   : Case 6 - International (Room 1: Adult 2, Child 2)
+Timestamp   : 2026-05-23T04:48:47.857Z
+Duration    : 84535ms
+Success     : YES
+
+Booking Details
+----------------------------------------
+Hotel Name  : Grand Alpine Hotel
+Hotel Code  : 1002606
+Booking ID  : 2132118
+Confirm No  : 2014916806
+Booking Ref : 2016565206
+Status      : Confirmed
+Voucher     : Generated
+
+Validation Results
+----------------------------------------
+Room Count  : 1
+Adult Count : 2
+Child Count : 2
+Child Ages  : 5, 8
+
+Log Entries
+----------------------------------------
+[1] [2026-05-23T04:48:47.857Z] Check-in: 2026-06-22 | Check-out: 2026-06-23 (30-day lead for child rates)
+[2] [2026-05-23T04:48:47.857Z] Step 1: Fetching hotel codes...
+[3] [2026-05-23T04:48:47.857Z] Fetching hotel codes for city: 144092
+[4] [2026-05-23T04:48:50.105Z] Found 5228 hotel(s) for city 144092
+[5] [2026-05-23T04:48:51.621Z] Step 2 (batch 1): Searching codes 1–150 of 5228...
+[6] [2026-05-23T04:48:53.010Z] Saved: search-request.json
+[7] [2026-05-23T04:48:53.012Z] Saved: search-response.json
+[8] [2026-05-23T04:48:53.012Z] Batch 1: 32 candidate hotel(s). Top: 1022991 | Refundable: true | Rate: INR 4378.05
+[9] [2026-05-23T04:48:54.516Z] Step 3: Hotel PreBook (hotel 1022991)...
+[10] [2026-05-23T04:48:54.517Z] Saved: prebook-request.json
+[11] [2026-05-23T04:48:56.605Z] Saved: prebook-response.json
+[12] [2026-05-23T04:48:56.606Z] PreBook OK | NetAmount: 4378.679523459 | PassportRequired: false | PANRequired: true
+[13] [2026-05-23T04:48:58.119Z] Step 4: Hotel Book...
+[14] [2026-05-23T04:48:58.120Z] Saved: booking-request.json
+[15] [2026-05-23T04:49:02.150Z] Saved: booking-response.json
+[16] [2026-05-23T04:49:02.151Z] Hotel 1022991 skipped: [Book] TBO error 2: Error in Supplier Response: Exception while reading price ch. Trying next...
+[17] [2026-05-23T04:49:03.659Z] Step 3: Hotel PreBook (hotel 1018344)...
+[18] [2026-05-23T04:49:03.660Z] Saved: prebook-request.json
+[19] [2026-05-23T04:49:06.154Z] Saved: prebook-response.json
+[20] [2026-05-23T04:49:06.155Z] PreBook OK | NetAmount: 5479.529505161001 | PassportRequired: false | PANRequired: true
+[21] [2026-05-23T04:49:07.666Z] Step 4: Hotel Book...
+[22] [2026-05-23T04:49:07.667Z] Saved: booking-request.json
+[23] [2026-05-23T04:49:09.682Z] Saved: booking-response.json
+[24] [2026-05-23T04:49:09.683Z] Hotel 1018344 skipped: [Book] TBO error 2: Error in Supplier Response: Exception while reading price ch. Trying next...
+[25] [2026-05-23T04:49:11.191Z] Step 3: Hotel PreBook (hotel 1022899)...
+[26] [2026-05-23T04:49:11.192Z] Saved: prebook-request.json
+[27] [2026-05-23T04:49:11.534Z] Saved: prebook-response.json
+[28] [2026-05-23T04:49:11.534Z] Hotel 1022899 skipped: [PreBook] Unexpected status 201: No Available rooms for given criteria. Trying next...
+[29] [2026-05-23T04:49:13.036Z] Step 3: Hotel PreBook (hotel 1001875)...
+[30] [2026-05-23T04:49:13.037Z] Saved: prebook-request.json
+[31] [2026-05-23T04:49:15.145Z] Saved: prebook-response.json
+[32] [2026-05-23T04:49:15.145Z] PreBook OK | NetAmount: 6673.954608491999 | PassportRequired: false | PANRequired: true
+[33] [2026-05-23T04:49:16.652Z] Step 4: Hotel Book...
+[34] [2026-05-23T04:49:16.653Z] Saved: booking-request.json
+[35] [2026-05-23T04:49:18.692Z] Saved: booking-response.json
+[36] [2026-05-23T04:49:18.692Z] Hotel 1001875 skipped: [Book] TBO error 2: Error in Supplier Response: Exception while reading price ch. Trying next...
+[37] [2026-05-23T04:49:20.204Z] Step 3: Hotel PreBook (hotel 1022940)...
+[38] [2026-05-23T04:49:20.205Z] Saved: prebook-request.json
+[39] [2026-05-23T04:49:23.203Z] Saved: prebook-response.json
+[40] [2026-05-23T04:49:23.203Z] PreBook OK | NetAmount: 6933.906596408999 | PassportRequired: false | PANRequired: true
+[41] [2026-05-23T04:49:24.714Z] Step 4: Hotel Book...
+[42] [2026-05-23T04:49:24.715Z] Saved: booking-request.json
+[43] [2026-05-23T04:49:26.839Z] Saved: booking-response.json
+[44] [2026-05-23T04:49:26.840Z] Hotel 1022940 skipped: [Book] TBO error 2: Error in Supplier Response: Exception while reading price ch. Trying next...
+[45] [2026-05-23T04:49:28.346Z] Step 3: Hotel PreBook (hotel 1001665)...
+[46] [2026-05-23T04:49:28.347Z] Saved: prebook-request.json
+[47] [2026-05-23T04:49:30.746Z] Saved: prebook-response.json
+[48] [2026-05-23T04:49:30.746Z] PreBook OK | NetAmount: 7489.494843584 | PassportRequired: false | PANRequired: true
+[49] [2026-05-23T04:49:32.252Z] Step 4: Hotel Book...
+[50] [2026-05-23T04:49:32.253Z] Saved: booking-request.json
+[51] [2026-05-23T04:49:34.321Z] Saved: booking-response.json
+[52] [2026-05-23T04:49:34.322Z] Hotel 1001665 skipped: [Book] TBO error 2: Error in Supplier Response: Exception while reading price ch. Trying next...
+[53] [2026-05-23T04:49:35.833Z] Step 3: Hotel PreBook (hotel 1022895)...
+[54] [2026-05-23T04:49:35.834Z] Saved: prebook-request.json
+[55] [2026-05-23T04:49:38.341Z] Saved: prebook-response.json
+[56] [2026-05-23T04:49:38.342Z] PreBook OK | NetAmount: 8228.989771648 | PassportRequired: false | PANRequired: true
+[57] [2026-05-23T04:49:39.848Z] Step 4: Hotel Book...
+[58] [2026-05-23T04:49:39.849Z] Saved: booking-request.json
+[59] [2026-05-23T04:49:42.407Z] Saved: booking-response.json
+[60] [2026-05-23T04:49:42.408Z] Hotel 1022895 skipped: [Book] TBO error 2: Error in Supplier Response: Exception while reading price ch. Trying next...
+[61] [2026-05-23T04:49:43.909Z] Step 3: Hotel PreBook (hotel 1018358)...
+[62] [2026-05-23T04:49:43.909Z] Saved: prebook-request.json
+[63] [2026-05-23T04:49:46.096Z] Saved: prebook-response.json
+[64] [2026-05-23T04:49:46.096Z] PreBook OK | NetAmount: 8240.912215297001 | PassportRequired: false | PANRequired: true
+[65] [2026-05-23T04:49:47.606Z] Step 4: Hotel Book...
+[66] [2026-05-23T04:49:47.608Z] Saved: booking-request.json
+[67] [2026-05-23T04:49:49.998Z] Saved: booking-response.json
+[68] [2026-05-23T04:49:49.998Z] Hotel 1018358 skipped: [Book] TBO error 2: Error in Supplier Response: Exception while reading price ch. Trying next...
+[69] [2026-05-23T04:49:51.513Z] Step 3: Hotel PreBook (hotel 1013354)...
+[70] [2026-05-23T04:49:51.514Z] Saved: prebook-request.json
+[71] [2026-05-23T04:49:53.882Z] Saved: prebook-response.json
+[72] [2026-05-23T04:49:53.882Z] PreBook OK | NetAmount: 8338.710663627 | PassportRequired: false | PANRequired: true
+[73] [2026-05-23T04:49:55.393Z] Step 4: Hotel Book...
+[74] [2026-05-23T04:49:55.395Z] Saved: booking-request.json
+[75] [2026-05-23T04:49:57.500Z] Saved: booking-response.json
+[76] [2026-05-23T04:49:57.501Z] Hotel 1013354 skipped: [Book] TBO error 2: Error in Supplier Response: Exception while reading price ch. Trying next...
+[77] [2026-05-23T04:49:59.014Z] Step 3: Hotel PreBook (hotel 1002606)...
+[78] [2026-05-23T04:49:59.015Z] Saved: prebook-request.json
+[79] [2026-05-23T04:50:01.897Z] Saved: prebook-response.json
+[80] [2026-05-23T04:50:01.897Z] PreBook OK | NetAmount: 8449.685925165999 | PassportRequired: false | PANRequired: true
+[81] [2026-05-23T04:50:03.411Z] Step 4: Hotel Book...
+[82] [2026-05-23T04:50:03.412Z] Saved: booking-request.json
+[83] [2026-05-23T04:50:07.754Z] Saved: booking-response.json
+[84] [2026-05-23T04:50:07.755Z] Booking Confirmed | ID: 2132118 | Conf: 2014916806 | Status: Confirmed
+[85] [2026-05-23T04:50:09.257Z] Step 5: Generate Voucher...
+[86] [2026-05-23T04:50:09.258Z] Saved: voucher-request.json
+[87] [2026-05-23T04:50:09.969Z] Saved: voucher-response.json
+[88] [2026-05-23T04:50:09.969Z] Voucher Status: Generated
+[89] [2026-05-23T04:50:11.469Z] Step 6: Get Booking Details...
+[90] [2026-05-23T04:50:12.390Z] Saved: booking-detail-response.json
+[91] [2026-05-23T04:50:12.390Z] Hotel Name: Grand Alpine Hotel
+
+Files saved to: C:\Users\muska\DESKTOP\spaksTrip\certification-output\case-6

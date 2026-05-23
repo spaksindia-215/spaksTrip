@@ -1,0 +1,330 @@
+{
+  "GetBookingDetailResult": {
+    "TBOReferenceNo": "TBMGQX4CWE",
+    "VoucherStatus": true,
+    "ResponseStatus": 1,
+    "Error": {
+      "ErrorCode": 0,
+      "ErrorMessage": ""
+    },
+    "TraceId": "13d75148-5662-11f1-80ca-d2b16b9afa66",
+    "Status": 1,
+    "HotelBookingStatus": "Confirmed",
+    "ConfirmationNo": "7714579635718",
+    "BookingRefNo": "168700779711888,671025242855853",
+    "BookingId": 2132115,
+    "IsPriceChanged": false,
+    "IsCancellationPolicyChanged": false,
+    "Rooms": [
+      {
+        "AdultCount": 1,
+        "AvailabilityType": "NotAvailable",
+        "ChildCount": 0,
+        "HotelPassenger": [
+          {
+            "Age": 30,
+            "Email": "test@spakstrip.com",
+            "FileDocument": null,
+            "FirstName": "John",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Smith",
+            "LeadPassenger": true,
+            "MiddleName": null,
+            "PAN": null,
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273665,
+            "PaxType": 1,
+            "Phoneno": "9999999999",
+            "Title": "Mr"
+          }
+        ],
+        "RequireAllPaxDetails": false,
+        "RoomId": 202116,
+        "RoomStatus": 0,
+        "RoomIndex": 1,
+        "RoomTypeCode": "326128572|",
+        "RoomDescription": "<p></p><p>Soundproofed room</p><br/><p><b>Layout</b> - Bedroom and dining area</p><p><b>Internet</b> - Free WiFi 100+ Mbps (good for 1–2 people or up to 6 devices) </p><p><b>Entertainment</b> - 43-inch LCD TV with premium channels</p><p><b>Food and Drink</b> - Free bottled water</p><p><b>Sleep</b> - Bed sheets </p><p><b>Bathroom</b> - Private bathroom, shower, slippers, and towels</p><p><b>Practical</b> - Laptop workspace</p><p><b>Comfort</b> - Fresh bed sheets (on request), fresh towels (on request), and air conditioning</p><p>Non-Smoking</p>",
+        "RoomTypeName": "Classic Double Room,1 Twin Bed",
+        "RatePlanCode": "326128572|400165351|37336|141",
+        "RatePlan": 0,
+        "IsPerStay": true,
+        "PriceBreakUp": {
+          "CurrencyCode": "INR",
+          "RoomRate": 1458.63,
+          "RoomTax": 72.89,
+          "RoomExtraGuestCharges": 0,
+          "RoomChildCharges": 0,
+          "ServiceFee": 0,
+          "AgentCommission": 12.42,
+          "TaxBreakup": [
+            {
+              "TaxType": "Tax_CGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_IGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_SGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TCS",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TDS",
+              "TaxAmount": 0.25
+            }
+          ]
+        },
+        "RoomPromotion": null,
+        "Amenities": [
+          "Non-Smoking",
+          "Digital TV service",
+          "Soundproofed rooms",
+          "Change of bed sheets (on request)",
+          "Laptop-friendly workspace",
+          "Separate dining area",
+          "Ceiling fan",
+          "Daily housekeeping",
+          "Free WiFi",
+          "Change of towels (on request)",
+          "Desk",
+          "WiFi speed - 100+ Mbps (good for 1–2 people or up to 6 devices)",
+          "Towels provided",
+          "Premium TV channels",
+          "Bedsheets provided",
+          "Soap",
+          "Toilet paper",
+          "Shower only",
+          "Wireless internet access",
+          "TV size measurement: inch",
+          "Slippers",
+          "Private bathroom",
+          "Air conditioning",
+          "TV size: 43",
+          "LCD TV",
+          "Free bottled water"
+        ],
+        "SmokingPreference": "NoPreference",
+        "BedTypes": [],
+        "Supplements": [],
+        "LastCancellationDate": "2026-05-28T23:59:59",
+        "CancelPolicies": [
+          {
+            "CancellationCharge": 0,
+            "ChargeType": 1,
+            "Currency": "INR",
+            "FromDate": "22/05/2026 00:00:00",
+            "ToDate": "28/05/2026 23:59:59"
+          },
+          {
+            "CancellationCharge": 100,
+            "ChargeType": 2,
+            "Currency": "INR",
+            "FromDate": "29/05/2026 00:00:00",
+            "ToDate": "29/05/2026 23:59:59"
+          }
+        ],
+        "CancellationPolicies": null,
+        "LastVoucherDate": "2026-05-28T23:59:59",
+        "CancellationPolicy": "Classic Double Room,1 Twin Bed#^#No cancellation charge, If cancelled between 22-May-2026 00:00:00 and 28-May-2026 23:59:59.|100.00% of total amount will be charged, If cancelled between 29-May-2026 00:00:00 and 29-May-2026 23:59:59.|#!#",
+        "Inclusion": "Room Only"
+      },
+      {
+        "AdultCount": 1,
+        "AvailabilityType": "NotAvailable",
+        "ChildCount": 0,
+        "HotelPassenger": [
+          {
+            "Age": 30,
+            "Email": "test@spakstrip.com",
+            "FileDocument": null,
+            "FirstName": "John",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Smith",
+            "LeadPassenger": true,
+            "MiddleName": null,
+            "PAN": null,
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273666,
+            "PaxType": 1,
+            "Phoneno": "9999999999",
+            "Title": "Mr"
+          }
+        ],
+        "RequireAllPaxDetails": false,
+        "RoomId": 202117,
+        "RoomStatus": 0,
+        "RoomIndex": 2,
+        "RoomTypeCode": "326128572|",
+        "RoomDescription": "<p></p><p>Soundproofed room</p><br/><p><b>Layout</b> - Bedroom and dining area</p><p><b>Internet</b> - Free WiFi 100+ Mbps (good for 1–2 people or up to 6 devices) </p><p><b>Entertainment</b> - 43-inch LCD TV with premium channels</p><p><b>Food and Drink</b> - Free bottled water</p><p><b>Sleep</b> - Bed sheets </p><p><b>Bathroom</b> - Private bathroom, shower, slippers, and towels</p><p><b>Practical</b> - Laptop workspace</p><p><b>Comfort</b> - Fresh bed sheets (on request), fresh towels (on request), and air conditioning</p><p>Non-Smoking</p>",
+        "RoomTypeName": "Classic Double Room,1 Twin Bed",
+        "RatePlanCode": "326128572|400165351|37336|141",
+        "RatePlan": 0,
+        "IsPerStay": true,
+        "PriceBreakUp": {
+          "CurrencyCode": "INR",
+          "RoomRate": 1458.63,
+          "RoomTax": 72.89,
+          "RoomExtraGuestCharges": 0,
+          "RoomChildCharges": 0,
+          "ServiceFee": 0,
+          "AgentCommission": 12.42,
+          "TaxBreakup": [
+            {
+              "TaxType": "Tax_CGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_IGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_SGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TCS",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TDS",
+              "TaxAmount": 0.25
+            }
+          ]
+        },
+        "RoomPromotion": null,
+        "Amenities": [
+          "Non-Smoking",
+          "Digital TV service",
+          "Soundproofed rooms",
+          "Change of bed sheets (on request)",
+          "Laptop-friendly workspace",
+          "Separate dining area",
+          "Ceiling fan",
+          "Daily housekeeping",
+          "Free WiFi",
+          "Change of towels (on request)",
+          "Desk",
+          "WiFi speed - 100+ Mbps (good for 1–2 people or up to 6 devices)",
+          "Towels provided",
+          "Premium TV channels",
+          "Bedsheets provided",
+          "Soap",
+          "Toilet paper",
+          "Shower only",
+          "Wireless internet access",
+          "TV size measurement: inch",
+          "Slippers",
+          "Private bathroom",
+          "Air conditioning",
+          "TV size: 43",
+          "LCD TV",
+          "Free bottled water"
+        ],
+        "SmokingPreference": "NoPreference",
+        "BedTypes": [],
+        "Supplements": [],
+        "LastCancellationDate": "2026-05-28T23:59:59",
+        "CancelPolicies": [
+          {
+            "CancellationCharge": 0,
+            "ChargeType": 1,
+            "Currency": "INR",
+            "FromDate": "22/05/2026 00:00:00",
+            "ToDate": "28/05/2026 23:59:59"
+          },
+          {
+            "CancellationCharge": 100,
+            "ChargeType": 2,
+            "Currency": "INR",
+            "FromDate": "29/05/2026 00:00:00",
+            "ToDate": "29/05/2026 23:59:59"
+          }
+        ],
+        "CancellationPolicies": null,
+        "LastVoucherDate": "2026-05-28T23:59:59",
+        "CancellationPolicy": "Classic Double Room,1 Twin Bed#^#No cancellation charge, If cancelled between 22-May-2026 00:00:00 and 28-May-2026 23:59:59.|100.00% of total amount will be charged, If cancelled between 29-May-2026 00:00:00 and 29-May-2026 23:59:59.|#!#",
+        "Inclusion": "Room Only"
+      }
+    ],
+    "NetAmount": 3038.7,
+    "NetTax": 146.28,
+    "RateConditions": [
+      "Early check out will attract full cancellation charge unless otherwise specified",
+      "CheckIn Time-Begin: 12:00 PM ",
+      " CheckIn Time-End: anytime",
+      "CheckOut Time: 11:00 AM",
+      "CheckIn Instructions: &lt;ul&gt;  &lt;li&gt;Extra-person charges may apply and vary depending on property policy&lt;/li&gt;&lt;li&gt;Government-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges&lt;/li&gt;&lt;li&gt;Special requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed&lt;/li&gt;&lt;li&gt;This property only accepts cash&lt;/li&gt;  &lt;/ul&gt; ",
+      " Special Instructions : This property offers transfers from the airport (surcharges may apply). To arrange pick-up, guests must contact the property 24 hours prior to arrival, using the contact information on the booking confirmation. Front desk staff will greet guests on arrival at the property. Information provided by the property may be translated using automated translation tools.",
+      "Minimum CheckIn Age : 18",
+      "Optional Fees: &lt;ul&gt; &lt;li&gt;Airport shuttle fee: INR 700 per vehicle (maximum occupancy 4)&lt;/li&gt;&lt;li&gt;Airport shuttle fee per child: INR 300 (from 7 to 17 years old)&lt;/li&gt; &lt;li&gt;Housekeeping is available for an additional fee&lt;/li&gt;&lt;/ul&gt; &lt;p&gt;The above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. &lt;/p&gt;",
+      "Cards Accepted: Debit cards not accepted,Cash,Cash-only property",
+      "Pets not allowed,Professional property host/manager,No cribs (infant beds) available,No rollaway/extra beds available,No elevators",
+      "Extra person charges may apply at check-in, as per the property's policy."
+    ],
+    "AgentRemarks": "",
+    "BookingSource": "EANPackage",
+    "BookingStatus": 2,
+    "CreditNoteGSTIN": null,
+    "GSTIN": null,
+    "GuestNationality": "IN",
+    "HotelItineraryTracking": {
+      "CampaignId": null,
+      "CampaignName": null,
+      "IsLovedByIndians": false,
+      "IsSelectedFromSimilar": false,
+      "ItineraryTrackingJson": null,
+      "SearchType": 1
+    },
+    "HotelPolicyDetail": null,
+    "IntHotelPassportDetails": null,
+    "InvoiceAmount": 3039,
+    "InvoiceCreatedOn": "2026-05-23T04:44:41",
+    "InvoiceNo": "MW/2627/5843",
+    "IsCorporate": false,
+    "LastCancellationDeadline": "2026-05-28T23:59:59",
+    "PostBookingRequestDetails": [],
+    "HotelConfirmationNo": null,
+    "HotelCode": "113049783",
+    "HotelId": 175950,
+    "HotelName": "Midtown Hotel",
+    "TBOHotelCode": "1031455",
+    "StarRating": 3,
+    "AddressLine1": "Ajmal Khan Rd,",
+    "AddressLine2": "",
+    "CountryCode": "IN",
+    "Latitude": "28.645400",
+    "Longitude": "77.189400",
+    "City": "New Delhi",
+    "CityId": 130443,
+    "CheckInDate": "2026-05-30T00:00:00",
+    "InitialCheckInDate": "2026-05-30T00:00:00",
+    "CheckOutDate": "2026-05-31T00:00:00",
+    "InitialCheckOutDate": "2026-05-31T00:00:00",
+    "LastCancellationDate": "2026-05-28T23:59:59",
+    "LastVoucherDate": "2026-05-28T23:59:59",
+    "NoOfRooms": 2,
+    "BookingDate": "2026-05-23T04:44:41",
+    "SpecialRequest": "",
+    "IsDomestic": true,
+    "BookingAllowedForRoamer": true
+  }
+}

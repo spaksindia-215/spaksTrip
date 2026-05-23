@@ -1,0 +1,607 @@
+{
+  "Status": {
+    "Code": 200,
+    "Description": "Successful"
+  },
+  "HotelResult": [
+    {
+      "HotelCode": "1031524",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Family Room,2 Double Beds"
+          ],
+          "BookingCode": "1031524!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast,Free self parking",
+          "TotalFare": 11068.12,
+          "TotalTax": 1738.32,
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        }
+      ]
+    },
+    {
+      "HotelCode": "1022371",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "The Roseate Luxury Suite, Hi-Tea, 20% Dis Food and Soft Bev Spa Laundry Car Service, Airport Transfers,1 King Bed"
+          ],
+          "BookingCode": "1022371!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 76244.57,
+          "TotalTax": 12016.44,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        }
+      ]
+    },
+    {
+      "HotelCode": "1083269",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Family Room (2 Rooms with 1 Washroom),2 Double Beds"
+          ],
+          "BookingCode": "1083269!TB!4!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Room Only",
+          "TotalFare": 3693.44,
+          "TotalTax": 192.39,
+          "RoomPromotion": [
+            "Book now and save"
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Suite Room,1 King Bed"
+          ],
+          "BookingCode": "1083269!TB!3!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Room Only",
+          "TotalFare": 4769.61,
+          "TotalTax": 248.25,
+          "RoomPromotion": [
+            "Book now and save"
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Family Room (2 Rooms with 1 Washroom),2 Double Beds"
+          ],
+          "BookingCode": "1083269!TB!5!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast",
+          "TotalFare": 4769.61,
+          "TotalTax": 248.25,
+          "RoomPromotion": [
+            "Book now and save"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Suite Room 2.0,1 King Bed"
+          ],
+          "BookingCode": "1083269!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast",
+          "TotalFare": 4819.53,
+          "TotalTax": 231.3,
+          "RoomPromotion": [
+            "Save:23%"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Suite Room,1 King Bed"
+          ],
+          "BookingCode": "1083269!TB!2!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast",
+          "TotalFare": 5985.59,
+          "TotalTax": 311.81,
+          "RoomPromotion": [
+            "Book now and save"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        }
+      ]
+    },
+    {
+      "HotelCode": "1083410",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Superior Room, 1 King Bed"
+          ],
+          "BookingCode": "1083410!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free self parking",
+          "TotalFare": 5650.3,
+          "TotalTax": 279.69,
+          "RoomPromotion": [
+            "Save:46%"
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Superior Room, 1 King Bed"
+          ],
+          "BookingCode": "1083410!TB!2!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Breakfast buffet,Free self parking",
+          "TotalFare": 6142.51,
+          "TotalTax": 304.27,
+          "RoomPromotion": [
+            "Save:46%"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        }
+      ]
+    },
+    {
+      "HotelCode": "1062257",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Deluxe Room,2 Twin Beds"
+          ],
+          "BookingCode": "1062257!TB!4!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Full Breakfast,Free valet parking,Free self parking",
+          "TotalFare": 5157.15,
+          "TotalTax": 263.5,
+          "MealType": "BreakFast",
+          "IsRefundable": false,
+          "WithTransfers": false,
+          "BeddingGroup": "Bedding type is not guaranteed and it will be allocated by hotel based on availability"
+        },
+        {
+          "Name": [
+            "Deluxe Room,1 King Bed"
+          ],
+          "BookingCode": "1062257!TB!5!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Full Breakfast,Free valet parking,Free self parking",
+          "TotalFare": 5157.15,
+          "TotalTax": 263.5,
+          "MealType": "BreakFast",
+          "IsRefundable": false,
+          "WithTransfers": false,
+          "BeddingGroup": "Bedding type is not guaranteed and it will be allocated by hotel based on availability"
+        },
+        {
+          "Name": [
+            "Deluxe Room,1 King Bed"
+          ],
+          "BookingCode": "1062257!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Full Breakfast,Free valet parking,Free self parking",
+          "TotalFare": 5672.25,
+          "TotalTax": 278.76,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "BeddingGroup": "Bedding type is not guaranteed and it will be allocated by hotel based on availability"
+        },
+        {
+          "Name": [
+            "Deluxe Room,2 Twin Beds"
+          ],
+          "BookingCode": "1062257!TB!6!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Full Breakfast,Free valet parking,Free self parking",
+          "TotalFare": 5672.25,
+          "TotalTax": 278.76,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "BeddingGroup": "Bedding type is not guaranteed and it will be allocated by hotel based on availability"
+        },
+        {
+          "Name": [
+            "Business Room (Business Class),1 King Bed"
+          ],
+          "BookingCode": "1062257!TB!3!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Full Breakfast,Free valet parking,Free self parking",
+          "TotalFare": 10441.31,
+          "TotalTax": 1693.4,
+          "MealType": "BreakFast",
+          "IsRefundable": false,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Business Room (Business Class),1 King Bed"
+          ],
+          "BookingCode": "1062257!TB!2!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Full Breakfast,Free valet parking,Free self parking",
+          "TotalFare": 11424.59,
+          "TotalTax": 1793.32,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        }
+      ]
+    },
+    {
+      "HotelCode": "1083320",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Classic Room,2 Twin Beds"
+          ],
+          "BookingCode": "1083320!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free self parking",
+          "TotalFare": 5297.47,
+          "TotalTax": 270.28,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "BeddingGroup": "Bedding type is not guaranteed and it will be allocated by hotel based on availability"
+        }
+      ]
+    },
+    {
+      "HotelCode": "1031581",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Triple Room,2 King Beds"
+          ],
+          "BookingCode": "1031581!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast,Free self parking",
+          "TotalFare": 3192.58,
+          "TotalTax": 191.46,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "BeddingGroup": "Bedding type is not guaranteed and it will be allocated by hotel based on availability"
+        },
+        {
+          "Name": [
+            "Triple Room,2 King Beds"
+          ],
+          "BookingCode": "1031581!TB!2!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free self parking",
+          "TotalFare": 3931.9,
+          "TotalTax": 224.52,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "BeddingGroup": "Bedding type is not guaranteed and it will be allocated by hotel based on availability"
+        }
+      ]
+    },
+    {
+      "HotelCode": "1031592",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Deluxe Room,2 Double Beds"
+          ],
+          "BookingCode": "1031592!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Breakfast buffet,Free self parking",
+          "TotalFare": 5634.96,
+          "TotalTax": 271.22,
+          "RoomPromotion": [
+            "Book now and save"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "BeddingGroup": "Bedding type is not guaranteed and it will be allocated by hotel based on availability"
+        }
+      ]
+    },
+    {
+      "HotelCode": "1047981",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Family Room,2 Double Beds"
+          ],
+          "BookingCode": "1047981!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Early check-in (subject to availability),Free self parking",
+          "TotalFare": 1726.79,
+          "TotalTax": 83.06,
+          "RoomPromotion": [
+            "Private sale"
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false
+        }
+      ]
+    },
+    {
+      "HotelCode": "1033560",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Deluxe Room,1 King Bed"
+          ],
+          "BookingCode": "1033560!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free valet parking,Free self parking",
+          "TotalFare": 20148.06,
+          "TotalTax": 3268.14,
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Deluxe Room,1 King Bed"
+          ],
+          "BookingCode": "1033560!TB!2!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 21622.36,
+          "TotalTax": 3507.15,
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Luxury Room,1 King Bed"
+          ],
+          "BookingCode": "1033560!TB!3!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 23587.53,
+          "TotalTax": 3825.74,
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Premier Room,1 King Bed"
+          ],
+          "BookingCode": "1033560!TB!4!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Breakfast buffet,Free valet parking,Free self parking",
+          "TotalFare": 25553.63,
+          "TotalTax": 4145.35,
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Premier Plus Room,1 King Bed"
+          ],
+          "BookingCode": "1033560!TB!5!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 29848.57,
+          "TotalTax": 4862.38,
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        }
+      ]
+    },
+    {
+      "HotelCode": "1033556",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Deluxe Room King Bed Diplomatic Enclave View,1 King Bed"
+          ],
+          "BookingCode": "1033556!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 15573.13,
+          "TotalTax": 2465.51,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Deluxe Room Twin Bed Diplomatic Enclave View,2 Twin Beds"
+          ],
+          "BookingCode": "1033556!TB!2!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 16442.54,
+          "TotalTax": 2601.88,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Deluxe Room King Bed Forest and Pool View,1 King Bed"
+          ],
+          "BookingCode": "1033556!TB!3!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 16442.54,
+          "TotalTax": 2601.88,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Deluxe Room King Bed Diplomatic Enclave View,1 King Bed"
+          ],
+          "BookingCode": "1033556!TB!4!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free dinner,Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 17863.07,
+          "TotalTax": 2840.05,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "Half_Board",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Deluxe Room King Bed Forest and Pool View,1 King Bed"
+          ],
+          "BookingCode": "1033556!TB!5!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free dinner,Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 18717.36,
+          "TotalTax": 2976.59,
+          "RoomPromotion": [
+            "Member’s exclusive price"
+          ],
+          "MealType": "Half_Board",
+          "IsRefundable": true,
+          "WithTransfers": false
+        }
+      ]
+    },
+    {
+      "HotelCode": "1057361",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Premium Quadruple Room,2 Double Beds"
+          ],
+          "BookingCode": "1057361!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free self parking",
+          "TotalFare": 9085.49,
+          "TotalTax": 1423.03,
+          "RoomPromotion": [
+            "Book now and save"
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false
+        }
+      ]
+    },
+    {
+      "HotelCode": "1033562",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Taj Club Premium Room,1 King Bed"
+          ],
+          "BookingCode": "1033562!TB!1!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free one-way airport transfer,Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 27484.34,
+          "TotalTax": 4216.55,
+          "RoomPromotion": [
+            "Book now and save"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Taj Club, Club Suite,1 King Bed"
+          ],
+          "BookingCode": "1033562!TB!2!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free one-way airport transfer,Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 28867.28,
+          "TotalTax": 4428.43,
+          "RoomPromotion": [
+            "Book now and save"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Taj Club, Club Suite,1 King Bed"
+          ],
+          "BookingCode": "1033562!TB!3!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free dinner,Free one-way airport transfer,Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 35259.4,
+          "TotalTax": 5408.96,
+          "RoomPromotion": [
+            "Book now and save"
+          ],
+          "MealType": "Half_Board",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Taj Club, Club Suite, Balcony,1 King Bed"
+          ],
+          "BookingCode": "1033562!TB!4!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free one-way airport transfer,Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 36551.44,
+          "TotalTax": 5607.37,
+          "RoomPromotion": [
+            "Book now and save"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Luxury Suite, 1 Bedroom,1 King Bed"
+          ],
+          "BookingCode": "1033562!TB!5!TB!734bb0d6-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast,Free valet parking,Free self parking",
+          "TotalFare": 36616.28,
+          "TotalTax": 5617.54,
+          "RoomPromotion": [
+            "Book now and save"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": true,
+          "WithTransfers": false
+        }
+      ]
+    }
+  ]
+}

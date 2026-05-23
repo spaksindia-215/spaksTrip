@@ -1,0 +1,26 @@
+{
+  "name": "tbo-hotel-certification-runner",
+  "version": "1.0.0",
+  "description": "TBO Hotel API Certification Test Runner for SpaksTrip",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "start:all": "ts-node src/index.ts --all",
+    "start:case": "ts-node src/index.ts --case",
+    "build": "tsc",
+    "run:prod": "node dist/index.js",
+    "package": "ts-node src/package-submission.ts"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  }
+}

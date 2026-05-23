@@ -1,0 +1,7 @@
+{
+  "caseNumber": 4,
+  "caseName": "Case 4 - Domestic (Room 1: Adult 1, Child 2) (Room 2: Adult 2)",
+  "timestamp": "2026-05-21T17:21:01.870Z",
+  "error": "[Book] TBO error 2: Error in Supplier Response: Exception while reading price check response : System.NullReferenceException: Object reference not set to an instance of an object.\n   at API.Hotel.Suppliers.EAN.VerifyPrice(OTA_HotelResRQ& pReservationRequest, String& pPriceChangeMessage, String& bookToken)",
+  "stack": "ValidationError: [Book] TBO error 2: Error in Supplier Response: Exception while reading price check response : System.NullReferenceException: Object reference not set to an instance of an object.\n   at API.Hotel.Suppliers.EAN.VerifyPrice(OTA_HotelResRQ& pReservationRequest, String& pPriceChangeMessage, String& bookToken)\n    at validateBookResponse (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\validator.ts:106:11)\n    at runBookingFlow (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\bookingFlow.ts:334:23)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async runCertification (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\runner.ts:65:22)\n    at async main (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\index.ts:51:20)"
+}

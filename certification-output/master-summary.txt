@@ -1,0 +1,41 @@
+TBO Hotel API Certification — Master Summary
+============================================================
+Generated: 2026-05-23T04:53:39.246Z
+
+Total Cases : 8
+Passed      : 8
+Failed      : 0
+
+Case Results
+------------------------------------------------------------
+[PASS] Case 1: Case 1 - Domestic (Room 1: Adult 1)
+       BookingId: 2132111 | Conf: 7717512266428
+       Duration: 23758ms
+
+[PASS] Case 2: Case 2 - Domestic (Room 1: Adult 2, Child 2)
+       BookingId: 2132114 | Conf: 2014914865
+       Duration: 263979ms
+
+[PASS] Case 3: Case 3 - Domestic (Room 1: Adult 1) (Room 2: Adult 1)
+       BookingId: 2132115 | Conf: 7714579635718
+       Duration: 24284ms
+
+[PASS] Case 4: Case 4 - Domestic (Room 1: Adult 1, Child 2) (Room 2: Adult 2)
+       BookingId: 2132116 | Conf: 2014916089
+       Duration: 195405ms
+
+[PASS] Case 5: Case 5 - International (Room 1: Adult 1)
+       BookingId: 2132117 | Conf: 7957823430785
+       Duration: 30324ms
+
+[PASS] Case 6: Case 6 - International (Room 1: Adult 2, Child 2)
+       BookingId: 2132118 | Conf: 2014916806
+       Duration: 84535ms
+
+[PASS] Case 7: Case 7 - International (Room 1: Adult 1) (Room 2: Adult 1)
+       BookingId: 2132119 | Conf: 7326939702501
+       Duration: 31321ms
+
+[PASS] Case 8: Case 8 - International (Room 1: Adult 1, Child 2) (Room 2: Adult 2)
+       BookingId: 2132122 | Conf: 2014917938
+       Duration: 165514ms

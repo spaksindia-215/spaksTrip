@@ -128,6 +128,7 @@ function GuestInner() {
                           value={g.firstName}
                           onChange={(e) => updateGuest(i, "firstName", e.target.value)}
                           placeholder="As on ID"
+                          autoComplete="given-name"
                         />
                         <Input
                           id={`guest-last-name-${i}`}
@@ -135,6 +136,7 @@ function GuestInner() {
                           value={g.lastName}
                           onChange={(e) => updateGuest(i, "lastName", e.target.value)}
                           placeholder="As on ID"
+                          autoComplete="family-name"
                         />
                       </div>
                     </div>

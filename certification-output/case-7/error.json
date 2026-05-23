@@ -1,0 +1,7 @@
+{
+  "caseNumber": 7,
+  "caseName": "Case 7 - International (Room 1: Adult 1) (Room 2: Adult 1)",
+  "timestamp": "2026-05-22T08:36:46.860Z",
+  "error": "All candidate hotels exhausted across 1 search batch(es) for city 130264. Total skipped: 1 hotel(s) [1664286]. Try a different city code or check account limits.",
+  "stack": "Error: All candidate hotels exhausted across 1 search batch(es) for city 130264. Total skipped: 1 hotel(s) [1664286]. Try a different city code or check account limits.\n    at runBookingFlow (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\bookingFlow.ts:499:9)\n    at async runCertification (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\runner.ts:65:22)\n    at async main (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\index.ts:60:20)"
+}

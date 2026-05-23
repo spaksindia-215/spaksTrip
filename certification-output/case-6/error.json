@@ -1,0 +1,7 @@
+{
+  "caseNumber": 6,
+  "caseName": "Case 6 - International (Room 1: Adult 2, Child 2)",
+  "timestamp": "2026-05-23T04:32:16.277Z",
+  "error": "[PreBook] Unexpected status 201: No Available rooms for given criteria",
+  "stack": "ValidationError: [PreBook] Unexpected status 201: No Available rooms for given criteria\n    at validatePreBookResponse (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\validator.ts:67:11)\n    at attemptBookingForHotel (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\bookingFlow.ts:245:26)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async runBookingFlow (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\bookingFlow.ts:453:24)\n    at async runCertification (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\runner.ts:65:22)\n    at async main (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\index.ts:60:20)"
+}

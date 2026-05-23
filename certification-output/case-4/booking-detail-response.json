@@ -1,0 +1,341 @@
+{
+  "GetBookingDetailResult": {
+    "TBOReferenceNo": "TBCJCDDA0W",
+    "VoucherStatus": true,
+    "ResponseStatus": 1,
+    "Error": {
+      "ErrorCode": 0,
+      "ErrorMessage": ""
+    },
+    "TraceId": "24da7e58-5662-11f1-80ca-d2b16b9afa66",
+    "Status": 1,
+    "HotelBookingStatus": "Confirmed",
+    "ConfirmationNo": "2014916089",
+    "BookingRefNo": "2016564532",
+    "BookingId": 2132116,
+    "IsPriceChanged": false,
+    "IsCancellationPolicyChanged": false,
+    "Rooms": [
+      {
+        "AdultCount": 1,
+        "AvailabilityType": "NotAvailable",
+        "ChildAge": [
+          9,
+          6
+        ],
+        "ChildCount": 2,
+        "HotelPassenger": [
+          {
+            "Age": 30,
+            "Email": "test@spakstrip.com",
+            "FileDocument": null,
+            "FirstName": "Robert",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Johnson",
+            "LeadPassenger": true,
+            "MiddleName": null,
+            "PAN": null,
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273667,
+            "PaxType": 1,
+            "Phoneno": "9999999999",
+            "Title": "Mr"
+          },
+          {
+            "Age": 9,
+            "Email": null,
+            "FileDocument": null,
+            "FirstName": "Emma",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Smith",
+            "LeadPassenger": false,
+            "MiddleName": null,
+            "PAN": null,
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273668,
+            "PaxType": 2,
+            "Phoneno": null,
+            "Title": "Mstr"
+          },
+          {
+            "Age": 6,
+            "Email": null,
+            "FileDocument": null,
+            "FirstName": "Liam",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Smith",
+            "LeadPassenger": false,
+            "MiddleName": null,
+            "PAN": null,
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273669,
+            "PaxType": 2,
+            "Phoneno": null,
+            "Title": "Mstr"
+          }
+        ],
+        "RequireAllPaxDetails": false,
+        "RoomId": 202118,
+        "RoomStatus": 0,
+        "RoomIndex": 1,
+        "RoomTypeCode": "3168255|v1",
+        "RoomDescription": "Luxury Room",
+        "RoomTypeName": "Luxury Room",
+        "RatePlanCode": "957756|217031911|v1_CgEtEMwCGi4KHTIwMjYtMDYtMjJUMDA6MDA6MDAuMDAwKzA3OjAwEAEY3w0gAigDMgIGCTgCIgIIAQ==",
+        "RatePlan": 0,
+        "IsPerStay": true,
+        "PriceBreakUp": {
+          "CurrencyCode": "INR",
+          "RoomRate": 8399.19,
+          "RoomTax": 1769.68,
+          "RoomExtraGuestCharges": 0,
+          "RoomChildCharges": 0,
+          "ServiceFee": 0,
+          "AgentCommission": 839.92,
+          "TaxBreakup": [
+            {
+              "TaxType": "Tax_CGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_IGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_SGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TCS",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TDS",
+              "TaxAmount": 16.8
+            }
+          ]
+        },
+        "RoomPromotion": null,
+        "Amenities": [],
+        "SmokingPreference": "NoPreference",
+        "BedTypes": [],
+        "Supplements": [],
+        "LastCancellationDate": "2026-06-20T23:59:59",
+        "CancelPolicies": [
+          {
+            "CancellationCharge": 0,
+            "ChargeType": 1,
+            "Currency": "INR",
+            "FromDate": "22/05/2026 00:00:00",
+            "ToDate": "20/06/2026 23:59:59"
+          },
+          {
+            "CancellationCharge": 100,
+            "ChargeType": 2,
+            "Currency": "INR",
+            "FromDate": "21/06/2026 00:00:00",
+            "ToDate": "21/06/2026 23:59:59"
+          }
+        ],
+        "CancellationPolicies": null,
+        "LastVoucherDate": "2026-06-20T23:59:59",
+        "CancellationPolicy": "Luxury Room#^#No cancellation charge, If cancelled between 22-May-2026 00:00:00 and 20-Jun-2026 23:59:59.|100.00% of total amount will be charged, If cancelled between 21-Jun-2026 00:00:00 and 21-Jun-2026 23:59:59.|#!#",
+        "Inclusion": "FOOD namp; BEVERAGE DISCOUNT 10%,PARKING,WELCOME DRINK,EXPRESS CHECK-IN,FREE WIFI,DRINKING WATER,FREE FITNESS CENTER ACCESS,Extra Bed"
+      },
+      {
+        "AdultCount": 2,
+        "AvailabilityType": "NotAvailable",
+        "ChildCount": 0,
+        "HotelPassenger": [
+          {
+            "Age": 28,
+            "Email": "test@spakstrip.com",
+            "FileDocument": null,
+            "FirstName": "Sarah",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Johnson",
+            "LeadPassenger": true,
+            "MiddleName": null,
+            "PAN": null,
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273670,
+            "PaxType": 1,
+            "Phoneno": "9999999999",
+            "Title": "Mrs"
+          },
+          {
+            "Age": 30,
+            "Email": null,
+            "FileDocument": null,
+            "FirstName": "Michael",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Johnson",
+            "LeadPassenger": false,
+            "MiddleName": null,
+            "PAN": null,
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273671,
+            "PaxType": 1,
+            "Phoneno": null,
+            "Title": "Mr"
+          }
+        ],
+        "RequireAllPaxDetails": false,
+        "RoomId": 202119,
+        "RoomStatus": 0,
+        "RoomIndex": 2,
+        "RoomTypeCode": "3168255|v1",
+        "RoomDescription": "Luxury Room",
+        "RoomTypeName": "Luxury Room",
+        "RatePlanCode": "957756|217031911|v1_CgEtEMwCGi4KHTIwMjYtMDYtMjJUMDA6MDA6MDAuMDAwKzA3OjAwEAEY3w0gAigDMgIGCTgCIgIIAQ==",
+        "RatePlan": 0,
+        "IsPerStay": true,
+        "PriceBreakUp": {
+          "CurrencyCode": "INR",
+          "RoomRate": 8399.19,
+          "RoomTax": 1769.68,
+          "RoomExtraGuestCharges": 0,
+          "RoomChildCharges": 0,
+          "ServiceFee": 0,
+          "AgentCommission": 839.92,
+          "TaxBreakup": [
+            {
+              "TaxType": "Tax_CGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_IGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_SGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TCS",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TDS",
+              "TaxAmount": 16.8
+            }
+          ]
+        },
+        "RoomPromotion": null,
+        "Amenities": [],
+        "SmokingPreference": "NoPreference",
+        "BedTypes": [],
+        "Supplements": [],
+        "LastCancellationDate": "2026-06-20T23:59:59",
+        "CancelPolicies": [
+          {
+            "CancellationCharge": 0,
+            "ChargeType": 1,
+            "Currency": "INR",
+            "FromDate": "22/05/2026 00:00:00",
+            "ToDate": "20/06/2026 23:59:59"
+          },
+          {
+            "CancellationCharge": 100,
+            "ChargeType": 2,
+            "Currency": "INR",
+            "FromDate": "21/06/2026 00:00:00",
+            "ToDate": "21/06/2026 23:59:59"
+          }
+        ],
+        "CancellationPolicies": null,
+        "LastVoucherDate": "2026-06-20T23:59:59",
+        "CancellationPolicy": "Luxury Room#^#No cancellation charge, If cancelled between 22-May-2026 00:00:00 and 20-Jun-2026 23:59:59.|100.00% of total amount will be charged, If cancelled between 21-Jun-2026 00:00:00 and 21-Jun-2026 23:59:59.|#!#",
+        "Inclusion": "FOOD namp; BEVERAGE DISCOUNT 10%,PARKING,WELCOME DRINK,EXPRESS CHECK-IN,FREE WIFI,DRINKING WATER,FREE FITNESS CENTER ACCESS,Extra Bed"
+      }
+    ],
+    "NetAmount": 18691.5,
+    "NetTax": 3572.96,
+    "RateConditions": [
+      "Early check out will attract full cancellation charge unless otherwise specified",
+      "Remark :Guests must provide a valid form of government regulated identification (eg. passport, ID card, driver’s license, etc.) upon check-in. nlt;br/ngt; The hotel reserves the right of admission. Accommodation can be denied to guests posing as a couple if suitable proof of identification is not presented at check-in. nlt;brngt;nlt;brngt;The hotel reserves the right of admission for local residents. Accommodation can be denied to guests residing within the city. All forms of local ID are not valid. nlt;br/ngt; Please note that any changes in tax structure due to government policies will result in revised taxes, which will be applicable to all reservations and will be charged additionally during check out.Children 2 - 8 year(s) : Stay for free if using existing bedding.",
+      "Extra person charges may apply at check-in, as per the property's policy."
+    ],
+    "AgentRemarks": "",
+    "BookingSource": "Agoda",
+    "BookingStatus": 2,
+    "CreditNoteGSTIN": null,
+    "GSTIN": null,
+    "GuestNationality": "IN",
+    "HotelItineraryTracking": {
+      "CampaignId": null,
+      "CampaignName": null,
+      "IsLovedByIndians": false,
+      "IsSelectedFromSimilar": false,
+      "ItineraryTrackingJson": null,
+      "SearchType": 1
+    },
+    "HotelPolicyDetail": null,
+    "IntHotelPassportDetails": null,
+    "InvoiceAmount": 18692,
+    "InvoiceCreatedOn": "2026-05-23T04:48:02",
+    "InvoiceNo": "MW/2627/5844",
+    "IsCorporate": false,
+    "LastCancellationDeadline": "2026-06-20T23:59:59",
+    "PostBookingRequestDetails": [],
+    "HotelConfirmationNo": null,
+    "HotelCode": "178188",
+    "HotelId": 175951,
+    "HotelName": "Majestic Palace",
+    "TBOHotelCode": "1031465",
+    "StarRating": 2,
+    "AddressLine1": "4/35, W.E.A. Saraswati Marg Karol Bagh, Western Extension AreaKarol BaghNew Delhi 110005",
+    "AddressLine2": "",
+    "CountryCode": "IN",
+    "Latitude": "28.648029",
+    "Longitude": "77.188578",
+    "City": "New Delhi",
+    "CityId": 130443,
+    "CheckInDate": "2026-06-22T00:00:00",
+    "InitialCheckInDate": "2026-06-22T00:00:00",
+    "CheckOutDate": "2026-06-23T00:00:00",
+    "InitialCheckOutDate": "2026-06-23T00:00:00",
+    "LastCancellationDate": "2026-06-20T23:59:59",
+    "LastVoucherDate": "2026-06-20T23:59:59",
+    "NoOfRooms": 2,
+    "BookingDate": "2026-05-23T04:48:01",
+    "SpecialRequest": "",
+    "IsDomestic": true,
+    "BookingAllowedForRoamer": true
+  }
+}

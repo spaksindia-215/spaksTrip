@@ -1,0 +1,20 @@
+{
+  "BookResult": {
+    "TBOReferenceNo": null,
+    "VoucherStatus": true,
+    "ResponseStatus": 1,
+    "Error": {
+      "ErrorCode": 0,
+      "ErrorMessage": ""
+    },
+    "TraceId": "62271611-5661-11f1-80ca-d2b16b9afa66",
+    "Status": 1,
+    "HotelBookingStatus": "Confirmed",
+    "InvoiceNumber": "MW/2627/5840",
+    "ConfirmationNo": "7717512266428",
+    "BookingRefNo": "159160400818961",
+    "BookingId": 2132111,
+    "IsPriceChanged": false,
+    "IsCancellationPolicyChanged": false
+  }
+}

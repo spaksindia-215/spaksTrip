@@ -1,0 +1,113 @@
+{
+  "Status": {
+    "Code": 200,
+    "Description": "Successful"
+  },
+  "HotelResult": [
+    {
+      "HotelCode": "1018364",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Superior Room -- 2 Bed",
+            "Superior Room -- 2 Bed"
+          ],
+          "BookingCode": "1018364!TB!1!TB!fcb82e7f-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "PARKING,WELCOME DRINK,COFFEE namp; TEA,EXPRESS CHECK-IN,FREE WIFI,DRINKING WATER,FREE FITNESS CENTER ACCESS,Extra Bed",
+          "DayRates": [
+            [
+              {
+                "BasePrice": 6888.78
+              }
+            ],
+            [
+              {
+                "BasePrice": 6888.78
+              }
+            ]
+          ],
+          "TotalFare": 16486.32,
+          "TotalTax": 2708.76,
+          "NetAmount": 16516.931522428,
+          "NetTax": 2739.3769998280004,
+          "RoomPromotion": [
+            "Super Saver",
+            "Super Saver"
+          ],
+          "CancelPolicies": [
+            {
+              "FromDate": "22-05-2026 00:00:00",
+              "ChargeType": "Fixed",
+              "CancellationCharge": 0
+            },
+            {
+              "FromDate": "21-06-2026 00:00:00",
+              "ChargeType": "Percentage",
+              "CancellationCharge": 100
+            },
+            {
+              "FromDate": "23-06-2026 00:00:00",
+              "ChargeType": "Percentage",
+              "CancellationCharge": 100
+            }
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "LastCancellationDeadline": "20-06-2026 23:59:59",
+          "PriceBreakUp": [
+            {
+              "RoomRate": 7654.196957,
+              "RoomTax": 1354.3801060000003,
+              "AgentCommission": 765.4196957,
+              "TaxBreakup": [
+                {
+                  "TaxType": "Tax_TDS",
+                  "TaxableAmount": 765.4196957,
+                  "TaxPercentage": 2,
+                  "TaxAmount": 15.308393914
+                }
+              ]
+            },
+            {
+              "RoomRate": 7654.196957,
+              "RoomTax": 1354.3801060000003,
+              "AgentCommission": 765.4196957,
+              "TaxBreakup": [
+                {
+                  "TaxType": "Tax_TDS",
+                  "TaxableAmount": 765.4196957,
+                  "TaxPercentage": 2,
+                  "TaxAmount": 15.308393914
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "RateConditions": [
+        "Early check out will attract full cancellation charge unless otherwise specified",
+        "Children 2 - 12 year(s) : Stay for free if using existing bedding."
+      ]
+    }
+  ],
+  "ValidationInfo": {
+    "PanMandatory": true,
+    "PassportMandatory": false,
+    "CorporateBookingAllowed": false,
+    "PanCountRequired": 1,
+    "SamePaxNameAllowed": true,
+    "SpaceAllowed": true,
+    "SpecialCharAllowed": false,
+    "PaxNameMinLength": 1,
+    "PaxNameMaxLength": 50,
+    "CharLimit": true,
+    "PackageFare": false,
+    "PackageDetailsMandatory": false,
+    "DepartureDetailsMandatory": false,
+    "GSTAllowed": false,
+    "CrpPANMandatory": true,
+    "IsAgencyOwnPANAllowed": false
+  }
+}

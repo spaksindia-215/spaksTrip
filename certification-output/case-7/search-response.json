@@ -1,0 +1,178 @@
+{
+  "Status": {
+    "Code": 200,
+    "Description": "Successful"
+  },
+  "HotelResult": [
+    {
+      "HotelCode": "1027991",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Deluxe Double Room,1 Double Bed and 1 Twin Sofa Bed",
+            "Deluxe Double Room,1 Double Bed and 1 Twin Sofa Bed"
+          ],
+          "BookingCode": "1027991!TB!1!TB!e64ccf94-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast",
+          "TotalFare": 30259.54,
+          "TotalTax": 3286.78,
+          "RoomPromotion": [
+            "Save:16%",
+            "Save:16%"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": false,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Deluxe Triple Room,1 Double Bed, 1 Twin Bed and 1 Twin Sofa Bed",
+            "Deluxe Triple Room,1 Double Bed, 1 Twin Bed and 1 Twin Sofa Bed"
+          ],
+          "BookingCode": "1027991!TB!2!TB!e64ccf94-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast",
+          "TotalFare": 46940.38,
+          "TotalTax": 5100.54,
+          "RoomPromotion": [
+            "Save:16%",
+            "Save:16%"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": false,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Family Duplex,1 Double Bed and 2 Twin Beds",
+            "Family Duplex,1 Double Bed and 2 Twin Beds"
+          ],
+          "BookingCode": "1027991!TB!3!TB!e64ccf94-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast",
+          "TotalFare": 69170.26,
+          "TotalTax": 7515.88,
+          "RoomPromotion": [
+            "Save:16%",
+            "Save:16%"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": false,
+          "WithTransfers": false
+        }
+      ]
+    },
+    {
+      "HotelCode": "1664286",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Standard Double or Twin Room,2 Twin Beds",
+            "Standard Double or Twin Room,2 Twin Beds"
+          ],
+          "BookingCode": "1664286!TB!1!TB!e64ccf94-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "All-inclusive (food/beverages/snacks),Free self parking",
+          "TotalFare": 23515.44,
+          "TotalTax": 2350.92,
+          "RoomPromotion": [
+            "Save:10%",
+            "Save:10%"
+          ],
+          "MealType": "All_Inclusive_All_Meal",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "BeddingGroup": "Bedding type is not guaranteed and it will be allocated by hotel based on availability"
+        },
+        {
+          "Name": [
+            "Triple Room,1 Double Bed and 1 Twin Bed",
+            "Triple Room,1 Double Bed and 1 Twin Bed"
+          ],
+          "BookingCode": "1664286!TB!2!TB!e64ccf94-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "All-inclusive (food/beverages/snacks),Free self parking",
+          "TotalFare": 23515.44,
+          "TotalTax": 2350.92,
+          "RoomPromotion": [
+            "Save:10%",
+            "Save:10%"
+          ],
+          "MealType": "All_Inclusive_All_Meal",
+          "IsRefundable": true,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Comfort Double or Twin Room,1 Double Bed",
+            "Comfort Double or Twin Room,1 Double Bed"
+          ],
+          "BookingCode": "1664286!TB!3!TB!e64ccf94-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "All-inclusive (food/beverages/snacks),Free self parking",
+          "TotalFare": 24843.12,
+          "TotalTax": 2611.98,
+          "RoomPromotion": [
+            "Save:10%",
+            "Save:10%"
+          ],
+          "MealType": "All_Inclusive_All_Meal",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "BeddingGroup": "Bedding type is not guaranteed and it will be allocated by hotel based on availability"
+        },
+        {
+          "Name": [
+            "Comfort Double or Twin Room,2 Twin Beds",
+            "Comfort Double or Twin Room,2 Twin Beds"
+          ],
+          "BookingCode": "1664286!TB!4!TB!e64ccf94-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "All-inclusive (food/beverages/snacks),Free self parking",
+          "TotalFare": 24843.12,
+          "TotalTax": 2611.98,
+          "RoomPromotion": [
+            "Save:10%",
+            "Save:10%"
+          ],
+          "MealType": "All_Inclusive_All_Meal",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "BeddingGroup": "Bedding type is not guaranteed and it will be allocated by hotel based on availability"
+        }
+      ]
+    },
+    {
+      "HotelCode": "1413256",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Deluxe Room,1 Double Bed",
+            "Deluxe Room,1 Double Bed"
+          ],
+          "BookingCode": "1413256!TB!1!TB!e64ccf94-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast",
+          "TotalFare": 20184.24,
+          "TotalTax": 2144.12,
+          "RoomPromotion": [
+            "Save11%",
+            "Save11%"
+          ],
+          "MealType": "BreakFast",
+          "IsRefundable": false,
+          "WithTransfers": false
+        },
+        {
+          "Name": [
+            "Deluxe Triple Room,2 Double Beds and 1 Twin Bed",
+            "Deluxe Triple Room,2 Double Beds and 1 Twin Bed"
+          ],
+          "BookingCode": "1413256!TB!2!TB!e64ccf94-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "Free breakfast",
+          "TotalFare": 33771.02,
+          "TotalTax": 3456.12,
+          "MealType": "BreakFast",
+          "IsRefundable": false,
+          "WithTransfers": false
+        }
+      ]
+    }
+  ]
+}

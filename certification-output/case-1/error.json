@@ -1,0 +1,7 @@
+{
+  "caseNumber": 1,
+  "caseName": "Case 1 - Domestic (Room 1: Adult 1)",
+  "timestamp": "2026-05-21T17:19:58.514Z",
+  "error": "[Voucher] TBO error 2: HotelVoucher already generated (InvoiceNumber :2135578 ). Please call GetBookingDetail method to know get the status.",
+  "stack": "ValidationError: [Voucher] TBO error 2: HotelVoucher already generated (InvoiceNumber :2135578 ). Please call GetBookingDetail method to know get the status.\n    at validateVoucherResponse (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\validator.ts:138:11)\n    at runBookingFlow (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\bookingFlow.ts:365:26)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async runCertification (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\runner.ts:65:22)\n    at async main (C:\\Users\\muska\\DESKTOP\\spaksTrip\\certification-runner\\src\\index.ts:51:20)"
+}

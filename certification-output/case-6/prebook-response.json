@@ -1,0 +1,93 @@
+{
+  "Status": {
+    "Code": 200,
+    "Description": "Successful"
+  },
+  "HotelResult": [
+    {
+      "HotelCode": "1002606",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Family room - 4 pax"
+          ],
+          "BookingCode": "1002606!TB!1!TB!b1b78659-5662-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "FREE WIFI,DRINKING WATER",
+          "DayRates": [
+            [
+              {
+                "BasePrice": 7047.44
+              }
+            ]
+          ],
+          "TotalFare": 8434.02,
+          "TotalTax": 1386.59,
+          "NetAmount": 8449.685925165999,
+          "NetTax": 1402.2478654660001,
+          "RoomPromotion": [
+            "Limited Time Offer. Price includes 30% discount!"
+          ],
+          "CancelPolicies": [
+            {
+              "FromDate": "22-05-2026 00:00:00",
+              "ChargeType": "Fixed",
+              "CancellationCharge": 0
+            },
+            {
+              "FromDate": "21-06-2026 00:00:00",
+              "ChargeType": "Percentage",
+              "CancellationCharge": 100
+            },
+            {
+              "FromDate": "23-06-2026 00:00:00",
+              "ChargeType": "Percentage",
+              "CancellationCharge": 100
+            }
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "LastCancellationDeadline": "20-06-2026 23:59:59",
+          "PriceBreakUp": [
+            {
+              "RoomRate": 7830.486733,
+              "RoomTax": 1386.586892,
+              "AgentCommission": 783.0486732999999,
+              "TaxBreakup": [
+                {
+                  "TaxType": "Tax_TDS",
+                  "TaxableAmount": 783.0486732999999,
+                  "TaxPercentage": 2,
+                  "TaxAmount": 15.660973465999998
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "RateConditions": [
+        "Early check out will attract full cancellation charge unless otherwise specified",
+        "Children 2 - 6 year(s) : Stay for free if using existing bedding."
+      ]
+    }
+  ],
+  "ValidationInfo": {
+    "PanMandatory": true,
+    "PassportMandatory": false,
+    "CorporateBookingAllowed": false,
+    "PanCountRequired": 1,
+    "SamePaxNameAllowed": true,
+    "SpaceAllowed": true,
+    "SpecialCharAllowed": false,
+    "PaxNameMinLength": 1,
+    "PaxNameMaxLength": 50,
+    "CharLimit": true,
+    "PackageFare": false,
+    "PackageDetailsMandatory": false,
+    "DepartureDetailsMandatory": false,
+    "GSTAllowed": false,
+    "CrpPANMandatory": true,
+    "IsAgencyOwnPANAllowed": false
+  }
+}

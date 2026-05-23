@@ -1,0 +1,88 @@
+{
+  "Status": {
+    "Code": 200,
+    "Description": "Successful"
+  },
+  "HotelResult": [
+    {
+      "HotelCode": "1297739",
+      "Currency": "INR",
+      "Rooms": [
+        {
+          "Name": [
+            "Family Room"
+          ],
+          "BookingCode": "1297739!TB!1!TB!f6ac408f-5661-11f1-80ca-d2b16b9afa66!TB!N!TB!AFF!",
+          "Inclusion": "PARKING,FREE WIFI",
+          "DayRates": [
+            [
+              {
+                "BasePrice": 5714.08
+              }
+            ]
+          ],
+          "TotalFare": 7106.6,
+          "TotalTax": 1392.52,
+          "NetAmount": 7119.294789454,
+          "NetTax": 1405.2176701540006,
+          "RoomPromotion": [
+            "Limited Time Offer. Super Hot Deal"
+          ],
+          "CancelPolicies": [
+            {
+              "FromDate": "22-05-2026 00:00:00",
+              "ChargeType": "Fixed",
+              "CancellationCharge": 0
+            },
+            {
+              "FromDate": "20-06-2026 00:00:00",
+              "ChargeType": "Percentage",
+              "CancellationCharge": 100
+            }
+          ],
+          "MealType": "Room_Only",
+          "IsRefundable": true,
+          "WithTransfers": false,
+          "LastCancellationDeadline": "19-06-2026 23:59:59",
+          "PriceBreakUp": [
+            {
+              "RoomRate": 6348.974577,
+              "RoomTax": 1392.5197210000006,
+              "AgentCommission": 634.8974576999999,
+              "TaxBreakup": [
+                {
+                  "TaxType": "Tax_TDS",
+                  "TaxableAmount": 634.8974576999999,
+                  "TaxPercentage": 2,
+                  "TaxAmount": 12.697949153999998
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "RateConditions": [
+        "Early check out will attract full cancellation charge unless otherwise specified",
+        "Remark :The property reserves the right of admission. Accommodation can be denied to guests posing as married couples if suitable ID proof is not presented at the time of check-in. nlt;br/ngt; These rates are only applicable to non-residents of New Delhi and NCR for promotional reasons. nlt;br/ngt; Please note that any changes in tax structure due to government policies will result in revised taxes, which will be applicable to all reservations and will be charged additionally during check out.Children 4 - 12 year(s) : Stay for free if using existing bedding."
+      ]
+    }
+  ],
+  "ValidationInfo": {
+    "PanMandatory": false,
+    "PassportMandatory": false,
+    "CorporateBookingAllowed": false,
+    "PanCountRequired": 0,
+    "SamePaxNameAllowed": true,
+    "SpaceAllowed": true,
+    "SpecialCharAllowed": false,
+    "PaxNameMinLength": 1,
+    "PaxNameMaxLength": 50,
+    "CharLimit": true,
+    "PackageFare": false,
+    "PackageDetailsMandatory": false,
+    "DepartureDetailsMandatory": false,
+    "GSTAllowed": false,
+    "CrpPANMandatory": false,
+    "IsAgencyOwnPANAllowed": false
+  }
+}

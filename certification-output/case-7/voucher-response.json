@@ -1,0 +1,17 @@
+{
+  "GenerateVoucherResult": {
+    "TBOReferenceNo": null,
+    "VoucherStatus": true,
+    "ResponseStatus": 2,
+    "Error": {
+      "ErrorCode": 2,
+      "ErrorMessage": "Booking under cancellation cannot be vouchered"
+    },
+    "TraceId": "e64ccf94-5662-11f1-80ca-d2b16b9afa66",
+    "Status": 0,
+    "HotelBookingStatus": null,
+    "ConfirmationNo": null,
+    "BookingRefNo": null,
+    "BookingId": 0
+  }
+}

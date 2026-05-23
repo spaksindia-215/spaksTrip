@@ -1,0 +1,51 @@
+TBO Hotel Certification - Case 1
+============================================================
+Case Name   : Case 1 - Domestic (Room 1: Adult 1)
+Timestamp   : 2026-05-23T04:39:25.081Z
+Duration    : 23757ms
+Success     : YES
+
+Booking Details
+----------------------------------------
+Hotel Name  : Midtown Hotel
+Hotel Code  : 1031455
+Booking ID  : 2132111
+Confirm No  : 7717512266428
+Booking Ref : 159160400818961
+Status      : Confirmed
+Voucher     : Generated
+
+Validation Results
+----------------------------------------
+Room Count  : 1
+Adult Count : 1
+Child Count : 0
+Child Ages  : None
+
+Log Entries
+----------------------------------------
+[1] [2026-05-23T04:39:25.083Z] Check-in: 2026-05-30 | Check-out: 2026-05-31
+[2] [2026-05-23T04:39:25.084Z] Step 1: Fetching hotel codes...
+[3] [2026-05-23T04:39:25.092Z] Fetching hotel codes for city: 130443
+[4] [2026-05-23T04:39:27.165Z] Found 3529 hotel(s) for city 130443
+[5] [2026-05-23T04:39:28.676Z] Step 2 (batch 1): Searching codes 1–150 of 600...
+[6] [2026-05-23T04:39:30.080Z] Saved: search-request.json
+[7] [2026-05-23T04:39:30.082Z] Saved: search-response.json
+[8] [2026-05-23T04:39:30.082Z] Batch 1: 38 candidate hotel(s). Top: 1031455 | Refundable: true | Rate: INR 1519.02
+[9] [2026-05-23T04:39:31.584Z] Step 3: Hotel PreBook (hotel 1031455)...
+[10] [2026-05-23T04:39:31.585Z] Saved: prebook-request.json
+[11] [2026-05-23T04:39:33.300Z] Saved: prebook-response.json
+[12] [2026-05-23T04:39:33.301Z] PreBook OK | NetAmount: 1519.3491967210002 | PassportRequired: false | PANRequired: false
+[13] [2026-05-23T04:39:34.808Z] Step 4: Hotel Book...
+[14] [2026-05-23T04:39:34.810Z] Saved: booking-request.json
+[15] [2026-05-23T04:39:44.226Z] Saved: booking-response.json
+[16] [2026-05-23T04:39:44.226Z] Booking Confirmed | ID: 2132111 | Conf: 7717512266428 | Status: Confirmed
+[17] [2026-05-23T04:39:45.727Z] Step 5: Generate Voucher...
+[18] [2026-05-23T04:39:45.728Z] Saved: voucher-request.json
+[19] [2026-05-23T04:39:46.432Z] Saved: voucher-response.json
+[20] [2026-05-23T04:39:46.433Z] Voucher Status: Generated
+[21] [2026-05-23T04:39:47.947Z] Step 6: Get Booking Details...
+[22] [2026-05-23T04:39:48.834Z] Saved: booking-detail-response.json
+[23] [2026-05-23T04:39:48.834Z] Hotel Name: Midtown Hotel
+
+Files saved to: C:\Users\muska\DESKTOP\spaksTrip\certification-output\case-1

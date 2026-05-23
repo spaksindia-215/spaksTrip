@@ -1,0 +1,59 @@
+TBO Hotel Certification - Case 5
+============================================================
+Case Name   : Case 5 - International (Room 1: Adult 1)
+Timestamp   : 2026-05-23T04:48:12.530Z
+Duration    : 30323ms
+Success     : YES
+
+Booking Details
+----------------------------------------
+Hotel Name  : Lugga Boutique Hotel & Beach
+Hotel Code  : 1027991
+Booking ID  : 2132117
+Confirm No  : 7957823430785
+Booking Ref : 291910477591441
+Status      : Confirmed
+Voucher     : Generated
+
+Validation Results
+----------------------------------------
+Room Count  : 1
+Adult Count : 1
+Child Count : 0
+Child Ages  : None
+
+Log Entries
+----------------------------------------
+[1] [2026-05-23T04:48:12.530Z] Check-in: 2026-05-30 | Check-out: 2026-05-31
+[2] [2026-05-23T04:48:12.530Z] Step 1: Fetching hotel codes...
+[3] [2026-05-23T04:48:12.530Z] Fetching hotel codes for city: 130264
+[4] [2026-05-23T04:48:13.475Z] Found 27 hotel(s) for city 130264
+[5] [2026-05-23T04:48:14.983Z] Step 2 (batch 1): Searching codes 1–27 of 27...
+[6] [2026-05-23T04:48:15.994Z] Saved: search-request.json
+[7] [2026-05-23T04:48:15.995Z] Saved: search-response.json
+[8] [2026-05-23T04:48:15.995Z] Batch 1: 3 candidate hotel(s). Top: 1664286 | Refundable: true | Rate: INR 11757.72
+[9] [2026-05-23T04:48:17.498Z] Step 3: Hotel PreBook (hotel 1664286)...
+[10] [2026-05-23T04:48:17.499Z] Saved: prebook-request.json
+[11] [2026-05-23T04:48:20.237Z] Saved: prebook-response.json
+[12] [2026-05-23T04:48:20.237Z] Hotel 1664286 skipped: [PreBook] Unexpected status 500: Unexpected Error. Trying next...
+[13] [2026-05-23T04:48:21.750Z] Step 3: Hotel PreBook (hotel 1413256)...
+[14] [2026-05-23T04:48:21.751Z] Saved: prebook-request.json
+[15] [2026-05-23T04:48:23.712Z] Saved: prebook-response.json
+[16] [2026-05-23T04:48:23.713Z] Hotel 1413256 skipped: [PreBook] Unexpected status 500: Unexpected Error. Trying next...
+[17] [2026-05-23T04:48:25.220Z] Step 3: Hotel PreBook (hotel 1027991)...
+[18] [2026-05-23T04:48:25.221Z] Saved: prebook-request.json
+[19] [2026-05-23T04:48:26.951Z] Saved: prebook-response.json
+[20] [2026-05-23T04:48:26.952Z] PreBook OK | NetAmount: 15132.328737955002 | PassportRequired: false | PANRequired: true
+[21] [2026-05-23T04:48:28.455Z] Step 4: Hotel Book...
+[22] [2026-05-23T04:48:28.456Z] Saved: booking-request.json
+[23] [2026-05-23T04:48:38.255Z] Saved: booking-response.json
+[24] [2026-05-23T04:48:38.255Z] Booking Confirmed | ID: 2132117 | Conf: 7957823430785 | Status: Confirmed
+[25] [2026-05-23T04:48:39.767Z] Step 5: Generate Voucher...
+[26] [2026-05-23T04:48:39.770Z] Saved: voucher-request.json
+[27] [2026-05-23T04:48:40.478Z] Saved: voucher-response.json
+[28] [2026-05-23T04:48:40.478Z] Voucher Status: Generated
+[29] [2026-05-23T04:48:41.984Z] Step 6: Get Booking Details...
+[30] [2026-05-23T04:48:42.850Z] Saved: booking-detail-response.json
+[31] [2026-05-23T04:48:42.850Z] Hotel Name: Lugga Boutique Hotel & Beach
+
+Files saved to: C:\Users\muska\DESKTOP\spaksTrip\certification-output\case-5

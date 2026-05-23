@@ -1,0 +1,252 @@
+{
+  "GetBookingDetailResult": {
+    "TBOReferenceNo": "TBSM3VWROH",
+    "VoucherStatus": true,
+    "ResponseStatus": 1,
+    "Error": {
+      "ErrorCode": 0,
+      "ErrorMessage": ""
+    },
+    "TraceId": "b1b78659-5662-11f1-80ca-d2b16b9afa66",
+    "Status": 1,
+    "HotelBookingStatus": "Confirmed",
+    "ConfirmationNo": "2014916806",
+    "BookingRefNo": "2016565206",
+    "BookingId": 2132118,
+    "IsPriceChanged": false,
+    "IsCancellationPolicyChanged": false,
+    "Rooms": [
+      {
+        "AdultCount": 2,
+        "AvailabilityType": "NotAvailable",
+        "ChildAge": [
+          8,
+          5
+        ],
+        "ChildCount": 2,
+        "HotelPassenger": [
+          {
+            "Age": 30,
+            "Email": "test@spakstrip.com",
+            "FileDocument": null,
+            "FirstName": "John",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Smith",
+            "LeadPassenger": true,
+            "MiddleName": null,
+            "PAN": "AAAPA0001B",
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273673,
+            "PaxType": 1,
+            "Phoneno": "9999999999",
+            "Title": "Mr"
+          },
+          {
+            "Age": 28,
+            "Email": null,
+            "FileDocument": null,
+            "FirstName": "Jane",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Smith",
+            "LeadPassenger": false,
+            "MiddleName": null,
+            "PAN": "AAAPA0002B",
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273674,
+            "PaxType": 1,
+            "Phoneno": null,
+            "Title": "Mrs"
+          },
+          {
+            "Age": 8,
+            "Email": null,
+            "FileDocument": null,
+            "FirstName": "Tom",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Smith",
+            "LeadPassenger": false,
+            "MiddleName": null,
+            "PAN": "AAAPA0003B",
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273675,
+            "PaxType": 2,
+            "Phoneno": null,
+            "Title": "Mstr"
+          },
+          {
+            "Age": 5,
+            "Email": null,
+            "FileDocument": null,
+            "FirstName": "Lucy",
+            "GSTCompanyAddress": null,
+            "GSTCompanyContactNumber": null,
+            "GSTCompanyEmail": null,
+            "GSTCompanyName": null,
+            "GSTNumber": null,
+            "GuardianDetail": null,
+            "LastName": "Smith",
+            "LeadPassenger": false,
+            "MiddleName": null,
+            "PAN": "AAAPA0004B",
+            "PassportExpDate": null,
+            "PassportIssueDate": null,
+            "PassportNo": null,
+            "PaxId": 273676,
+            "PaxType": 2,
+            "Phoneno": null,
+            "Title": "Mstr"
+          }
+        ],
+        "RequireAllPaxDetails": false,
+        "RoomId": 202121,
+        "RoomStatus": 0,
+        "RoomIndex": 1,
+        "RoomTypeCode": "1183384523",
+        "RoomDescription": "Family room - 4 pax",
+        "RoomTypeName": "Family room - 4 pax",
+        "RatePlanCode": "15298125|215280137|v1_CgEtEMwCGi4KHTIwMjYtMDYtMjJUMDA6MDA6MDAuMDAwKzA3OjAwEAEY3w0gAigCMgIFCDgBIgIIAQ",
+        "RatePlan": 0,
+        "IsPerStay": true,
+        "PriceBreakUp": {
+          "CurrencyCode": "INR",
+          "RoomRate": 7830.49,
+          "RoomTax": 1386.59,
+          "RoomExtraGuestCharges": 0,
+          "RoomChildCharges": 0,
+          "ServiceFee": 0,
+          "AgentCommission": 783.05,
+          "TaxBreakup": [
+            {
+              "TaxType": "Tax_CGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_IGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_SGST",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TCS",
+              "TaxAmount": 0
+            },
+            {
+              "TaxType": "Tax_TDS",
+              "TaxAmount": 15.66
+            }
+          ]
+        },
+        "RoomPromotion": null,
+        "Amenities": [],
+        "SmokingPreference": "NoPreference",
+        "BedTypes": [],
+        "Supplements": [],
+        "LastCancellationDate": "2026-06-20T23:59:59",
+        "CancelPolicies": [
+          {
+            "CancellationCharge": 0,
+            "ChargeType": 1,
+            "Currency": "INR",
+            "FromDate": "22/05/2026 00:00:00",
+            "ToDate": "20/06/2026 23:59:59"
+          },
+          {
+            "CancellationCharge": 100,
+            "ChargeType": 2,
+            "Currency": "INR",
+            "FromDate": "21/06/2026 00:00:00",
+            "ToDate": "21/06/2026 23:59:59"
+          },
+          {
+            "CancellationCharge": 100,
+            "ChargeType": 2,
+            "Currency": "INR",
+            "FromDate": "23/06/2026 00:00:00",
+            "NoShowPolicy": true,
+            "ToDate": "23/06/2026 00:00:00"
+          }
+        ],
+        "CancellationPolicies": null,
+        "LastVoucherDate": "2026-06-20T23:59:59",
+        "CancellationPolicy": "Family room - 4 pax#^#No cancellation charge, If cancelled between 22-May-2026 00:00:00 and 20-Jun-2026 23:59:59.|100.00% of total amount will be charged, If cancelled between 21-Jun-2026 00:00:00 and 21-Jun-2026 23:59:59.|100.00% of total amount will be charged, If cancelled between 23-Jun-2026 00:00:00 and 23-Jun-2026 00:00:00.|#!#",
+        "Inclusion": "FREE WIFI,DRINKING WATER"
+      }
+    ],
+    "NetAmount": 8449.69,
+    "NetTax": 1402.25,
+    "RateConditions": [
+      "Early check out will attract full cancellation charge unless otherwise specified",
+      "Children 2 - 6 year(s) : Stay for free if using existing bedding.",
+      "Extra person charges may apply at check-in, as per the property's policy."
+    ],
+    "AgentRemarks": "",
+    "BookingSource": "Agoda",
+    "BookingStatus": 2,
+    "CreditNoteGSTIN": null,
+    "GSTIN": null,
+    "GuestNationality": "IN",
+    "HotelItineraryTracking": {
+      "CampaignId": null,
+      "CampaignName": null,
+      "IsLovedByIndians": false,
+      "IsSelectedFromSimilar": false,
+      "ItineraryTrackingJson": null,
+      "SearchType": 1
+    },
+    "HotelPolicyDetail": null,
+    "IntHotelPassportDetails": null,
+    "InvoiceAmount": 8450,
+    "InvoiceCreatedOn": "2026-05-23T04:50:06",
+    "InvoiceNo": "MW/2627/5846",
+    "IsCorporate": false,
+    "LastCancellationDeadline": "2026-06-20T23:59:59",
+    "PostBookingRequestDetails": [],
+    "HotelConfirmationNo": null,
+    "HotelCode": "287269",
+    "HotelId": 175953,
+    "HotelName": "Grand Alpine Hotel",
+    "TBOHotelCode": "1002606",
+    "StarRating": 3,
+    "AddressLine1": "Phetchaburi Rd, Khwaeng Thanon Phaya Thai, Khet Ratchathewi, Krung Thep Maha Nakhon 10400,",
+    "AddressLine2": "",
+    "CountryCode": "TH",
+    "Latitude": "13.753496",
+    "Longitude": "100.539113",
+    "City": "Bangkok",
+    "CityId": 144092,
+    "CheckInDate": "2026-06-22T00:00:00",
+    "InitialCheckInDate": "2026-06-22T00:00:00",
+    "CheckOutDate": "2026-06-23T00:00:00",
+    "InitialCheckOutDate": "2026-06-23T00:00:00",
+    "LastCancellationDate": "2026-06-20T23:59:59",
+    "LastVoucherDate": "2026-06-20T23:59:59",
+    "NoOfRooms": 1,
+    "BookingDate": "2026-05-23T04:50:06",
+    "SpecialRequest": "",
+    "IsDomestic": false,
+    "BookingAllowedForRoamer": true
+  }
+}

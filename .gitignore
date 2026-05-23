@@ -6,7 +6,7 @@ graphify-out
 .graphify_python
 TBO_Postman_Collection.json
 test*
-TBO*
+/TBO*
 .agents
 body.js
 /Hotel_Api_Info

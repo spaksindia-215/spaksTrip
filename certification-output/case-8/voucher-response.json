@@ -1,0 +1,17 @@
+{
+  "GenerateVoucherResult": {
+    "TBOReferenceNo": null,
+    "VoucherStatus": true,
+    "ResponseStatus": 2,
+    "Error": {
+      "ErrorCode": 2,
+      "ErrorMessage": "HotelVoucher already generated (InvoiceNumber :2136157 ). Please call GetBookingDetail method to know get the status."
+    },
+    "TraceId": "fcb82e7f-5662-11f1-80ca-d2b16b9afa66",
+    "Status": 0,
+    "HotelBookingStatus": null,
+    "ConfirmationNo": null,
+    "BookingRefNo": null,
+    "BookingId": 0
+  }
+}

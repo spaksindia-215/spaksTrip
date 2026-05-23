@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, type InputHTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useRef, type InputHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
@@ -20,9 +20,11 @@ const SIZE_STYLES = {
 
 const Input = forwardRef<HTMLInputElement, Props>(function Input(
   { label, hint, error, leading, trailing, sizeVariant = "md", id, className, ...rest },
-  ref,
+  forwardedRef,
 ) {
+  const localRef = useRef<HTMLInputElement>(null);
   const invalid = Boolean(error);
+
   return (
     <div className={cn("flex flex-col gap-1", className)}>
       {label ? (
@@ -37,10 +39,16 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
           invalid ? "border-danger-500" : "border-border",
           SIZE_STYLES[sizeVariant],
         )}
+        onClick={() => localRef.current?.focus()}
       >
         {leading ? <span className="text-ink-muted">{leading}</span> : null}
         <input
-          ref={ref}
+          ref={(el) => {
+            (localRef as React.MutableRefObject<HTMLInputElement | null>).current = el;
+            if (typeof forwardedRef === "function") forwardedRef(el);
+            else if (forwardedRef)
+              (forwardedRef as React.MutableRefObject<HTMLInputElement | null>).current = el;
+          }}
           id={id}
           aria-invalid={invalid || undefined}
           className="flex-1 min-w-0 h-full bg-transparent outline-none placeholder:text-ink-subtle text-ink"
