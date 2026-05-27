@@ -1,0 +1,846 @@
+{
+    "Response": {
+        "Error": {
+            "ErrorCode": 0,
+            "ErrorMessage": ""
+        },
+        "ResponseStatus": 1,
+        "TraceId": "598b1d78-dd8e-402d-bf60-943e8f06a33b",
+        "FlightItinerary": {
+            "AgentRemarks": "",
+            "CommentDetails": null,
+            "FareClassification": "Spice Saver#rgb(182,215,228)",
+            "IsAutoReissuanceAllowed": true,
+            "IsPartialVoidAllowed": true,
+            "IsSeatsBooked": false,
+            "IssuancePcc": "APITESTID",
+            "JourneyType": 5,
+            "SearchCombinationType": 1,
+            "SupplierFareClasses": "Spice Saver",
+            "TBOConfNo": "TBFF2H8TR",
+            "TBOTripID": null,
+            "TripIndicator": 1,
+            "BookingAllowedForRoamer": true,
+            "BookingId": 2133005,
+            "IsCouponAppilcable": true,
+            "IsManual": false,
+            "PNR": "B7KBNP",
+            "IsDomestic": true,
+            "ResultFareType": "RegularFare",
+            "Source": 25,
+            "Origin": "BOM",
+            "Destination": "CCU",
+            "AirlineCode": "SG",
+            "LastTicketDate": "9999-12-31T05:25:00",
+            "ValidatingAirlineCode": "SG",
+            "AirlineRemark": "SG L2B - Star Coupon",
+            "IsLCC": true,
+            "NonRefundable": false,
+            "FareType": "PUB",
+            "CreditNoteNo": null,
+            "Fare": {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "ServiceFeeDisplayType": 0,
+                "Currency": "INR",
+                "BaseFare": 23268,
+                "Tax": 8784,
+                "TaxBreakup": [
+                    {
+                        "key": "K3",
+                        "value": 1410
+                    },
+                    {
+                        "key": "UDF",
+                        "value": 2064
+                    },
+                    {
+                        "key": "YR",
+                        "value": 390
+                    },
+                    {
+                        "key": "YQTax",
+                        "value": 4194
+                    },
+                    {
+                        "key": "RcfTax",
+                        "value": 200
+                    },
+                    {
+                        "key": "TotalTax",
+                        "value": 8784
+                    },
+                    {
+                        "key": "OtherTaxes",
+                        "value": 526
+                    }
+                ],
+                "TransactionFee": 2471.58,
+                "YQTax": 4194,
+                "AdditionalTxnFeeOfrd": 0,
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "OtherCharges": 354,
+                "ChargeBU": [
+                    {
+                        "key": "TBOMARKUP",
+                        "value": 0
+                    },
+                    {
+                        "key": "GLOBALPROCUREMENTCHARGE",
+                        "value": 0
+                    },
+                    {
+                        "key": "OTHERCHARGE",
+                        "value": 354
+                    },
+                    {
+                        "key": "CONVENIENCECHARGE",
+                        "value": 0
+                    }
+                ],
+                "Discount": 0,
+                "PublishedFare": 34877.58,
+                "CommissionEarned": 0,
+                "PLBEarned": 0,
+                "IncentiveEarned": 0,
+                "OfferedFare": 34877.58,
+                "TdsOnCommission": 0,
+                "TdsOnPLB": 0,
+                "TdsOnIncentive": 0,
+                "ServiceFee": 0,
+                "TotalBaggageCharges": 0,
+                "TotalMealCharges": 0,
+                "TotalSeatCharges": 0,
+                "TotalSpecialServiceCharges": 0
+            },
+            "CreditNoteCreatedOn": null,
+            "Passenger": [
+                {
+                    "BarcodeDetails": {
+                        "Id": 3435110,
+                        "Barcode": [
+                            {
+                                "Index": 1,
+                                "Format": "PDF417",
+                                "Content": "M1SHARMA/RAHUL         B7KBNP BOMCCUSG 0488 226Y00000000 000",
+                                "BarCodeInBase64": null,
+                                "JourneyWayType": 3
+                            },
+                            {
+                                "Index": 2,
+                                "Format": "PDF417",
+                                "Content": "M1SHARMA/RAHUL         B7KBNP CCUBOMSG 0487 233Y00000000 000",
+                                "BarCodeInBase64": null,
+                                "JourneyWayType": 3
+                            }
+                        ]
+                    },
+                    "DocumentDetails": null,
+                    "GuardianDetails": null,
+                    "IsReissued": false,
+                    "SegmentDetails": null,
+                    "PaxId": 3435110,
+                    "Title": "Mr",
+                    "FirstName": "RAHUL",
+                    "LastName": "SHARMA",
+                    "PaxType": 1,
+                    "DateOfBirth": "1985-03-15T00:00:00",
+                    "Gender": 1,
+                    "IsPANRequired": false,
+                    "IsPassportRequired": false,
+                    "PAN": "",
+                    "PassportNo": "",
+                    "AddressLine1": "45 Prithviraj Road",
+                    "Fare": {
+                        "CFARAmount": 0,
+                        "DCFARAmount": 0,
+                        "ServiceFeeDisplayType": 0,
+                        "Currency": "INR",
+                        "BaseFare": 8310,
+                        "Tax": 2956,
+                        "TaxBreakup": [
+                            {
+                                "key": "K3",
+                                "value": 498
+                            },
+                            {
+                                "key": "UDF",
+                                "value": 688
+                            },
+                            {
+                                "key": "YR",
+                                "value": 130
+                            },
+                            {
+                                "key": "YQTax",
+                                "value": 1398
+                            },
+                            {
+                                "key": "RcfTax",
+                                "value": 50
+                            },
+                            {
+                                "key": "TotalTax",
+                                "value": 2956
+                            },
+                            {
+                                "key": "OtherTaxes",
+                                "value": 192
+                            }
+                        ],
+                        "TransactionFee": 873.72,
+                        "YQTax": 1398,
+                        "AdditionalTxnFeeOfrd": 0,
+                        "AdditionalTxnFeePub": 0,
+                        "PGCharge": 0,
+                        "OtherCharges": 118,
+                        "ChargeBU": [
+                            {
+                                "key": "TBOMARKUP",
+                                "value": 0
+                            },
+                            {
+                                "key": "GLOBALPROCUREMENTCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "OTHERCHARGE",
+                                "value": 118
+                            },
+                            {
+                                "key": "CONVENIENCECHARGE",
+                                "value": 0
+                            }
+                        ],
+                        "Discount": 0,
+                        "PublishedFare": 12257.72,
+                        "CommissionEarned": 0,
+                        "PLBEarned": 0,
+                        "IncentiveEarned": 0,
+                        "OfferedFare": 12257.72,
+                        "TdsOnCommission": 0,
+                        "TdsOnPLB": 0,
+                        "TdsOnIncentive": 0,
+                        "ServiceFee": 0,
+                        "TotalBaggageCharges": 0,
+                        "TotalMealCharges": 0,
+                        "TotalSeatCharges": 0,
+                        "TotalSpecialServiceCharges": 0
+                    },
+                    "City": "New Delhi",
+                    "CountryCode": "IN",
+                    "Nationality": "IN",
+                    "ContactNo": "9810001234",
+                    "Email": "rahul.sharma@example.com",
+                    "IsLeadPax": true,
+                    "FFAirlineCode": null,
+                    "FFNumber": null,
+                    "Ssr": [],
+                    "Ticket": {
+                        "TicketId": 2436235,
+                        "TicketNumber": "B7KBNP",
+                        "IssueDate": "2026-05-26T06:45:45",
+                        "ValidatingAirline": "001",
+                        "Remarks": "",
+                        "ServiceFeeDisplayType": "ShowInTax",
+                        "Status": "OK",
+                        "ConjunctionNumber": "",
+                        "TicketType": "N"
+                    },
+                    "SegmentAdditionalInfo": [
+                        {
+                            "FareBasis": "USAV",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "0 Platter",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "USAV",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "0 Platter",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        }
+                    ]
+                },
+                {
+                    "BarcodeDetails": {
+                        "Id": 3435111,
+                        "Barcode": [
+                            {
+                                "Index": 1,
+                                "Format": "PDF417",
+                                "Content": "M1SHARMA/PRIYA         B7KBNP BOMCCUSG 0488 226Y00000000 000",
+                                "BarCodeInBase64": null,
+                                "JourneyWayType": 3
+                            },
+                            {
+                                "Index": 2,
+                                "Format": "PDF417",
+                                "Content": "M1SHARMA/PRIYA         B7KBNP CCUBOMSG 0487 233Y00000000 000",
+                                "BarCodeInBase64": null,
+                                "JourneyWayType": 3
+                            }
+                        ]
+                    },
+                    "DocumentDetails": null,
+                    "GuardianDetails": null,
+                    "IsReissued": false,
+                    "SegmentDetails": null,
+                    "PaxId": 3435111,
+                    "Title": "Mrs",
+                    "FirstName": "PRIYA",
+                    "LastName": "SHARMA",
+                    "PaxType": 1,
+                    "DateOfBirth": "1988-07-22T00:00:00",
+                    "Gender": 2,
+                    "IsPANRequired": false,
+                    "IsPassportRequired": false,
+                    "PAN": "",
+                    "PassportNo": "",
+                    "AddressLine1": "45 Prithviraj Road",
+                    "Fare": {
+                        "CFARAmount": 0,
+                        "DCFARAmount": 0,
+                        "ServiceFeeDisplayType": 0,
+                        "Currency": "INR",
+                        "BaseFare": 8310,
+                        "Tax": 2956,
+                        "TaxBreakup": [
+                            {
+                                "key": "K3",
+                                "value": 498
+                            },
+                            {
+                                "key": "UDF",
+                                "value": 688
+                            },
+                            {
+                                "key": "YR",
+                                "value": 130
+                            },
+                            {
+                                "key": "YQTax",
+                                "value": 1398
+                            },
+                            {
+                                "key": "RcfTax",
+                                "value": 50
+                            },
+                            {
+                                "key": "TotalTax",
+                                "value": 2956
+                            },
+                            {
+                                "key": "OtherTaxes",
+                                "value": 192
+                            }
+                        ],
+                        "TransactionFee": 873.72,
+                        "YQTax": 1398,
+                        "AdditionalTxnFeeOfrd": 0,
+                        "AdditionalTxnFeePub": 0,
+                        "PGCharge": 0,
+                        "OtherCharges": 118,
+                        "ChargeBU": [
+                            {
+                                "key": "TBOMARKUP",
+                                "value": 0
+                            },
+                            {
+                                "key": "GLOBALPROCUREMENTCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "OTHERCHARGE",
+                                "value": 118
+                            },
+                            {
+                                "key": "CONVENIENCECHARGE",
+                                "value": 0
+                            }
+                        ],
+                        "Discount": 0,
+                        "PublishedFare": 12257.72,
+                        "CommissionEarned": 0,
+                        "PLBEarned": 0,
+                        "IncentiveEarned": 0,
+                        "OfferedFare": 12257.72,
+                        "TdsOnCommission": 0,
+                        "TdsOnPLB": 0,
+                        "TdsOnIncentive": 0,
+                        "ServiceFee": 0,
+                        "TotalBaggageCharges": 0,
+                        "TotalMealCharges": 0,
+                        "TotalSeatCharges": 0,
+                        "TotalSpecialServiceCharges": 0
+                    },
+                    "City": "New Delhi",
+                    "CountryCode": "IN",
+                    "Nationality": "IN",
+                    "ContactNo": "",
+                    "IsLeadPax": false,
+                    "FFAirlineCode": null,
+                    "FFNumber": null,
+                    "Ssr": [],
+                    "Ticket": {
+                        "TicketId": 2436236,
+                        "TicketNumber": "B7KBNP",
+                        "IssueDate": "2026-05-26T06:45:46",
+                        "ValidatingAirline": "001",
+                        "Remarks": "",
+                        "ServiceFeeDisplayType": "ShowInTax",
+                        "Status": "OK",
+                        "ConjunctionNumber": "",
+                        "TicketType": "N"
+                    },
+                    "SegmentAdditionalInfo": [
+                        {
+                            "FareBasis": "USAV",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "0 Platter",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "USAV",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "0 Platter",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        }
+                    ]
+                },
+                {
+                    "BarcodeDetails": {
+                        "Id": 3435112,
+                        "Barcode": [
+                            {
+                                "Index": 1,
+                                "Format": "PDF417",
+                                "Content": "M1SHARMA/ROHAN         B7KBNP BOMCCUSG 0488 226Y00000000 000",
+                                "BarCodeInBase64": null,
+                                "JourneyWayType": 3
+                            },
+                            {
+                                "Index": 2,
+                                "Format": "PDF417",
+                                "Content": "M1SHARMA/ROHAN         B7KBNP CCUBOMSG 0487 233Y00000000 000",
+                                "BarCodeInBase64": null,
+                                "JourneyWayType": 3
+                            }
+                        ]
+                    },
+                    "DocumentDetails": null,
+                    "GuardianDetails": null,
+                    "IsReissued": false,
+                    "SegmentDetails": null,
+                    "PaxId": 3435112,
+                    "Title": "Mstr",
+                    "FirstName": "ROHAN",
+                    "LastName": "SHARMA",
+                    "PaxType": 2,
+                    "DateOfBirth": "2017-05-10T00:00:00",
+                    "Gender": 1,
+                    "IsPANRequired": false,
+                    "IsPassportRequired": false,
+                    "PAN": "",
+                    "PassportNo": "",
+                    "AddressLine1": "45 Prithviraj Road",
+                    "Fare": {
+                        "CFARAmount": 0,
+                        "DCFARAmount": 0,
+                        "ServiceFeeDisplayType": 0,
+                        "Currency": "INR",
+                        "BaseFare": 6648,
+                        "Tax": 2872,
+                        "TaxBreakup": [
+                            {
+                                "key": "K3",
+                                "value": 414
+                            },
+                            {
+                                "key": "UDF",
+                                "value": 688
+                            },
+                            {
+                                "key": "YR",
+                                "value": 130
+                            },
+                            {
+                                "key": "YQTax",
+                                "value": 1398
+                            },
+                            {
+                                "key": "RcfTax",
+                                "value": 100
+                            },
+                            {
+                                "key": "TotalTax",
+                                "value": 2872
+                            },
+                            {
+                                "key": "OtherTaxes",
+                                "value": 142
+                            }
+                        ],
+                        "TransactionFee": 724.14,
+                        "YQTax": 1398,
+                        "AdditionalTxnFeeOfrd": 0,
+                        "AdditionalTxnFeePub": 0,
+                        "PGCharge": 0,
+                        "OtherCharges": 118,
+                        "ChargeBU": [
+                            {
+                                "key": "TBOMARKUP",
+                                "value": 0
+                            },
+                            {
+                                "key": "GLOBALPROCUREMENTCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "OTHERCHARGE",
+                                "value": 118
+                            },
+                            {
+                                "key": "CONVENIENCECHARGE",
+                                "value": 0
+                            }
+                        ],
+                        "Discount": 0,
+                        "PublishedFare": 10362.14,
+                        "CommissionEarned": 0,
+                        "PLBEarned": 0,
+                        "IncentiveEarned": 0,
+                        "OfferedFare": 10362.14,
+                        "TdsOnCommission": 0,
+                        "TdsOnPLB": 0,
+                        "TdsOnIncentive": 0,
+                        "ServiceFee": 0,
+                        "TotalBaggageCharges": 0,
+                        "TotalMealCharges": 0,
+                        "TotalSeatCharges": 0,
+                        "TotalSpecialServiceCharges": 0
+                    },
+                    "City": "New Delhi",
+                    "CountryCode": "IN",
+                    "Nationality": "IN",
+                    "ContactNo": "",
+                    "IsLeadPax": false,
+                    "FFAirlineCode": null,
+                    "FFNumber": null,
+                    "Ssr": [
+                        {
+                            "Detail": "10/05/2017",
+                            "SsrCode": "CHLD",
+                            "SsrStatus": null,
+                            "Status": 1
+                        }
+                    ],
+                    "Ticket": {
+                        "TicketId": 2436237,
+                        "TicketNumber": "B7KBNP",
+                        "IssueDate": "2026-05-26T06:45:46",
+                        "ValidatingAirline": "001",
+                        "Remarks": "",
+                        "ServiceFeeDisplayType": "ShowInTax",
+                        "Status": "OK",
+                        "ConjunctionNumber": "",
+                        "TicketType": "N"
+                    },
+                    "SegmentAdditionalInfo": [
+                        {
+                            "FareBasis": "USAV",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "0 Platter",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "USAV",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "0 Platter",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        }
+                    ]
+                }
+            ],
+            "CancellationCharges": null,
+            "Segments": [
+                {
+                    "Baggage": null,
+                    "CabinBaggage": null,
+                    "CabinClass": 2,
+                    "SupplierFareClass": null,
+                    "TripIndicator": 1,
+                    "SegmentIndicator": 1,
+                    "Airline": {
+                        "AirlineCode": "SG",
+                        "AirlineName": "SpiceJet",
+                        "FlightNumber": "488",
+                        "FareClass": "U",
+                        "OperatingCarrier": ""
+                    },
+                    "AirlinePNR": "",
+                    "Origin": {
+                        "Airport": {
+                            "AirportCode": "BOM",
+                            "AirportName": "Chhatrapati Shivaji International Airport",
+                            "Terminal": "1",
+                            "CityCode": "BOM",
+                            "CityName": "Mumbai",
+                            "CountryCode": "IN",
+                            "CountryName": "India"
+                        },
+                        "DepTime": "2026-08-14T05:55:00"
+                    },
+                    "Destination": {
+                        "Airport": {
+                            "AirportCode": "CCU",
+                            "AirportName": "Netaji Subhash Chandra Bose International Airport",
+                            "Terminal": "2",
+                            "CityCode": "CCU",
+                            "CityName": "Kolkata",
+                            "CountryCode": "IN",
+                            "CountryName": "India"
+                        },
+                        "ArrTime": "2026-08-14T08:45:00"
+                    },
+                    "Duration": 170,
+                    "GroundTime": 0,
+                    "Mile": 0,
+                    "StopOver": false,
+                    "FlightInfoIndex": "1",
+                    "StopPoint": "",
+                    "StopPointArrivalTime": null,
+                    "StopPointDepartureTime": null,
+                    "Craft": "73H",
+                    "Remark": "Spice Saver",
+                    "IsETicketEligible": true,
+                    "FlightStatus": "Confirmed",
+                    "Status": "HK",
+                    "FareClassification": {
+                        "Color": "",
+                        "Type": "Spice Saver"
+                    }
+                },
+                {
+                    "Baggage": null,
+                    "CabinBaggage": null,
+                    "CabinClass": 2,
+                    "SupplierFareClass": null,
+                    "TripIndicator": 2,
+                    "SegmentIndicator": 1,
+                    "Airline": {
+                        "AirlineCode": "SG",
+                        "AirlineName": "SpiceJet",
+                        "FlightNumber": "487",
+                        "FareClass": "U",
+                        "OperatingCarrier": ""
+                    },
+                    "AirlinePNR": "",
+                    "Origin": {
+                        "Airport": {
+                            "AirportCode": "CCU",
+                            "AirportName": "Netaji Subhash Chandra Bose International Airport",
+                            "Terminal": "2",
+                            "CityCode": "CCU",
+                            "CityName": "Kolkata",
+                            "CountryCode": "IN",
+                            "CountryName": "India"
+                        },
+                        "DepTime": "2026-08-21T16:40:00"
+                    },
+                    "Destination": {
+                        "Airport": {
+                            "AirportCode": "BOM",
+                            "AirportName": "Chhatrapati Shivaji International Airport",
+                            "Terminal": "1",
+                            "CityCode": "BOM",
+                            "CityName": "Mumbai",
+                            "CountryCode": "IN",
+                            "CountryName": "India"
+                        },
+                        "ArrTime": "2026-08-21T19:40:00"
+                    },
+                    "Duration": 180,
+                    "GroundTime": 0,
+                    "Mile": 0,
+                    "StopOver": false,
+                    "FlightInfoIndex": "2",
+                    "StopPoint": "",
+                    "StopPointArrivalTime": null,
+                    "StopPointDepartureTime": null,
+                    "Craft": "73H",
+                    "Remark": "Spice Saver",
+                    "IsETicketEligible": true,
+                    "FlightStatus": "Confirmed",
+                    "Status": "HK",
+                    "FareClassification": {
+                        "Color": "",
+                        "Type": "Spice Saver"
+                    }
+                }
+            ],
+            "FareRules": [
+                {
+                    "Origin": "BOM",
+                    "Destination": "CCU",
+                    "Airline": "SG",
+                    "FareBasisCode": "USAV",
+                    "FareRuleDetail": "The FareBasisCode is: USAV<br /> \n\n Changes and cancellations are permitted as per applicable rules and charges.\n <br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+                    "FareRestriction": "",
+                    "FareFamilyCode": "",
+                    "FareRuleIndex": "",
+                    "FareInclusions": []
+                },
+                {
+                    "Origin": "CCU",
+                    "Destination": "BOM",
+                    "Airline": "SG",
+                    "FareBasisCode": "USAV",
+                    "FareRuleDetail": "The FareBasisCode is: USAV<br /> \n\n Changes and cancellations are permitted as per applicable rules and charges.\n <br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+                    "FareRestriction": "",
+                    "FareFamilyCode": "",
+                    "FareRuleIndex": "",
+                    "FareInclusions": []
+                }
+            ],
+            "MiniFareRules": [
+                {
+                    "CFARExcludedDetails": null,
+                    "JourneyPoints": "BOM-CCU",
+                    "Type": "Reissue",
+                    "From": "0",
+                    "To": "96",
+                    "Unit": "HOURS",
+                    "Details": "INR 2950",
+                    "OnlineReissueAllowed": false,
+                    "OnlineRefundAllowed": false
+                },
+                {
+                    "CFARExcludedDetails": null,
+                    "JourneyPoints": "BOM-CCU",
+                    "Type": "Reissue",
+                    "From": "96",
+                    "To": "",
+                    "Unit": "HOURS",
+                    "Details": "INR 2250",
+                    "OnlineReissueAllowed": false,
+                    "OnlineRefundAllowed": false
+                },
+                {
+                    "CFARExcludedDetails": null,
+                    "JourneyPoints": "BOM-CCU",
+                    "Type": "Cancellation",
+                    "From": "0",
+                    "To": "96",
+                    "Unit": "HOURS",
+                    "Details": "INR 3950",
+                    "OnlineReissueAllowed": false,
+                    "OnlineRefundAllowed": false
+                },
+                {
+                    "CFARExcludedDetails": null,
+                    "JourneyPoints": "BOM-CCU",
+                    "Type": "Cancellation",
+                    "From": "96",
+                    "To": "",
+                    "Unit": "HOURS",
+                    "Details": "INR 2950",
+                    "OnlineReissueAllowed": false,
+                    "OnlineRefundAllowed": false
+                },
+                {
+                    "CFARExcludedDetails": null,
+                    "JourneyPoints": "CCU-BOM",
+                    "Type": "Reissue",
+                    "From": "0",
+                    "To": "96",
+                    "Unit": "HOURS",
+                    "Details": "INR 2950",
+                    "OnlineReissueAllowed": false,
+                    "OnlineRefundAllowed": false
+                },
+                {
+                    "CFARExcludedDetails": null,
+                    "JourneyPoints": "CCU-BOM",
+                    "Type": "Reissue",
+                    "From": "96",
+                    "To": "",
+                    "Unit": "HOURS",
+                    "Details": "INR 2250",
+                    "OnlineReissueAllowed": false,
+                    "OnlineRefundAllowed": false
+                },
+                {
+                    "CFARExcludedDetails": null,
+                    "JourneyPoints": "CCU-BOM",
+                    "Type": "Cancellation",
+                    "From": "0",
+                    "To": "96",
+                    "Unit": "HOURS",
+                    "Details": "INR 3950",
+                    "OnlineReissueAllowed": false,
+                    "OnlineRefundAllowed": false
+                },
+                {
+                    "CFARExcludedDetails": null,
+                    "JourneyPoints": "CCU-BOM",
+                    "Type": "Cancellation",
+                    "From": "96",
+                    "To": "",
+                    "Unit": "HOURS",
+                    "Details": "INR 2950",
+                    "OnlineReissueAllowed": false,
+                    "OnlineRefundAllowed": false
+                }
+            ],
+            "PenaltyCharges": {
+                "ReissueCharge": "",
+                "CancellationCharge": ""
+            },
+            "Status": 5,
+            "Invoice": [
+                {
+                    "CreditNoteGSTIN": null,
+                    "GSTIN": null,
+                    "InvoiceCreatedOn": "2026-05-26T06:45:46",
+                    "InvoiceId": 14014,
+                    "InvoiceNo": "DW/2627/14014",
+                    "InvoiceAmount": 34878,
+                    "Remarks": "",
+                    "InvoiceStatus": 3
+                }
+            ],
+            "InvoiceAmount": 34878,
+            "InvoiceNo": "DW/2627/14014",
+            "InvoiceStatus": 3,
+            "InvoiceCreatedOn": "2026-05-26T06:45:46",
+            "Remarks": "",
+            "IsWebCheckInAllowed": false
+        }
+    }
+}

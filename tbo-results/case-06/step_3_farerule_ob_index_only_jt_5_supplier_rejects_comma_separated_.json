@@ -1,0 +1,190 @@
+{
+    "Response": {
+        "Error": {
+            "ErrorCode": 0,
+            "ErrorMessage": ""
+        },
+        "FareRules": [
+            {
+                "Airline": "SG",
+                "DepartureTime": "0001-01-01T00:00:00",
+                "Destination": "CCU",
+                "FareBasisCode": "USAV",
+                "FareInclusions": [],
+                "FareRestriction": null,
+                "FareRuleDetail": "The FareBasisCode is: USAV<br /> \r\n\r\n Changes and cancellations are permitted as per applicable rules and charges.\r <br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+                "FlightId": 0,
+                "MiniFarRules": {
+                    "Currency": "",
+                    "Rules": [
+                        {
+                            "DepartureType": "BEFORE DEPARTURE",
+                            "FromDuration": "PT4H",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 4899,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 4899,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P4D",
+                            "Type": 0
+                        },
+                        {
+                            "DepartureType": "BEFORE DEPARTURE",
+                            "FromDuration": "P4D",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 3899,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 3899,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": null,
+                            "Type": 0
+                        },
+                        {
+                            "DepartureType": "BEFORE DEPARTURE",
+                            "FromDuration": "PT4H",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 2999,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 2999,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P4D",
+                            "Type": 1
+                        },
+                        {
+                            "DepartureType": "BEFORE DEPARTURE",
+                            "FromDuration": "P4D",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 2999,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 2999,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": null,
+                            "Type": 1
+                        }
+                    ]
+                },
+                "Origin": "BOM",
+                "ReturnDate": "0001-01-01T00:00:00"
+            },
+            {
+                "Airline": "SG",
+                "DepartureTime": "0001-01-01T00:00:00",
+                "Destination": "BOM",
+                "FareBasisCode": "USAV",
+                "FareInclusions": [],
+                "FareRestriction": null,
+                "FareRuleDetail": "The FareBasisCode is: USAV<br /> \r\n\r\n Changes and cancellations are permitted as per applicable rules and charges.\r <br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+                "FlightId": 0,
+                "MiniFarRules": {
+                    "Currency": "",
+                    "Rules": [
+                        {
+                            "DepartureType": "BEFORE DEPARTURE",
+                            "FromDuration": "PT4H",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 4899,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 4899,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P4D",
+                            "Type": 0
+                        },
+                        {
+                            "DepartureType": "BEFORE DEPARTURE",
+                            "FromDuration": "P4D",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 3899,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 3899,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": null,
+                            "Type": 0
+                        },
+                        {
+                            "DepartureType": "BEFORE DEPARTURE",
+                            "FromDuration": "PT4H",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 2999,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 2999,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P4D",
+                            "Type": 1
+                        },
+                        {
+                            "DepartureType": "BEFORE DEPARTURE",
+                            "FromDuration": "P4D",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 2999,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 2999,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": null,
+                            "Type": 1
+                        }
+                    ]
+                },
+                "Origin": "CCU",
+                "ReturnDate": "0001-01-01T00:00:00"
+            }
+        ],
+        "ResponseStatus": 1,
+        "TraceId": "598b1d78-dd8e-402d-bf60-943e8f06a33b"
+    }
+}

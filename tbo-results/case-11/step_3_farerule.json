@@ -1,0 +1,190 @@
+{
+    "Response": {
+        "Error": {
+            "ErrorCode": 0,
+            "ErrorMessage": ""
+        },
+        "FareRules": [
+            {
+                "Airline": "KU",
+                "DepartureTime": "2026-07-01T07:15:00",
+                "Destination": "KWI",
+                "FareBasisCode": "TLOWIN1",
+                "FareInclusions": null,
+                "FareRestriction": "",
+                "FareRuleDetail": "<table border='1'><tr><th>Sector</th><th>Duration</th><th>Type</th><th>DepartureType</th><th>PenaltyDetails</th><th>Currency</th></tr><tr><th rowspan='5'>DEL-LON</th><td>REST OF TIME PERIOD</td><td>Reissue</td><td>Before Departure</td><td>Adult: 4000, Child: 4000</td><th rowspan='5'>INR</th></tr><tr><td>REST OF TIME PERIOD</td><td>Reissue</td><td>After Departure</td><td>Adult: 4000, Child: 4000</td></tr><tr><td>REST OF TIME PERIOD</td><td>Refund</td><td>Before Departure</td><td>Adult: 8000, Child: 8000</td></tr><tr><td>REST OF TIME PERIOD</td><td>Refund</td><td>After Departure</td><td>Adult: 12000, Child: 12000</td></tr><tr><td>REST OF TIME</td><td>Refund</td><td>Before Departure</td><td>Adult: 8000, Child: 8000</td></tr></table><br /><br /><ul><li><b>There is no Minimum Stay requirement</b><br><li><b>There is no Maximum Stay requirement</b><br><fieldset><legend><b><b>Adult</b><br></b></legend><ul><li><b>Revalidation/Reissue</b><br>Fare Component <b>TLOWIN1</b>&emsp; Sector <b>DEL-LON</b> &nbsp;<ul><li>Revalidation before/after departure, including failure to show at first/subsequent flight(s) : <b>Not Allowed</b></li><li>Reissue before/after departure, including failure to show at first/subsequent flight(s) : <b>Allowed with Restrictions</b></li><li>Revalidation/Reissue request, including failure to show at first flight, must be made prior to <b>26MAY27  0000</b></li><li>Revalidation/Reissue request, including failure to show at subsequent flight(s), must be made prior to <b>01JUL27  0000</b></li><li><b>Prior to Departure of journey</b><ul><u>Reissue</u><li>Penalty fee : <b>4000 INR(at today exchange rates 4000 INR) </b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>4000 INR</b></li></ul></li><li><b>Failure to show at first flight</b><ul><u>Reissue</u><li>Penalty fee : <b>10000 INR(at today exchange rates 10000 INR) </b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>10000 INR</b></li></ul></li><li><b>After departure of journey</b><ul><u>Reissue</u><li>Penalty fee : <b>4000 INR(at today exchange rates 4000 INR) </b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>4000 INR</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><u>Reissue</u><li>Penalty fee : <b>10000 INR(at today exchange rates 10000 INR) </b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>10000 INR</b></li></ul></li></ul></li><li><b>Refund</b><br>Fare Component <b>TLOWIN1</b>&emsp; Sector <b>DEL-LON</b> &nbsp;<ul><li>Refund before/after departure, including failure to show at first/subsequent flight(s) : <b>Allowed with Restrictions</b></li><li><b>Prior to Departure of journey</b><ul><li>Penalty fee : <b>8000 INR(at today exchange rates 8000 INR) </b></td></tr><li>Maximum Refund penalty fee for entire ticket : <b>8000 INR</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at first flight</b><ul><li>Penalty fee : <b>8000 INR(at today exchange rates 8000 INR) </b></li><li>Maximum Refund penalty fee for entire ticket : <b>8000 INR</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>After departure of journey</b><ul><li>Penalty fee : <b>12000 INR(at today exchange rates 12000 INR) </b></li><li>Maximum Refund penalty fee for entire ticket : <b>12000 INR</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><li>Penalty fee : <b>12000 INR(at today exchange rates 12000 INR) </b></li><li>Maximum Refund penalty fee for entire ticket : <b>12000 INR</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li></ul></li><br><b>* Revalidation is a modification of the original ticket without any reissue of a new ticket.</b><br><b>* For Reissue, Penalty fees are in addition to any difference in fare.</b><br><b>* For Refund, certain Taxes are non-refundable.</b></ul></fieldset></ul><ul><fieldset><legend><b><b>Child</b><br></b></legend><ul><li><b>Revalidation/Reissue</b><br>Fare Component <b>TLOWIN1</b>&emsp; Sector <b>DEL-LON</b> &nbsp;<ul><li>Revalidation before/after departure, including failure to show at first/subsequent flight(s) : <b>Not Allowed</b></li><li>Reissue before/after departure, including failure to show at first/subsequent flight(s) : <b>Allowed with Restrictions</b></li><li>Revalidation/Reissue request, including failure to show at first flight, must be made prior to <b>26MAY27  0000</b></li><li>Revalidation/Reissue request, including failure to show at subsequent flight(s), must be made prior to <b>01JUL27  0000</b></li><li><b>Prior to Departure of journey</b><ul><u>Reissue</u><li>Penalty fee : <b>4000 INR(at today exchange rates 4000 INR) </b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>4000 INR</b></li></ul></li><li><b>Failure to show at first flight</b><ul><u>Reissue</u><li>Penalty fee : <b>10000 INR(at today exchange rates 10000 INR) </b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>10000 INR</b></li></ul></li><li><b>After departure of journey</b><ul><u>Reissue</u><li>Penalty fee : <b>4000 INR(at today exchange rates 4000 INR) </b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>4000 INR</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><u>Reissue</u><li>Penalty fee : <b>10000 INR(at today exchange rates 10000 INR) </b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>10000 INR</b></li></ul></li></ul></li><li><b>Refund</b><br>Fare Component <b>TLOWIN1</b>&emsp; Sector <b>DEL-LON</b> &nbsp;<ul><li>Refund before/after departure, including failure to show at first/subsequent flight(s) : <b>Allowed with Restrictions</b></li><li><b>Prior to Departure of journey</b><ul><li>Penalty fee : <b>8000 INR(at today exchange rates 8000 INR) </b></td></tr><li>Maximum Refund penalty fee for entire ticket : <b>8000 INR</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at first flight</b><ul><li>Penalty fee : <b>8000 INR(at today exchange rates 8000 INR) </b></li><li>Maximum Refund penalty fee for entire ticket : <b>8000 INR</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>After departure of journey</b><ul><li>Penalty fee : <b>12000 INR(at today exchange rates 12000 INR) </b></li><li>Maximum Refund penalty fee for entire ticket : <b>12000 INR</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><li>Penalty fee : <b>12000 INR(at today exchange rates 12000 INR) </b></li><li>Maximum Refund penalty fee for entire ticket : <b>12000 INR</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li></ul></li><br><b>* Revalidation is a modification of the original ticket without any reissue of a new ticket.</b><br><b>* For Reissue, Penalty fees are in addition to any difference in fare.</b><br><b>* For Refund, certain Taxes are non-refundable.</b></ul></fieldset></ul><br/> <br/>RateClass : TLOWIN1<br/>FareClass : TLOWIN1<br/>marketing Company : KU<br/>Booking Class : T<br/>Origin : DEL<br/>destination : LON<br/>ruleSectionLocalId : 1<br/>ruleCategoryCode : (5)<br/>AP.ADVANCE RES/TKT  RESERVATIONS ARE REQUIRED FOR ALL SECTORS.         NOTE -          TICKET MUST BE ISSUED WITH CONFIRMED RESERVATION          FOR THE ENTIRE JOURNEY.          -------------------------------------------------          KU RESERVES THE RIGHT TO CANCEL ANY PNR WHERE          ITINERARY DO NOT COMPLY WITH THE RESERVATION          BOOKING CODE / RBD/          --------------------------------------------------          IF A TICKET IS USED OUT OF SEQUENCE KU RESERVES          THE RIGHT TO CANCEL ANY PNR OR INVALIDATE THE          REMAINING FLIGHT COUPONS.          -------------------------------------------------          IF A PASSENGER FAILS TO TRAVEL ON A SECTOR BOOKED          KU RESERVES THE RIGHT TO CANCEL THE REMAINING KU          SECTOR .          --------------------------------------------------          ANY VIOLATION OF MARRIED SEGMENT WOULD INCUR A          DEBIT.          -------------------------------------------------          TAX /SERVICE CHARGES/GOVT .LEVIES TO BE PAID AS          APPLICABLE AT THE TIME OF TKT ISSUANCE.          --------------------------------------------------<br/>ruleSectionLocalId : 2<br/>ruleCategoryCode : (16)<br/>PE.PENALTIESFOR TLOWIN1 TYPE FARES  CHANGES    BEFORE DEPARTURE      CHARGE INR 4000.         NOTE -          REBOOKING -          CHARGE ABOVE AMOUNT AND TICKET TO BE REISSUED.          -----------------------------------------------          GST TO BE APPLIED ON THE DATE CHANGE/ REISSUANCE          FEE PENALTIES AS BELOW -          1- 5 PCT FOR ALL ECONOMY CLASS.          2- 18 PCT FOR ALL FIRST / BUSINESS CLASS.          --------------------------------------------------          GST OF TO BE APPLIED FOR ALL CLASSES ON REFUND /          VOID AND NO-SHOW.          1- 5 PCT FOR ALL ECONOMY CLASS.          2- 18 PCT FOR ALL FIRST / BUSINESS CLASS.          --------------------------------------------------          WHEN ITINERARY RESULTS IN A HIGHER FARE THE FARE          DIFF WILL BE COLLECTED PLUS CHANGE FEE AND IF NEW          ITINERARY RESULTS IN LOWER FARE THE CHANGE FEE          WILL APPLY AND NO REFUND WILL BE MADE.          ABOVE CHARGES APPLICABLE ONLY IF TKT IS          REISSUED BEFORE DEPARTURE OF FLT          --------------------------------------------------          CHANGE FEE DOES NOT APPLY TO INFANT NOT OCCUPYING          A SEAT.          -------------------------------------------------    AFTER DEPARTURE      CHARGE INR 10000.    CHARGE INR 10000 FOR NO-SHOW.         NOTE -          PASSENGER WILL BE TREATED AS NO SHOW IF THE          BOOKING IS NOT CANCELLED AT LEAST 24 HOURS BEFORE          THE DEPARTURE OF THE FLIGHT          -------------------------------------------------          CHANGES AFTER DEPARTURE - NO SHOW PLUS CHANGE          FEES APPLICABLE          --------------------------------------------------          IN CASE OF REFUND AFTER DEPARTURE CHARGE NO-SHOW          FEES PLUS CANCELLATION FEES.          --------------------------------------------------          CHANGES AFTER DEPARTURE - NO SHOW PLUS CHANGE          FEES AND FARE DIFFERNCE IF ANY  APPLICABLE          ----------------------------------------          TO AVOID NO-SHOW CHARGES TICKET MUST BE          REISSUED/REFUNDED BEFORE SCHEDULED FLIGHT          DEPARTURE IN TICKET  CANCELLATIONS    BEFORE DEPARTURE      CHARGE INR 8000.         NOTE -          REFUND-          UNUTILIZED TICKETS-          -------------------------------------------------          REFUND IS NOT APPLICABLE ON REMAINING FLIGHT          COUPONS IF THE TICKET IS UTILIZED OUT OF SEQUENCE          --------------------------------------------------          REFUND PENALTY WAIVED IN CASE OF DEATH OF          PASSENGER ONLY AND OFFICIAL DOCUMENTATION          REQUIRED FOR SAME.          --------------------------------------------------          GST TO BE APPLIED ON THE DATE CHANGE/          REISSUANCE FEE PENALTIES AS BELOW -          1- 5 PCT FOR ALL ECONOMY CLASS.          2- 18 PCT FOR ALL FIRST / BUSINESS CLASS.          --------------------------------------------------          GST OF TO BE APPLIED FOR ALL CLASSES ON REFUND /          VOID AND NO-SHOW.          1- 5 PCT FOR ALL ECONOMY CLASS.          2- 18 PCT FOR ALL FIRST / BUSINESS CLASS.          --------------------------------------------------          WAIVERS          1.WAIVED FOR DEATH OF PASSENGER OR FAMILY MEMBER.          A COPY OF VALID DEATH CERTIFICATE ISSUED BY A          COMPETENT MEDICAL AUTHORITY IS REQUIRED.          FAMILY MEMBERS AS DEFINED IN KU CONDITIONS OF          CARRIAGE OR PASSENGER AIRLINE TARIFF RULE BOOK.          2.NO WAIVER APPLICABLE FOR ILLNESS OF PASSENGER          OR FAMILY MEMBER.          3.CONTACT KU OFFICE FOR WAIVERS DEFINED ABOVE.          4. NO WAIVERS IN CASE OF VISA REFUSAL.          ----------------------------------------------          OUT OF SEQUENCE TICKETS -NO REFUND          ----------------------------------------------          YQ - CARRIER IMPOSED FEE          PLUS THE APPLICABLE GST AS PER CLASS OF BOOKING          IS NON REFUNDABLE.          ANYTIME YQ CHARGES          NON - REFUNDABLE FOR TICKETS ISSUED ON OR BEFORE          22JAN26.          REFUNDABLE FOR TICKETS ISSUED ON OR AFTER 23JAN26.          YR TAX IS NON REFUNDABLE FOR TICKETS ISSUED ON OR          AFTER 23JAN26.          6H TAX IS NON REFUNDABLE FOR TICKETS ISSUED ON OR          AFTER 22JAN25.          ----------------------------------------------          CANCELLATION FEE DOES NOT APPLY TO INFANT NOT          OCCUPYING A SEAT.    AFTER DEPARTURE      CHARGE INR 12000.         NOTE -          PARTLY UNUSED TICKETS -          REFUND PERMITTED DEDUCT OW FARE ON          THE SAME RBD          IF ONE WAY FARE IS NOT AVAILABLE          METIONED ON THE          TICKET THEN DEDUCT NEXT AVAILABLE OW          FARE FOR          WHICH THE JOURNEY HAS BEEN          PERFORMED.          --------------------------------------------------          YR TAX NON REFUNDABLE          --------------------------------------------------<br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+                "FlightId": -2147483648,
+                "MiniFarRules": {
+                    "Currency": "INR",
+                    "Rules": [
+                        {
+                            "DepartureType": "Before Departure",
+                            "FromDuration": "P1D",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 8000,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 8000,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P34DT10H",
+                            "Type": 0
+                        },
+                        {
+                            "DepartureType": "NoShow",
+                            "FromDuration": "PT0S",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 10000,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 10000,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P1D",
+                            "Type": 0
+                        },
+                        {
+                            "DepartureType": "Before Departure",
+                            "FromDuration": "P1D",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 4000,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 4000,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P34DT10H",
+                            "Type": 1
+                        },
+                        {
+                            "DepartureType": "NoShow",
+                            "FromDuration": "PT0S",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 10000,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 10000,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P1D",
+                            "Type": 1
+                        }
+                    ]
+                },
+                "Origin": "DEL",
+                "ReturnDate": "2026-07-01T07:15:00"
+            },
+            {
+                "Airline": "KU",
+                "DepartureTime": "2026-07-01T10:00:00",
+                "Destination": "LHR",
+                "FareBasisCode": "TLOWIN1",
+                "FareInclusions": null,
+                "FareRestriction": "",
+                "FareRuleDetail": "Please refer above.<br/> <br/>Please refer above.",
+                "FlightId": -2147483648,
+                "MiniFarRules": {
+                    "Currency": "INR",
+                    "Rules": [
+                        {
+                            "DepartureType": "Before Departure",
+                            "FromDuration": "P1D",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 8000,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 8000,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P34DT10H",
+                            "Type": 0
+                        },
+                        {
+                            "DepartureType": "NoShow",
+                            "FromDuration": "PT0S",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 10000,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 10000,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P1D",
+                            "Type": 0
+                        },
+                        {
+                            "DepartureType": "Before Departure",
+                            "FromDuration": "P1D",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 4000,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 4000,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P34DT10H",
+                            "Type": 1
+                        },
+                        {
+                            "DepartureType": "NoShow",
+                            "FromDuration": "PT0S",
+                            "PaxPenalties": [
+                                {
+                                    "AirlineFee": 10000,
+                                    "Currency": "INR",
+                                    "PassengerType": 1
+                                },
+                                {
+                                    "AirlineFee": 10000,
+                                    "Currency": "INR",
+                                    "PassengerType": 2
+                                }
+                            ],
+                            "ToDuration": "P1D",
+                            "Type": 1
+                        }
+                    ]
+                },
+                "Origin": "KWI",
+                "ReturnDate": "2026-07-01T10:00:00"
+            }
+        ],
+        "ResponseStatus": 1,
+        "TraceId": "37c6c759-5019-4da8-a9ed-5649290086e7"
+    }
+}

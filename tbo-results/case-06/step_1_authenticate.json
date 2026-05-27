@@ -1,0 +1,21 @@
+{
+  "status": 200,
+  "response": {
+    "Status": 1,
+    "TokenId": "1250f6e2-ad50-40b5-a3bb-002cf558a05d",
+    "Error": {
+      "ErrorCode": 0,
+      "ErrorMessage": ""
+    },
+    "Member": {
+      "FirstName": "siddartha",
+      "LastName": "kumar",
+      "Email": "spaksindia@gmail.com",
+      "MemberId": 58195,
+      "AgencyId": 57987,
+      "LoginName": "Spaks",
+      "LoginDetails": "Login Success at#@ 23/05/2026 10:23:38 #@ IPAddress: 3.111.17.8",
+      "isPrimaryAgent": false
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+    "Response": {
+        "ResponseStatus": 1,
+        "Error": {
+            "ErrorCode": 0,
+            "ErrorMessage": ""
+        },
+        "TraceId": "4c39fb70-d2be-4a86-bf7f-68690ac8b6b1",
+        "Origin": "DEL",
+        "Destination": "BOM",
+        "SearchResults": [
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-15T08:50:00",
+                "Fare": 2642.00,
+                "BaseFare": 2642,
+                "Tax": 2574,
+                "OtherCharges": 354.00,
+                "FuelSurcharge": 549
+            }
+        ]
+    }
+}

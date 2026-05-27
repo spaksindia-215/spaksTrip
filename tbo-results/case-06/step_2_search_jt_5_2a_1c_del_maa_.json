@@ -1,0 +1,1914 @@
+{
+  "status": 200,
+  "response": {
+    "Response": {
+      "ResultRecommendationType": 1,
+      "ResponseStatus": 1,
+      "Error": {
+        "ErrorCode": 0,
+        "ErrorMessage": ""
+      },
+      "TraceId": "598b1d78-dd8e-402d-bf60-943e8f06a33b",
+      "Origin": "BOM",
+      "Destination": "CCU",
+      "Results": [
+        [
+          {
+            "FareCombinationId": "SG#25#0",
+            "FareInclusions": [
+              "Lounge Pass - Excluded",
+              "Meal - Excluded",
+              "Priority Checkin - Excluded",
+              "Seat - Excluded"
+            ],
+            "FareInclusionsList": [
+              {
+                "Key": "lounge pass",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "meal",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "priority checkin",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "seat",
+                "Value": "Excluded"
+              }
+            ],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "LastNameFormat": null,
+            "NonStopFirstRanking": 1,
+            "SmartChoiceRanking": 1,
+            "ResultIndex": "OB1[TBO]H8aO+iq5b6CXjCZMaP82szqyyimuIGryno8rHwWWzB64yxwjUzb9TcrH5cbyKXcYi+yYQgvBUGq4+asY37uzo6R0FujdfIyrQ+zdWBGBguS4aMtUM+fcFuSwH4fYf6nZBmbt9MMXzlPTvdREe4QgDhV0Y4wT231n5bOIhn/EbJtjkEaVfg9ResCRIWU41jZVP6aJiPmnFyCzaIEZbZgfhJsFTq8HHM67Q1E1IPLfWEUjwNwwGg12O7QrX22PFSHhjbm1r4PBOqjp5RjCvfVhgDm6nKx+iEo27M62Gy2PnO3LXy722uDJGA/79lh1PhlCo0c88CeTxIx0ESIYS/Iad6ScVGRgS53s2Mu7kRkG8e1zLtmIQS82rGHJtjmArfefCYOp6o+1rrX8xrDmSsqN/kLfbPahMyeae6iwBvJhz8FOin/YLhZSnghLq3m6iYRIfLgZndNRFsDH6336jeY7vsjLuuKaS8WV6VWOk3mztBySCLPG6jJ113v0z94pSvJGVb5QYKa4Vjxs9GtvefbzO4gX1YJmo//UaLLJ+T/GLG4KkyUM6k/0FISZkQLkrj0EiuVaE95AtNzLfXdgWwaDps0NJZsjScvRyp2sMZrPu9yV6SiZW2OefbM3W4NUqVwzkHISq19d4tUqZ0ACU2qmmL/hpOIBhTgLktlBIrrUn+CY3lf6Xh7ySKJyYPAIFOuxrjmnJqACv1ePrR2wVeyegAVBoty5KwKZg86C08BEM2rkUXF7iTFQcOtC/OeqroToRrWj+IZOJ3WOofYD75pLAk9gOicxCAvazGbwzlv9ovnXRK/fOkIyPF3DhgakwmiyR/IMgILMmuswOVoptlFMQMN8+kgHd8s5Oh73EF62VEx4QKoxZsVk9HHANiwZQaovLx/FAgQ/XPvtUVkp8DWftjsKqJp8/psRGsZ01WnoJf0xapXCNM74CW/6JlgJpoo4BRYNY+K5+tK4+jHgWsvJS8ch+S6sbwSaEMUa/V2L+vH80w6w+m2rpv8ddgbQrCf1I1DsWeXNd9o45p5Xcf/CoxtN9fnCpD8QFEvPFF5pAhydUl49XNIWN4AzKt6aliBmj7FPili2+XvtChsK6xh3u4bmH2VI64e9HPStFUxbkV3WJnc56eftVtVhnjAh7gAY",
+            "Source": 25,
+            "IsLCC": true,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": "SG L2B - Star Coupon.",
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Fare": {
+              "CFARAmount": 0,
+              "DCFARAmount": 0,
+              "ServiceFeeDisplayType": 0,
+              "Currency": "INR",
+              "BaseFare": 11379,
+              "Tax": 3609,
+              "TaxBreakup": [
+                {
+                  "key": "K3",
+                  "value": 0
+                },
+                {
+                  "key": "YQTax",
+                  "value": 0
+                },
+                {
+                  "key": "YR",
+                  "value": 195
+                },
+                {
+                  "key": "OtherTaxes",
+                  "value": 3414
+                }
+              ],
+              "TransactionFee": 1024.11,
+              "YQTax": 0,
+              "AdditionalTxnFeeOfrd": 0,
+              "AdditionalTxnFeePub": 0,
+              "PGCharge": 0,
+              "OtherCharges": 354,
+              "ChargeBU": [
+                {
+                  "key": "TBOMARKUP",
+                  "value": 0
+                },
+                {
+                  "key": "GLOBALPROCUREMENTCHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "CONVENIENCECHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "OTHERCHARGE",
+                  "value": 354
+                }
+              ],
+              "Discount": 0,
+              "PublishedFare": 16366.11,
+              "CommissionEarned": 0,
+              "PLBEarned": 0,
+              "IncentiveEarned": 0,
+              "OfferedFare": 16366.11,
+              "TdsOnCommission": 0,
+              "TdsOnPLB": 0,
+              "TdsOnIncentive": 0,
+              "ServiceFee": 0,
+              "TotalBaggageCharges": 0,
+              "TotalMealCharges": 0,
+              "TotalSeatCharges": 0,
+              "TotalSpecialServiceCharges": 0
+            },
+            "FareBreakdown": [
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": [
+                  {
+                    "FlightInfoIndex": "1"
+                  }
+                ],
+                "Currency": "INR",
+                "PassengerType": 1,
+                "PassengerCount": 2,
+                "BaseFare": 8128,
+                "Tax": 2434,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 130
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 2304
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              },
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": null,
+                "Currency": "INR",
+                "PassengerType": 2,
+                "PassengerCount": 1,
+                "BaseFare": 3251,
+                "Tax": 1175,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 65
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 1110
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              }
+            ],
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": null,
+                  "CabinClass": 2,
+                  "SupplierFareClass": "Spice Saver",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "SG",
+                    "AirlineName": "SpiceJet",
+                    "FlightNumber": "488",
+                    "FareClass": "U",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "BOM",
+                      "AirportName": "Chhatrapati Shivaji Maharaj International Airport",
+                      "Terminal": "1",
+                      "CityCode": "BOM",
+                      "CityName": "Mumbai",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-08-14T05:55:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "CCU",
+                      "AirportName": "Calcutta",
+                      "Terminal": "2",
+                      "CityCode": "CCU",
+                      "CityName": "Kolkata",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "ArrTime": "2026-08-14T08:45:00"
+                  },
+                  "Duration": 170,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "73H",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": {
+                    "Color": "rgb(182,215,228)",
+                    "Type": "Spice Saver"
+                  }
+                }
+              ]
+            ],
+            "LastTicketDate": null,
+            "TicketAdvisory": null,
+            "FareRules": [
+              {
+                "Origin": "BOM",
+                "Destination": "CCU",
+                "Airline": "SG",
+                "FareBasisCode": "USAV",
+                "FareRuleDetail": "",
+                "FareRestriction": "",
+                "FareFamilyCode": "",
+                "FareRuleIndex": "",
+                "FareInclusions": []
+              }
+            ],
+            "AirlineCode": "SG",
+            "MiniFareRules": [
+              [
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Reissue",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Reissue",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2250",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Cancellation",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 3950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Cancellation",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                }
+              ]
+            ],
+            "ValidatingAirline": "SG",
+            "FareClassification": {
+              "Color": "rgb(182,215,228)",
+              "Type": "Spice Saver"
+            }
+          },
+          {
+            "FareCombinationId": "SG#28#0",
+            "FareInclusions": [
+              "Lounge Pass - Excluded",
+              "Meal - Excluded",
+              "Priority Checkin - Excluded",
+              "Seat - Excluded"
+            ],
+            "FareInclusionsList": [
+              {
+                "Key": "lounge pass",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "meal",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "priority checkin",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "seat",
+                "Value": "Excluded"
+              }
+            ],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "LastNameFormat": null,
+            "NonStopFirstRanking": 2,
+            "SmartChoiceRanking": 2,
+            "ResultIndex": "OB2[TBO]Aqu3UdZ9G8Yu7O7ysF7oa/pYW/kzlo0Mzjt9KDXIZDTNfW2YfmkESIK1hsFwVkw5u/c/hETTVP2+SHhP6g1WlsoApAinOr0D32u1Z6hMr3rwyXRlSMYx4LJU3R8Ht75gN2qnxOlhMZqMMtbLjUA1EI1oXJ4YKps7W7rJkdQd0uEDAkHohbGO5larwDPa1aLtGcKRr8jd3b9/E0G+ZNtS+n+KJ5wRhY4Y9Mfw7Bg+TkQU5z9ga+Ul/5XfkDmubRB1Rv+qRgn+9Q/8m/W7mRb342O1Lumew2/kbFXCOyYANS0LPrpiy10tunl++LwfzxTeuNoQ72x4tAQX+2m/UiVHRt2fh4WoeaJW/4PZO0VzVOKZatgxr6LmsGdahVvPv+uNZfMnZn7yLTO9r3ZOTZsImI6rjbbA+d1VOGMS9gyVIJU1ISnncTOyTRI5rs06U7mFCjmbZs0ODuvbLdbnViqf3qcJwDTzFkZ9Bfv410WIQkuommD4J3ZvRGEnqIiUtOUeCPT1ZQ+zRoMRD87onfAHmkvsBE7JcHkSPt65+s38/e5k/J3kP6K8G0Mahd4cAJ6HsW5et5Ty2pJm+IJiY7I2d5yHLxR+E6R1fih6btDj88dOA2A6rJXuFpEl5SGDQoh3Z9HN4as37vzbFk9bNFVnPuDKdKNBoXdMbwGb31MCY3gZIMTqlY0gA5Zs8Ba4L7uhf6cx2V3kArdMl4dLImq/MzGrJ5G9t8ugNB3OUMIs8O8TZ5PfrFvds3mX3oUrNRKDJ05jmCh6ukMElQH1YNafdYQ2h9Su2r0LOcYq2kMjLo5vgVD5B6ZNOdyxLYatl2VPUPXzAvOU+nClhN+O3ZdMBig3q9ncuCQbkPEVeAi29dY4/pwDZ3Bt6Vpx+JgvFIMu2KcsZ5fogcyWwwfJg1xHqbpEhYJmqSlQhNMfi6alRfyicDbTemIu58fISz7a2mvdfcCXooJLMHfnER/gMw+CZqIAOmGQa/V5ta6aDBIdGBvGr49RFn729zZkoJ66Tui0THAmz8POPqibwKrhoLXS6KhHEMXD7uJID7fqqtmnZ3u4tQMXRE8+Uc9oIQM7YYZmInEMsEw15BlAYGH+GgSDWmY8r3qXOI6lLGjEh5N3EXbJkD93y8scLT1KKFO90uH2",
+            "Source": 28,
+            "IsLCC": true,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": "As pe SGT.",
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Fare": {
+              "CFARAmount": 0,
+              "DCFARAmount": 0,
+              "ServiceFeeDisplayType": 0,
+              "Currency": "INR",
+              "BaseFare": 11379,
+              "Tax": 3609,
+              "TaxBreakup": [
+                {
+                  "key": "K3",
+                  "value": 0
+                },
+                {
+                  "key": "YQTax",
+                  "value": 0
+                },
+                {
+                  "key": "YR",
+                  "value": 195
+                },
+                {
+                  "key": "OtherTaxes",
+                  "value": 3414
+                }
+              ],
+              "TransactionFee": 910.32,
+              "YQTax": 0,
+              "AdditionalTxnFeeOfrd": 0,
+              "AdditionalTxnFeePub": 0,
+              "PGCharge": 0,
+              "OtherCharges": 531,
+              "ChargeBU": [
+                {
+                  "key": "TBOMARKUP",
+                  "value": 0
+                },
+                {
+                  "key": "GLOBALPROCUREMENTCHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "CONVENIENCECHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "OTHERCHARGE",
+                  "value": 531
+                }
+              ],
+              "Discount": 0,
+              "PublishedFare": 16429.32,
+              "CommissionEarned": 0,
+              "PLBEarned": 0,
+              "IncentiveEarned": 0,
+              "OfferedFare": 16429.32,
+              "TdsOnCommission": 0,
+              "TdsOnPLB": 0,
+              "TdsOnIncentive": 0,
+              "ServiceFee": 0,
+              "TotalBaggageCharges": 0,
+              "TotalMealCharges": 0,
+              "TotalSeatCharges": 0,
+              "TotalSpecialServiceCharges": 0
+            },
+            "FareBreakdown": [
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": [
+                  {
+                    "CabinBaggage": {
+                      "FreeText": "",
+                      "Unit": "KG",
+                      "Value": "7"
+                    },
+                    "CheckedInBaggage": {
+                      "FreeText": "",
+                      "Unit": "KG",
+                      "Value": "15"
+                    },
+                    "FlightInfoIndex": "1"
+                  }
+                ],
+                "Currency": "INR",
+                "PassengerType": 1,
+                "PassengerCount": 2,
+                "BaseFare": 8128,
+                "Tax": 2434,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 130
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 2304
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              },
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": null,
+                "Currency": "INR",
+                "PassengerType": 2,
+                "PassengerCount": 1,
+                "BaseFare": 3251,
+                "Tax": 1175,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 65
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 1110
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              }
+            ],
+            "Segments": [
+              [
+                {
+                  "Baggage": "15 KG",
+                  "CabinBaggage": "7 KG",
+                  "CabinClass": 2,
+                  "SupplierFareClass": "Spice Saver",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "SG",
+                    "AirlineName": "SpiceJet",
+                    "FlightNumber": "488",
+                    "FareClass": "U",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "BOM",
+                      "AirportName": "Chhatrapati Shivaji Maharaj International Airport",
+                      "Terminal": "1",
+                      "CityCode": "BOM",
+                      "CityName": "Mumbai",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-08-14T05:55:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "CCU",
+                      "AirportName": "Calcutta",
+                      "Terminal": "2",
+                      "CityCode": "CCU",
+                      "CityName": "Kolkata",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "ArrTime": "2026-08-14T08:45:00"
+                  },
+                  "Duration": 170,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "73H",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": {
+                    "Color": "rgb(182,215,228)",
+                    "Type": "Spice Saver"
+                  }
+                }
+              ]
+            ],
+            "LastTicketDate": null,
+            "TicketAdvisory": null,
+            "FareRules": [
+              {
+                "Origin": "BOM",
+                "Destination": "CCU",
+                "Airline": "SG",
+                "FareBasisCode": "USAV",
+                "FareRuleDetail": "",
+                "FareRestriction": "",
+                "FareFamilyCode": "",
+                "FareRuleIndex": "",
+                "FareInclusions": []
+              }
+            ],
+            "AirlineCode": "SG",
+            "MiniFareRules": [
+              [
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Reissue",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Reissue",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2250",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Cancellation",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 3950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Cancellation",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                }
+              ]
+            ],
+            "ValidatingAirline": "SG",
+            "FareClassification": {
+              "Color": "rgb(182,215,228)",
+              "Type": "Spice Saver"
+            }
+          },
+          {
+            "FareCombinationId": "SG#31#0",
+            "FareInclusions": [
+              "Lounge Pass - Included",
+              "Meal - Excluded",
+              "Priority Checkin - Excluded",
+              "Seat - Excluded"
+            ],
+            "FareInclusionsList": [
+              {
+                "Key": "lounge pass",
+                "Value": "Included"
+              },
+              {
+                "Key": "meal",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "priority checkin",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "seat",
+                "Value": "Excluded"
+              }
+            ],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "LastNameFormat": null,
+            "NonStopFirstRanking": 3,
+            "SmartChoiceRanking": 3,
+            "ResultIndex": "OB3[TBO]8Cinf2k1c/0gJSXb5EtQTTn+jQrxM5k2dXzv1My5lD9AtUoS0dvqlwnYs6ZUdQBRipqAX7G09zm5aiQmS8ngh8BuT0LYOIKlbOYuwRRy8DYHtJIj+42gPXZktALDcnxB2IF1GvAfWloglZBpCmFmRdM3ejooolcINIabk8GvkI8A1LLuoEPAIvyHsC9sEUHmtBaaObeb4VnLPj4ndZos0wWqUBtqjuRYlN37Yy8P9XzxFjxil2xlVWrxlk7CMt4HOBenfhjjSxJAgVfZVfOonLSoXIzqAZnxrxVUQR2o32Ra4wyMrKZKATHPmnvSoT0xRBexfKBgt5JW93UEfAmXCtx2ZbP0kEx60Noz2ip/RCTCid1ORxwxNRzyWjWl8ppZs84iLkrYpONgkXDihKjahpeMLD4qr3os73XCpUV+0z0zUrQbaNiMbKa5l5dTw9ADSgaSKaZ62EFYY/ElcCi0USGE0idKadp0E9V+F+XblIyUBd/dK4omnc9h9KSLLCWm7NWLtqRJJV2eSSTxDgwSrWhJnOxxguYMrKzuVAwY2tXLveHuDCVDdOwsztK2W5jlcmM3ksRKhs1e6Ilsk61PgVplWNYFZcROmRvRr567S64CnebMIpXOIWHn+RYVKmwxU14V8KF1ayS6yrYMQNWGGjx4Dekgsi761vPHOY8lviDHs8qkqjCIoICJ/JIL6BnjWRwgi+aXUjE+TaxO/EzWo/SRwDmLijGHHSbUod96LIFVrpahI3TbOzobsOKCO4tR4pqnhPqZhIgMB4Jnda/fIAs+Ng6q+hT4Fk/FpCTcLWWg16szD1QpYs9JTqllffvJ12QMUOby/3W4wnXwECGW0WzXr7fes8/zIJPLFX68fgFZSaoW54awPHuNvVk7ssXZhZWe5RlcYfz5W3sZEefTDVOHWdK6JwFWI/CWUNVUc7Fn2nS++eo/xbKSzNxOvD97Tj5uH5/F6Df8MZlLIhaZiVp1Xcd0l5c9xN2wJOxXre70o3wbkkTc64h9jZtx27vuBGFUWO29Go9PscjW7JFjS9jYXf3RjepMDXCYSScjHY+HxSTGDmsWc4ZgCK9vTfR8Oqzi4nLuhbe2aza3FDFA6Kqr0hn8A1YswdinkAViUMXWbrNFq93lQfD4MmO2ftNL",
+            "Source": 31,
+            "IsLCC": true,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": false,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": "Sg sp SGS.",
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Fare": {
+              "CFARAmount": 0,
+              "DCFARAmount": 0,
+              "ServiceFeeDisplayType": 0,
+              "Currency": "INR",
+              "BaseFare": 13041,
+              "Tax": 3693,
+              "TaxBreakup": [
+                {
+                  "key": "K3",
+                  "value": 0
+                },
+                {
+                  "key": "YQTax",
+                  "value": 0
+                },
+                {
+                  "key": "YR",
+                  "value": 195
+                },
+                {
+                  "key": "OtherTaxes",
+                  "value": 3498
+                }
+              ],
+              "YQTax": 0,
+              "AdditionalTxnFeeOfrd": 0,
+              "AdditionalTxnFeePub": 0,
+              "PGCharge": 0,
+              "OtherCharges": 354,
+              "ChargeBU": [
+                {
+                  "key": "TBOMARKUP",
+                  "value": 0
+                },
+                {
+                  "key": "GLOBALPROCUREMENTCHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "CONVENIENCECHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "OTHERCHARGE",
+                  "value": 354
+                }
+              ],
+              "Discount": 0,
+              "PublishedFare": 17088,
+              "CommissionEarned": 0,
+              "PLBEarned": 0,
+              "IncentiveEarned": 0,
+              "OfferedFare": 17088,
+              "TdsOnCommission": 0,
+              "TdsOnPLB": 0,
+              "TdsOnIncentive": 0,
+              "ServiceFee": 0,
+              "TotalBaggageCharges": 0,
+              "TotalMealCharges": 0,
+              "TotalSeatCharges": 0,
+              "TotalSpecialServiceCharges": 0
+            },
+            "FareBreakdown": [
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": [
+                  {
+                    "CabinBaggage": {
+                      "FreeText": "",
+                      "Unit": "KG",
+                      "Value": "7"
+                    },
+                    "CheckedInBaggage": {
+                      "FreeText": "",
+                      "Unit": "KG",
+                      "Value": "15"
+                    },
+                    "FlightInfoIndex": "1"
+                  }
+                ],
+                "Currency": "INR",
+                "PassengerType": 1,
+                "PassengerCount": 2,
+                "BaseFare": 8694,
+                "Tax": 2462,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 130
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 2332
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              },
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": null,
+                "Currency": "INR",
+                "PassengerType": 2,
+                "PassengerCount": 1,
+                "BaseFare": 4347,
+                "Tax": 1231,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 65
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 1166
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              }
+            ],
+            "Segments": [
+              [
+                {
+                  "Baggage": "15 KG",
+                  "CabinBaggage": "7 KG",
+                  "CabinClass": 2,
+                  "SupplierFareClass": "SME Fare",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "SG",
+                    "AirlineName": "SpiceJet",
+                    "FlightNumber": "488",
+                    "FareClass": "U",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "BOM",
+                      "AirportName": "Chhatrapati Shivaji Maharaj International Airport",
+                      "Terminal": "1",
+                      "CityCode": "BOM",
+                      "CityName": "Mumbai",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-08-14T05:55:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "CCU",
+                      "AirportName": "Calcutta",
+                      "Terminal": "2",
+                      "CityCode": "CCU",
+                      "CityName": "Kolkata",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "ArrTime": "2026-08-14T08:45:00"
+                  },
+                  "Duration": 170,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "73H",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": {
+                    "Color": "rgb(182,215,228)",
+                    "Type": "SME Fare"
+                  }
+                }
+              ]
+            ],
+            "LastTicketDate": null,
+            "TicketAdvisory": null,
+            "FareRules": [
+              {
+                "Origin": "BOM",
+                "Destination": "CCU",
+                "Airline": "SG",
+                "FareBasisCode": "USME",
+                "FareRuleDetail": "",
+                "FareRestriction": "",
+                "FareFamilyCode": "",
+                "FareRuleIndex": "",
+                "FareInclusions": []
+              }
+            ],
+            "AirlineCode": "SG",
+            "MiniFareRules": [
+              [
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Reissue",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Cancellation",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 3950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Cancellation",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "BOM-CCU",
+                  "Type": "Reissue",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2250",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                }
+              ]
+            ],
+            "ValidatingAirline": "SG",
+            "FareClassification": {
+              "Color": "rgb(182,215,228)",
+              "Type": "SME Fare"
+            }
+          }
+        ],
+        [
+          {
+            "FareCombinationId": "SG#25#0",
+            "FareInclusions": [
+              "Lounge Pass - Excluded",
+              "Meal - Excluded",
+              "Priority Checkin - Excluded",
+              "Seat - Excluded"
+            ],
+            "FareInclusionsList": [
+              {
+                "Key": "lounge pass",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "meal",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "priority checkin",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "seat",
+                "Value": "Excluded"
+              }
+            ],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "LastNameFormat": null,
+            "NonStopFirstRanking": 1,
+            "SmartChoiceRanking": 1,
+            "ResultIndex": "IB1[TBO]vHaaSDziqDTUgxq9ca5lVvAuo7mjY6RLBWhA+bSQ+385okC0BoARsa2yLpw4JN2VlE8W5Dzs8n4xw1X7LpPWaTRV/xF/DXyUdEQaVbu9J65atRsoe6MdTw/2dmNyN6mN45kbayJAuXTjv8mHi9c4fQ0Bdjuw1tQTrLS+RyiAuJvakGc4CX2nxYMVOZMm14BXCNxqwumasKfLzfRTyItmbQ+SlL4dcHlndd++x1qxETu24xr3nU5His9vN9Gr5buL+GYaXJfiBI2Tu0bQPcjWrLwlT0Zwo4jsqlNgM+P3TIr7yeAt1cAbX0LMK5NYjxF6mUvzDqqIrnp1t3tvPZzcnOIBlznV+3PRy2ZKlHldviZx2QRbSPWqHIUXzOZh2dRnezMWXhBqwZPS7lmz9LLIHO8r21G9Haujc0CXqFSah0YbUU6ZvWzAYUp3oqYPhjt/HYkI7hVH6vL3F5v5Si0WIZY8WyiM77HqrL4+edSxnIBbVYi5hNQ8xsT+RkK/2exaFOKOtMxD4nypua5d7GNuZxTPb2dYCYUzC78SuNsUtdT3zfFlZiWrhCrkccNl4Y+0f/L7s2vQ0U8IsTlmdZS8aWk9cmelEB7azBRtrDgfByziFpJN8uFfKIg3tkPBJzi1FdyvG9wD8mEU3bsi29p/FMfQ5cJHO8uiJ8jq/cVd8VEdETpe5JziezaY7iw1ZfOxLfLmc5QC2DkMOxveGOP5FVDibCg3eUUOuxjHAnA1z4wQvoPNbNWOl32HhrNtHekXr7HIhb1AkpPPdbBn7j4QFvauLqOJxON25PVn933CQLkefgf/mvYI9TxpG4yswANyGTamm22G4mSnunpkTBNq3hSyB20o3UkL0gqzhnhRlTtUNBB9wxLPdKHyhrbPtK5TiAWbTyfy1odDqtjNDl9CF3H3onwPHtA+5Q4DxpbW9w5hPTocbDawo1UErVsYdTsubnRXscaRE6+7hGXwQtGZs7Xlouz6SMoPJgVY/CsOLwstUTdTFTFTZqb2SrJs5xxVZ3fWLIVenBDFBAlQvs4JmLa0rHxzfRPBwOrR2FxiFxRsNqap/krwKxJzdzEXO8oGe1LQnfdaDJX4ueR04fAEaCS5BC1V0lPDzEjUXzAVgAu/PCgJ06MP+QWoLa1Pbm/0",
+            "Source": 25,
+            "IsLCC": true,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": "SG L2B - Star Coupon.",
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Fare": {
+              "CFARAmount": 0,
+              "DCFARAmount": 0,
+              "ServiceFeeDisplayType": 0,
+              "Currency": "INR",
+              "BaseFare": 11889,
+              "Tax": 5175,
+              "TaxBreakup": [
+                {
+                  "key": "K3",
+                  "value": 0
+                },
+                {
+                  "key": "YQTax",
+                  "value": 0
+                },
+                {
+                  "key": "YR",
+                  "value": 195
+                },
+                {
+                  "key": "OtherTaxes",
+                  "value": 4980
+                }
+              ],
+              "TransactionFee": 1070.01,
+              "YQTax": 0,
+              "AdditionalTxnFeeOfrd": 0,
+              "AdditionalTxnFeePub": 0,
+              "PGCharge": 0,
+              "OtherCharges": 354,
+              "ChargeBU": [
+                {
+                  "key": "TBOMARKUP",
+                  "value": 0
+                },
+                {
+                  "key": "GLOBALPROCUREMENTCHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "CONVENIENCECHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "OTHERCHARGE",
+                  "value": 354
+                }
+              ],
+              "Discount": 0,
+              "PublishedFare": 18488.01,
+              "CommissionEarned": 0,
+              "PLBEarned": 0,
+              "IncentiveEarned": 0,
+              "OfferedFare": 18488.01,
+              "TdsOnCommission": 0,
+              "TdsOnPLB": 0,
+              "TdsOnIncentive": 0,
+              "ServiceFee": 0,
+              "TotalBaggageCharges": 0,
+              "TotalMealCharges": 0,
+              "TotalSeatCharges": 0,
+              "TotalSpecialServiceCharges": 0
+            },
+            "FareBreakdown": [
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": [
+                  {
+                    "FlightInfoIndex": "1"
+                  }
+                ],
+                "Currency": "INR",
+                "PassengerType": 1,
+                "PassengerCount": 2,
+                "BaseFare": 8492,
+                "Tax": 3478,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 130
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 3348
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              },
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": null,
+                "Currency": "INR",
+                "PassengerType": 2,
+                "PassengerCount": 1,
+                "BaseFare": 3397,
+                "Tax": 1697,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 65
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 1632
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              }
+            ],
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": null,
+                  "CabinClass": 2,
+                  "SupplierFareClass": "Spice Saver",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "SG",
+                    "AirlineName": "SpiceJet",
+                    "FlightNumber": "487",
+                    "FareClass": "U",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "CCU",
+                      "AirportName": "Calcutta",
+                      "Terminal": "2",
+                      "CityCode": "CCU",
+                      "CityName": "Kolkata",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-08-21T16:40:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "BOM",
+                      "AirportName": "Chhatrapati Shivaji Maharaj International Airport",
+                      "Terminal": "1",
+                      "CityCode": "BOM",
+                      "CityName": "Mumbai",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "ArrTime": "2026-08-21T19:40:00"
+                  },
+                  "Duration": 180,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "73H",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": {
+                    "Color": "rgb(182,215,228)",
+                    "Type": "Spice Saver"
+                  }
+                }
+              ]
+            ],
+            "LastTicketDate": null,
+            "TicketAdvisory": null,
+            "FareRules": [
+              {
+                "Origin": "CCU",
+                "Destination": "BOM",
+                "Airline": "SG",
+                "FareBasisCode": "USAV",
+                "FareRuleDetail": "",
+                "FareRestriction": "",
+                "FareFamilyCode": "",
+                "FareRuleIndex": "",
+                "FareInclusions": []
+              }
+            ],
+            "AirlineCode": "SG",
+            "MiniFareRules": [
+              [
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Reissue",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Reissue",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2250",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Cancellation",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 3950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Cancellation",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                }
+              ]
+            ],
+            "ValidatingAirline": "SG",
+            "FareClassification": {
+              "Color": "rgb(182,215,228)",
+              "Type": "Spice Saver"
+            }
+          },
+          {
+            "FareCombinationId": "SG#28#0",
+            "FareInclusions": [
+              "Lounge Pass - Excluded",
+              "Meal - Excluded",
+              "Priority Checkin - Excluded",
+              "Seat - Excluded"
+            ],
+            "FareInclusionsList": [
+              {
+                "Key": "lounge pass",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "meal",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "priority checkin",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "seat",
+                "Value": "Excluded"
+              }
+            ],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "LastNameFormat": null,
+            "NonStopFirstRanking": 2,
+            "SmartChoiceRanking": 2,
+            "ResultIndex": "IB2[TBO]eYY6SeR7nDNpz6vs14gDbIZCDHDn/kMDWI0YGN4yoHBIlo+5mKujEcIVmFBp3O69/LwNjWrUOnMPTlPJsH7e4gnwkrAls6b37gIT+UWrWqfaHGtOeq40zbijmUuh2A1m1stGVEqrjmlvixlC713WZIKEkwN1sYOrcCRyNhwP4X3BBYCmR6uC9sNriVjdZczEkP7WSEYPHNyf7aw9iWA3WNfbr0NHVX6fEKuFNP+j09scnCpEk1kPZwVkAzISkJfMchbbLnDfKiKTlVxYmHfU3kS7kzbjYcW/lUt1n86m3mj0Ca47UFqvR8vrpRozU89N+6Y9izUkyTPZviO/PEnqy/HEE2T1u8XPZYbY7od1gtRMOrBeuOmGsImFo0lyOoVGBMmFS3gzZqCdv9ykMbE6U/zD9rJWxZjj7POoSGQDPr1Y0x3qNmqpNXd3eY0XYXfE12efhGP0Ip8v5xiInYNRWLcWGcptWPI+kPjkaMI7gJV5vMT6JX1msCok1g6bQ+HGt++wHDKCYOUOnSKOOvy8XZu+iz6qKedknSQElHy+Ch7Jqw19w4opmRetLBxrX0UHNDrJAShI5E+4FYL/E4W4jshfw5Npq9BZ1tEqOkVLE0YpLyQLKT4mUApQPYx2+glThWyjw1v5mndVfZ/FmlvuFOMk51vHyUhc3MTCbEdVQtqds1RNowk3t2INz9xFOVZeV9pSMsHXu3nQ5wLK1P/rYHfswsIsdMtdmtyOzgFUFaI+pYUUZqRORHMMzb/qeR7r+E7Hjq3K8RN3mcp7FuVuwvjvp+ELKClo30j4sZADdl8E5tfidUrD+VZDSOPog5NkfgcwcYff9zapU5TphKTQvrYpRTg3BsgC41MPxQYiGFaF5mrZBx077IBP5oo9lxmpmhW7aqvRn2Ovyy1nmfIOwI8tVY4I6+g+Dve/VFmkkz+fQpU7O77+yrKVCDYL1QnhbO50zS0D3jRrst0A5V7F+kN9huRVe3m6/1PanwNA8OesB8YIh/RAlvvJ8tGQgSTmm9BEvMtHyw0esTJevTKjV6F2LYYTyKjTwEzMsXBIaHmkt0F1E7IDf8ua6GFwI0YjXgGnCwzHWo9RmFeI2VAL5akPTOihPj3VDIzlRk0XPcl0laRZKaUG2mvFfsTVub9L",
+            "Source": 28,
+            "IsLCC": true,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": "As pe SGT.",
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Fare": {
+              "CFARAmount": 0,
+              "DCFARAmount": 0,
+              "ServiceFeeDisplayType": 0,
+              "Currency": "INR",
+              "BaseFare": 11889,
+              "Tax": 5175,
+              "TaxBreakup": [
+                {
+                  "key": "K3",
+                  "value": 0
+                },
+                {
+                  "key": "YQTax",
+                  "value": 0
+                },
+                {
+                  "key": "YR",
+                  "value": 195
+                },
+                {
+                  "key": "OtherTaxes",
+                  "value": 4980
+                }
+              ],
+              "TransactionFee": 951.12,
+              "YQTax": 0,
+              "AdditionalTxnFeeOfrd": 0,
+              "AdditionalTxnFeePub": 0,
+              "PGCharge": 0,
+              "OtherCharges": 531,
+              "ChargeBU": [
+                {
+                  "key": "TBOMARKUP",
+                  "value": 0
+                },
+                {
+                  "key": "GLOBALPROCUREMENTCHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "CONVENIENCECHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "OTHERCHARGE",
+                  "value": 531
+                }
+              ],
+              "Discount": 0,
+              "PublishedFare": 18546.12,
+              "CommissionEarned": 0,
+              "PLBEarned": 0,
+              "IncentiveEarned": 0,
+              "OfferedFare": 18546.12,
+              "TdsOnCommission": 0,
+              "TdsOnPLB": 0,
+              "TdsOnIncentive": 0,
+              "ServiceFee": 0,
+              "TotalBaggageCharges": 0,
+              "TotalMealCharges": 0,
+              "TotalSeatCharges": 0,
+              "TotalSpecialServiceCharges": 0
+            },
+            "FareBreakdown": [
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": [
+                  {
+                    "CabinBaggage": {
+                      "FreeText": "",
+                      "Unit": "KG",
+                      "Value": "7"
+                    },
+                    "CheckedInBaggage": {
+                      "FreeText": "",
+                      "Unit": "KG",
+                      "Value": "15"
+                    },
+                    "FlightInfoIndex": "1"
+                  }
+                ],
+                "Currency": "INR",
+                "PassengerType": 1,
+                "PassengerCount": 2,
+                "BaseFare": 8492,
+                "Tax": 3478,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 130
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 3348
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              },
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": null,
+                "Currency": "INR",
+                "PassengerType": 2,
+                "PassengerCount": 1,
+                "BaseFare": 3397,
+                "Tax": 1697,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 65
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 1632
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              }
+            ],
+            "Segments": [
+              [
+                {
+                  "Baggage": "15 KG",
+                  "CabinBaggage": "7 KG",
+                  "CabinClass": 2,
+                  "SupplierFareClass": "Spice Saver",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "SG",
+                    "AirlineName": "SpiceJet",
+                    "FlightNumber": "487",
+                    "FareClass": "U",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "CCU",
+                      "AirportName": "Calcutta",
+                      "Terminal": "2",
+                      "CityCode": "CCU",
+                      "CityName": "Kolkata",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-08-21T16:40:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "BOM",
+                      "AirportName": "Chhatrapati Shivaji Maharaj International Airport",
+                      "Terminal": "1",
+                      "CityCode": "BOM",
+                      "CityName": "Mumbai",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "ArrTime": "2026-08-21T19:40:00"
+                  },
+                  "Duration": 180,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "73H",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": {
+                    "Color": "rgb(182,215,228)",
+                    "Type": "Spice Saver"
+                  }
+                }
+              ]
+            ],
+            "LastTicketDate": null,
+            "TicketAdvisory": null,
+            "FareRules": [
+              {
+                "Origin": "CCU",
+                "Destination": "BOM",
+                "Airline": "SG",
+                "FareBasisCode": "USAV",
+                "FareRuleDetail": "",
+                "FareRestriction": "",
+                "FareFamilyCode": "",
+                "FareRuleIndex": "",
+                "FareInclusions": []
+              }
+            ],
+            "AirlineCode": "SG",
+            "MiniFareRules": [
+              [
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Reissue",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Reissue",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2250",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Cancellation",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 3950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Cancellation",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                }
+              ]
+            ],
+            "ValidatingAirline": "SG",
+            "FareClassification": {
+              "Color": "rgb(182,215,228)",
+              "Type": "Spice Saver"
+            }
+          },
+          {
+            "FareCombinationId": "SG#31#0",
+            "FareInclusions": [
+              "Lounge Pass - Included",
+              "Meal - Excluded",
+              "Priority Checkin - Excluded",
+              "Seat - Excluded"
+            ],
+            "FareInclusionsList": [
+              {
+                "Key": "lounge pass",
+                "Value": "Included"
+              },
+              {
+                "Key": "meal",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "priority checkin",
+                "Value": "Excluded"
+              },
+              {
+                "Key": "seat",
+                "Value": "Excluded"
+              }
+            ],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "LastNameFormat": null,
+            "NonStopFirstRanking": 3,
+            "SmartChoiceRanking": 3,
+            "ResultIndex": "IB3[TBO]2v/IrQNnq1iJUpvnU9XVApb2WapoSQLkHACPGOLPop57J406JL/a6qQS3sQHekP+p90fhNm0PC1z3pycqRFFzpKbW6618RsHUxJmJTJLtEE5bidYQq/9THKBk7KGzPKyOYXTnurSLwGwME9g7ezvPrUTyf2wV7XFJI/VbX1/1Vih7olXFdUeDUx+fzjgOU6RMYBVW6CBQhTXb9QMFUHxQeWy4Qb4Nuk9AJezLx6cGsCdokbeVmmSoT2/wWR5uAsKAixZsHyDB0ASyBOYX3V6H4t1Ie7CXQc4g/tDzuWJWGk33W4Uo+NsP7Osw+HZNT/nU6Cyx94okRvbuiH8vEr6rDz685tYuyOv+Gk6pNB0GqPA+v4o6LZoV7uQ++EvIFOFiV51tENuztiyJL1E9edEhPG8K0hrpOJ5+8P+HSWRZMwiRFc7aW8kXTkn0/V4DILNetZTry3428xgHnEwzOCJAsH1B2Pq/Cs6hj65EYBK467Kar8o5riubB6+lSYVJf72t4zEafkKsIW1K/o7FH6mhy2diksW5Hj1WPrLDck7ywM1XGmMCLXFrIFuiHmZmxk86Ao6iQtdFz8Nk4Ghv6hK7VZAS5wCbtB9RkkBoKCwX5Dk0hUWltb+iQ38WwOk4pxT9YNlTwjJlA5bDsp1nXlDnBn1Q7atu7kFV2uUOzn7+vLse1ot3qY78fajtDnf3dZiKGOOn2/CTi5Rf32S9DNIL8j//CmRIcn5UWScxKlMn7+UQjmlRP7ZzhMnPYgiEvNi0jNxNj0iiWB8t9sDqE2JirfUljw1iXShXUhtdotwVHmfQrrLa8sD/0VH6bfnZHQtqJbeCxpu1t0LDXIAsgBc833RDXPNOSNult2bVUO1z9jLKdFYtFyJCql0kJv6yOGsCnKtm7dXRso6cq3wO5poAOrUY0BexkzMA6b1Tg9sCzYWxYqeOF8qMk0adWJ1czpy8ZQFrC66se4qq3Rm42y3hDwg58nI64rPaSKU3CN2oBzwDdtI9tbgEOAlCZNrrtg6UOKkRq9MM82FwloM3SFyuFAnklaE7FT21x/tTsdvUuu+ZxUYegZoYfB14okxqwxXNNCMwac+ZPY2GeMhMyaJyWOAepZhQhZnowxlZjbEdDk=",
+            "Source": 31,
+            "IsLCC": true,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": false,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": "Sg sp SGS.",
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Fare": {
+              "CFARAmount": 0,
+              "DCFARAmount": 0,
+              "ServiceFeeDisplayType": 0,
+              "Currency": "INR",
+              "BaseFare": 13125,
+              "Tax": 5235,
+              "TaxBreakup": [
+                {
+                  "key": "K3",
+                  "value": 0
+                },
+                {
+                  "key": "YQTax",
+                  "value": 0
+                },
+                {
+                  "key": "YR",
+                  "value": 195
+                },
+                {
+                  "key": "OtherTaxes",
+                  "value": 5040
+                }
+              ],
+              "YQTax": 0,
+              "AdditionalTxnFeeOfrd": 0,
+              "AdditionalTxnFeePub": 0,
+              "PGCharge": 0,
+              "OtherCharges": 354,
+              "ChargeBU": [
+                {
+                  "key": "TBOMARKUP",
+                  "value": 0
+                },
+                {
+                  "key": "GLOBALPROCUREMENTCHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "CONVENIENCECHARGE",
+                  "value": 0
+                },
+                {
+                  "key": "OTHERCHARGE",
+                  "value": 354
+                }
+              ],
+              "Discount": 0,
+              "PublishedFare": 18714,
+              "CommissionEarned": 0,
+              "PLBEarned": 0,
+              "IncentiveEarned": 0,
+              "OfferedFare": 18714,
+              "TdsOnCommission": 0,
+              "TdsOnPLB": 0,
+              "TdsOnIncentive": 0,
+              "ServiceFee": 0,
+              "TotalBaggageCharges": 0,
+              "TotalMealCharges": 0,
+              "TotalSeatCharges": 0,
+              "TotalSpecialServiceCharges": 0
+            },
+            "FareBreakdown": [
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": [
+                  {
+                    "CabinBaggage": {
+                      "FreeText": "",
+                      "Unit": "KG",
+                      "Value": "7"
+                    },
+                    "CheckedInBaggage": {
+                      "FreeText": "",
+                      "Unit": "KG",
+                      "Value": "15"
+                    },
+                    "FlightInfoIndex": "1"
+                  }
+                ],
+                "Currency": "INR",
+                "PassengerType": 1,
+                "PassengerCount": 2,
+                "BaseFare": 8750,
+                "Tax": 3490,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 130
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 3360
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              },
+              {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "SegmentDetails": null,
+                "Currency": "INR",
+                "PassengerType": 2,
+                "PassengerCount": 1,
+                "BaseFare": 4375,
+                "Tax": 1745,
+                "TransactionFee": 0,
+                "YQTax": 0,
+                "TaxBreakUp": [
+                  {
+                    "key": "YQTax",
+                    "value": 0
+                  },
+                  {
+                    "key": "YR",
+                    "value": 65
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 1680
+                  }
+                ],
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "SupplierReissueCharges": 0
+              }
+            ],
+            "Segments": [
+              [
+                {
+                  "Baggage": "15 KG",
+                  "CabinBaggage": "7 KG",
+                  "CabinClass": 2,
+                  "SupplierFareClass": "SME Fare",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "SG",
+                    "AirlineName": "SpiceJet",
+                    "FlightNumber": "487",
+                    "FareClass": "U",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "CCU",
+                      "AirportName": "Calcutta",
+                      "Terminal": "2",
+                      "CityCode": "CCU",
+                      "CityName": "Kolkata",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-08-21T16:40:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "BOM",
+                      "AirportName": "Chhatrapati Shivaji Maharaj International Airport",
+                      "Terminal": "1",
+                      "CityCode": "BOM",
+                      "CityName": "Mumbai",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "ArrTime": "2026-08-21T19:40:00"
+                  },
+                  "Duration": 180,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "73H",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": {
+                    "Color": "rgb(182,215,228)",
+                    "Type": "SME Fare"
+                  }
+                }
+              ]
+            ],
+            "LastTicketDate": null,
+            "TicketAdvisory": null,
+            "FareRules": [
+              {
+                "Origin": "CCU",
+                "Destination": "BOM",
+                "Airline": "SG",
+                "FareBasisCode": "USME",
+                "FareRuleDetail": "",
+                "FareRestriction": "",
+                "FareFamilyCode": "",
+                "FareRuleIndex": "",
+                "FareInclusions": []
+              }
+            ],
+            "AirlineCode": "SG",
+            "MiniFareRules": [
+              [
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Reissue",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Cancellation",
+                  "From": "0",
+                  "To": "96",
+                  "Unit": "HOURS",
+                  "Details": "INR 3950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Cancellation",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2950",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                },
+                {
+                  "CFARExcludedDetails": null,
+                  "JourneyPoints": "CCU-BOM",
+                  "Type": "Reissue",
+                  "From": "96",
+                  "To": "",
+                  "Unit": "HOURS",
+                  "Details": "INR 2250",
+                  "OnlineReissueAllowed": false,
+                  "OnlineRefundAllowed": false
+                }
+              ]
+            ],
+            "ValidatingAirline": "SG",
+            "FareClassification": {
+              "Color": "rgb(182,215,228)",
+              "Type": "SME Fare"
+            }
+          }
+        ]
+      ]
+    }
+  }
+}
