@@ -1,0 +1,935 @@
+{
+  "status": 200,
+  "response": {
+    "Response": {
+      "B2B2BStatus": false,
+      "Error": {
+        "ErrorCode": 0,
+        "ErrorMessage": ""
+      },
+      "ResponseStatus": 1,
+      "TraceId": "1ecc44ed-69d2-43ae-b80f-7f0ce173c011",
+      "Response": {
+        "ItineraryChangeList": null,
+        "PNR": "MHW8GB",
+        "BookingId": 2131390,
+        "SSRDenied": false,
+        "SSRMessage": null,
+        "Status": 1,
+        "IsPriceChanged": false,
+        "IsTimeChanged": false,
+        "FlightItinerary": {
+          "CommentDetails": null,
+          "FareClassification": "Publish#rgb(182,215,228) ",
+          "IsAutoReissuanceAllowed": true,
+          "IsPartialVoidAllowed": true,
+          "IsSeatsBooked": false,
+          "IssuancePcc": "APITESTID",
+          "JourneyType": 2,
+          "SearchCombinationType": 1,
+          "SupplierFareClasses": null,
+          "TBOConfNo": "TBFXQPZIO",
+          "TBOTripID": null,
+          "TripIndicator": 2,
+          "BookingAllowedForRoamer": true,
+          "BookingId": 2131390,
+          "ParentBookingId": 2131389,
+          "IsCouponAppilcable": true,
+          "IsManual": false,
+          "PNR": "MHW8GB",
+          "IsDomestic": true,
+          "ResultFareType": "RegularFare",
+          "Source": 3,
+          "Origin": "BLR",
+          "Destination": "DEL",
+          "AirlineCode": "SG",
+          "LastTicketDate": "9999-12-31T05:25:00",
+          "ValidatingAirlineCode": "SG",
+          "AirlineRemark": "SpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet Main",
+          "IsLCC": true,
+          "NonRefundable": false,
+          "FareType": "PUB",
+          "CreditNoteNo": null,
+          "Fare": {
+            "CFARAmount": 0,
+            "DCFARAmount": 0,
+            "ServiceFeeDisplayType": 0,
+            "Currency": "INR",
+            "BaseFare": 3662,
+            "Tax": 5457,
+            "TaxBreakup": [
+              {
+                "key": "UDF",
+                "value": 844
+              },
+              {
+                "key": "YR",
+                "value": 280
+              },
+              {
+                "key": "YQTax",
+                "value": 2796
+              },
+              {
+                "key": "RcfTax",
+                "value": 100
+              },
+              {
+                "key": "OtherTaxes",
+                "value": 364
+              },
+              {
+                "key": "K3",
+                "value": 374
+              },
+              {
+                "key": "TotalTax",
+                "value": 5457
+              }
+            ],
+            "YQTax": 2796,
+            "AdditionalTxnFeeOfrd": 0,
+            "AdditionalTxnFeePub": 0,
+            "PGCharge": 0,
+            "OtherCharges": 7.08,
+            "ChargeBU": [
+              {
+                "key": "TBOMARKUP",
+                "value": 0
+              },
+              {
+                "key": "GLOBALPROCUREMENTCHARGE",
+                "value": 0
+              },
+              {
+                "key": "OTHERCHARGE",
+                "value": 7.08
+              },
+              {
+                "key": "CONVENIENCECHARGE",
+                "value": 0
+              }
+            ],
+            "Discount": 0,
+            "PublishedFare": 9126.08,
+            "CommissionEarned": 0,
+            "PLBEarned": 0,
+            "IncentiveEarned": 0,
+            "OfferedFare": 9126.08,
+            "TdsOnCommission": 0,
+            "TdsOnPLB": 0,
+            "TdsOnIncentive": 0,
+            "ServiceFee": 0,
+            "TotalBaggageCharges": 0,
+            "TotalMealCharges": 0,
+            "TotalSeatCharges": 0,
+            "TotalSpecialServiceCharges": 0
+          },
+          "CreditNoteCreatedOn": null,
+          "Passenger": [
+            {
+              "BarcodeDetails": {
+                "Id": 3433250,
+                "Barcode": [
+                  {
+                    "Index": 1,
+                    "Format": "PDF417",
+                    "Content": "M1SHARMA/RAHUL         MHW8GB BLRDELSG 0529 173Y00000000 000",
+                    "BarCodeInBase64": null,
+                    "JourneyWayType": 3
+                  }
+                ]
+              },
+              "DocumentDetails": null,
+              "GuardianDetails": null,
+              "IsReissued": false,
+              "SegmentDetails": [
+                {
+                  "FlightInfoIndex": "1"
+                }
+              ],
+              "PaxId": 3433250,
+              "Title": "Mr",
+              "FirstName": "RAHUL",
+              "LastName": "SHARMA",
+              "PaxType": 1,
+              "DateOfBirth": "1985-03-15T00:00:00",
+              "Gender": 1,
+              "IsPANRequired": false,
+              "IsPassportRequired": false,
+              "PAN": "",
+              "PassportNo": "",
+              "AddressLine1": "45 Prithviraj Road",
+              "Fare": {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "ServiceFeeDisplayType": 0,
+                "Currency": "INR",
+                "BaseFare": 499,
+                "Tax": 1160,
+                "TaxBreakup": [
+                  {
+                    "key": "K3",
+                    "value": 64
+                  },
+                  {
+                    "key": "UDF",
+                    "value": 211
+                  },
+                  {
+                    "key": "YR",
+                    "value": 70
+                  },
+                  {
+                    "key": "YQTax",
+                    "value": 699
+                  },
+                  {
+                    "key": "RcfTax",
+                    "value": 25
+                  },
+                  {
+                    "key": "TotalTax",
+                    "value": 1160
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 91
+                  }
+                ],
+                "YQTax": 699,
+                "AdditionalTxnFeeOfrd": 0,
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "OtherCharges": 1.77,
+                "ChargeBU": [
+                  {
+                    "key": "TBOMARKUP",
+                    "value": 0
+                  },
+                  {
+                    "key": "GLOBALPROCUREMENTCHARGE",
+                    "value": 0
+                  },
+                  {
+                    "key": "OTHERCHARGE",
+                    "value": 1.77
+                  },
+                  {
+                    "key": "CONVENIENCECHARGE",
+                    "value": 0
+                  }
+                ],
+                "Discount": 0,
+                "PublishedFare": 1660.77,
+                "CommissionEarned": 0,
+                "PLBEarned": 0,
+                "IncentiveEarned": 0,
+                "OfferedFare": 1660.77,
+                "TdsOnCommission": 0,
+                "TdsOnPLB": 0,
+                "TdsOnIncentive": 0,
+                "ServiceFee": 0,
+                "TotalBaggageCharges": 0,
+                "TotalMealCharges": 0,
+                "TotalSeatCharges": 0,
+                "TotalSpecialServiceCharges": 0
+              },
+              "City": "New Delhi",
+              "CountryCode": "IN",
+              "CountryName": "India",
+              "Nationality": "IN",
+              "ContactNo": "9810001234",
+              "Email": "rahul.sharma@example.com",
+              "IsLeadPax": true,
+              "FFAirlineCode": null,
+              "FFNumber": null,
+              "Ssr": [],
+              "Ticket": {
+                "TicketId": 2434616,
+                "TicketNumber": "MHW8GB",
+                "IssueDate": "2026-05-21T16:20:10",
+                "ValidatingAirline": "001",
+                "Remarks": "",
+                "ServiceFeeDisplayType": "ShowInTax",
+                "Status": "OK",
+                "ConjunctionNumber": "",
+                "TicketType": "N"
+              },
+              "GSTCompanyAddress": "",
+              "GSTCompanyContactNumber": "",
+              "GSTCompanyEmail": "",
+              "GSTCompanyName": "",
+              "GSTNumber": "",
+              "SegmentAdditionalInfo": [
+                {
+                  "FareBasis": "UHBO",
+                  "NVA": "",
+                  "NVB": "",
+                  "Baggage": "15 KG",
+                  "Meal": "0 Platter",
+                  "Seat": "",
+                  "SpecialService": "",
+                  "CabinBaggage": "7 KG"
+                }
+              ]
+            },
+            {
+              "BarcodeDetails": {
+                "Id": 3433251,
+                "Barcode": [
+                  {
+                    "Index": 1,
+                    "Format": "PDF417",
+                    "Content": "M1SHARMA/PRIYA         MHW8GB BLRDELSG 0529 173Y00000000 000",
+                    "BarCodeInBase64": null,
+                    "JourneyWayType": 3
+                  }
+                ]
+              },
+              "DocumentDetails": null,
+              "GuardianDetails": null,
+              "IsReissued": false,
+              "SegmentDetails": [
+                {
+                  "FlightInfoIndex": "1"
+                }
+              ],
+              "PaxId": 3433251,
+              "Title": "Mrs",
+              "FirstName": "PRIYA",
+              "LastName": "SHARMA",
+              "PaxType": 1,
+              "DateOfBirth": "1988-07-22T00:00:00",
+              "Gender": 2,
+              "IsPANRequired": false,
+              "IsPassportRequired": false,
+              "PAN": "",
+              "PassportNo": "",
+              "AddressLine1": "45 Prithviraj Road",
+              "Fare": {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "ServiceFeeDisplayType": 0,
+                "Currency": "INR",
+                "BaseFare": 499,
+                "Tax": 1160,
+                "TaxBreakup": [
+                  {
+                    "key": "K3",
+                    "value": 64
+                  },
+                  {
+                    "key": "UDF",
+                    "value": 211
+                  },
+                  {
+                    "key": "YR",
+                    "value": 70
+                  },
+                  {
+                    "key": "YQTax",
+                    "value": 699
+                  },
+                  {
+                    "key": "RcfTax",
+                    "value": 25
+                  },
+                  {
+                    "key": "TotalTax",
+                    "value": 1160
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 91
+                  }
+                ],
+                "YQTax": 699,
+                "AdditionalTxnFeeOfrd": 0,
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "OtherCharges": 1.77,
+                "ChargeBU": [
+                  {
+                    "key": "TBOMARKUP",
+                    "value": 0
+                  },
+                  {
+                    "key": "GLOBALPROCUREMENTCHARGE",
+                    "value": 0
+                  },
+                  {
+                    "key": "OTHERCHARGE",
+                    "value": 1.77
+                  },
+                  {
+                    "key": "CONVENIENCECHARGE",
+                    "value": 0
+                  }
+                ],
+                "Discount": 0,
+                "PublishedFare": 1660.77,
+                "CommissionEarned": 0,
+                "PLBEarned": 0,
+                "IncentiveEarned": 0,
+                "OfferedFare": 1660.77,
+                "TdsOnCommission": 0,
+                "TdsOnPLB": 0,
+                "TdsOnIncentive": 0,
+                "ServiceFee": 0,
+                "TotalBaggageCharges": 0,
+                "TotalMealCharges": 0,
+                "TotalSeatCharges": 0,
+                "TotalSpecialServiceCharges": 0
+              },
+              "City": "New Delhi",
+              "CountryCode": "IN",
+              "CountryName": "India",
+              "Nationality": "IN",
+              "ContactNo": "",
+              "IsLeadPax": false,
+              "FFAirlineCode": null,
+              "FFNumber": null,
+              "Ssr": [],
+              "Ticket": {
+                "TicketId": 2434617,
+                "TicketNumber": "MHW8GB",
+                "IssueDate": "2026-05-21T16:20:11",
+                "ValidatingAirline": "001",
+                "Remarks": "",
+                "ServiceFeeDisplayType": "ShowInTax",
+                "Status": "OK",
+                "ConjunctionNumber": "",
+                "TicketType": "N"
+              },
+              "GSTCompanyAddress": "",
+              "GSTCompanyContactNumber": "",
+              "GSTCompanyEmail": "",
+              "GSTCompanyName": "",
+              "GSTNumber": "",
+              "SegmentAdditionalInfo": [
+                {
+                  "FareBasis": "UHBO",
+                  "NVA": "",
+                  "NVB": "",
+                  "Baggage": "15 KG",
+                  "Meal": "0 Platter",
+                  "Seat": "",
+                  "SpecialService": "",
+                  "CabinBaggage": "7 KG"
+                }
+              ]
+            },
+            {
+              "BarcodeDetails": {
+                "Id": 3433252,
+                "Barcode": [
+                  {
+                    "Index": 1,
+                    "Format": "PDF417",
+                    "Content": "M1SHARMA/ROHAN         MHW8GB BLRDELSG 0529 173Y00000000 000",
+                    "BarCodeInBase64": null,
+                    "JourneyWayType": 3
+                  }
+                ]
+              },
+              "DocumentDetails": null,
+              "GuardianDetails": null,
+              "IsReissued": false,
+              "SegmentDetails": [
+                {
+                  "FlightInfoIndex": "1"
+                }
+              ],
+              "PaxId": 3433252,
+              "Title": "Mstr",
+              "FirstName": "ROHAN",
+              "LastName": "SHARMA",
+              "PaxType": 2,
+              "DateOfBirth": "2017-05-10T00:00:00",
+              "Gender": 1,
+              "IsPANRequired": false,
+              "IsPassportRequired": false,
+              "PAN": "",
+              "PassportNo": "",
+              "AddressLine1": "45 Prithviraj Road",
+              "Fare": {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "ServiceFeeDisplayType": 0,
+                "Currency": "INR",
+                "BaseFare": 499,
+                "Tax": 1160,
+                "TaxBreakup": [
+                  {
+                    "key": "K3",
+                    "value": 64
+                  },
+                  {
+                    "key": "UDF",
+                    "value": 211
+                  },
+                  {
+                    "key": "YR",
+                    "value": 70
+                  },
+                  {
+                    "key": "YQTax",
+                    "value": 699
+                  },
+                  {
+                    "key": "RcfTax",
+                    "value": 25
+                  },
+                  {
+                    "key": "TotalTax",
+                    "value": 1160
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 91
+                  }
+                ],
+                "YQTax": 699,
+                "AdditionalTxnFeeOfrd": 0,
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "OtherCharges": 1.77,
+                "ChargeBU": [
+                  {
+                    "key": "TBOMARKUP",
+                    "value": 0
+                  },
+                  {
+                    "key": "GLOBALPROCUREMENTCHARGE",
+                    "value": 0
+                  },
+                  {
+                    "key": "OTHERCHARGE",
+                    "value": 1.77
+                  },
+                  {
+                    "key": "CONVENIENCECHARGE",
+                    "value": 0
+                  }
+                ],
+                "Discount": 0,
+                "PublishedFare": 1660.77,
+                "CommissionEarned": 0,
+                "PLBEarned": 0,
+                "IncentiveEarned": 0,
+                "OfferedFare": 1660.77,
+                "TdsOnCommission": 0,
+                "TdsOnPLB": 0,
+                "TdsOnIncentive": 0,
+                "ServiceFee": 0,
+                "TotalBaggageCharges": 0,
+                "TotalMealCharges": 0,
+                "TotalSeatCharges": 0,
+                "TotalSpecialServiceCharges": 0
+              },
+              "City": "New Delhi",
+              "CountryCode": "IN",
+              "CountryName": "India",
+              "Nationality": "IN",
+              "ContactNo": "",
+              "IsLeadPax": false,
+              "FFAirlineCode": null,
+              "FFNumber": null,
+              "Ssr": [],
+              "Ticket": {
+                "TicketId": 2434618,
+                "TicketNumber": "MHW8GB",
+                "IssueDate": "2026-05-21T16:20:11",
+                "ValidatingAirline": "001",
+                "Remarks": "",
+                "ServiceFeeDisplayType": "ShowInTax",
+                "Status": "OK",
+                "ConjunctionNumber": "",
+                "TicketType": "N"
+              },
+              "GSTCompanyAddress": "",
+              "GSTCompanyContactNumber": "",
+              "GSTCompanyEmail": "",
+              "GSTCompanyName": "",
+              "GSTNumber": "",
+              "SegmentAdditionalInfo": [
+                {
+                  "FareBasis": "UHBO",
+                  "NVA": "",
+                  "NVB": "",
+                  "Baggage": "15 KG",
+                  "Meal": "0 Platter",
+                  "Seat": "",
+                  "SpecialService": "",
+                  "CabinBaggage": "7 KG"
+                }
+              ]
+            },
+            {
+              "BarcodeDetails": {
+                "Id": 3433253,
+                "Barcode": [
+                  {
+                    "Index": 1,
+                    "Format": "PDF417",
+                    "Content": "M1SHARMA/RIYA          MHW8GB BLRDELSG 0529 173Y00000000 000",
+                    "BarCodeInBase64": null,
+                    "JourneyWayType": 3
+                  }
+                ]
+              },
+              "DocumentDetails": null,
+              "GuardianDetails": null,
+              "IsReissued": false,
+              "SegmentDetails": [
+                {
+                  "FlightInfoIndex": "1"
+                }
+              ],
+              "PaxId": 3433253,
+              "Title": "Miss",
+              "FirstName": "RIYA",
+              "LastName": "SHARMA",
+              "PaxType": 2,
+              "DateOfBirth": "2016-08-20T00:00:00",
+              "Gender": 2,
+              "IsPANRequired": false,
+              "IsPassportRequired": false,
+              "PAN": "",
+              "PassportNo": "",
+              "AddressLine1": "45 Prithviraj Road",
+              "Fare": {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "ServiceFeeDisplayType": 0,
+                "Currency": "INR",
+                "BaseFare": 499,
+                "Tax": 1160,
+                "TaxBreakup": [
+                  {
+                    "key": "K3",
+                    "value": 64
+                  },
+                  {
+                    "key": "UDF",
+                    "value": 211
+                  },
+                  {
+                    "key": "YR",
+                    "value": 70
+                  },
+                  {
+                    "key": "YQTax",
+                    "value": 699
+                  },
+                  {
+                    "key": "RcfTax",
+                    "value": 25
+                  },
+                  {
+                    "key": "TotalTax",
+                    "value": 1160
+                  },
+                  {
+                    "key": "OtherTaxes",
+                    "value": 91
+                  }
+                ],
+                "YQTax": 699,
+                "AdditionalTxnFeeOfrd": 0,
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "OtherCharges": 1.77,
+                "ChargeBU": [
+                  {
+                    "key": "TBOMARKUP",
+                    "value": 0
+                  },
+                  {
+                    "key": "GLOBALPROCUREMENTCHARGE",
+                    "value": 0
+                  },
+                  {
+                    "key": "OTHERCHARGE",
+                    "value": 1.77
+                  },
+                  {
+                    "key": "CONVENIENCECHARGE",
+                    "value": 0
+                  }
+                ],
+                "Discount": 0,
+                "PublishedFare": 1660.77,
+                "CommissionEarned": 0,
+                "PLBEarned": 0,
+                "IncentiveEarned": 0,
+                "OfferedFare": 1660.77,
+                "TdsOnCommission": 0,
+                "TdsOnPLB": 0,
+                "TdsOnIncentive": 0,
+                "ServiceFee": 0,
+                "TotalBaggageCharges": 0,
+                "TotalMealCharges": 0,
+                "TotalSeatCharges": 0,
+                "TotalSpecialServiceCharges": 0
+              },
+              "City": "New Delhi",
+              "CountryCode": "IN",
+              "CountryName": "India",
+              "Nationality": "IN",
+              "ContactNo": "",
+              "IsLeadPax": false,
+              "FFAirlineCode": null,
+              "FFNumber": null,
+              "Ssr": [],
+              "Ticket": {
+                "TicketId": 2434619,
+                "TicketNumber": "MHW8GB",
+                "IssueDate": "2026-05-21T16:20:11",
+                "ValidatingAirline": "001",
+                "Remarks": "",
+                "ServiceFeeDisplayType": "ShowInTax",
+                "Status": "OK",
+                "ConjunctionNumber": "",
+                "TicketType": "N"
+              },
+              "GSTCompanyAddress": "",
+              "GSTCompanyContactNumber": "",
+              "GSTCompanyEmail": "",
+              "GSTCompanyName": "",
+              "GSTNumber": "",
+              "SegmentAdditionalInfo": [
+                {
+                  "FareBasis": "UHBO",
+                  "NVA": "",
+                  "NVB": "",
+                  "Baggage": "15 KG",
+                  "Meal": "0 Platter",
+                  "Seat": "",
+                  "SpecialService": "",
+                  "CabinBaggage": "7 KG"
+                }
+              ]
+            },
+            {
+              "BarcodeDetails": {
+                "Id": 3433254,
+                "Barcode": [
+                  {
+                    "Index": 1,
+                    "Format": "PDF417",
+                    "Content": "M1SHARMA/KABIR         MHW8GB BLRDELSG 0529 173Y00000000 000",
+                    "BarCodeInBase64": null,
+                    "JourneyWayType": 3
+                  }
+                ]
+              },
+              "DocumentDetails": null,
+              "GuardianDetails": null,
+              "IsReissued": false,
+              "SegmentDetails": [
+                {
+                  "FlightInfoIndex": "1"
+                }
+              ],
+              "PaxId": 3433254,
+              "Title": "Mstr",
+              "FirstName": "KABIR",
+              "LastName": "SHARMA",
+              "PaxType": 3,
+              "DateOfBirth": "2025-01-20T00:00:00",
+              "Gender": 1,
+              "IsPANRequired": false,
+              "IsPassportRequired": false,
+              "PAN": "",
+              "PassportNo": "",
+              "AddressLine1": "45 Prithviraj Road",
+              "Fare": {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "ServiceFeeDisplayType": 0,
+                "Currency": "INR",
+                "BaseFare": 1666,
+                "Tax": 817,
+                "TaxBreakup": [
+                  {
+                    "key": "K3",
+                    "value": 118
+                  },
+                  {
+                    "key": "TotalTax",
+                    "value": 817
+                  }
+                ],
+                "YQTax": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "OtherCharges": 0,
+                "ChargeBU": [
+                  {
+                    "key": "TBOMARKUP",
+                    "value": 0
+                  },
+                  {
+                    "key": "GLOBALPROCUREMENTCHARGE",
+                    "value": 0
+                  },
+                  {
+                    "key": "OTHERCHARGE",
+                    "value": 0
+                  },
+                  {
+                    "key": "CONVENIENCECHARGE",
+                    "value": 0
+                  }
+                ],
+                "Discount": 0,
+                "PublishedFare": 2483,
+                "CommissionEarned": 0,
+                "PLBEarned": 0,
+                "IncentiveEarned": 0,
+                "OfferedFare": 2483,
+                "TdsOnCommission": 0,
+                "TdsOnPLB": 0,
+                "TdsOnIncentive": 0,
+                "ServiceFee": 0,
+                "TotalBaggageCharges": 0,
+                "TotalMealCharges": 0,
+                "TotalSeatCharges": 0,
+                "TotalSpecialServiceCharges": 0
+              },
+              "City": "New Delhi",
+              "CountryCode": "IN",
+              "CountryName": "India",
+              "Nationality": "IN",
+              "ContactNo": "",
+              "IsLeadPax": false,
+              "FFAirlineCode": null,
+              "FFNumber": null,
+              "Ssr": [],
+              "Ticket": {
+                "TicketId": 2434620,
+                "TicketNumber": "MHW8GB",
+                "IssueDate": "2026-05-21T16:20:11",
+                "ValidatingAirline": "001",
+                "Remarks": "",
+                "ServiceFeeDisplayType": "ShowInTax",
+                "Status": "OK",
+                "ConjunctionNumber": "",
+                "TicketType": "N"
+              },
+              "GSTCompanyAddress": "",
+              "GSTCompanyContactNumber": "",
+              "GSTCompanyEmail": "",
+              "GSTCompanyName": "",
+              "GSTNumber": "",
+              "SegmentAdditionalInfo": [
+                {
+                  "FareBasis": "UHBO",
+                  "NVA": "",
+                  "NVB": "",
+                  "Baggage": "0 Kg",
+                  "Meal": "0 Platter",
+                  "Seat": "",
+                  "SpecialService": "",
+                  "CabinBaggage": ""
+                }
+              ]
+            }
+          ],
+          "CancellationCharges": null,
+          "Segments": [
+            {
+              "Baggage": "15 KG",
+              "CabinBaggage": "7 KG",
+              "CabinClass": 2,
+              "SupplierFareClass": null,
+              "TripIndicator": 1,
+              "SegmentIndicator": 1,
+              "Airline": {
+                "AirlineCode": "SG",
+                "AirlineName": "SpiceJet",
+                "FlightNumber": "529",
+                "FareClass": "HB",
+                "OperatingCarrier": ""
+              },
+              "AirlinePNR": "",
+              "Origin": {
+                "Airport": {
+                  "AirportCode": "BLR",
+                  "AirportName": "Kempegowda International Airport",
+                  "Terminal": "1",
+                  "CityCode": "BLR",
+                  "CityName": "Bangalore",
+                  "CountryCode": "IN",
+                  "CountryName": "India"
+                },
+                "DepTime": "2026-06-22T05:05:00"
+              },
+              "Destination": {
+                "Airport": {
+                  "AirportCode": "DEL",
+                  "AirportName": "Indira Gandhi Airport",
+                  "Terminal": "1D",
+                  "CityCode": "DEL",
+                  "CityName": "Delhi",
+                  "CountryCode": "IN",
+                  "CountryName": "India"
+                },
+                "ArrTime": "2026-06-22T07:45:00"
+              },
+              "Duration": 160,
+              "GroundTime": 0,
+              "Mile": 0,
+              "StopOver": false,
+              "FlightInfoIndex": "1",
+              "StopPoint": "",
+              "StopPointArrivalTime": "0001-01-01T00:00:00",
+              "StopPointDepartureTime": "0001-01-01T00:00:00",
+              "Craft": "73H",
+              "Remark": "",
+              "IsETicketEligible": true,
+              "FlightStatus": "Confirmed",
+              "Status": "HK",
+              "FareClassification": null
+            }
+          ],
+          "FareRules": [
+            {
+              "Origin": "BLR",
+              "Destination": "DEL",
+              "Airline": "SG",
+              "FareBasisCode": "UHBO",
+              "FareRuleDetail": "The FareBasisCode is: UHBO<br /><B>These are just hand bag fares there is no checked in baggage for this fare. </B> \r\n\r\n Changes and cancellations are permitted as per applicable rules and charges.\r <br /><br /><B>If passenger is carrying Check-in Baggage at the last minute then below charges will apply: <table border=\"1\"><tr><td>S.No</td><td>Check-In Baggage Weight Slab</td><td>Price( in INR)</td></tr><tr><td>1.</td><td>Upto 15 Kg</td><td>Flat Fee of INR 400/-</td></tr><tr><td>2.</td><td>Above 15 Kg</td><td>INR 400/- (for the first 15 kg.)<br />INR 300/- per kg. for each additional kg.</td></tr></table><br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+              "FareRestriction": null,
+              "FareInclusions": []
+            }
+          ],
+          "PenaltyCharges": {},
+          "Status": 5,
+          "Invoice": [
+            {
+              "CreditNoteGSTIN": null,
+              "GSTIN": null,
+              "InvoiceCreatedOn": "2026-05-21T16:20:11",
+              "InvoiceId": 13175,
+              "InvoiceNo": "DW/2627/13175",
+              "InvoiceAmount": 9126,
+              "Remarks": "",
+              "InvoiceStatus": 3
+            }
+          ],
+          "InvoiceAmount": 9126,
+          "InvoiceNo": "DW/2627/13175",
+          "InvoiceStatus": 3,
+          "InvoiceCreatedOn": "2026-05-21T16:20:11",
+          "Remarks": "",
+          "IsWebCheckInAllowed": false
+        },
+        "TicketStatus": 1
+      }
+    }
+  }
+}

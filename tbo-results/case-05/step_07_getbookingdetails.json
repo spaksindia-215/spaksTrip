@@ -1,0 +1,1258 @@
+
+{
+    "Response": {
+        "Error": {
+            "ErrorCode": 0,
+            "ErrorMessage": ""
+        },
+        "ResponseStatus": 1,
+        "TraceId": "f099ad61-2c08-4225-8b25-edf426e589d9",
+        "FlightItinerary": {
+            "AgentRemarks": "",
+            "CommentDetails": null,
+            "FareClassification": "Publish#rgb(182,215,228)",
+            "IsPartialVoidAllowed": true,
+            "IsSeatsBooked": false,
+            "IssuancePcc": "DELWI2216",
+            "JourneyType": 2,
+            "SearchCombinationType": 2,
+            "SupplierFareClasses": "",
+            "TBOConfNo": "TBFO5XS1P",
+            "TBOTripID": null,
+            "TripIndicator": 1,
+            "VoidTime": "2026-05-23T23:59:59",
+            "BookingAllowedForRoamer": true,
+            "BookingId": 2132106,
+            "IsCouponAppilcable": true,
+            "IsManual": false,
+            "PNR": "83HGHD",
+            "IsDomestic": false,
+            "ResultFareType": "RegularFare",
+            "Source": 4,
+            "Origin": "DEL",
+            "Destination": "LHR",
+            "AirlineCode": "AY",
+            "ValidatingAirlineCode": "AY",
+            "AirlineRemark": "",
+            "IsLCC": false,
+            "NonRefundable": false,
+            "FareType": "RP",
+            "CreditNoteNo": null,
+            "Fare": {
+                "CFARAmount": 0,
+                "DCFARAmount": 0,
+                "ServiceFeeDisplayType": 0,
+                "Currency": "INR",
+                "BaseFare": 147295,
+                "Tax": 81709,
+                "TaxBreakup": [
+                    {
+                        "key": "YQTax",
+                        "value": 13432
+                    },
+                    {
+                        "key": "INTax",
+                        "value": 4368
+                    },
+                    {
+                        "key": "K3",
+                        "value": 8039
+                    },
+                    {
+                        "key": "TotalTax",
+                        "value": 81709
+                    },
+                    {
+                        "key": "OtherTaxes",
+                        "value": 55870
+                    }
+                ],
+                "YQTax": 13432,
+                "AdditionalTxnFeeOfrd": 0,
+                "AdditionalTxnFeePub": 0,
+                "PGCharge": 0,
+                "OtherCharges": 0,
+                "ChargeBU": [
+                    {
+                        "key": "TBOMARKUP",
+                        "value": 0
+                    },
+                    {
+                        "key": "GLOBALPROCUREMENTCHARGE",
+                        "value": 0
+                    },
+                    {
+                        "key": "OTHERCHARGE",
+                        "value": 0
+                    },
+                    {
+                        "key": "CONVENIENCECHARGE",
+                        "value": 0
+                    }
+                ],
+                "Discount": 0,
+                "PublishedFare": 229004,
+                "CommissionEarned": 0,
+                "PLBEarned": 0,
+                "IncentiveEarned": 0,
+                "OfferedFare": 229004,
+                "TdsOnCommission": 0,
+                "TdsOnPLB": 0,
+                "TdsOnIncentive": 0,
+                "ServiceFee": 0,
+                "TotalBaggageCharges": 0,
+                "TotalMealCharges": 0,
+                "TotalSeatCharges": 0,
+                "TotalSpecialServiceCharges": 0
+            },
+            "CreditNoteCreatedOn": null,
+            "Passenger": [
+                {
+                    "BarcodeDetails": null,
+                    "DocumentDetails": [
+                        {
+                            "DocumentExpiryDate": "2030-12-31",
+                            "DocumentIssueDate": "1900-01-01",
+                            "DocumentIssuingCountry": "",
+                            "DocumentNumber": "Z1234567",
+                            "DocumentTypeId": "Passport",
+                            "PaxId": 3434034,
+                            "ResultFareType": 2
+                        }
+                    ],
+                    "GuardianDetails": null,
+                    "IsReissued": false,
+                    "SegmentDetails": null,
+                    "PaxId": 3434034,
+                    "Title": "Mr",
+                    "FirstName": "RAHUL",
+                    "LastName": "SHARMA",
+                    "PaxType": 1,
+                    "DateOfBirth": "1985-03-15T00:00:00",
+                    "Gender": 1,
+                    "IsPANRequired": false,
+                    "IsPassportRequired": false,
+                    "PAN": "",
+                    "PassportNo": "Z1234567",
+                    "AddressLine1": "45 Prithviraj Road",
+                    "Fare": {
+                        "CFARAmount": 0,
+                        "DCFARAmount": 0,
+                        "ServiceFeeDisplayType": 0,
+                        "Currency": "INR",
+                        "BaseFare": 40915,
+                        "Tax": 26484,
+                        "TaxBreakup": [
+                            {
+                                "key": "K3",
+                                "value": 2214
+                            },
+                            {
+                                "key": "YQTax",
+                                "value": 3358
+                            },
+                            {
+                                "key": "INTax",
+                                "value": 1092
+                            },
+                            {
+                                "key": "TotalTax",
+                                "value": 26484
+                            },
+                            {
+                                "key": "OtherTaxes",
+                                "value": 19820
+                            }
+                        ],
+                        "YQTax": 3358,
+                        "AdditionalTxnFeeOfrd": 0,
+                        "AdditionalTxnFeePub": 0,
+                        "PGCharge": 0,
+                        "OtherCharges": 0,
+                        "ChargeBU": [
+                            {
+                                "key": "TBOMARKUP",
+                                "value": 0
+                            },
+                            {
+                                "key": "GLOBALPROCUREMENTCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "OTHERCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "CONVENIENCECHARGE",
+                                "value": 0
+                            }
+                        ],
+                        "Discount": 0,
+                        "PublishedFare": 67399,
+                        "CommissionEarned": 0,
+                        "PLBEarned": 0,
+                        "IncentiveEarned": 0,
+                        "OfferedFare": 67399,
+                        "TdsOnCommission": 0,
+                        "TdsOnPLB": 0,
+                        "TdsOnIncentive": 0,
+                        "ServiceFee": 0,
+                        "TotalBaggageCharges": 0,
+                        "TotalMealCharges": 0,
+                        "TotalSeatCharges": 0,
+                        "TotalSpecialServiceCharges": 0
+                    },
+                    "City": "New Delhi",
+                    "CountryCode": "IN",
+                    "Nationality": "IN",
+                    "ContactNo": "9810001234",
+                    "Email": "rahul.sharma@example.com",
+                    "IsLeadPax": true,
+                    "FFAirlineCode": null,
+                    "FFNumber": null,
+                    "Ssr": [
+                        {
+                            "Detail": "Z1234567-IN",
+                            "SsrCode": "PSPT",
+                            "SsrStatus": null,
+                            "Status": 3
+                        }
+                    ],
+                    "Ticket": {
+                        "TicketId": 2435311,
+                        "TicketNumber": "5014444851",
+                        "IssueDate": "2026-05-23T10:02:54",
+                        "ValidatingAirline": "105",
+                        "Remarks": "",
+                        "ServiceFeeDisplayType": "ShowInTax",
+                        "Status": "OK",
+                        "ConjunctionNumber": "",
+                        "TicketType": "N"
+                    },
+                    "SegmentAdditionalInfo": [
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        }
+                    ]
+                },
+                {
+                    "BarcodeDetails": null,
+                    "DocumentDetails": [
+                        {
+                            "DocumentExpiryDate": "2030-06-30",
+                            "DocumentIssueDate": "1900-01-01",
+                            "DocumentIssuingCountry": "",
+                            "DocumentNumber": "Z7654321",
+                            "DocumentTypeId": "Passport",
+                            "PaxId": 3434035,
+                            "ResultFareType": 2
+                        }
+                    ],
+                    "GuardianDetails": null,
+                    "IsReissued": false,
+                    "SegmentDetails": null,
+                    "PaxId": 3434035,
+                    "Title": "Mrs",
+                    "FirstName": "PRIYA",
+                    "LastName": "SHARMA",
+                    "PaxType": 1,
+                    "DateOfBirth": "1988-07-22T00:00:00",
+                    "Gender": 2,
+                    "IsPANRequired": false,
+                    "IsPassportRequired": false,
+                    "PAN": "",
+                    "PassportNo": "Z7654321",
+                    "AddressLine1": "45 Prithviraj Road",
+                    "Fare": {
+                        "CFARAmount": 0,
+                        "DCFARAmount": 0,
+                        "ServiceFeeDisplayType": 0,
+                        "Currency": "INR",
+                        "BaseFare": 40915,
+                        "Tax": 26484,
+                        "TaxBreakup": [
+                            {
+                                "key": "K3",
+                                "value": 2214
+                            },
+                            {
+                                "key": "YQTax",
+                                "value": 3358
+                            },
+                            {
+                                "key": "INTax",
+                                "value": 1092
+                            },
+                            {
+                                "key": "TotalTax",
+                                "value": 26484
+                            },
+                            {
+                                "key": "OtherTaxes",
+                                "value": 19820
+                            }
+                        ],
+                        "YQTax": 3358,
+                        "AdditionalTxnFeeOfrd": 0,
+                        "AdditionalTxnFeePub": 0,
+                        "PGCharge": 0,
+                        "OtherCharges": 0,
+                        "ChargeBU": [
+                            {
+                                "key": "TBOMARKUP",
+                                "value": 0
+                            },
+                            {
+                                "key": "GLOBALPROCUREMENTCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "OTHERCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "CONVENIENCECHARGE",
+                                "value": 0
+                            }
+                        ],
+                        "Discount": 0,
+                        "PublishedFare": 67399,
+                        "CommissionEarned": 0,
+                        "PLBEarned": 0,
+                        "IncentiveEarned": 0,
+                        "OfferedFare": 67399,
+                        "TdsOnCommission": 0,
+                        "TdsOnPLB": 0,
+                        "TdsOnIncentive": 0,
+                        "ServiceFee": 0,
+                        "TotalBaggageCharges": 0,
+                        "TotalMealCharges": 0,
+                        "TotalSeatCharges": 0,
+                        "TotalSpecialServiceCharges": 0
+                    },
+                    "City": "New Delhi",
+                    "CountryCode": "IN",
+                    "Nationality": "IN",
+                    "ContactNo": "",
+                    "IsLeadPax": false,
+                    "FFAirlineCode": null,
+                    "FFNumber": null,
+                    "Ssr": [
+                        {
+                            "Detail": "Z7654321-IN",
+                            "SsrCode": "PSPT",
+                            "SsrStatus": null,
+                            "Status": 3
+                        }
+                    ],
+                    "Ticket": {
+                        "TicketId": 2435310,
+                        "TicketNumber": "5014444850",
+                        "IssueDate": "2026-05-23T10:02:54",
+                        "ValidatingAirline": "105",
+                        "Remarks": "",
+                        "ServiceFeeDisplayType": "ShowInTax",
+                        "Status": "OK",
+                        "ConjunctionNumber": "",
+                        "TicketType": "N"
+                    },
+                    "SegmentAdditionalInfo": [
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        }
+                    ]
+                },
+                {
+                    "BarcodeDetails": null,
+                    "DocumentDetails": [
+                        {
+                            "DocumentExpiryDate": "2030-12-31",
+                            "DocumentIssueDate": "1900-01-01",
+                            "DocumentIssuingCountry": "",
+                            "DocumentNumber": "Z5555555",
+                            "DocumentTypeId": "Passport",
+                            "PaxId": 3434036,
+                            "ResultFareType": 2
+                        }
+                    ],
+                    "GuardianDetails": null,
+                    "IsReissued": false,
+                    "SegmentDetails": null,
+                    "PaxId": 3434036,
+                    "Title": "Mstr",
+                    "FirstName": "ROHAN",
+                    "LastName": "SHARMA",
+                    "PaxType": 2,
+                    "DateOfBirth": "2017-05-10T00:00:00",
+                    "Gender": 1,
+                    "IsPANRequired": false,
+                    "IsPassportRequired": false,
+                    "PAN": "",
+                    "PassportNo": "Z5555555",
+                    "AddressLine1": "45 Prithviraj Road",
+                    "Fare": {
+                        "CFARAmount": 0,
+                        "DCFARAmount": 0,
+                        "ServiceFeeDisplayType": 0,
+                        "Currency": "INR",
+                        "BaseFare": 30685,
+                        "Tax": 12777,
+                        "TaxBreakup": [
+                            {
+                                "key": "K3",
+                                "value": 1703
+                            },
+                            {
+                                "key": "YQTax",
+                                "value": 3358
+                            },
+                            {
+                                "key": "INTax",
+                                "value": 1092
+                            },
+                            {
+                                "key": "TotalTax",
+                                "value": 12777
+                            },
+                            {
+                                "key": "OtherTaxes",
+                                "value": 6624
+                            }
+                        ],
+                        "YQTax": 3358,
+                        "AdditionalTxnFeeOfrd": 0,
+                        "AdditionalTxnFeePub": 0,
+                        "PGCharge": 0,
+                        "OtherCharges": 0,
+                        "ChargeBU": [
+                            {
+                                "key": "TBOMARKUP",
+                                "value": 0
+                            },
+                            {
+                                "key": "GLOBALPROCUREMENTCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "OTHERCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "CONVENIENCECHARGE",
+                                "value": 0
+                            }
+                        ],
+                        "Discount": 0,
+                        "PublishedFare": 43462,
+                        "CommissionEarned": 0,
+                        "PLBEarned": 0,
+                        "IncentiveEarned": 0,
+                        "OfferedFare": 43462,
+                        "TdsOnCommission": 0,
+                        "TdsOnPLB": 0,
+                        "TdsOnIncentive": 0,
+                        "ServiceFee": 0,
+                        "TotalBaggageCharges": 0,
+                        "TotalMealCharges": 0,
+                        "TotalSeatCharges": 0,
+                        "TotalSpecialServiceCharges": 0
+                    },
+                    "City": "New Delhi",
+                    "CountryCode": "IN",
+                    "Nationality": "IN",
+                    "ContactNo": "",
+                    "IsLeadPax": false,
+                    "FFAirlineCode": null,
+                    "FFNumber": null,
+                    "Ssr": [
+                        {
+                            "Detail": "Z5555555-IN",
+                            "SsrCode": "PSPT",
+                            "SsrStatus": null,
+                            "Status": 3
+                        },
+                        {
+                            "Detail": "10/05/2017",
+                            "SsrCode": "CHLD",
+                            "SsrStatus": null,
+                            "Status": 3
+                        }
+                    ],
+                    "Ticket": {
+                        "TicketId": 2435314,
+                        "TicketNumber": "5014444853",
+                        "IssueDate": "2026-05-23T10:02:54",
+                        "ValidatingAirline": "105",
+                        "Remarks": "",
+                        "ServiceFeeDisplayType": "ShowInTax",
+                        "Status": "OK",
+                        "ConjunctionNumber": "",
+                        "TicketType": "N"
+                    },
+                    "SegmentAdditionalInfo": [
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        }
+                    ]
+                },
+                {
+                    "BarcodeDetails": null,
+                    "DocumentDetails": [
+                        {
+                            "DocumentExpiryDate": "2030-12-31",
+                            "DocumentIssueDate": "1900-01-01",
+                            "DocumentIssuingCountry": "",
+                            "DocumentNumber": "Z6666666",
+                            "DocumentTypeId": "Passport",
+                            "PaxId": 3434037,
+                            "ResultFareType": 2
+                        }
+                    ],
+                    "GuardianDetails": null,
+                    "IsReissued": false,
+                    "SegmentDetails": null,
+                    "PaxId": 3434037,
+                    "Title": "Miss",
+                    "FirstName": "RIYA",
+                    "LastName": "SHARMA",
+                    "PaxType": 2,
+                    "DateOfBirth": "2016-08-20T00:00:00",
+                    "Gender": 2,
+                    "IsPANRequired": false,
+                    "IsPassportRequired": false,
+                    "PAN": "",
+                    "PassportNo": "Z6666666",
+                    "AddressLine1": "45 Prithviraj Road",
+                    "Fare": {
+                        "CFARAmount": 0,
+                        "DCFARAmount": 0,
+                        "ServiceFeeDisplayType": 0,
+                        "Currency": "INR",
+                        "BaseFare": 30685,
+                        "Tax": 12777,
+                        "TaxBreakup": [
+                            {
+                                "key": "K3",
+                                "value": 1703
+                            },
+                            {
+                                "key": "YQTax",
+                                "value": 3358
+                            },
+                            {
+                                "key": "INTax",
+                                "value": 1092
+                            },
+                            {
+                                "key": "TotalTax",
+                                "value": 12777
+                            },
+                            {
+                                "key": "OtherTaxes",
+                                "value": 6624
+                            }
+                        ],
+                        "YQTax": 3358,
+                        "AdditionalTxnFeeOfrd": 0,
+                        "AdditionalTxnFeePub": 0,
+                        "PGCharge": 0,
+                        "OtherCharges": 0,
+                        "ChargeBU": [
+                            {
+                                "key": "TBOMARKUP",
+                                "value": 0
+                            },
+                            {
+                                "key": "GLOBALPROCUREMENTCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "OTHERCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "CONVENIENCECHARGE",
+                                "value": 0
+                            }
+                        ],
+                        "Discount": 0,
+                        "PublishedFare": 43462,
+                        "CommissionEarned": 0,
+                        "PLBEarned": 0,
+                        "IncentiveEarned": 0,
+                        "OfferedFare": 43462,
+                        "TdsOnCommission": 0,
+                        "TdsOnPLB": 0,
+                        "TdsOnIncentive": 0,
+                        "ServiceFee": 0,
+                        "TotalBaggageCharges": 0,
+                        "TotalMealCharges": 0,
+                        "TotalSeatCharges": 0,
+                        "TotalSpecialServiceCharges": 0
+                    },
+                    "City": "New Delhi",
+                    "CountryCode": "IN",
+                    "Nationality": "IN",
+                    "ContactNo": "",
+                    "IsLeadPax": false,
+                    "FFAirlineCode": null,
+                    "FFNumber": null,
+                    "Ssr": [
+                        {
+                            "Detail": "Z6666666-IN",
+                            "SsrCode": "PSPT",
+                            "SsrStatus": null,
+                            "Status": 3
+                        },
+                        {
+                            "Detail": "20/08/2016",
+                            "SsrCode": "CHLD",
+                            "SsrStatus": null,
+                            "Status": 3
+                        }
+                    ],
+                    "Ticket": {
+                        "TicketId": 2435313,
+                        "TicketNumber": "5014444852",
+                        "IssueDate": "2026-05-23T10:02:54",
+                        "ValidatingAirline": "105",
+                        "Remarks": "",
+                        "ServiceFeeDisplayType": "ShowInTax",
+                        "Status": "OK",
+                        "ConjunctionNumber": "",
+                        "TicketType": "N"
+                    },
+                    "SegmentAdditionalInfo": [
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        }
+                    ]
+                },
+                {
+                    "BarcodeDetails": null,
+                    "DocumentDetails": [
+                        {
+                            "DocumentExpiryDate": "2030-12-31",
+                            "DocumentIssueDate": "1900-01-01",
+                            "DocumentIssuingCountry": "",
+                            "DocumentNumber": "Z9999999",
+                            "DocumentTypeId": "Passport",
+                            "PaxId": 3434038,
+                            "ResultFareType": 2
+                        }
+                    ],
+                    "GuardianDetails": null,
+                    "IsReissued": false,
+                    "SegmentDetails": null,
+                    "PaxId": 3434038,
+                    "Title": "",
+                    "FirstName": "KABIR",
+                    "LastName": "SHARMA",
+                    "PaxType": 3,
+                    "DateOfBirth": "2025-01-20T00:00:00",
+                    "Gender": 1,
+                    "IsPANRequired": false,
+                    "IsPassportRequired": false,
+                    "PAN": "",
+                    "PassportNo": "Z9999999",
+                    "AddressLine1": "45 Prithviraj Road",
+                    "Fare": {
+                        "CFARAmount": 0,
+                        "DCFARAmount": 0,
+                        "ServiceFeeDisplayType": 0,
+                        "Currency": "INR",
+                        "BaseFare": 4095,
+                        "Tax": 3187,
+                        "TaxBreakup": [
+                            {
+                                "key": "K3",
+                                "value": 205
+                            },
+                            {
+                                "key": "TotalTax",
+                                "value": 3187
+                            },
+                            {
+                                "key": "OtherTaxes",
+                                "value": 2982
+                            }
+                        ],
+                        "YQTax": 0,
+                        "AdditionalTxnFeeOfrd": 0,
+                        "AdditionalTxnFeePub": 0,
+                        "PGCharge": 0,
+                        "OtherCharges": 0,
+                        "ChargeBU": [
+                            {
+                                "key": "TBOMARKUP",
+                                "value": 0
+                            },
+                            {
+                                "key": "GLOBALPROCUREMENTCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "OTHERCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "CONVENIENCECHARGE",
+                                "value": 0
+                            }
+                        ],
+                        "Discount": 0,
+                        "PublishedFare": 7282,
+                        "CommissionEarned": 0,
+                        "PLBEarned": 0,
+                        "IncentiveEarned": 0,
+                        "OfferedFare": 7282,
+                        "TdsOnCommission": 0,
+                        "TdsOnPLB": 0,
+                        "TdsOnIncentive": 0,
+                        "ServiceFee": 0,
+                        "TotalBaggageCharges": 0,
+                        "TotalMealCharges": 0,
+                        "TotalSeatCharges": 0,
+                        "TotalSpecialServiceCharges": 0
+                    },
+                    "City": "New Delhi",
+                    "CountryCode": "IN",
+                    "Nationality": "IN",
+                    "ContactNo": "",
+                    "IsLeadPax": false,
+                    "FFAirlineCode": null,
+                    "FFNumber": null,
+                    "Ssr": [
+                        {
+                            "Detail": "Z9999999-IN",
+                            "SsrCode": "PSPT",
+                            "SsrStatus": null,
+                            "Status": 3
+                        },
+                        {
+                            "Detail": "20/01/2025",
+                            "SsrCode": "INFT",
+                            "SsrStatus": null,
+                            "Status": 3
+                        }
+                    ],
+                    "Ticket": {
+                        "TicketId": 2435312,
+                        "TicketNumber": "5014444854",
+                        "IssueDate": "2026-05-23T10:02:54",
+                        "ValidatingAirline": "105",
+                        "Remarks": "",
+                        "ServiceFeeDisplayType": "ShowInTax",
+                        "Status": "OK",
+                        "ConjunctionNumber": "",
+                        "TicketType": "N"
+                    },
+                    "SegmentAdditionalInfo": [
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        },
+                        {
+                            "FareBasis": "ZNN0S2CM",
+                            "NVA": "",
+                            "NVB": "",
+                            "Baggage": "0 Kg",
+                            "Meal": "Included",
+                            "Seat": "",
+                            "SpecialService": "",
+                            "CabinBaggage": ""
+                        }
+                    ]
+                }
+            ],
+            "CancellationCharges": null,
+            "Segments": [
+                {
+                    "Baggage": null,
+                    "CabinBaggage": null,
+                    "CabinClass": 2,
+                    "SupplierFareClass": null,
+                    "TripIndicator": 1,
+                    "SegmentIndicator": 1,
+                    "Airline": {
+                        "AirlineCode": "AY",
+                        "AirlineName": "Finnair",
+                        "FlightNumber": "122",
+                        "FareClass": "Z",
+                        "OperatingCarrier": "AY"
+                    },
+                    "AirlinePNR": "83HGHD",
+                    "Origin": {
+                        "Airport": {
+                            "AirportCode": "DEL",
+                            "AirportName": "Indira Gandhi Airport",
+                            "Terminal": "3",
+                            "CityCode": "DEL",
+                            "CityName": "Delhi",
+                            "CountryCode": "IN",
+                            "CountryName": "India"
+                        },
+                        "DepTime": "2026-07-01T07:40:00"
+                    },
+                    "Destination": {
+                        "Airport": {
+                            "AirportCode": "HEL",
+                            "AirportName": "Helsinki-Vantaa",
+                            "Terminal": "",
+                            "CityCode": "HEL",
+                            "CityName": "Helsinki",
+                            "CountryCode": "FI",
+                            "CountryName": "Finland"
+                        },
+                        "ArrTime": "2026-07-01T14:25:00"
+                    },
+                    "Duration": 555,
+                    "GroundTime": 0,
+                    "Mile": 0,
+                    "StopOver": false,
+                    "FlightInfoIndex": "1",
+                    "StopPoint": "",
+                    "StopPointArrivalTime": null,
+                    "StopPointDepartureTime": null,
+                    "Craft": "333",
+                    "Remark": null,
+                    "IsETicketEligible": true,
+                    "FlightStatus": "Confirmed",
+                    "Status": "HK",
+                    "FareClassification": null
+                },
+                {
+                    "Baggage": null,
+                    "CabinBaggage": null,
+                    "CabinClass": 2,
+                    "SupplierFareClass": null,
+                    "TripIndicator": 1,
+                    "SegmentIndicator": 2,
+                    "Airline": {
+                        "AirlineCode": "AY",
+                        "AirlineName": "Finnair",
+                        "FlightNumber": "1337",
+                        "FareClass": "Z",
+                        "OperatingCarrier": "AY"
+                    },
+                    "AirlinePNR": "83HGHD",
+                    "Origin": {
+                        "Airport": {
+                            "AirportCode": "HEL",
+                            "AirportName": "Helsinki-Vantaa",
+                            "Terminal": "",
+                            "CityCode": "HEL",
+                            "CityName": "Helsinki",
+                            "CountryCode": "FI",
+                            "CountryName": "Finland"
+                        },
+                        "DepTime": "2026-07-01T16:00:00"
+                    },
+                    "Destination": {
+                        "Airport": {
+                            "AirportCode": "LHR",
+                            "AirportName": "Heathrow",
+                            "Terminal": "3",
+                            "CityCode": "LON",
+                            "CityName": "London",
+                            "CountryCode": "GB",
+                            "CountryName": "United Kingdom"
+                        },
+                        "ArrTime": "2026-07-01T17:05:00"
+                    },
+                    "AccumulatedDuration": 835,
+                    "Duration": 185,
+                    "GroundTime": 95,
+                    "Mile": 0,
+                    "StopOver": false,
+                    "FlightInfoIndex": "2",
+                    "StopPoint": "",
+                    "StopPointArrivalTime": null,
+                    "StopPointDepartureTime": null,
+                    "Craft": "359",
+                    "Remark": null,
+                    "IsETicketEligible": true,
+                    "FlightStatus": "Confirmed",
+                    "Status": "HK",
+                    "FareClassification": null
+                },
+                {
+                    "Baggage": null,
+                    "CabinBaggage": null,
+                    "CabinClass": 2,
+                    "SupplierFareClass": null,
+                    "TripIndicator": 2,
+                    "SegmentIndicator": 3,
+                    "Airline": {
+                        "AirlineCode": "AY",
+                        "AirlineName": "Finnair",
+                        "FlightNumber": "1332",
+                        "FareClass": "Z",
+                        "OperatingCarrier": "AY"
+                    },
+                    "AirlinePNR": "83HGHD",
+                    "Origin": {
+                        "Airport": {
+                            "AirportCode": "LHR",
+                            "AirportName": "Heathrow",
+                            "Terminal": "3",
+                            "CityCode": "LON",
+                            "CityName": "London",
+                            "CountryCode": "GB",
+                            "CountryName": "United Kingdom"
+                        },
+                        "DepTime": "2026-07-15T10:20:00"
+                    },
+                    "Destination": {
+                        "Airport": {
+                            "AirportCode": "HEL",
+                            "AirportName": "Helsinki-Vantaa",
+                            "Terminal": "",
+                            "CityCode": "HEL",
+                            "CityName": "Helsinki",
+                            "CountryCode": "FI",
+                            "CountryName": "Finland"
+                        },
+                        "ArrTime": "2026-07-15T15:15:00"
+                    },
+                    "Duration": 175,
+                    "GroundTime": 0,
+                    "Mile": 0,
+                    "StopOver": false,
+                    "FlightInfoIndex": "3",
+                    "StopPoint": "",
+                    "StopPointArrivalTime": null,
+                    "StopPointDepartureTime": null,
+                    "Craft": "359",
+                    "Remark": null,
+                    "IsETicketEligible": true,
+                    "FlightStatus": "Confirmed",
+                    "Status": "HK",
+                    "FareClassification": null
+                },
+                {
+                    "Baggage": null,
+                    "CabinBaggage": null,
+                    "CabinClass": 2,
+                    "SupplierFareClass": null,
+                    "TripIndicator": 2,
+                    "SegmentIndicator": 4,
+                    "Airline": {
+                        "AirlineCode": "AY",
+                        "AirlineName": "Finnair",
+                        "FlightNumber": "121",
+                        "FareClass": "Z",
+                        "OperatingCarrier": "AY"
+                    },
+                    "AirlinePNR": "83HGHD",
+                    "Origin": {
+                        "Airport": {
+                            "AirportCode": "HEL",
+                            "AirportName": "Helsinki-Vantaa",
+                            "Terminal": "",
+                            "CityCode": "HEL",
+                            "CityName": "Helsinki",
+                            "CountryCode": "FI",
+                            "CountryName": "Finland"
+                        },
+                        "DepTime": "2026-07-15T18:30:00"
+                    },
+                    "Destination": {
+                        "Airport": {
+                            "AirportCode": "DEL",
+                            "AirportName": "Indira Gandhi Airport",
+                            "Terminal": "3",
+                            "CityCode": "DEL",
+                            "CityName": "Delhi",
+                            "CountryCode": "IN",
+                            "CountryName": "India"
+                        },
+                        "ArrTime": "2026-07-16T05:20:00"
+                    },
+                    "AccumulatedDuration": 870,
+                    "Duration": 500,
+                    "GroundTime": 195,
+                    "Mile": 0,
+                    "StopOver": false,
+                    "FlightInfoIndex": "4",
+                    "StopPoint": "",
+                    "StopPointArrivalTime": null,
+                    "StopPointDepartureTime": null,
+                    "Craft": "333",
+                    "Remark": null,
+                    "IsETicketEligible": true,
+                    "FlightStatus": "Confirmed",
+                    "Status": "HK",
+                    "FareClassification": null
+                }
+            ],
+            "FareRules": [
+                {
+                    "Origin": "DEL",
+                    "Destination": "HEL",
+                    "Airline": "AY",
+                    "FareBasisCode": "ZNN0S2CM",
+                    "FareRuleDetail": "<table border='1'><tr><th>Sector</th><th>Duration</th><th>Type</th><th>DepartureType</th><th>PenaltyDetails</th><th>Currency</th></tr><tr><th rowspan='4'>DEL-LON</th><td>REST OF TIME PERIOD</td><td>Reissue</td><td>Before Departure</td><td>Adult: 0, Child: 0, Infant: 0</td><th rowspan='4'>INR</th></tr><tr><td>REST OF TIME PERIOD</td><td>Reissue</td><td>After Departure</td><td>Adult: 0, Child: 0, Infant: 0</td></tr><tr><td>REST OF TIME PERIOD</td><td>Refund</td><td>Before Departure</td><td>Adult: 20140, Child: 20140, Infant: 0</td></tr><tr><td>REST OF TIME</td><td>Refund</td><td>Before Departure</td><td>Adult: 20140, Child: 20140, Infant: 0</td></tr></table><br /><br /><ul><li><b>Advance Purchase</b><br>Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>DEL-LON</b> &nbsp;Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>LON-DEL</b> &nbsp;<ul><li>Earliest reservation date before departure <b>No restriction</b></li><li>Earliest ticketing date before departure <b>No restriction</b></li><li>Latest reservation date before departure <b>No restriction</b></li><li>Latest ticketing date before departure <b>26MAY26  1000</b></li><li>Latest ticketing date after reservation <b>26MAY26  1000</b></li></ul></li><li><b>Minimum Stay</b><br>Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>LON-DEL</b> &nbsp;<ul><li>Travel must commence after <b>06JUL26  0000 from LHR</b></li></ul></li><li><b>There is no Maximum Stay requirement</b><br><fieldset><legend><b><b>Adult</b><br></b></legend><ul><li><b>Revalidation/Reissue</b><br>Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>DEL-LON</b> &nbsp;Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>LON-DEL</b> &nbsp;<ul><li><b>Prior to Departure of journey</b><ul><u>Revalidation</u> : <b>Allowed with Restrictions</b><li>Revalidation : <b>Allowed, Free of charge</b></li><li>Maximum revalidation penalty fee for entire ticket (per revalidation) : <b>No charge</b></li><u>Reissue</u> : <b>Allowed with Restrictions</b><li>Reissue : <b>Allowed, Free of charge</b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>No charge</b></li><li>Revalidation/Reissue request must be made prior to : <b>23MAY27  0000</b></li></ul></li><li><b>Failure to show at first flight</b><ul><li>Revalidation : <b>Not Allowed</b></li><li>Reissue : <b>Not Allowed</b></li><li>Revalidation/Reissue request must be made prior to : <b>No restriction</b></li></ul></li><li><b>After departure of journey</b><ul><u>Revalidation</u> : <b>Allowed with Restrictions</b><li>Revalidation : <b>Allowed, Free of charge</b></li><li>Maximum revalidation penalty fee for entire ticket (per revalidation) : <b>No charge</b></li><u>Reissue</u> : <b>Allowed with Restrictions</b><li>Reissue : <b>Allowed, Free of charge</b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>No charge</b></li><li>Revalidation/Reissue request must be made prior to : <b>01JUL27  0000</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><li>Revalidation : <b>Not Allowed</b></li><li>Reissue : <b>Not Allowed</b></li><li>Revalidation/Reissue request must be made prior to : <b>No restriction</b></li></ul></li></ul></li><li><b>Refund</b><br>Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>DEL-LON</b> &nbsp;Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>LON-DEL</b> &nbsp;<ul><li>Refund, including failure to show at subsequent flight(s) : <b>Not Allowed</b></li><li><b>Prior to Departure of journey</b><ul><li>Refund : <b>Allowed with Restrictions</b></li><li>Penalty fee : <b>20140 INR(at today exchange rates 20140 INR) </b></td></tr><li>Maximum Refund penalty fee for entire ticket : <b>20140 INR</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at first flight</b><ul><li>Refund : <b>Not Allowed</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>After departure of journey</b><ul><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li></ul></li><br><b>* Revalidation is a modification of the original ticket without any reissue of a new ticket.</b><br><b>* For Reissue, Penalty fees are in addition to any difference in fare.</b><br><b>* For Refund, certain Taxes are non-refundable.</b></ul></fieldset></ul><ul><fieldset><legend><b><b>Child</b><br></b></legend><ul><li><b>Revalidation/Reissue</b><br>Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>DEL-LON</b> &nbsp;Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>LON-DEL</b> &nbsp;<ul><li><b>Prior to Departure of journey</b><ul><u>Revalidation</u> : <b>Allowed with Restrictions</b><li>Revalidation : <b>Allowed, Free of charge</b></li><li>Maximum revalidation penalty fee for entire ticket (per revalidation) : <b>No charge</b></li><u>Reissue</u> : <b>Allowed with Restrictions</b><li>Reissue : <b>Allowed, Free of charge</b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>No charge</b></li><li>Revalidation/Reissue request must be made prior to : <b>23MAY27  0000</b></li></ul></li><li><b>Failure to show at first flight</b><ul><li>Revalidation : <b>Not Allowed</b></li><li>Reissue : <b>Not Allowed</b></li><li>Revalidation/Reissue request must be made prior to : <b>No restriction</b></li></ul></li><li><b>After departure of journey</b><ul><u>Revalidation</u> : <b>Allowed with Restrictions</b><li>Revalidation : <b>Allowed, Free of charge</b></li><li>Maximum revalidation penalty fee for entire ticket (per revalidation) : <b>No charge</b></li><u>Reissue</u> : <b>Allowed with Restrictions</b><li>Reissue : <b>Allowed, Free of charge</b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>No charge</b></li><li>Revalidation/Reissue request must be made prior to : <b>01JUL27  0000</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><li>Revalidation : <b>Not Allowed</b></li><li>Reissue : <b>Not Allowed</b></li><li>Revalidation/Reissue request must be made prior to : <b>No restriction</b></li></ul></li></ul></li><li><b>Refund</b><br>Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>DEL-LON</b> &nbsp;Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>LON-DEL</b> &nbsp;<ul><li>Refund, including failure to show at subsequent flight(s) : <b>Not Allowed</b></li><li><b>Prior to Departure of journey</b><ul><li>Refund : <b>Allowed with Restrictions</b></li><li>Penalty fee : <b>20140 INR(at today exchange rates 20140 INR) </b></td></tr><li>Maximum Refund penalty fee for entire ticket : <b>20140 INR</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at first flight</b><ul><li>Refund : <b>Not Allowed</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>After departure of journey</b><ul><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li></ul></li><br><b>* Revalidation is a modification of the original ticket without any reissue of a new ticket.</b><br><b>* For Reissue, Penalty fees are in addition to any difference in fare.</b><br><b>* For Refund, certain Taxes are non-refundable.</b></ul></fieldset></ul><ul><fieldset><legend><b><b>Infant</b><br></b></legend><ul><li><b>Revalidation/Reissue</b><br>Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>DEL-LON</b> &nbsp;Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>LON-DEL</b> &nbsp;<ul><li><b>Prior to Departure of journey</b><ul><u>Revalidation</u> : <b>Allowed with Restrictions</b><li>Revalidation : <b>Allowed, Free of charge</b></li><li>Maximum revalidation penalty fee for entire ticket (per revalidation) : <b>No charge</b></li><u>Reissue</u> : <b>Allowed with Restrictions</b><li>Reissue : <b>Allowed, Free of charge</b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>No charge</b></li><li>Revalidation/Reissue request must be made prior to : <b>23MAY27  0000</b></li></ul></li><li><b>Failure to show at first flight</b><ul><li>Revalidation : <b>Not Allowed</b></li><li>Reissue : <b>Not Allowed</b></li><li>Revalidation/Reissue request must be made prior to : <b>No restriction</b></li></ul></li><li><b>After departure of journey</b><ul><u>Revalidation</u> : <b>Allowed with Restrictions</b><li>Revalidation : <b>Allowed, Free of charge</b></li><li>Maximum revalidation penalty fee for entire ticket (per revalidation) : <b>No charge</b></li><u>Reissue</u> : <b>Allowed with Restrictions</b><li>Reissue : <b>Allowed, Free of charge</b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>No charge</b></li><li>Revalidation/Reissue request must be made prior to : <b>01JUL27  0000</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><li>Revalidation : <b>Not Allowed</b></li><li>Reissue : <b>Not Allowed</b></li><li>Revalidation/Reissue request must be made prior to : <b>No restriction</b></li></ul></li></ul></li><li><b>Refund</b><br>Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>DEL-LON</b> &nbsp;Fare Component <b>ZNN0S2CM</b>&emsp; Sector <b>LON-DEL</b> &nbsp;<ul><li>Refund, including failure to show at subsequent flight(s) : <b>Not Allowed</b></li><li><b>Prior to Departure of journey</b><ul><li>Refund : <b>Allowed with Restrictions</b></li><li>Refund : <b>Allowed, Free of charge</b></li><li>Maximum Refund penalty fee for entire ticket : <b>No charge</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at first flight</b><ul><li>Refund : <b>Not Allowed</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>After departure of journey</b><ul><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li></ul></li><br><b>* Revalidation is a modification of the original ticket without any reissue of a new ticket.</b><br><b>* For Reissue, Penalty fees are in addition to any difference in fare.</b><br><b>* For Refund, certain Taxes are non-refundable.</b></ul></fieldset></ul><br/> <br/>RateClass : ZNN0S2CM<br/>FareClass : ZNN0S2CM<br/>marketing Company : AY<br/>Booking Class : Z<br/>Origin : DEL<br/>destination : LON<br/>ruleSectionLocalId : 1<br/>ruleCategoryCode : (5)<br/>AP.ADVANCE RES/TKT  RESERVATIONS ARE REQUIRED FOR ALL SECTORS.  WAITLIST NOT PERMITTED.  WHEN RESERVATIONS ARE MADE AT LEAST 4 DAYS BEFORE  DEPARTURE TICKETING MUST BE COMPLETED WITHIN 72 HOURS  AFTER RESERVATIONS ARE MADE OR AT LEAST 72 HOURS BEFORE  DEPARTURE WHICHEVER IS EARLIER.  OR - RESERVATIONS FOR ALL SECTORS AND TICKETING MUST BE       COMPLETED AT THE SAME TIME.         NOTE -          WAITLIST NOT PERMITTED AT TIME OF TICKETING.          TIME OF TICKETING IS DEFINED ACCORDING TO TICKET          TIME LIMIT. IF TTL IS NOT RESPECTED ALL SEGMENTS          WILL BE CANCELLED.          ----          DUE TO AUTOMATED TICKETING DEADLINE CONTROL          DIFFERENCE COULD EXIST BETWEEN THE FARE RULE          LAST TICKETING DATE AND THE SYSTEM GENERATED          TICKETING DEADLINE MESSAGE.          THE MORE RESTRICTIVE TICKETING DEADLINE APPLIES.          ----          ANY RESERVATION NOT TICKETED AT LEAST 26 HOURS          BEFORE DEPARTURE WILL BE CANCELLED. THIS APPLIES          IRRESPECTIVE OF THE ABOVE MENTIONED DEADLINES.          RESERVATIONS MADE WITHIN 26 HOURS BEFORE DEPARTURE          REQUIRE TICKETING AT THE SAME TIME.<br/>ruleSectionLocalId : 2<br/>ruleCategoryCode : (16)<br/>PE.PENALTIESFROM/TO INDIA  CHANGES    ANY TIME      CHANGES PERMITTED FOR REISSUE/REVALIDATION.         NOTE -          CHANGES PERMITTED BEFORE ORIGINALY SCHEDULED          FLIGHT          ----------          THE TICKET MUST BE REVALIDATED OR REISSUED AT THE          SAME TIME WHEN THE BOOKING IS CHANGED.          ----------          WHEN COMBINING ON A HALF ROUNDTRIP BASIS THE          PENALTY RULES FOR EACH FARE COMPONENT APPLY.          CHARGE HIGHEST PENALTY FEE OF ALL CHANGED FARE          COMPONENTS.          ----------          IN CASE OF REISSUE-REROUTING/UPGRADE-          WHEN THE CHANGES ARE MADE TO THE UNUSED TICKET          CURRENT FARES VALID AT THE TIME OF REISSUE MUST          BE USED.          OTHERWISE HISTORICAL FARES VALID AT THE TIME OF          ISSUANCE OF PREVIOUS TICKET MUST BE USED.          ----------          IN CASE OF RE-ROUTING -          NEW BASE FARE MUST BE EQUAL OR HIGHER THAN          PREVIOUS FARE AND FARE DIFFERENCE HAS TO BE          COLLECTED. WHEN NEW ITINERARY RESULTS IN LOWER          FARE - UPGRADE TO A LEVEL WHICH IS AT LEAST EQUAL          AS THE BASE FARE OF PREVIOUS TICKET.          ----------          FARE DIFFERENCE MUST BE COLLECTED.          ----------          CHANGES PERMITTED ONLY WITHIN SAME BRAND.          ----------          ALL PROVISIONS OF THE NEW FARE MUST BE COMPLIED          WITH          ----------          ONCE A FARE COMPONENT HAS BEEN COMPLETED FARE          BREAK POINTS CAN NOT BE CHANGED.          ----------          THE NON-REFUNDABLE AMOUNT - FARE/YQ/YR - OF THE          ORIGINAL TICKET WILL BE NON-REFUNDABLE AND HAS TO          BE INSERTED IN THE ENDORSEMENT BOX OF THE NEW          TICKET.          ----------          NO SHOW - NOT PERMITTED          ----------          IF PASSENGER IS NO SHOW - FINNAIR HAS A RIGHT          TO CANCEL ONWARD OR RETURN RESERVATION.          ----------          NAME CHANGE. CHANGE OF PASSENGER ALLOWED BEFORE          DEPARTURE OF THE FIRST FLIGHT SEGMENT FOR FEE          400.00 EURO OR EQUIVALENT IN LOCAL CURRENCY TO BE          COLLECTED ON EMD.          ONLY ALLOWED WHEN WHOLE ITINERARY AND FLIGHTS IN          THE PNR ARE MARKETED BY AY AND OPERATED BY          AY/TF/WF OR NORDIC REGIONAL AIRLINES.  CANCELLATIONS    BEFORE DEPARTURE      CHARGE EUR 90.00 FOR CANCEL/REFUND.         NOTE -          CHARGES APPLY PER FARE COMPONENT          ----------          NO CHILD DISCOUNT APPLIES / INFANT WITHOUT A          SEAT - NO CHARGE.          ----------          UNUSED YR/YQ FEES WILL BE REFUNDED.          ----------          WHEN COMBINING NON-REFUNDABLE FARES WITH          REFUNDABLE FARES          1. THE AMOUNT PAID ON EACH REFUNDABLE FARE          COMPONENT IS REFUNDED.          2. THE AMOUNT PAID ON EACH NON-REFUNDABLE FARE          COMPONENT WILL NOT BE REFUNDED.          3. WHEN COMBINING FARES CHARGE THE SUM OF THE          CANCELLATION FEES OF ALL CANCELLED FARE          COMPONENTS.          ----------          FULL REFUND PERMITTED IN CASE OF-          - REJECTION OF VISA. EMBASSY STATEMENT REQUIRED.          - DEATH OF PASSENGER OR FAMILY MEMBER.          WAIVERS MUST BE EVIDENCED BY DEATH CERTIFICATE.          ----------          NO SHOW - NOT PERMITTED.    AFTER DEPARTURE      TICKET IS NON-REFUNDABLE.         NOTE -          FARE COMPONENT IS NON-REFUNDABLE.          ----------          UNUSED YR/YQ FEES ARE REFUNDABLE.          ----------          WHEN COMBINING NON-REFUNDABLE FARES WITH          REFUNDABLE FARES          1. THE AMOUNT PAID ON EACH REFUNDABLE FARE          COMPONENT IS REFUNDED.          2. THE AMOUNT PAID ON EACH NON-REFUNDABLE FARE          COMPONENT WILL NOT BE REFUNDED.          3. WHEN COMBINING FARES CHARGE THE SUM OF THE          CANCELLATION FEES OF ALL CANCELLED FARE          COMPONENTS.          ----------          FULL REFUND PERMITTED IN CASE OF-          - REJECTION OF VISA. EMBASSY STATEMENT REQUIRED.          - DEATH OF PASSENGER OR FAMILY MEMBER.          WAIVERS MUST BE EVIDENCED BY DEATH CERTIFICATE.          ----------          NO SHOW - NOT PERMITTED.<br/>RateClass : ZNN0S2CM<br/>FareClass : ZNN0S2CM<br/>marketing Company : AY<br/>Booking Class : Z<br/>Origin : LON<br/>destination : DEL<br/>ruleSectionLocalId : 1<br/>ruleCategoryCode : (5)<br/>AP.ADVANCE RES/TKT  RESERVATIONS ARE REQUIRED FOR ALL SECTORS.  WAITLIST NOT PERMITTED.  WHEN RESERVATIONS ARE MADE AT LEAST 4 DAYS BEFORE  DEPARTURE TICKETING MUST BE COMPLETED WITHIN 72 HOURS  AFTER RESERVATIONS ARE MADE OR AT LEAST 72 HOURS BEFORE  DEPARTURE WHICHEVER IS EARLIER.  OR - RESERVATIONS FOR ALL SECTORS AND TICKETING MUST BE       COMPLETED AT THE SAME TIME.         NOTE -          WAITLIST NOT PERMITTED AT TIME OF TICKETING.          TIME OF TICKETING IS DEFINED ACCORDING TO TICKET          TIME LIMIT. IF TTL IS NOT RESPECTED ALL SEGMENTS          WILL BE CANCELLED.          ----          DUE TO AUTOMATED TICKETING DEADLINE CONTROL          DIFFERENCE COULD EXIST BETWEEN THE FARE RULE          LAST TICKETING DATE AND THE SYSTEM GENERATED          TICKETING DEADLINE MESSAGE.          THE MORE RESTRICTIVE TICKETING DEADLINE APPLIES.          ----          ANY RESERVATION NOT TICKETED AT LEAST 26 HOURS          BEFORE DEPARTURE WILL BE CANCELLED. THIS APPLIES          IRRESPECTIVE OF THE ABOVE MENTIONED DEADLINES.          RESERVATIONS MADE WITHIN 26 HOURS BEFORE DEPARTURE          REQUIRE TICKETING AT THE SAME TIME.<br/>ruleSectionLocalId : 2<br/>ruleCategoryCode : (16)<br/>PE.PENALTIESFROM/TO INDIA  CHANGES    ANY TIME      CHANGES PERMITTED FOR REISSUE/REVALIDATION.         NOTE -          CHANGES PERMITTED BEFORE ORIGINALY SCHEDULED          FLIGHT          ----------          THE TICKET MUST BE REVALIDATED OR REISSUED AT THE          SAME TIME WHEN THE BOOKING IS CHANGED.          ----------          WHEN COMBINING ON A HALF ROUNDTRIP BASIS THE          PENALTY RULES FOR EACH FARE COMPONENT APPLY.          CHARGE HIGHEST PENALTY FEE OF ALL CHANGED FARE          COMPONENTS.          ----------          IN CASE OF REISSUE-REROUTING/UPGRADE-          WHEN THE CHANGES ARE MADE TO THE UNUSED TICKET          CURRENT FARES VALID AT THE TIME OF REISSUE MUST          BE USED.          OTHERWISE HISTORICAL FARES VALID AT THE TIME OF          ISSUANCE OF PREVIOUS TICKET MUST BE USED.          ----------          IN CASE OF RE-ROUTING -          NEW BASE FARE MUST BE EQUAL OR HIGHER THAN          PREVIOUS FARE AND FARE DIFFERENCE HAS TO BE          COLLECTED. WHEN NEW ITINERARY RESULTS IN LOWER          FARE - UPGRADE TO A LEVEL WHICH IS AT LEAST EQUAL          AS THE BASE FARE OF PREVIOUS TICKET.          ----------          FARE DIFFERENCE MUST BE COLLECTED.          ----------          CHANGES PERMITTED ONLY WITHIN SAME BRAND.          ----------          ALL PROVISIONS OF THE NEW FARE MUST BE COMPLIED          WITH          ----------          ONCE A FARE COMPONENT HAS BEEN COMPLETED FARE          BREAK POINTS CAN NOT BE CHANGED.          ----------          THE NON-REFUNDABLE AMOUNT - FARE/YQ/YR - OF THE          ORIGINAL TICKET WILL BE NON-REFUNDABLE AND HAS TO          BE INSERTED IN THE ENDORSEMENT BOX OF THE NEW          TICKET.          ----------          NO SHOW - NOT PERMITTED          ----------          IF PASSENGER IS NO SHOW - FINNAIR HAS A RIGHT          TO CANCEL ONWARD OR RETURN RESERVATION.          ----------          NAME CHANGE. CHANGE OF PASSENGER ALLOWED BEFORE          DEPARTURE OF THE FIRST FLIGHT SEGMENT FOR FEE          400.00 EURO OR EQUIVALENT IN LOCAL CURRENCY TO BE          COLLECTED ON EMD.          ONLY ALLOWED WHEN WHOLE ITINERARY AND FLIGHTS IN          THE PNR ARE MARKETED BY AY AND OPERATED BY          AY/TF/WF OR NORDIC REGIONAL AIRLINES.  CANCELLATIONS    BEFORE DEPARTURE      CHARGE EUR 90.00 FOR CANCEL/REFUND.         NOTE -          CHARGES APPLY PER FARE COMPONENT          ----------          NO CHILD DISCOUNT APPLIES / INFANT WITHOUT A          SEAT - NO CHARGE.          ----------          UNUSED YR/YQ FEES WILL BE REFUNDED.          ----------          WHEN COMBINING NON-REFUNDABLE FARES WITH          REFUNDABLE FARES          1. THE AMOUNT PAID ON EACH REFUNDABLE FARE          COMPONENT IS REFUNDED.          2. THE AMOUNT PAID ON EACH NON-REFUNDABLE FARE          COMPONENT WILL NOT BE REFUNDED.          3. WHEN COMBINING FARES CHARGE THE SUM OF THE          CANCELLATION FEES OF ALL CANCELLED FARE          COMPONENTS.          ----------          FULL REFUND PERMITTED IN CASE OF-          - REJECTION OF VISA. EMBASSY STATEMENT REQUIRED.          - DEATH OF PASSENGER OR FAMILY MEMBER.          WAIVERS MUST BE EVIDENCED BY DEATH CERTIFICATE.          ----------          NO SHOW - NOT PERMITTED.    AFTER DEPARTURE      TICKET IS NON-REFUNDABLE.         NOTE -          FARE COMPONENT IS NON-REFUNDABLE.          ----------          UNUSED YR/YQ FEES ARE REFUNDABLE.          ----------          WHEN COMBINING NON-REFUNDABLE FARES WITH          REFUNDABLE FARES          1. THE AMOUNT PAID ON EACH REFUNDABLE FARE          COMPONENT IS REFUNDED.          2. THE AMOUNT PAID ON EACH NON-REFUNDABLE FARE          COMPONENT WILL NOT BE REFUNDED.          3. WHEN COMBINING FARES CHARGE THE SUM OF THE          CANCELLATION FEES OF ALL CANCELLED FARE          COMPONENTS.          ----------          FULL REFUND PERMITTED IN CASE OF-          - REJECTION OF VISA. EMBASSY STATEMENT REQUIRED.          - DEATH OF PASSENGER OR FAMILY MEMBER.          WAIVERS MUST BE EVIDENCED BY DEATH CERTIFICATE.          ----------          NO SHOW - NOT PERMITTED.<br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+                    "FareRestriction": "N",
+                    "FareFamilyCode": "",
+                    "FareRuleIndex": "",
+                    "FareInclusions": []
+                },
+                {
+                    "Origin": "HEL",
+                    "Destination": "DEL",
+                    "Airline": "AY",
+                    "FareBasisCode": "ZNN0S2CM",
+                    "FareRuleDetail": "Please refer above.<br/> <br/>Please refer above.",
+                    "FareRestriction": "Y",
+                    "FareFamilyCode": "",
+                    "FareRuleIndex": "",
+                    "FareInclusions": []
+                },
+                {
+                    "Origin": "HEL",
+                    "Destination": "LHR",
+                    "Airline": "AY",
+                    "FareBasisCode": "ZNN0S2CM",
+                    "FareRuleDetail": "Please refer above.<br/> <br/>Please refer above.",
+                    "FareRestriction": "Y",
+                    "FareFamilyCode": "",
+                    "FareRuleIndex": "",
+                    "FareInclusions": []
+                },
+                {
+                    "Origin": "LHR",
+                    "Destination": "HEL",
+                    "Airline": "AY",
+                    "FareBasisCode": "ZNN0S2CM",
+                    "FareRuleDetail": "Please refer above.<br/> <br/>Please refer above.",
+                    "FareRestriction": "N",
+                    "FareFamilyCode": "",
+                    "FareRuleIndex": "",
+                    "FareInclusions": []
+                }
+            ],
+            "MiniFareRules": [
+                {
+                    "CFARExcludedDetails": null,
+                    "JourneyPoints": "DEL-HEL-LHR-HEL-DEL",
+                    "Type": "Reissue",
+                    "From": "",
+                    "To": "",
+                    "Unit": "",
+                    "Details": "REFER TO DETAILED FARE RULES",
+                    "OnlineReissueAllowed": false,
+                    "OnlineRefundAllowed": false
+                },
+                {
+                    "CFARExcludedDetails": null,
+                    "JourneyPoints": "DEL-HEL-LHR-HEL-DEL",
+                    "Type": "Cancellation",
+                    "From": "",
+                    "To": "",
+                    "Unit": "",
+                    "Details": "INR 20140*",
+                    "OnlineReissueAllowed": false,
+                    "OnlineRefundAllowed": true
+                }
+            ],
+            "PenaltyCharges": {
+                "ReissueCharge": "",
+                "CancellationCharge": ""
+            },
+            "Status": 5,
+            "Invoice": [
+                {
+                    "CreditNoteGSTIN": null,
+                    "GSTIN": null,
+                    "InvoiceCreatedOn": "2026-05-23T10:02:59",
+                    "InvoiceId": 6675,
+                    "InvoiceNo": "IW/2627/6675",
+                    "InvoiceAmount": 229004,
+                    "Remarks": "",
+                    "InvoiceStatus": 3
+                }
+            ],
+            "InvoiceAmount": 229004,
+            "InvoiceNo": "IW/2627/6675",
+            "InvoiceStatus": 3,
+            "InvoiceCreatedOn": "2026-05-23T10:02:59",
+            "Remarks": "",
+            "IsWebCheckInAllowed": false
+        }
+    }
+}

@@ -1,0 +1,31 @@
+{
+  "status": 200,
+  "response": {
+    "Response": {
+      "Error": {
+        "ErrorCode": 0,
+        "ErrorMessage": ""
+      },
+      "FareRules": [
+        {
+          "Airline": "SG",
+          "DepartureTime": "0001-01-01T00:00:00",
+          "Destination": "DXB",
+          "FareBasisCode": "USAV",
+          "FareInclusions": [],
+          "FareRestriction": null,
+          "FareRuleDetail": "The FareBasisCode is: USAV<br /> \r\n\r\n Changes and cancellations are permitted as per applicable rules and charges.\r <br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+          "FlightId": 0,
+          "MiniFarRules": {
+            "Currency": null,
+            "Rules": []
+          },
+          "Origin": "DEL",
+          "ReturnDate": "0001-01-01T00:00:00"
+        }
+      ],
+      "ResponseStatus": 1,
+      "TraceId": "21a38e61-465d-4c99-a469-75ee745d1e71"
+    }
+  }
+}

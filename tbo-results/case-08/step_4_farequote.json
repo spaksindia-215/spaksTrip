@@ -1,0 +1,542 @@
+{
+  "status": 200,
+  "response": {
+    "Response": {
+      "Error": {
+        "ErrorCode": 0,
+        "ErrorMessage": ""
+      },
+      "FlightDetailChangeInfo": "FlightCabinClassChanged",
+      "IsPriceChanged": false,
+      "ItineraryChangeList": [
+        2
+      ],
+      "ResponseStatus": 1,
+      "Results": {
+        "FareInclusions": [],
+        "FirstNameFormat": "Canada: If Given/First Name missing, put surname in Last Name and Given Name as \"FNU\" + title (e.g., SMITH/FNU MR).\r\nUAE: Single-name travel documents not allowed. Passports must have surname and given name separated by space.\r\nExamples:\r\n- Maryam (Given only): Not accepted\r\n- (No surname)/Maryam: Not accepted\r\n- Ali/Maryam: Accepted as Ali/Maryam MS\r\n- Maryam Ali (single field, space & MRZ): Accepted as Maryam Ali/FNU MS\r\nExemptions:\r\n- Parent/guardian name on passport\r\n- UAE ID with two names\r\n- UAE employment visa or visa with additional names\r\n- Government duty passport\r\nAustralia/NZ:\r\n1. Single name repeated as Last/First (e.g., JONES/JONES MR).\r\n2. Single-char surname repeated twice as Last Name; Given Name as First (e.g., OO/JOE MR).",
+        "IsBookableIfSeatNotAvailable": false,
+        "IsExclusiveFare": false,
+        "IsFreeMealAvailable": true,
+        "IsHoldAllowedWithSSR": true,
+        "IsHoldMandatoryWithSSR": false,
+        "LastNameFormat": "For Canada: If LastName is missing, set LastName as \"LNU\" and FirstName as \"Given Name(s) Title\" (e.g., LNU/JEREMY BROWN MR).\r\nFor UAE: If LastName is missing but full name exists in GivenName (e.g., \"Maryam Ali\"), set LastName as full name and FirstName as \"FNU Title\" (e.g., MARYAM ALI/FNU MS).\r\nFor Australia & New Zealand: If only one name exists on the passport, repeat the name as both LastName and FirstName (e.g., JONES/JONES MR).",
+        "RequiredFieldValidators": {},
+        "ResultIndex": "OB9[TBO]qxGMHPkAGP4ga0D3p1sRGIunoL7N7ydCzcX16YrfMXWta1v0cELo+R8wjdZ4Mggaalm7iWA7c1Jo3htF34yAJuxnpWvvyVnIKnGyPK4e6Vmf+p/VS6tFmd93oHAed9dzuIhcJblX2OHAIaqRjy5FEYS1q112vfxRPa/gvmnbEt+rSGu8a2dJ2HxrvwYR8poeGUUpgLx3dh6NbVFuOFD2WeMvBrQmLAEFA7Wf7hFg6zja/ZVPrQOunI6EF2rZdYpmMmSngfyGzpAKKtJe2+BSyBOpJM2l05yZi0t3ICegXutpAilR5q+4XvLhqFWomfPck9+hGFRX0yXvjmliFL+p6Ypd5zh58Ijk1PFXszchcgVO0NCoFGR7jvyLnoBXLRlBiCY1T7vC2w/ox+bGlX33R7r8tT7PV5X/YJM0gGDw3wAkbgkRXtvAhOn1Zp8dUruxQBTc+G2alcGRV+W0qZa3hF6ZPU1PtRSUNO9IqZNtsf1WOsNb5R6cY9VQAD7eLe9Qp5hbdkZNJpSyEgdplnL884rPfhezlRJrbq10yPwGVEYwIEpi9C8M7qGDUfgnKWRAfnd/obIqrvsbZbriQLEwD1wZwpGcYCdKAVqlNew3vkpE61+y5qXBc5KcuXIa+rLaJ3W2btrvkTo2yjwKuvG43nylMOATyNcMAcVNXwLVkaHepvyZjrmmPXjvgzD3kDZFJRzZ0kNZxQWjgXl0KD3MyzItr5mk6O9m58JycJrQg1FIddXOhCpLvI2nL28w2XQ6zcR+sZL+9kDCEnf/OnWtl3T+vNklZlXjfSi9APMR0suAZL7fCqc+tVBmSTnQu7h08EgpdTUdafVTzlYmHxJB+jCn1kyYxACyHPQDoTYL59KpAmn1TrkO7KyanDLyUnPE+MbgSOQWAs1WzEwChVaiJUhvvAg0qX+ANHi0kG1uHWtYU9RJeDpMmF7csIQdBVONk/UAq2csqRjOnw3oCq8c+DbsHVB73kgH1QzcIAHTLEGkwPHLn8WUM3rYLMc9/+t8aEFPmTLRZTUqzc+Mw7ktjfG+cOaLVC1+vJSNGjDkj39yce4LSJCL1D74r7xYmtoLNG3rawp+624S7+oyi7T1yzL+NV/b81vfYsV0z0h0HqTw3ltxgXN9roLDKzrD6LP0KLWrGGPAZjD4MYJhj80PvS0VK7tZLPryqFleErC4ootQjDNl71qfMMPjpWCIX4D1CUu+CTNHAKxwr3yug2+wkg==",
+        "Source": 77,
+        "IsLCC": false,
+        "IsRefundable": true,
+        "IsPanRequiredAtBook": false,
+        "IsPanRequiredAtTicket": false,
+        "IsPassportRequiredAtBook": false,
+        "IsPassportRequiredAtTicket": false,
+        "GSTAllowed": true,
+        "IsCouponAppilcable": true,
+        "IsGSTMandatory": false,
+        "IsHoldAllowed": true,
+        "AirlineRemark": "We are testing Airline remark node. AmadeusNDC Result.",
+        "IsPassportFullDetailRequiredAtBook": false,
+        "ResultFareType": "RegularFare",
+        "Fare": {
+          "CFARAmount": 0,
+          "DCFARAmount": 0,
+          "ServiceFeeDisplayType": 0,
+          "Currency": "INR",
+          "BaseFare": 21728,
+          "Tax": 5948,
+          "TaxBreakup": [
+            {
+              "key": "K3",
+              "value": 0
+            },
+            {
+              "key": "YQTax",
+              "value": 2196
+            },
+            {
+              "key": "YR",
+              "value": 680
+            },
+            {
+              "key": "OtherTaxes",
+              "value": 3072
+            }
+          ],
+          "YQTax": 1098,
+          "AdditionalTxnFeeOfrd": 0,
+          "AdditionalTxnFeePub": 0,
+          "PGCharge": 0,
+          "OtherCharges": 0,
+          "ChargeBU": [
+            {
+              "key": "TBOMARKUP",
+              "value": 0
+            },
+            {
+              "key": "GLOBALPROCUREMENTCHARGE",
+              "value": 0
+            },
+            {
+              "key": "CONVENIENCECHARGE",
+              "value": 0
+            },
+            {
+              "key": "OTHERCHARGE",
+              "value": 0
+            }
+          ],
+          "Discount": 0,
+          "PublishedFare": 27676,
+          "CommissionEarned": 184.76,
+          "PLBEarned": 0,
+          "IncentiveEarned": 0,
+          "OfferedFare": 27565.14,
+          "TdsOnCommission": 73.9,
+          "TdsOnPLB": 0,
+          "TdsOnIncentive": 0,
+          "ServiceFee": 0,
+          "TotalBaggageCharges": 0,
+          "TotalMealCharges": 0,
+          "TotalSeatCharges": 0,
+          "TotalSpecialServiceCharges": 0
+        },
+        "FareBreakdown": [
+          {
+            "CFARAmount": 0,
+            "DCFARAmount": 0,
+            "SegmentDetails": [
+              {
+                "CheckedInBaggage": {
+                  "Unit": "KG",
+                  "Value": "15"
+                },
+                "FlightInfoIndex": "1"
+              },
+              {
+                "CheckedInBaggage": {
+                  "Unit": "KG",
+                  "Value": "15"
+                },
+                "FlightInfoIndex": "2"
+              }
+            ],
+            "Currency": "INR",
+            "PassengerType": 1,
+            "PassengerCount": 2,
+            "BaseFare": 21728,
+            "Tax": 5948,
+            "TransactionFee": 0,
+            "YQTax": 1098,
+            "TaxBreakUp": [
+              {
+                "key": "YQTax",
+                "value": 2196
+              },
+              {
+                "key": "YR",
+                "value": 680
+              },
+              {
+                "key": "OtherTaxes",
+                "value": 3072
+              }
+            ],
+            "AdditionalTxnFeePub": 0,
+            "PGCharge": 0,
+            "AdditionalTxnFeeOfrd": 0,
+            "SupplierReissueCharges": 0
+          }
+        ],
+        "Segments": [
+          [
+            {
+              "Baggage": "15 KG",
+              "CabinBaggage": "Included",
+              "CabinClass": 2,
+              "SupplierFareClass": "PublishNDC",
+              "TripIndicator": 1,
+              "SegmentIndicator": 1,
+              "Airline": {
+                "AirlineCode": "AI",
+                "AirlineName": "Air India",
+                "FlightNumber": "9486",
+                "FareClass": "S",
+                "OperatingCarrier": "IX"
+              },
+              "Origin": {
+                "Airport": {
+                  "AirportCode": "DEL",
+                  "AirportName": "Indira Gandhi Airport",
+                  "Terminal": "1",
+                  "CityCode": "DEL",
+                  "CityName": "Delhi",
+                  "CountryCode": "IN",
+                  "CountryName": "India"
+                },
+                "DepTime": "2026-06-15T09:15:00"
+              },
+              "Destination": {
+                "Airport": {
+                  "AirportCode": "BOM",
+                  "AirportName": "Chhatrapati Shivaji International Airport",
+                  "Terminal": "2",
+                  "CityCode": "BOM",
+                  "CityName": "Mumbai",
+                  "CountryCode": "IN",
+                  "CountryName": "India"
+                },
+                "ArrTime": "2026-06-15T11:40:00"
+              },
+              "AccumulatedDuration": 145,
+              "Duration": 145,
+              "GroundTime": 0,
+              "Mile": 0,
+              "StopOver": false,
+              "FlightInfoIndex": "1",
+              "StopPoint": "",
+              "StopPointArrivalTime": "0001-01-01T00:00:00",
+              "StopPointDepartureTime": "0001-01-01T00:00:00",
+              "Craft": "737",
+              "Remark": null,
+              "IsETicketEligible": true,
+              "FlightStatus": "Confirmed",
+              "Status": "",
+              "FareClassification": null
+            }
+          ],
+          [
+            {
+              "Baggage": "15 KG",
+              "CabinBaggage": "Included",
+              "CabinClass": 2,
+              "SupplierFareClass": "PublishNDC",
+              "TripIndicator": 2,
+              "SegmentIndicator": 1,
+              "Airline": {
+                "AirlineCode": "AI",
+                "AirlineName": "Air India",
+                "FlightNumber": "435",
+                "FareClass": "U",
+                "OperatingCarrier": "AI"
+              },
+              "Origin": {
+                "Airport": {
+                  "AirportCode": "BOM",
+                  "AirportName": "Chhatrapati Shivaji International Airport",
+                  "Terminal": "2",
+                  "CityCode": "BOM",
+                  "CityName": "Mumbai",
+                  "CountryCode": "IN",
+                  "CountryName": "India"
+                },
+                "DepTime": "2026-06-20T18:10:00"
+              },
+              "Destination": {
+                "Airport": {
+                  "AirportCode": "MAA",
+                  "AirportName": "Chennai International Airport",
+                  "Terminal": "4",
+                  "CityCode": "MAA",
+                  "CityName": "Chennai",
+                  "CountryCode": "IN",
+                  "CountryName": "India"
+                },
+                "ArrTime": "2026-06-20T20:10:00"
+              },
+              "AccumulatedDuration": 120,
+              "Duration": 120,
+              "GroundTime": 0,
+              "Mile": 0,
+              "StopOver": false,
+              "FlightInfoIndex": "2",
+              "StopPoint": "",
+              "StopPointArrivalTime": "0001-01-01T00:00:00",
+              "StopPointDepartureTime": "0001-01-01T00:00:00",
+              "Craft": "319",
+              "Remark": null,
+              "IsETicketEligible": true,
+              "FlightStatus": "Confirmed",
+              "Status": "",
+              "FareClassification": null
+            }
+          ]
+        ],
+        "LastTicketDate": "26May26",
+        "TicketAdvisory": null,
+        "FareRules": [
+          {
+            "Origin": "DEL",
+            "Destination": "BOM",
+            "Airline": "AI",
+            "FareBasisCode": "SK1YXYII",
+            "FareRuleDetail": "",
+            "FareRestriction": "",
+            "FareFamilyCode": "",
+            "FareRuleIndex": "",
+            "MiniFarRules": {
+              "Currency": "INR",
+              "Rules": [
+                {
+                  "DepartureType": "Before Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 10000,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 0
+                },
+                {
+                  "DepartureType": "No Show Before Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 0,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 0
+                },
+                {
+                  "DepartureType": "After Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 0,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 0
+                },
+                {
+                  "DepartureType": "No Show After Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 0,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 0
+                },
+                {
+                  "DepartureType": "Before Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 3000,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 1
+                },
+                {
+                  "DepartureType": "No Show Before Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 0,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 1
+                },
+                {
+                  "DepartureType": "After Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 0,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 1
+                },
+                {
+                  "DepartureType": "No Show After Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 0,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 1
+                }
+              ]
+            }
+          },
+          {
+            "Origin": "BOM",
+            "Destination": "MAA",
+            "Airline": "AI",
+            "FareBasisCode": "UU1YXSII",
+            "FareRuleDetail": "",
+            "FareRestriction": "",
+            "FareFamilyCode": "",
+            "FareRuleIndex": "",
+            "MiniFarRules": {
+              "Currency": "INR",
+              "Rules": [
+                {
+                  "DepartureType": "Before Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 10000,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 0
+                },
+                {
+                  "DepartureType": "No Show Before Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 0,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 0
+                },
+                {
+                  "DepartureType": "After Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 0,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 0
+                },
+                {
+                  "DepartureType": "No Show After Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 0,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 0
+                },
+                {
+                  "DepartureType": "Before Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 3000,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 1
+                },
+                {
+                  "DepartureType": "No Show Before Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 0,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 1
+                },
+                {
+                  "DepartureType": "After Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 3000,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 1
+                },
+                {
+                  "DepartureType": "No Show After Departure",
+                  "FromDuration": null,
+                  "PaxPenalties": [
+                    {
+                      "AirlineFee": 0,
+                      "Currency": "INR",
+                      "PassengerType": 1
+                    }
+                  ],
+                  "ToDuration": null,
+                  "Type": 1
+                }
+              ]
+            }
+          }
+        ],
+        "AirlineCode": "AI",
+        "MiniFareRules": [
+          [
+            {
+              "CFARExcludedDetails": "",
+              "JourneyPoints": "DEL-BOM-MAA",
+              "Type": "Reissue",
+              "From": "",
+              "To": "",
+              "Unit": "",
+              "Details": "INR 6000*",
+              "OnlineReissueAllowed": true,
+              "OnlineRefundAllowed": false
+            },
+            {
+              "CFARExcludedDetails": "",
+              "JourneyPoints": "DEL-BOM-MAA",
+              "Type": "Cancellation",
+              "From": "",
+              "To": "",
+              "Unit": "",
+              "Details": "INR 10000*",
+              "OnlineReissueAllowed": false,
+              "OnlineRefundAllowed": true
+            }
+          ]
+        ],
+        "ValidatingAirline": "AI",
+        "FareClassification": {
+          "Color": "lightblue",
+          "Type": "PublishNDC"
+        }
+      },
+      "TraceId": "79b8c161-6d7a-4f98-9a42-b8d2e99935dd"
+    }
+  }
+}

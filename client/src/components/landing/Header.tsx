@@ -15,6 +15,7 @@ import { getCountryFlagUrl } from "@/lib/countryFlags";
 type NavItem = {
   labelKey: string;
   href: string;
+  partnerOnly?: boolean;
   menu?: { labelKey: string; href: string }[];
 };
 
@@ -117,11 +118,12 @@ const NAV_ITEMS: NavItem[] = [
       { labelKey: "Bookings", href: "/self-drive/bookings" },
     ],
   },
-  { labelKey: "Queues", href: "/queues" },
-  { labelKey: "Accounts", href: "/accounts" },
-  { labelKey: "Reports", href: "/reports" },
-  { labelKey: "Admin", href: "/admin" },
-  { labelKey: "GST", href: "/gst" },
+  { labelKey: "Packages", href: "/partner/packages", partnerOnly: true },
+  { labelKey: "Queues", href: "/queues", partnerOnly: true },
+  { labelKey: "Accounts", href: "/accounts", partnerOnly: true },
+  { labelKey: "Reports", href: "/reports", partnerOnly: true },
+  { labelKey: "Admin", href: "/admin", partnerOnly: true },
+  { labelKey: "GST", href: "/gst", partnerOnly: true },
   { labelKey: "Islandhopper", href: "/islandhopper" },
   {
     labelKey: "nav.visa_consultancy",
@@ -392,6 +394,13 @@ function NavIcon({ labelKey, className }: { labelKey: string; className?: string
           <path d="M13 19h6" />
         </svg>
       );
+    case "Packages":
+      return (
+        <svg {...common}>
+          <path d="M12 2l9 4.5V17.5L12 22l-9-4.5V6.5L12 2z" />
+          <path d="M12 2v20M3 6.5l9 4.5 9-4.5" />
+        </svg>
+      );
     case "Queues":
       return (
         <svg {...common}>
@@ -489,6 +498,8 @@ export default function Header() {
   }, [openDropdown]);
 
   const profileHref = user?.role === "partner" ? "/partner/dashboard" : "/my-trips";
+  const isPartner = user?.role === "partner";
+  const visibleNavItems = NAV_ITEMS.filter((item) => !item.partnerOnly || isPartner);
 
   return (
     <motion.header
@@ -644,7 +655,7 @@ export default function Header() {
         <div className="mx-auto st-header-main-nav-inner max-w-7xl px-4 py-3 sm:px-6">
           <nav className="hidden lg:block flex-1 -ml-4 justify-center">
             <ul className="flex items-end gap-4 text-ink">
-              {NAV_ITEMS.map((item) => (
+              {visibleNavItems.map((item) => (
                 <motion.li
                   key={item.labelKey}
                   className={cn(
@@ -765,7 +776,7 @@ export default function Header() {
           </div>
 
           <ul className="flex flex-col py-2">
-            {NAV_ITEMS.map((item) => {
+            {visibleNavItems.map((item) => {
               const itemLabel = t(item.labelKey);
               return (
                 <li key={item.labelKey}>
@@ -1198,6 +1209,7 @@ const MEGA_DESCRIPTIONS: Record<string, string> = {
   SightSeeing: "Tours and local experience tickets",
   "Self-Drive": "Rental cars for flexible road trips",
   "Rail Europe": "Cross-border European train booking",
+  Packages: "Browse and manage your travel packages",
   Queues: "Monitor pending tasks and workflows",
   Accounts: "Billing, deposits, and ledgers",
   Reports: "Operational and sales reporting",

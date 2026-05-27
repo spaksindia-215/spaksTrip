@@ -1,0 +1,373 @@
+{
+    "Response": {
+        "Error": {
+            "ErrorCode": 0,
+            "ErrorMessage": ""
+        },
+        "FlightDetailChangeInfo": "FlightCabinClassChanged, FlightCabinBaggageChanged",
+        "IsPriceChanged": false,
+        "ItineraryChangeList": [
+            2,
+            7
+        ],
+        "ResponseStatus": 1,
+        "Results": {
+            "FareInclusions": [],
+            "FirstNameFormat": "If FirstName is missing, Update FirstName as title.",
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": true,
+            "IsHoldMandatoryWithSSR": false,
+            "LastNameFormat": "If LastName is missing, Update LastName as FIRSTNAME and First name as title.",
+            "ResultIndex": "OB16[TBO]1xn3sDzmrYOY6w9Ih6f5Lg0dSr7VNXSlKmZs09InlXUevNqDKrAHlWMiq0sgEg9QnRtfmlNW+z6MXY0krC9xCXjZo1xfWgh3hsrCYjsfNrc5aC0bcc+Va7bonM/qjmsuJS/4dckuzer8jA1I6NqMzo/tpSzX/8EWjsD5lQH/54nAFXbTuQJUElx8nqvIsGEl8klhCYkoYa2jNeShJRqswaFWHLAWoxed+c7+DUePQXbAQLtK/XoMKD+Rj+i7OGhyBQOegzjbcGK5B1zboB46qKmaULsIHuBByu3lTHRdMKPQ8Tihx2neoFIdIsfb+r9kpqBdsJNfISOUVYuYTo/p7wLECgFfExh1PrhBJ8S1eqV0pyxDXf/4FpFLq8aYHwg2Bd+Wh4FWDlCWNKsCKKz7+nAsq8BsdvUUCc2X4h6rj18xK3R+QwJ6N7JkwUAdd4+5rwiZy99+I35tIzP8AmW2aZiG3XzB9Oi0kmYK9jRvVH9+YMoYnbiwbVcJqvO2za5Pbkl2AE4wb0cJWXI3CpZEXE2ZDT+hrV6e13UP4yyxrnTVsNlpwTlwztv3DlYWbvbJaOOAGLLPO4lfcKTLNL3md+RLiAkScnjW+bg1RW3ivsJVySo91tpP6TUNhYDQdDa35ukpWY17ZAjhBYqpRs3OApx/l0qXHQtACxXyCZqeNbDRQfA0GHEOqSiph4E/ewY2VU2raVXslbpCOAGQuMGf8qoH68rtwcezUfV337azijW8YuD6M7CCqekRwsCupTGYeSWeujOUK0VYNy2zoRZ9Bp7HiydmIQoRnkX3LhSXqUhq6hb3tcny/A5pNs8na0nGPVTQ9xJ76GEJxOjrMsCrnQKyrZykRuMeBrfRFa3RtaYcX1QtoeJNTLqWJG+kJVh4UZWielCyAMhqMnVb5eEeNcZiy33p15D9TJpAYlP2uFjuuPP2kgraXNLS0ujgHG8SWKmX04qNC1QrsGjIb/nkBBD3b1NKtAe4Tsu+qyqp4LEu/mt1P7PR0CTAEqmjPo/t+KhGt1UZOPTj2horeLFe4wwnyslTaOi3oVL1wlhG63Go6RiktZry6uZ8xTOC1Y4tbQBuVylD/Gu4gf0+SsqVzLAECSOA6LjsZUyypINeGHVH9BXTQvJcgywUY+iEC+CUd9ldEat1t5reykAGzjjOQ4vFYKlmHK3NNoJT2L016vILZGO2UCfowSKKNJ0Qm7W54PFiUUEWBydYOoZW4WZMYg==",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": true,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "IsHoldAllowed": true,
+            "AirlineRemark": null,
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Fare": {
+                "CFARAmount": 0.0,
+                "DCFARAmount": 0.0,
+                "ServiceFeeDisplayType": 0,
+                "Currency": "INR",
+                "BaseFare": 69390,
+                "Tax": 28108,
+                "TaxBreakup": [
+                    {
+                        "key": "K3",
+                        "value": 3812.0
+                    },
+                    {
+                        "key": "YR",
+                        "value": 6820.0
+                    },
+                    {
+                        "key": "INTax",
+                        "value": 3068.0
+                    },
+                    {
+                        "key": "OtherTaxes",
+                        "value": 14408.0
+                    }
+                ],
+                "YQTax": 0,
+                "AdditionalTxnFeeOfrd": 0,
+                "AdditionalTxnFeePub": 0.0,
+                "PGCharge": 0,
+                "OtherCharges": 0.00,
+                "ChargeBU": [
+                    {
+                        "key": "TBOMARKUP",
+                        "value": 0
+                    },
+                    {
+                        "key": "GLOBALPROCUREMENTCHARGE",
+                        "value": 0
+                    },
+                    {
+                        "key": "CONVENIENCECHARGE",
+                        "value": 0
+                    },
+                    {
+                        "key": "OTHERCHARGE",
+                        "value": 0.00
+                    }
+                ],
+                "Discount": 0,
+                "PublishedFare": 97498,
+                "CommissionEarned": 0,
+                "PLBEarned": 0,
+                "IncentiveEarned": 0,
+                "OfferedFare": 97498.00,
+                "TdsOnCommission": 0,
+                "TdsOnPLB": 0,
+                "TdsOnIncentive": 0,
+                "ServiceFee": 0,
+                "TotalBaggageCharges": 0,
+                "TotalMealCharges": 0,
+                "TotalSeatCharges": 0,
+                "TotalSpecialServiceCharges": 0
+            },
+            "FareBreakdown": [
+                {
+                    "CFARAmount": 0,
+                    "DCFARAmount": 0,
+                    "SegmentDetails": [
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "1"
+                        },
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "2"
+                        }
+                    ],
+                    "Currency": "INR",
+                    "PassengerType": 1,
+                    "PassengerCount": 2,
+                    "BaseFare": 39650,
+                    "Tax": 14302,
+                    "TransactionFee": 0,
+                    "YQTax": 0,
+                    "TaxBreakUp": [
+                        {
+                            "key": "YR",
+                            "value": 3410
+                        },
+                        {
+                            "key": "K3",
+                            "value": 2154
+                        },
+                        {
+                            "key": "INTax",
+                            "value": 1534
+                        },
+                        {
+                            "key": "OtherTaxes",
+                            "value": 7204
+                        }
+                    ],
+                    "AdditionalTxnFeePub": 0.0,
+                    "PGCharge": 0,
+                    "AdditionalTxnFeeOfrd": 0,
+                    "SupplierReissueCharges": 0
+                },
+                {
+                    "CFARAmount": 0,
+                    "DCFARAmount": 0,
+                    "SegmentDetails": [
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "1"
+                        },
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "2"
+                        }
+                    ],
+                    "Currency": "INR",
+                    "PassengerType": 2,
+                    "PassengerCount": 2,
+                    "BaseFare": 29740,
+                    "Tax": 13806,
+                    "TransactionFee": 0,
+                    "YQTax": 0,
+                    "TaxBreakUp": [
+                        {
+                            "key": "YR",
+                            "value": 3410
+                        },
+                        {
+                            "key": "K3",
+                            "value": 1658
+                        },
+                        {
+                            "key": "INTax",
+                            "value": 1534
+                        },
+                        {
+                            "key": "OtherTaxes",
+                            "value": 7204
+                        }
+                    ],
+                    "AdditionalTxnFeePub": 0.0,
+                    "PGCharge": 0,
+                    "AdditionalTxnFeeOfrd": 0,
+                    "SupplierReissueCharges": 0
+                }
+            ],
+            "Segments": [
+                [
+                    {
+                        "Baggage": null,
+                        "CabinBaggage": "Included",
+                        "CabinClass": 2,
+                        "SupplierFareClass": "Publish",
+                        "TripIndicator": 1,
+                        "SegmentIndicator": 1,
+                        "Airline": {
+                            "AirlineCode": "KU",
+                            "AirlineName": "Kuwait Airways Corporation",
+                            "FlightNumber": "384",
+                            "FareClass": "T",
+                            "OperatingCarrier": "KU"
+                        },
+                        "Origin": {
+                            "Airport": {
+                                "AirportCode": "DEL",
+                                "AirportName": "Indira Gandhi Airport",
+                                "Terminal": "3",
+                                "CityCode": "DEL",
+                                "CityName": "Delhi",
+                                "CountryCode": "IN",
+                                "CountryName": "India"
+                            },
+                            "DepTime": "2026-07-01T07:15:00"
+                        },
+                        "Destination": {
+                            "Airport": {
+                                "AirportCode": "KWI",
+                                "AirportName": "Kuwait Int'l",
+                                "Terminal": "4",
+                                "CityCode": "KWI",
+                                "CityName": "Kuwait City",
+                                "CountryCode": "KW",
+                                "CountryName": "Kuwait"
+                            },
+                            "ArrTime": "2026-07-01T09:15:00"
+                        },
+                        "Duration": 270,
+                        "GroundTime": 0,
+                        "Mile": 0,
+                        "StopOver": false,
+                        "FlightInfoIndex": "1",
+                        "StopPoint": "",
+                        "StopPointArrivalTime": "0001-01-01T00:00:00",
+                        "StopPointDepartureTime": "0001-01-01T00:00:00",
+                        "Craft": "32N",
+                        "Remark": null,
+                        "IsETicketEligible": true,
+                        "FlightStatus": "Confirmed",
+                        "Status": "",
+                        "FareClassification": null
+                    },
+                    {
+                        "Baggage": null,
+                        "CabinBaggage": "Included",
+                        "CabinClass": 2,
+                        "SupplierFareClass": "Publish",
+                        "TripIndicator": 1,
+                        "SegmentIndicator": 2,
+                        "Airline": {
+                            "AirlineCode": "KU",
+                            "AirlineName": "Kuwait Airways Corporation",
+                            "FlightNumber": "101",
+                            "FareClass": "T",
+                            "OperatingCarrier": "KU"
+                        },
+                        "Origin": {
+                            "Airport": {
+                                "AirportCode": "KWI",
+                                "AirportName": "Kuwait Int'l",
+                                "Terminal": "4",
+                                "CityCode": "KWI",
+                                "CityName": "Kuwait City",
+                                "CountryCode": "KW",
+                                "CountryName": "Kuwait"
+                            },
+                            "DepTime": "2026-07-01T10:00:00"
+                        },
+                        "Destination": {
+                            "Airport": {
+                                "AirportCode": "LHR",
+                                "AirportName": "Heathrow",
+                                "Terminal": "4",
+                                "CityCode": "LON",
+                                "CityName": "London",
+                                "CountryCode": "GB",
+                                "CountryName": "United Kingdom"
+                            },
+                            "ArrTime": "2026-07-01T14:45:00"
+                        },
+                        "AccumulatedDuration": 720,
+                        "Duration": 405,
+                        "GroundTime": 45,
+                        "Mile": 0,
+                        "StopOver": false,
+                        "FlightInfoIndex": "2",
+                        "StopPoint": "",
+                        "StopPointArrivalTime": "0001-01-01T00:00:00",
+                        "StopPointDepartureTime": "0001-01-01T00:00:00",
+                        "Craft": "77W",
+                        "Remark": null,
+                        "IsETicketEligible": true,
+                        "FlightStatus": "Confirmed",
+                        "Status": "",
+                        "FareClassification": null
+                    }
+                ]
+            ],
+            "LastTicketDate": "01JUL26",
+            "TicketAdvisory": null,
+            "FareRules": [
+                {
+                    "Origin": "DEL",
+                    "Destination": "KWI",
+                    "Airline": "KU",
+                    "FareBasisCode": "TLOWIN1",
+                    "FareRuleDetail": "",
+                    "FareRestriction": "N",
+                    "FareFamilyCode": "",
+                    "MiniFarRules": {
+                        "Currency": null,
+                        "Rules": []
+                    }
+                },
+                {
+                    "Origin": "KWI",
+                    "Destination": "LHR",
+                    "Airline": "KU",
+                    "FareBasisCode": "TLOWIN1",
+                    "FareRuleDetail": "",
+                    "FareRestriction": "Y",
+                    "FareFamilyCode": "",
+                    "MiniFarRules": {
+                        "Currency": null,
+                        "Rules": []
+                    }
+                }
+            ],
+            "AirlineCode": "KU",
+            "MiniFareRules": [
+                [
+                    {
+                        "CFARExcludedDetails": "",
+                        "JourneyPoints": "DEL-KWI-LHR",
+                        "Type": "Reissue",
+                        "From": "",
+                        "To": "",
+                        "Unit": "",
+                        "Details": "INR 4000*",
+                        "OnlineReissueAllowed": true,
+                        "OnlineRefundAllowed": false
+                    },
+                    {
+                        "CFARExcludedDetails": "",
+                        "JourneyPoints": "DEL-KWI-LHR",
+                        "Type": "Cancellation",
+                        "From": "",
+                        "To": "",
+                        "Unit": "",
+                        "Details": "INR 8000*",
+                        "OnlineReissueAllowed": false,
+                        "OnlineRefundAllowed": true
+                    }
+                ]
+            ],
+            "ValidatingAirline": "KU",
+            "FareClassification": {
+                "Color": "rgb(182,215,228) ",
+                "Type": "Publish"
+            }
+        },
+        "TraceId": "37c6c759-5019-4da8-a9ed-5649290086e7"
+    }
+}

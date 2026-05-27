@@ -1,0 +1,532 @@
+{
+    "Response": {
+        "Error": {
+            "ErrorCode": 0,
+            "ErrorMessage": ""
+        },
+        "FlightDetailChangeInfo": "FlightCabinClassChanged, FlightCabinBaggageChanged",
+        "IsPriceChanged": false,
+        "ItineraryChangeList": [
+            2,
+            7
+        ],
+        "ResponseStatus": 1,
+        "Results": {
+            "FareInclusions": [],
+            "FirstNameFormat": "\"LastName/FNU Ms\"  If No First Name in Passport (Add SSR for Check In:- SSR CKIN AY HN1 PSGR NO FIRSTNAME)",
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": true,
+            "IsHoldMandatoryWithSSR": false,
+            "LastNameFormat": "\"FirstName/LNU Ms\"  If No Last Name in Passport (Add SSR for Check In:- SSR CKIN AY HN1 PSGR NO LASTNAME)",
+            "ResultIndex": "OB3[TBO]pfe+0n8/XWkKCSi72/IegCNHISk7gCDyfeT/Fn/fTqXCNmBkv1R71yUpXbY0ykCWbuGMe2+pRaph+E3ceS3Gy+33xry6R4GO2DOoeJRtWiwmuQpe4ds3d84mzCms3V69GVVnl7waw1uGnIfskButW6QeiivRuiv/l18fCeWnJVOJqlNSBkJljubB7wwPcHRTObnN5Pq7JZ4feIOctyLFfZI8KQIUrkEqxzyh19Pl4KTa9pZFdP2ydTonQFNKiWZCzI8/BPrpBK58pqwtis1pZrYIbnOp5ZxwCfizlpz94B+mrL9/nK/ex/FLoNGag5KvHvIp/pKaqneysx+u0gxCxv64fRtU22JQWdJ3t82KVdUhxP2if8hPJn+bMdnYUoJ38RtZv/wXd+LwOUDa7SlfArornx1d4kAtgZuTbixXTJ73vVkp8dYJzDP+NQiFyCP6msCGAvMlJEWjq401/EBGyceCc/YPwE8p3+8XsHI3SNKdLGC57PJ5XzCjQ/kJYHjaAwpulqVyB98eLn0EFRs49NUOwCljjrC0ddr3/2jV9K/PgkUTQq2R28dK3dZkRX/kS6SJga2IAOuhYBWI8pHavwaljAdCndHLq3pRUX2SebDEmiB015fSJ7+q1RbKOjj4oKiva8XREID80kpMD68jvST2OPJaB9go7XWjHTIbYQhisI8crJLafMlsrvWV1WAV9ydB1vsHDeRkw4paQlZVqVLpZJDoDqMEOWtk8t4qR7d7GTtsH4nG5KYdxMhjR3eoxZhqSAT8oglxD1CPK3pS/WBiQlMveJW1OFQf45qWqI18onNaVxtboUa+VkeVFh10AgyMFMsMxfIbaZMVS+I33T1TgCzhFKw+LBxGJQPeYA0ZI15qq93qs3wBoFTAQAVXnzNpm+hoPPXwReUXFmgxOryrzgsod4bYsYsyO9z6OirO2tpiOKU5BcVHSSjUYPsdF+rtieX5EzU8Wk8CNJy+utmtYoDlfvXnS80Qt70QIKRRzYxKp3KREqrF4WnHuF5sI0J/o5nQTlAcycZ1v2p1W2RW4YaHEoPjFeFjjqVhCJq6b/L7UwPqQx2XAkgsOoONHlHvTegJCmDZV1yQ2NObVnzJzez3camjsYMXe9ePnPKJHYiE16ijr5xDpoQVY/g2g8/2kk6DBAYpM0HlwLTaxCzFgCYsX05GU3Cgt7xW9wApZySw7LNp2kSP2FC2zlZEthF44YLJMmtA7UIr+Ou6OuncWFWnx1JqfiSIhhkGgjYOHUZi7V1PSR9lvLxpIJ+KHN/cLbJgNeeMDS3P7+EnIBFWMmSEnuU03PF95tg+CXWAvdr6ERJu9BXajdExYz5TW/H6fJzU9YKdiWXBih/XmHpqNKKyhC5Sz/ln8MShhihltNVlGNKD5NWtg0zdOPXK",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": true,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "IsHoldAllowed": true,
+            "AirlineRemark": null,
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Fare": {
+                "CFARAmount": 0.0,
+                "DCFARAmount": 0.0,
+                "ServiceFeeDisplayType": 0,
+                "Currency": "INR",
+                "BaseFare": 165970,
+                "Tax": 79202,
+                "TaxBreakup": [
+                    {
+                        "key": "K3",
+                        "value": 8966.0
+                    },
+                    {
+                        "key": "YQTax",
+                        "value": 13320.0
+                    },
+                    {
+                        "key": "INTax",
+                        "value": 4368.0
+                    },
+                    {
+                        "key": "OtherTaxes",
+                        "value": 52548.0
+                    }
+                ],
+                "YQTax": 13320,
+                "AdditionalTxnFeeOfrd": 0,
+                "AdditionalTxnFeePub": 0.0,
+                "PGCharge": 0,
+                "OtherCharges": 0.00,
+                "ChargeBU": [
+                    {
+                        "key": "TBOMARKUP",
+                        "value": 0
+                    },
+                    {
+                        "key": "GLOBALPROCUREMENTCHARGE",
+                        "value": 0
+                    },
+                    {
+                        "key": "CONVENIENCECHARGE",
+                        "value": 0
+                    },
+                    {
+                        "key": "OTHERCHARGE",
+                        "value": 0.00
+                    }
+                ],
+                "Discount": 0,
+                "PublishedFare": 245172,
+                "CommissionEarned": 0,
+                "PLBEarned": 0,
+                "IncentiveEarned": 0,
+                "OfferedFare": 245172.00,
+                "TdsOnCommission": 0,
+                "TdsOnPLB": 0,
+                "TdsOnIncentive": 0,
+                "ServiceFee": 0,
+                "TotalBaggageCharges": 0,
+                "TotalMealCharges": 0,
+                "TotalSeatCharges": 0,
+                "TotalSpecialServiceCharges": 0
+            },
+            "FareBreakdown": [
+                {
+                    "CFARAmount": 0,
+                    "DCFARAmount": 0,
+                    "SegmentDetails": [
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "1"
+                        },
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "2"
+                        },
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "3"
+                        },
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "4"
+                        }
+                    ],
+                    "Currency": "INR",
+                    "PassengerType": 1,
+                    "PassengerCount": 2,
+                    "BaseFare": 94840,
+                    "Tax": 53316,
+                    "TransactionFee": 0,
+                    "YQTax": 6660,
+                    "TaxBreakUp": [
+                        {
+                            "key": "YQTax",
+                            "value": 6660
+                        },
+                        {
+                            "key": "K3",
+                            "value": 5076
+                        },
+                        {
+                            "key": "INTax",
+                            "value": 2184
+                        },
+                        {
+                            "key": "OtherTaxes",
+                            "value": 39396
+                        }
+                    ],
+                    "AdditionalTxnFeePub": 0.0,
+                    "PGCharge": 0,
+                    "AdditionalTxnFeeOfrd": 0,
+                    "SupplierReissueCharges": 0
+                },
+                {
+                    "CFARAmount": 0,
+                    "DCFARAmount": 0,
+                    "SegmentDetails": [
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "1"
+                        },
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "2"
+                        },
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "3"
+                        },
+                        {
+                            "CheckedInBaggage": {
+                                "NoOfPiece": "1"
+                            },
+                            "FlightInfoIndex": "4"
+                        }
+                    ],
+                    "Currency": "INR",
+                    "PassengerType": 2,
+                    "PassengerCount": 2,
+                    "BaseFare": 71130,
+                    "Tax": 25886,
+                    "TransactionFee": 0,
+                    "YQTax": 6660,
+                    "TaxBreakUp": [
+                        {
+                            "key": "YQTax",
+                            "value": 6660
+                        },
+                        {
+                            "key": "K3",
+                            "value": 3890
+                        },
+                        {
+                            "key": "INTax",
+                            "value": 2184
+                        },
+                        {
+                            "key": "OtherTaxes",
+                            "value": 13152
+                        }
+                    ],
+                    "AdditionalTxnFeePub": 0.0,
+                    "PGCharge": 0,
+                    "AdditionalTxnFeeOfrd": 0,
+                    "SupplierReissueCharges": 0
+                }
+            ],
+            "Segments": [
+                [
+                    {
+                        "Baggage": null,
+                        "CabinBaggage": "Included",
+                        "CabinClass": 2,
+                        "SupplierFareClass": "Publish",
+                        "TripIndicator": 1,
+                        "SegmentIndicator": 1,
+                        "Airline": {
+                            "AirlineCode": "AY",
+                            "AirlineName": "Finnair",
+                            "FlightNumber": "122",
+                            "FareClass": "Q",
+                            "OperatingCarrier": "AY"
+                        },
+                        "Origin": {
+                            "Airport": {
+                                "AirportCode": "DEL",
+                                "AirportName": "Indira Gandhi Airport",
+                                "Terminal": "3",
+                                "CityCode": "DEL",
+                                "CityName": "Delhi",
+                                "CountryCode": "IN",
+                                "CountryName": "India"
+                            },
+                            "DepTime": "2026-08-25T07:40:00"
+                        },
+                        "Destination": {
+                            "Airport": {
+                                "AirportCode": "HEL",
+                                "AirportName": "Helsinki-Vantaa",
+                                "Terminal": "",
+                                "CityCode": "HEL",
+                                "CityName": "Helsinki",
+                                "CountryCode": "FI",
+                                "CountryName": "Finland"
+                            },
+                            "ArrTime": "2026-08-25T14:25:00"
+                        },
+                        "Duration": 555,
+                        "GroundTime": 0,
+                        "Mile": 0,
+                        "StopOver": false,
+                        "FlightInfoIndex": "1",
+                        "StopPoint": "",
+                        "StopPointArrivalTime": "0001-01-01T00:00:00",
+                        "StopPointDepartureTime": "0001-01-01T00:00:00",
+                        "Craft": "333",
+                        "Remark": null,
+                        "IsETicketEligible": true,
+                        "FlightStatus": "Confirmed",
+                        "Status": "",
+                        "FareClassification": null
+                    },
+                    {
+                        "Baggage": null,
+                        "CabinBaggage": "Included",
+                        "CabinClass": 2,
+                        "SupplierFareClass": "Publish",
+                        "TripIndicator": 1,
+                        "SegmentIndicator": 2,
+                        "Airline": {
+                            "AirlineCode": "AY",
+                            "AirlineName": "Finnair",
+                            "FlightNumber": "1339",
+                            "FareClass": "Q",
+                            "OperatingCarrier": "AY"
+                        },
+                        "Origin": {
+                            "Airport": {
+                                "AirportCode": "HEL",
+                                "AirportName": "Helsinki-Vantaa",
+                                "Terminal": "",
+                                "CityCode": "HEL",
+                                "CityName": "Helsinki",
+                                "CountryCode": "FI",
+                                "CountryName": "Finland"
+                            },
+                            "DepTime": "2026-08-25T19:30:00"
+                        },
+                        "Destination": {
+                            "Airport": {
+                                "AirportCode": "LHR",
+                                "AirportName": "Heathrow",
+                                "Terminal": "3",
+                                "CityCode": "LON",
+                                "CityName": "London",
+                                "CountryCode": "GB",
+                                "CountryName": "United Kingdom"
+                            },
+                            "ArrTime": "2026-08-25T20:40:00"
+                        },
+                        "AccumulatedDuration": 1050,
+                        "Duration": 190,
+                        "GroundTime": 305,
+                        "Mile": 0,
+                        "StopOver": false,
+                        "FlightInfoIndex": "2",
+                        "StopPoint": "",
+                        "StopPointArrivalTime": "0001-01-01T00:00:00",
+                        "StopPointDepartureTime": "0001-01-01T00:00:00",
+                        "Craft": "32B",
+                        "Remark": null,
+                        "IsETicketEligible": true,
+                        "FlightStatus": "Confirmed",
+                        "Status": "",
+                        "FareClassification": null
+                    }
+                ],
+                [
+                    {
+                        "Baggage": null,
+                        "CabinBaggage": "Included",
+                        "CabinClass": 2,
+                        "SupplierFareClass": "Publish",
+                        "TripIndicator": 2,
+                        "SegmentIndicator": 1,
+                        "Airline": {
+                            "AirlineCode": "AY",
+                            "AirlineName": "Finnair",
+                            "FlightNumber": "1332",
+                            "FareClass": "Z",
+                            "OperatingCarrier": "AY"
+                        },
+                        "Origin": {
+                            "Airport": {
+                                "AirportCode": "LHR",
+                                "AirportName": "Heathrow",
+                                "Terminal": "3",
+                                "CityCode": "LON",
+                                "CityName": "London",
+                                "CountryCode": "GB",
+                                "CountryName": "United Kingdom"
+                            },
+                            "DepTime": "2026-09-08T10:20:00"
+                        },
+                        "Destination": {
+                            "Airport": {
+                                "AirportCode": "HEL",
+                                "AirportName": "Helsinki-Vantaa",
+                                "Terminal": "",
+                                "CityCode": "HEL",
+                                "CityName": "Helsinki",
+                                "CountryCode": "FI",
+                                "CountryName": "Finland"
+                            },
+                            "ArrTime": "2026-09-08T15:15:00"
+                        },
+                        "Duration": 175,
+                        "GroundTime": 0,
+                        "Mile": 0,
+                        "StopOver": false,
+                        "FlightInfoIndex": "3",
+                        "StopPoint": "",
+                        "StopPointArrivalTime": "0001-01-01T00:00:00",
+                        "StopPointDepartureTime": "0001-01-01T00:00:00",
+                        "Craft": "359",
+                        "Remark": null,
+                        "IsETicketEligible": true,
+                        "FlightStatus": "Confirmed",
+                        "Status": "",
+                        "FareClassification": null
+                    },
+                    {
+                        "Baggage": null,
+                        "CabinBaggage": "Included",
+                        "CabinClass": 2,
+                        "SupplierFareClass": "Publish",
+                        "TripIndicator": 2,
+                        "SegmentIndicator": 2,
+                        "Airline": {
+                            "AirlineCode": "AY",
+                            "AirlineName": "Finnair",
+                            "FlightNumber": "121",
+                            "FareClass": "Z",
+                            "OperatingCarrier": "AY"
+                        },
+                        "Origin": {
+                            "Airport": {
+                                "AirportCode": "HEL",
+                                "AirportName": "Helsinki-Vantaa",
+                                "Terminal": "",
+                                "CityCode": "HEL",
+                                "CityName": "Helsinki",
+                                "CountryCode": "FI",
+                                "CountryName": "Finland"
+                            },
+                            "DepTime": "2026-09-08T18:30:00"
+                        },
+                        "Destination": {
+                            "Airport": {
+                                "AirportCode": "DEL",
+                                "AirportName": "Indira Gandhi Airport",
+                                "Terminal": "3",
+                                "CityCode": "DEL",
+                                "CityName": "Delhi",
+                                "CountryCode": "IN",
+                                "CountryName": "India"
+                            },
+                            "ArrTime": "2026-09-09T05:20:00"
+                        },
+                        "AccumulatedDuration": 870,
+                        "Duration": 500,
+                        "GroundTime": 195,
+                        "Mile": 0,
+                        "StopOver": false,
+                        "FlightInfoIndex": "4",
+                        "StopPoint": "",
+                        "StopPointArrivalTime": "0001-01-01T00:00:00",
+                        "StopPointDepartureTime": "0001-01-01T00:00:00",
+                        "Craft": "333",
+                        "Remark": null,
+                        "IsETicketEligible": true,
+                        "FlightStatus": "Confirmed",
+                        "Status": "",
+                        "FareClassification": null
+                    }
+                ]
+            ],
+            "LastTicketDate": "30MAY26",
+            "TicketAdvisory": null,
+            "FareRules": [
+                {
+                    "Origin": "DEL",
+                    "Destination": "HEL",
+                    "Airline": "AY",
+                    "FareBasisCode": "QNN0S3CM",
+                    "FareRuleDetail": "",
+                    "FareRestriction": "N",
+                    "FareFamilyCode": "",
+                    "MiniFarRules": {
+                        "Currency": null,
+                        "Rules": []
+                    }
+                },
+                {
+                    "Origin": "HEL",
+                    "Destination": "LHR",
+                    "Airline": "AY",
+                    "FareBasisCode": "QNN0S3CM",
+                    "FareRuleDetail": "",
+                    "FareRestriction": "Y",
+                    "FareFamilyCode": "",
+                    "MiniFarRules": {
+                        "Currency": null,
+                        "Rules": []
+                    }
+                },
+                {
+                    "Origin": "LHR",
+                    "Destination": "HEL",
+                    "Airline": "AY",
+                    "FareBasisCode": "ZNN0S2CM",
+                    "FareRuleDetail": "",
+                    "FareRestriction": "N",
+                    "FareFamilyCode": "",
+                    "MiniFarRules": {
+                        "Currency": null,
+                        "Rules": []
+                    }
+                },
+                {
+                    "Origin": "HEL",
+                    "Destination": "DEL",
+                    "Airline": "AY",
+                    "FareBasisCode": "ZNN0S2CM",
+                    "FareRuleDetail": "",
+                    "FareRestriction": "Y",
+                    "FareFamilyCode": "",
+                    "MiniFarRules": {
+                        "Currency": null,
+                        "Rules": []
+                    }
+                }
+            ],
+            "AirlineCode": "AY",
+            "MiniFareRules": [
+                [
+                    {
+                        "CFARExcludedDetails": "",
+                        "JourneyPoints": "DEL-HEL-LHR-HEL-DEL",
+                        "Type": "Reissue",
+                        "From": "",
+                        "To": "",
+                        "Unit": "",
+                        "Details": "REFER TO DETAILED FARE RULES",
+                        "OnlineReissueAllowed": false,
+                        "OnlineRefundAllowed": false
+                    },
+                    {
+                        "CFARExcludedDetails": "",
+                        "JourneyPoints": "DEL-HEL-LHR-HEL-DEL",
+                        "Type": "Cancellation",
+                        "From": "",
+                        "To": "",
+                        "Unit": "",
+                        "Details": "INR 19980*",
+                        "OnlineReissueAllowed": false,
+                        "OnlineRefundAllowed": true
+                    }
+                ]
+            ],
+            "ValidatingAirline": "AY",
+            "FareClassification": {
+                "Color": "rgb(182,215,228) ",
+                "Type": "Publish"
+            }
+        },
+        "TraceId": "cbbf1b78-7a84-408a-b1bd-99ace08b89e5"
+    }
+}

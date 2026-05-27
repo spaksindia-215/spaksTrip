@@ -19,13 +19,8 @@ export default function RoleGate() {
 
   useEffect(() => {
     if (status !== "ready") return;
-    if (user?.role === "partner" && !pathname.startsWith("/partner")) {
-      router.replace("/partner/dashboard");
-      return;
-    }
-
-    if (pathname === "/auth" && user?.role === "customer") {
-      router.replace("/");
+    if (pathname === "/auth" && user) {
+      router.replace(user.role === "partner" ? "/partner/dashboard" : "/");
     }
   }, [pathname, router, status, user]);
 

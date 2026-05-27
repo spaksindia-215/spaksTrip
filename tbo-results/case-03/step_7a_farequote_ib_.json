@@ -1,0 +1,338 @@
+{
+  "status": 200,
+  "response": {
+    "Response": {
+      "Error": {
+        "ErrorCode": 0,
+        "ErrorMessage": ""
+      },
+      "FlightDetailChangeInfo": "FlightCabinClassChanged",
+      "IsPriceChanged": true,
+      "ItineraryChangeList": [
+        2,
+        8
+      ],
+      "ResponseStatus": 1,
+      "Results": {
+        "FareInclusions": [],
+        "FirstNameFormat": "For Rest Country : Repeat the same last name\r\n</br> For UAE Sector : If there is a space in the passenger's last name, then split it (i.e., put the name before the space in the first name).\r\n</br> If the passenger has a single-word name in the last name so put father name will be the first name as per passport",
+        "IsBookableIfSeatNotAvailable": true,
+        "IsExclusiveFare": false,
+        "IsFreeMealAvailable": false,
+        "IsHoldAllowedWithSSR": false,
+        "IsHoldMandatoryWithSSR": false,
+        "LastNameFormat": "For Rest Country : Repeat the same given name\r\n</br> For UAE Sector : If there is a space in the passenger's given name, then split it(i.e., put the name after the space in the last name).\r\n</br> If the passenger has a single-word name in the given name so put father name will be the last name as per passport",
+        "ResultIndex": "IB1[TBO]V2P/TDg9iBkj4qSqPfxOTfVwoysU+zg+MdS+T68Hd1Iv5ewq0hW41Ik/8IUnk3+Ao29xx16uka9HTHo2mlnJP7krBQZ8af1LawOvNap/lsrgglId7h3DPuCF1WT9FnVUY/hRkzKneQN1nGbBW2KTLqLJIUypO0D/CECcyZZHQKELLqnPBv17ihHGRm/k5RWT1uM8TCkpdXLGQfwvKusHVLidbVf/MqBIqFRlJLELT9Jzq7G5vsJYtE39Sv2Von+OCFTa2jQt8s3b4T6ieV05KmbWZvZpgw99tAlb8QFgVviLzpjNdwedHbGgsH6wtM7jdia1nOdftPnymtkAMuOwuLVymo6u3QxZlPHv/FnjSBs9jqQ/GZlnbDhKt318bkex7V8omWIZzEJxhDDywX8D6cwWEVvyzEXYQD0SE6D7NrsM25wsu+6laLGg7k+KX1fIrhP9K3IrcS9oXsCdzqqqx6Ilx+Npmh5FiRbdRVGT/IWPJQgCujCMbQxYzVccl1QM+ki0kKSnK3zf0GEbnQU/Zai1bbKVVjtBdMF7FnR7z0nUrlJntDIvZ3CkIRLfr61XXG9+gVawFvLORtQunYZUz52fydclUpXGi96/sfv4Yd8HPlyunY+R8LEr849p1BDA3r9G6unWUNCwHlSWGChwpQYTaShHqAik0YsCR30Uwh7RNKtoADXwsdGBbnOHVavmg0medA1RI5CLO5mcKBVHMjFQxOEdkms6Lgd/6lZMe0BRppYWYWxzhGpEG7DaYvRWcUn37JU69Kxa79dFw3X4D3rvd36s3tfpkS+nvwvhT6kf3+Qf5GT5+BOA4N/pYNQlUPLUiknaexsoCt1nv3oHzn1cvRqQY7+1LZTkgw2cEKU2fITE5FYF8aCT1QGJEJIyU1EGf4cuBLsg8DBpDPYjFHv2T/gSNWHqxAhsU2iJ29xZPVRja0b7SgSu2c88LyRoW6/WkngPfCC+AlBbxPxFD2H6bPitGheSIgg0fXuUpDeLLo40JzvcQUwq1YXDg5frIUhcSkOzHgFARryY4N+P5ipHtQRZPFG0faVgfcLowkA=",
+        "Source": 3,
+        "IsLCC": true,
+        "IsRefundable": true,
+        "IsPanRequiredAtBook": false,
+        "IsPanRequiredAtTicket": false,
+        "IsPassportRequiredAtBook": false,
+        "IsPassportRequiredAtTicket": false,
+        "GSTAllowed": true,
+        "IsCouponAppilcable": true,
+        "IsGSTMandatory": false,
+        "IsHoldAllowed": true,
+        "AirlineRemark": "SpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet Main.",
+        "IsPassportFullDetailRequiredAtBook": false,
+        "ResultFareType": "RegularFare",
+        "Fare": {
+          "CFARAmount": 0,
+          "DCFARAmount": 0,
+          "ServiceFeeDisplayType": 0,
+          "Currency": "INR",
+          "BaseFare": 3662,
+          "Tax": 5457,
+          "TaxBreakup": [
+            {
+              "key": "K3",
+              "value": 374
+            },
+            {
+              "key": "UDF",
+              "value": 844
+            },
+            {
+              "key": "YR",
+              "value": 280
+            },
+            {
+              "key": "YQTax",
+              "value": 2796
+            },
+            {
+              "key": "OtherTaxes",
+              "value": 364
+            },
+            {
+              "key": "RcfTax",
+              "value": 100
+            }
+          ],
+          "YQTax": 2796,
+          "AdditionalTxnFeeOfrd": 0,
+          "AdditionalTxnFeePub": 0,
+          "PGCharge": 0,
+          "OtherCharges": 7.08,
+          "ChargeBU": [
+            {
+              "key": "TBOMARKUP",
+              "value": 0
+            },
+            {
+              "key": "GLOBALPROCUREMENTCHARGE",
+              "value": 0
+            },
+            {
+              "key": "CONVENIENCECHARGE",
+              "value": 0
+            },
+            {
+              "key": "OTHERCHARGE",
+              "value": 7.08
+            }
+          ],
+          "Discount": 0,
+          "PublishedFare": 9126.08,
+          "CommissionEarned": 0,
+          "PLBEarned": 0,
+          "IncentiveEarned": 0,
+          "OfferedFare": 9126.08,
+          "TdsOnCommission": 0,
+          "TdsOnPLB": 0,
+          "TdsOnIncentive": 0,
+          "ServiceFee": 0,
+          "TotalBaggageCharges": 0,
+          "TotalMealCharges": 0,
+          "TotalSeatCharges": 0,
+          "TotalSpecialServiceCharges": 0
+        },
+        "FareBreakdown": [
+          {
+            "CFARAmount": 0,
+            "DCFARAmount": 0,
+            "SegmentDetails": [
+              {
+                "CabinBaggage": {
+                  "FreeText": "",
+                  "Unit": "KG",
+                  "Value": "7"
+                },
+                "CheckedInBaggage": {
+                  "FreeText": "",
+                  "Unit": "KG",
+                  "Value": "15"
+                },
+                "FlightInfoIndex": "1"
+              }
+            ],
+            "Currency": "INR",
+            "PassengerType": 1,
+            "PassengerCount": 2,
+            "BaseFare": 998,
+            "Tax": 2320,
+            "TransactionFee": 0,
+            "YQTax": 1398,
+            "TaxBreakUp": [
+              {
+                "key": "UDF",
+                "value": 422
+              },
+              {
+                "key": "YR",
+                "value": 140
+              },
+              {
+                "key": "YQTax",
+                "value": 1398
+              },
+              {
+                "key": "SGST",
+                "value": 64
+              },
+              {
+                "key": "CGST",
+                "value": 64
+              },
+              {
+                "key": "OtherTaxes",
+                "value": 182
+              },
+              {
+                "key": "RcfTax",
+                "value": 50
+              }
+            ],
+            "AdditionalTxnFeePub": 0,
+            "PGCharge": 0,
+            "AdditionalTxnFeeOfrd": 0,
+            "SupplierReissueCharges": 0
+          },
+          {
+            "CFARAmount": 0,
+            "DCFARAmount": 0,
+            "SegmentDetails": [
+              {
+                "CabinBaggage": {},
+                "CheckedInBaggage": {},
+                "FlightInfoIndex": "1"
+              }
+            ],
+            "Currency": "INR",
+            "PassengerType": 2,
+            "PassengerCount": 2,
+            "BaseFare": 998,
+            "Tax": 2320,
+            "TransactionFee": 0,
+            "YQTax": 1398,
+            "TaxBreakUp": [
+              {
+                "key": "UDF",
+                "value": 422
+              },
+              {
+                "key": "YR",
+                "value": 140
+              },
+              {
+                "key": "YQTax",
+                "value": 1398
+              },
+              {
+                "key": "SGST",
+                "value": 64
+              },
+              {
+                "key": "CGST",
+                "value": 64
+              },
+              {
+                "key": "OtherTaxes",
+                "value": 182
+              },
+              {
+                "key": "RcfTax",
+                "value": 50
+              }
+            ],
+            "AdditionalTxnFeePub": 0,
+            "PGCharge": 0,
+            "AdditionalTxnFeeOfrd": 0,
+            "SupplierReissueCharges": 0
+          },
+          {
+            "CFARAmount": 0,
+            "DCFARAmount": 0,
+            "SegmentDetails": [
+              {
+                "CabinBaggage": {},
+                "CheckedInBaggage": {},
+                "FlightInfoIndex": "1"
+              }
+            ],
+            "Currency": "INR",
+            "PassengerType": 3,
+            "PassengerCount": 1,
+            "BaseFare": 1666,
+            "Tax": 817,
+            "TransactionFee": 0,
+            "YQTax": 0,
+            "TaxBreakUp": [
+              {
+                "key": "SGST",
+                "value": 59
+              },
+              {
+                "key": "CGST",
+                "value": 59
+              }
+            ],
+            "AdditionalTxnFeePub": 0,
+            "PGCharge": 0,
+            "AdditionalTxnFeeOfrd": 0,
+            "SupplierReissueCharges": 0
+          }
+        ],
+        "Segments": [
+          [
+            {
+              "Baggage": "15 KG",
+              "CabinBaggage": "7 KG",
+              "CabinClass": 2,
+              "SupplierFareClass": "Publish",
+              "TripIndicator": 1,
+              "SegmentIndicator": 1,
+              "Airline": {
+                "AirlineCode": "SG",
+                "AirlineName": "SpiceJet",
+                "FlightNumber": "529",
+                "FareClass": "HB",
+                "OperatingCarrier": ""
+              },
+              "Origin": {
+                "Airport": {
+                  "AirportCode": "BLR",
+                  "AirportName": "Kempegowda International Airport",
+                  "Terminal": "1",
+                  "CityCode": "BLR",
+                  "CityName": "Bangalore",
+                  "CountryCode": "IN",
+                  "CountryName": "India"
+                },
+                "DepTime": "2026-06-22T05:05:00"
+              },
+              "Destination": {
+                "Airport": {
+                  "AirportCode": "DEL",
+                  "AirportName": "Indira Gandhi Airport",
+                  "Terminal": "1D",
+                  "CityCode": "DEL",
+                  "CityName": "Delhi",
+                  "CountryCode": "IN",
+                  "CountryName": "India"
+                },
+                "ArrTime": "2026-06-22T07:45:00"
+              },
+              "Duration": 160,
+              "GroundTime": 0,
+              "Mile": 0,
+              "StopOver": false,
+              "FlightInfoIndex": "1",
+              "StopPoint": "",
+              "StopPointArrivalTime": "0001-01-01T00:00:00",
+              "StopPointDepartureTime": "0001-01-01T00:00:00",
+              "Craft": "73H",
+              "Remark": null,
+              "IsETicketEligible": true,
+              "FlightStatus": "Confirmed",
+              "Status": "",
+              "FareClassification": null
+            }
+          ]
+        ],
+        "LastTicketDate": "",
+        "TicketAdvisory": null,
+        "FareRules": [
+          {
+            "Origin": "BLR",
+            "Destination": "DEL",
+            "Airline": "SG",
+            "FareBasisCode": "UHBO",
+            "FareRuleDetail": "",
+            "FareRestriction": "",
+            "FareFamilyCode": "",
+            "FareRuleIndex": ""
+          }
+        ],
+        "AirlineCode": "SG",
+        "ValidatingAirline": "SG",
+        "FareClassification": {
+          "Color": "rgb(182,215,228) ",
+          "Type": "Publish"
+        }
+      },
+      "TraceId": "1ecc44ed-69d2-43ae-b80f-7f0ce173c011"
+    }
+  }
+}
