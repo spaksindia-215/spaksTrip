@@ -42,6 +42,7 @@ const NAV_ITEMS: NavItem[] = [
     labelKey: "nav.accommodation",
     href: "#",
     menu: [
+      { labelKey: "Hotel", href: "/hotel" },
       { labelKey: "nav.homestay", href: "#" },
       { labelKey: "nav.airbnb", href: "#" },
       { labelKey: "nav.villa", href: "#" },
@@ -55,10 +56,10 @@ const NAV_ITEMS: NavItem[] = [
     labelKey: "nav.transport",
     href: "#",
     menu: [
-      { labelKey: "nav.taxi_package", href: "/taxi-package" },
+      { labelKey: "Taxi Tour Package", href: "/taxi-package" },
       { labelKey: "nav.cabs", href: "/cabs" },
       { labelKey: "nav.tour_bus", href: "/tour-bus" },
-      { labelKey: "nav.train", href: "/train/search" },
+      { labelKey: "nav.train", href: "https://www.irctc.co.in/nget/train-search                                                                         "},
     ],
   },
   {
@@ -71,7 +72,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   {
     labelKey: "nav.train",
-    href: "/train/search",
+    href: "https://www.irctc.co.in/nget/train-search",
     menu: [
       { labelKey: "nav.search", href: "/train/search" },
       { labelKey: "nav.tickets", href: "/train/tickets" },
@@ -86,6 +87,11 @@ const NAV_ITEMS: NavItem[] = [
       { labelKey: "Search Trains", href: "/rail-europe" },
       { labelKey: "Bookings", href: "/rail-europe/bookings" },
     ],
+  },
+  {
+    labelKey: "Events",
+    href: "/events",
+    
   },
   {
     labelKey: "SightSeeing",
@@ -304,6 +310,7 @@ function NavIcon({ labelKey, className }: { labelKey: string; className?: string
           <path d="M7 20v-3M17 20v-3" />
         </svg>
       );
+    case "Events":
     case "nav.events":
       return (
         <svg {...common}>

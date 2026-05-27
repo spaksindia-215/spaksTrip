@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { CruiseOffer } from "@/lib/mock/cruises";
 import { formatINR } from "@/lib/format";
 import Badge from "@/components/ui/Badge";
@@ -65,13 +66,21 @@ export default function CruiseResultCard({ cruise }: Props) {
               </p>
               <p className="text-[11px] text-ink-muted">Cabin: {cruise.cabinTypes.join(", ")}</p>
             </div>
-            <button
-              type="button"
-              onClick={() => setEnquiryOpen(true)}
-              className="rounded-lg bg-accent-500 px-5 py-2.5 text-[14px] font-bold text-white hover:bg-accent-600 transition-colors"
-            >
-              Enquire Now
-            </button>
+            <div className="flex items-center gap-2">
+              <Link
+                href={`/cruise/${cruise.id}`}
+                className="rounded-lg border border-brand-500 px-4 py-2.5 text-[14px] font-bold text-brand-600 hover:bg-brand-50 transition-colors"
+              >
+                View Details
+              </Link>
+              <button
+                type="button"
+                onClick={() => setEnquiryOpen(true)}
+                className="rounded-lg bg-accent-500 px-5 py-2.5 text-[14px] font-bold text-white hover:bg-accent-600 transition-colors"
+              >
+                Enquire Now
+              </button>
+            </div>
           </div>
         </div>
       </article>

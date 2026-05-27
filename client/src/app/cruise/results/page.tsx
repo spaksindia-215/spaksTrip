@@ -6,7 +6,7 @@ import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import CruiseResultCard from "@/components/cruise/CruiseResultCard";
 import Chip from "@/components/ui/Chip";
-import type { CruiseOffer } from "@/lib/mock/cruises";
+import { generateCruises, type CruiseOffer } from "@/lib/mock/cruises";
 import { sleep } from "@/services/delay";
 import Skeleton from "@/components/ui/Skeleton";
 import InventoryUnavailable from "@/components/shared/InventoryUnavailable";
@@ -74,9 +74,7 @@ function CruiseResultsContent({
 
   useEffect(() => {
     sleep(700).then(() => {
-      void port;
-      void month;
-      setCruises([]);
+      setCruises(generateCruises(port, month));
       setLoading(false);
     });
   }, [port, month]);
