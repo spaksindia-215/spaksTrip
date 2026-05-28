@@ -1,0 +1,6 @@
+{
+  "TokenId": "c1f271cb-105b-4d44-a381-088355e37bb5",
+  "EndUserIp": "1.1.1.1",
+  "ResultIndex": "{{RBD_RESULT_INDEX}}",
+  "TraceId": "{{RBD_TRACE_ID}}"
+}

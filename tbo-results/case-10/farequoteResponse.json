@@ -1,0 +1,223 @@
+{
+  "status": 200,
+  "response": {
+    "Response": {
+      "Error": {
+        "ErrorCode": 0,
+        "ErrorMessage": ""
+      },
+      "FlightDetailChangeInfo": null,
+      "IsPriceChanged": false,
+      "ItineraryChangeList": null,
+      "ResponseStatus": 1,
+      "Results": {
+        "FareInclusions": [],
+        "FirstNameFormat": "If FirstName is missing, Update FirstName as title.",
+        "IsBookableIfSeatNotAvailable": false,
+        "IsExclusiveFare": false,
+        "IsFreeMealAvailable": false,
+        "IsHoldAllowedWithSSR": true,
+        "IsHoldMandatoryWithSSR": false,
+        "LastNameFormat": "If LastName is missing, Update LastName as FIRSTNAME and First name as title.",
+        "ResultIndex": "OB1[TBO]pFR0sfK/aZcIRbn4fxoMtncAYpq6y+1BIdco0RykFfMvfeTC/mgVUzdLnPT1llQ9QkTbOqpmymfnlUh9foEAER7dFJgQv00r88l6YI3lf4Csndn37vgEGX/67ye1H+qYu+AocfjNX8xr+sLb7VeUp2tDPefP7TIQSdoXlczVmq1GmWfF8cB0EeDdLE5nls1MiqAmH/OHiYSOdZMCm98ioqYBhohq3FPaTRAV1nh0hMCXNgPMQsr81w0rkFp6fukKygMmKdxAU8CyoaehBvgWS22JSFwkTVCYCrxfAYo5JrXfnCSe8u6N6ysKtT8X5Z+w29TeipRtXphyAsdFyoYH8fWnsl6gzQg1wWHloclsX4GGS5EZKIFk2w833LRbm2KvIKRX7YjXFPcMOzBORf/M4kNHBwAfA5TgAQVTY3E87y6RuUUnWZ7Ayw5g8vVrarmBwNxshX6grz3CXLxjizm7IaaOgr7gaSBepDiHq4BXB9B/VpulbC6xaO6GgFQzyu9kLBTb6jbreOnWnS/ndwh4DS/4gCFn4mrGnW+ZJXqpHieCFXXeAy6SF1b4JWG3nnxc2zIiw4gYr+1kOeXhBNFQ8Op3Wy9x/9q5LxSuLiyJQfJXRSTLf+YGycnT7K2dEJV9rsTxPeNBNciIKMF7NBOLE7+iaA3FS1105N2z62FshkmWGcl4p2LfIC9OT4CQpZUHcAfJpPcGuMGpIprh3LY9PE96L2xNlMKvf0rJjif6WgUew5dbuzwf8iykdT0+A2rrvm74uJ2SvB2c1lpxV8pjMD2MoupM0PMv/30Infe67qrbn0cd7v8HRYBISBqXEzDGSFjH0BCjlo4TFG19i/F6Tw==",
+        "Source": 4,
+        "IsLCC": false,
+        "IsRefundable": true,
+        "IsPanRequiredAtBook": false,
+        "IsPanRequiredAtTicket": false,
+        "IsPassportRequiredAtBook": false,
+        "IsPassportRequiredAtTicket": true,
+        "GSTAllowed": true,
+        "IsCouponAppilcable": true,
+        "IsGSTMandatory": false,
+        "IsHoldAllowed": true,
+        "AirlineRemark": "Aam janta airlines.",
+        "IsPassportFullDetailRequiredAtBook": false,
+        "ResultFareType": "RegularFare",
+        "Fare": {
+          "CFARAmount": 0,
+          "DCFARAmount": 0,
+          "ServiceFeeDisplayType": 0,
+          "Currency": "INR",
+          "BaseFare": 453180,
+          "Tax": 62072,
+          "TaxBreakup": [
+            {
+              "key": "K3",
+              "value": 24334
+            },
+            {
+              "key": "YQTax",
+              "value": 33494
+            },
+            {
+              "key": "INTax",
+              "value": 1534
+            },
+            {
+              "key": "OtherTaxes",
+              "value": 2710
+            }
+          ],
+          "YQTax": 33494,
+          "AdditionalTxnFeeOfrd": 0,
+          "AdditionalTxnFeePub": 0,
+          "PGCharge": 0,
+          "OtherCharges": 0,
+          "ChargeBU": [
+            {
+              "key": "TBOMARKUP",
+              "value": 0
+            },
+            {
+              "key": "GLOBALPROCUREMENTCHARGE",
+              "value": 0
+            },
+            {
+              "key": "CONVENIENCECHARGE",
+              "value": 0
+            },
+            {
+              "key": "OTHERCHARGE",
+              "value": 0
+            }
+          ],
+          "Discount": 0,
+          "PublishedFare": 515252,
+          "CommissionEarned": 0,
+          "PLBEarned": 0,
+          "IncentiveEarned": 0,
+          "OfferedFare": 515252,
+          "TdsOnCommission": 0,
+          "TdsOnPLB": 0,
+          "TdsOnIncentive": 0,
+          "ServiceFee": 0,
+          "TotalBaggageCharges": 0,
+          "TotalMealCharges": 0,
+          "TotalSeatCharges": 0,
+          "TotalSpecialServiceCharges": 0
+        },
+        "FareBreakdown": [
+          {
+            "CFARAmount": 0,
+            "DCFARAmount": 0,
+            "SegmentDetails": [
+              {
+                "FlightInfoIndex": "1"
+              }
+            ],
+            "Currency": "INR",
+            "PassengerType": 1,
+            "PassengerCount": 2,
+            "BaseFare": 453180,
+            "Tax": 62072,
+            "TransactionFee": 0,
+            "YQTax": 33494,
+            "TaxBreakUp": [
+              {
+                "key": "YQTax",
+                "value": 33494
+              },
+              {
+                "key": "K3",
+                "value": 24334
+              },
+              {
+                "key": "INTax",
+                "value": 1534
+              },
+              {
+                "key": "OtherTaxes",
+                "value": 2710
+              }
+            ],
+            "AdditionalTxnFeePub": 0,
+            "PGCharge": 0,
+            "AdditionalTxnFeeOfrd": 0,
+            "SupplierReissueCharges": 0
+          }
+        ],
+        "Segments": [
+          [
+            {
+              "Baggage": null,
+              "CabinBaggage": "Included",
+              "CabinClass": 0,
+              "SupplierFareClass": "Publish",
+              "TripIndicator": 1,
+              "SegmentIndicator": 1,
+              "Airline": {
+                "AirlineCode": "BA",
+                "AirlineName": "British Airways",
+                "FlightNumber": "142",
+                "FareClass": "Y",
+                "OperatingCarrier": ""
+              },
+              "Origin": {
+                "Airport": {
+                  "AirportCode": "DEL",
+                  "AirportName": "Indira Gandhi Airport",
+                  "Terminal": "3",
+                  "CityCode": "DEL",
+                  "CityName": "Delhi",
+                  "CountryCode": "IN",
+                  "CountryName": "India"
+                },
+                "DepTime": "2026-07-15T01:35:00"
+              },
+              "Destination": {
+                "Airport": {
+                  "AirportCode": "LHR",
+                  "AirportName": "Heathrow",
+                  "Terminal": "5",
+                  "CityCode": "LON",
+                  "CityName": "London",
+                  "CountryCode": "GB",
+                  "CountryName": "United Kingdom"
+                },
+                "ArrTime": "2026-07-15T06:45:00"
+              },
+              "Duration": 310,
+              "GroundTime": 0,
+              "Mile": 0,
+              "StopOver": false,
+              "FlightInfoIndex": "",
+              "StopPoint": "",
+              "StopPointArrivalTime": "0001-01-01T00:00:00",
+              "StopPointDepartureTime": "0001-01-01T00:00:00",
+              "Craft": "777",
+              "Remark": null,
+              "IsETicketEligible": true,
+              "FlightStatus": "Confirmed",
+              "Status": "",
+              "FareClassification": null
+            }
+          ]
+        ],
+        "LastTicketDate": "28May26",
+        "TicketAdvisory": null,
+        "FareRules": [
+          {
+            "Origin": "DEL",
+            "Destination": "LHR",
+            "Airline": "BA",
+            "FareBasisCode": "YNNF00S0",
+            "FareRuleDetail": null,
+            "FareRestriction": null,
+            "MiniFarRules": {
+              "Currency": null,
+              "Rules": []
+            }
+          }
+        ],
+        "AirlineCode": "BA",
+        "ValidatingAirline": "BA",
+        "FareClassification": {
+          "Color": "rgb(182,215,228) ",
+          "Type": "Publish"
+        }
+      },
+      "TraceId": "762321de-f8e1-42b3-8ebd-3f09e326dbf8"
+    }
+  }
+}

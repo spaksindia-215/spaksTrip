@@ -1,0 +1,57 @@
+{
+  "status": 200,
+  "response": {
+    "Response": {
+      "Error": {
+        "ErrorCode": 0,
+        "ErrorMessage": ""
+      },
+      "FareRules": [
+        {
+          "Airline": "IX",
+          "DepartureTime": "0001-01-01T00:00:00",
+          "Destination": "GOX",
+          "FareBasisCode": "XNRA015",
+          "FareInclusions": [
+            "Cabin Baggage Included",
+            "Check-In baggage Included",
+            "Cancellation fees apply",
+            "Reissue fees apply"
+          ],
+          "FareRestriction": null,
+          "FareRuleDetail": "The FareBasisCode is: XNRA015<br /><span><b>IX-I5 Domestic Fare Rules</b></span><br /><br /><table border=\"1\"><tbody><tr><td rowspan=\"2\"><b>Change/Cancel/Meal/Seat/Baggage</b></td><td rowspan=\"2\"></td><td style=\"text-align:center\"><b>Fare Type</b></td></tr><tr><th width=\"200px;\">Xpress Value (EC)</th></tr><tr><td rowspan=\"4\">Baggage</td><td>Check-in Baggage<br />(Adult/Child)</td><td style=\"text-align:center\">15 KG (1 piece)</td></tr><tr><td>Check-in Baggage<br />(Infant)</td><td style=\"text-align:center\">Nil</td></tr><tr><td>Check-in Baggage (Student Fare)</td><td style=\"text-align:center\">25 KG (1 piece)</td></tr><tr><td>Cabin Baggage<br />(Not applicable for Infant)</td><td style=\"text-align:center\">7 KG</td></tr><tr><td>Meal/Seat</td><td></td><td style=\"text-align:center\">Chargeable</td></tr><tr><td rowspan=\"2\" width=\"200px;\">Change Fee <br><b>(Fare Difference is also applicable)</b><br />Per Person Per Sector</b></td><td>0 to 2 Hours prior to the departure</td><th>Not Allowed</th></tr><tr><td>Upto 2 hrs prior to the departure</td><td style=\"text-align:center\">INR 3000/-</td></tr></tr><tr><td rowspan=\"2\" width=\"200px;\">Cancellation Fee<br><b>or Airfare charges (Whichever is lower)</b><br />Per Person Per Sector</td><td>0 to 2 Hours prior to the departure</td><th>Not Allowed</th></tr><tr><td>Upto 2 hrs prior to the departure</td><td style=\"text-align:center\">INR 3500/-</td></tr></tbody></table><br /><b>Note</b>:<br /><ol><li>Subject to change without prior notice.</li><li>We should receive the request at least 4 hours prior to Airline Fare Rules Policy.</li></ol><br /><b>Note: Any booking change/Cancellation is not allowed within 2 hrs from the Departure irrespective of the product book</b><br /><br /><br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+          "FlightId": 0,
+          "MiniFarRules": {
+            "Currency": null,
+            "Rules": []
+          },
+          "Origin": "DEL",
+          "ReturnDate": "0001-01-01T00:00:00"
+        },
+        {
+          "Airline": "IX",
+          "DepartureTime": "0001-01-01T00:00:00",
+          "Destination": "BOM",
+          "FareBasisCode": "XNRA015",
+          "FareInclusions": [
+            "Cabin Baggage Included",
+            "Check-In baggage Included",
+            "Cancellation fees apply",
+            "Reissue fees apply"
+          ],
+          "FareRestriction": null,
+          "FareRuleDetail": "Please refer above<br /><br /><br/> <br/>",
+          "FlightId": 0,
+          "MiniFarRules": {
+            "Currency": null,
+            "Rules": []
+          },
+          "Origin": "GOX",
+          "ReturnDate": "0001-01-01T00:00:00"
+        }
+      ],
+      "ResponseStatus": 1,
+      "TraceId": "077ff253-5875-4f4c-bae8-18339131778e"
+    }
+  }
+}

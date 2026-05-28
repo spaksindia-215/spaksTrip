@@ -1,0 +1,5 @@
+{
+  "TokenId": "{{TOKEN}}",
+  "EndUserIp": "1.1.1.1",
+  "BookingId": "{{BOOKING_ID}}"
+}

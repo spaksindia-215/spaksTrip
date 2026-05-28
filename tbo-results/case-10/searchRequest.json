@@ -1,0 +1,23 @@
+{
+  "TokenId": "c1f271cb-105b-4d44-a381-088355e37bb5",
+  "EndUserIp": "1.1.1.1",
+  "AdultCount": "2",
+  "ChildCount": "0",
+  "InfantCount": "0",
+  "DirectFlight": "false",
+  "OneStopFlight": "false",
+  "JourneyType": "1",
+  "PreferredAirlines": [
+    "AI"
+  ],
+  "Segments": [
+    {
+      "Origin": "DEL",
+      "Destination": "BOM",
+      "FlightCabinClass": "1",
+      "PreferredDepartureTime": "2026-08-20T00:00:00",
+      "PreferredArrivalTime": "2026-08-20T00:00:00"
+    }
+  ],
+  "Sources": null
+}

@@ -1,0 +1,32 @@
+{
+  "EndUserIp": "1.1.1.1",
+  "TokenId": "{{TOKEN}}",
+  "TraceId": "{{TRACE_ID}}",
+  "AdultCount": "2",
+  "ChildCount": "0",
+  "InfantCount": "0",
+  "AirSearchResult": [
+    {
+      "ResultIndex": "{{SEARCH_RESULT_INDEX}}",
+      "Source": "{{SOURCE}}",
+      "IsLCC": false,
+      "IsRefundable": "{{IS_REFUNDABLE}}",
+      "AirlineRemark": "",
+      "Segments": [
+        [
+          {
+            "TripIndicator": 1,
+            "SegmentIndicator": 1,
+            "Airline": {
+              "AirlineCode": "AI",
+              "AirlineName": "Air India",
+              "FlightNumber": "{{FLIGHT_NO}}",
+              "FareClass": "{{RBD}}",
+              "OperatingCarrier": ""
+            }
+          }
+        ]
+      ]
+    }
+  ]
+}

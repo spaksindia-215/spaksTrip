@@ -1,0 +1,689 @@
+{
+  "Response": {
+    "Error": {
+      "ErrorCode": 0,
+      "ErrorMessage": ""
+    },
+    "ResponseStatus": 1,
+    "TraceId": "c99070a4-4c03-465e-8f10-cbc0041f3249",
+    "FlightItinerary": {
+      "AgentRemarks": "",
+      "CommentDetails": null,
+      "FareClassification": "Sale#Turquoise",
+      "IsAutoReissuanceAllowed": true,
+      "IsPartialVoidAllowed": true,
+      "IsSeatsBooked": false,
+      "IssuancePcc": "OTI011",
+      "JourneyType": 1,
+      "SearchCombinationType": 2,
+      "SupplierFareClasses": "Sale",
+      "TBOConfNo": "TBFGLL6LN",
+      "TBOTripID": null,
+      "TripIndicator": 1,
+      "BookingAllowedForRoamer": true,
+      "BookingId": 2124267,
+      "IsCouponAppilcable": true,
+      "IsManual": false,
+      "PNR": "D4SYUR",
+      "IsDomestic": true,
+      "ResultFareType": "RegularFare",
+      "Source": 6,
+      "Origin": "DEL",
+      "Destination": "BLR",
+      "AirlineCode": "6E",
+      "LastTicketDate": "2026-05-10T18:05:32",
+      "ValidatingAirlineCode": "6E",
+      "AirlineRemark": "6E main",
+      "AirlineTollFreeNo": "1800-0001-5456-51515",
+      "IsLCC": true,
+      "NonRefundable": false,
+      "FareType": "PUB",
+      "CreditNoteNo": null,
+      "Fare": {
+        "CFARAmount": 0,
+        "DCFARAmount": 0,
+        "ServiceFeeDisplayType": 0,
+        "Currency": "INR",
+        "BaseFare": 4095,
+        "Tax": 2871,
+        "TaxBreakup": [
+          {
+            "key": "UDF",
+            "value": 304
+          },
+          {
+            "key": "YR",
+            "value": 100
+          },
+          {
+            "key": "YQTax",
+            "value": 1600
+          },
+          {
+            "key": "RcfTax",
+            "value": 100
+          },
+          {
+            "key": "TotalTax",
+            "value": 2766
+          },
+          {
+            "key": "OtherTaxes",
+            "value": 472
+          },
+          {
+            "key": "K3",
+            "value": 190
+          }
+        ],
+        "YQTax": 1600,
+        "AdditionalTxnFeeOfrd": 0,
+        "AdditionalTxnFeePub": 0,
+        "PGCharge": 0,
+        "OtherCharges": 0,
+        "ChargeBU": [
+          {
+            "key": "TBOMARKUP",
+            "value": 0
+          },
+          {
+            "key": "GLOBALPROCUREMENTCHARGE",
+            "value": 0
+          },
+          {
+            "key": "OTHERCHARGE",
+            "value": 0
+          },
+          {
+            "key": "CONVENIENCECHARGE",
+            "value": 0
+          }
+        ],
+        "Discount": 0,
+        "PublishedFare": 12204,
+        "CommissionEarned": 0,
+        "PLBEarned": 0,
+        "IncentiveEarned": 0,
+        "OfferedFare": 12204,
+        "TdsOnCommission": 0,
+        "TdsOnPLB": 0,
+        "TdsOnIncentive": 0,
+        "ServiceFee": 0,
+        "TotalBaggageCharges": 4040,
+        "TotalMealCharges": 800,
+        "TotalSeatCharges": 0,
+        "TotalSpecialServiceCharges": 398
+      },
+      "CreditNoteCreatedOn": null,
+      "Passenger": [
+        {
+          "BarcodeDetails": {
+            "Id": 3423475,
+            "Barcode": [
+              {
+                "Index": 1,
+                "Format": "PDF417",
+                "Content": "M1SHARMA/RAHUL         D4SYUR DELBLR6E 0811 166Y000000000000",
+                "BarCodeInBase64": null,
+                "JourneyWayType": 3
+              }
+            ]
+          },
+          "DocumentDetails": null,
+          "GuardianDetails": null,
+          "IsReissued": false,
+          "SegmentDetails": null,
+          "PaxId": 3423475,
+          "Title": "Mr",
+          "FirstName": "RAHUL",
+          "LastName": "SHARMA",
+          "PaxType": 1,
+          "DateOfBirth": "1985-03-15T00:00:00",
+          "Gender": 1,
+          "IsPANRequired": false,
+          "IsPassportRequired": false,
+          "PAN": "",
+          "PassportNo": "",
+          "AddressLine1": "45 Prithviraj Road",
+          "Fare": {
+            "CFARAmount": 0,
+            "DCFARAmount": 0,
+            "ServiceFeeDisplayType": 0,
+            "Currency": "INR",
+            "BaseFare": 1000,
+            "Tax": 1383,
+            "TaxBreakup": [
+              {
+                "key": "K3",
+                "value": 95
+              },
+              {
+                "key": "UDF",
+                "value": 152
+              },
+              {
+                "key": "YR",
+                "value": 50
+              },
+              {
+                "key": "YQTax",
+                "value": 800
+              },
+              {
+                "key": "RcfTax",
+                "value": 50
+              },
+              {
+                "key": "TotalTax",
+                "value": 1383
+              },
+              {
+                "key": "OtherTaxes",
+                "value": 236
+              }
+            ],
+            "YQTax": 800,
+            "AdditionalTxnFeeOfrd": 0,
+            "AdditionalTxnFeePub": 0,
+            "PGCharge": 0,
+            "OtherCharges": 0,
+            "ChargeBU": [
+              {
+                "key": "TBOMARKUP",
+                "value": 0
+              },
+              {
+                "key": "GLOBALPROCUREMENTCHARGE",
+                "value": 0
+              },
+              {
+                "key": "OTHERCHARGE",
+                "value": 0
+              },
+              {
+                "key": "CONVENIENCECHARGE",
+                "value": 0
+              }
+            ],
+            "Discount": 0,
+            "PublishedFare": 4696,
+            "CommissionEarned": 0,
+            "PLBEarned": 0,
+            "IncentiveEarned": 0,
+            "OfferedFare": 4696,
+            "TdsOnCommission": 0,
+            "TdsOnPLB": 0,
+            "TdsOnIncentive": 0,
+            "ServiceFee": 0,
+            "TotalBaggageCharges": 1515,
+            "TotalMealCharges": 400,
+            "TotalSeatCharges": 0,
+            "TotalSpecialServiceCharges": 398
+          },
+          "City": "New Delhi",
+          "CountryCode": "IN",
+          "Nationality": "IN",
+          "ContactNo": "9810001234",
+          "Email": "rahul.sharma@example.com",
+          "IsLeadPax": true,
+          "FFAirlineCode": null,
+          "FFNumber": null,
+          "Baggage": [
+            {
+              "AirlineCode": "6E",
+              "FlightNumber": "811",
+              "WayType": 2,
+              "Code": "XBPE",
+              "Description": 2,
+              "Weight": 3,
+              "Currency": "INR",
+              "Price": 1515,
+              "Origin": "DEL",
+              "Destination": "BLR",
+              "Text": ""
+            }
+          ],
+          "MealDynamic": [
+            {
+              "AirlineCode": "6E",
+              "FlightNumber": "811",
+              "WayType": 2,
+              "Code": "VGAN",
+              "Description": 2,
+              "AirlineDescription": "Vegan Meal",
+              "Quantity": 1,
+              "Currency": "INR",
+              "Price": 400,
+              "Origin": "DEL",
+              "Destination": "BLR"
+            }
+          ],
+          "SpecialServices": [
+            {
+              "Origin": "DEL",
+              "Destination": "BLR",
+              "DepartureTime": "2026-06-15T18:20:00",
+              "AirlineCode": "6E",
+              "FlightNumber": "811",
+              "Code": "FFWD",
+              "ServiceType": 3,
+              "Text": "Priority checkin is allowed",
+              "WayType": 4,
+              "Currency": "INR",
+              "Price": 398
+            }
+          ],
+          "Ssr": [
+            {
+              "Detail": "DEL-BLR 6E-811, 06/15/2026 18:20:00, Service : PriorityCheckIn ( Code -FFWD ), Desc: Priority checkin is allowed",
+              "SsrCode": "SPECIALSERVICE",
+              "SsrStatus": null,
+              "Status": 1
+            }
+          ],
+          "Ticket": {
+            "TicketId": 2425961,
+            "TicketNumber": "D4SYUR",
+            "IssueDate": "2026-05-10T12:10:33",
+            "ValidatingAirline": "708",
+            "Remarks": "",
+            "ServiceFeeDisplayType": "ShowInTax",
+            "Status": "OK",
+            "ConjunctionNumber": "",
+            "TicketType": "N"
+          },
+          "SegmentAdditionalInfo": [
+            {
+              "FareBasis": "S0IP",
+              "NVA": "",
+              "NVB": "",
+              "Baggage": "15 KG|3",
+              "Meal": "1 Platter",
+              "Seat": "",
+              "SpecialService": "PriorityCheckIn",
+              "CabinBaggage": "7 KG"
+            }
+          ]
+        },
+        {
+          "BarcodeDetails": {
+            "Id": 3423476,
+            "Barcode": [
+              {
+                "Index": 1,
+                "Format": "PDF417",
+                "Content": "M1SHARMA/ROHAN         D4SYUR DELBLR6E 0811 166Y000000000000",
+                "BarCodeInBase64": null,
+                "JourneyWayType": 3
+              }
+            ]
+          },
+          "DocumentDetails": null,
+          "GuardianDetails": null,
+          "IsReissued": false,
+          "SegmentDetails": null,
+          "PaxId": 3423476,
+          "Title": "Mstr",
+          "FirstName": "ROHAN",
+          "LastName": "SHARMA",
+          "PaxType": 2,
+          "DateOfBirth": "2017-05-10T00:00:00",
+          "Gender": 1,
+          "IsPANRequired": false,
+          "IsPassportRequired": false,
+          "PAN": "",
+          "PassportNo": "",
+          "AddressLine1": "45 Prithviraj Road",
+          "Fare": {
+            "CFARAmount": 0,
+            "DCFARAmount": 0,
+            "ServiceFeeDisplayType": 0,
+            "Currency": "INR",
+            "BaseFare": 1000,
+            "Tax": 1383,
+            "TaxBreakup": [
+              {
+                "key": "K3",
+                "value": 95
+              },
+              {
+                "key": "UDF",
+                "value": 152
+              },
+              {
+                "key": "YR",
+                "value": 50
+              },
+              {
+                "key": "YQTax",
+                "value": 800
+              },
+              {
+                "key": "RcfTax",
+                "value": 50
+              },
+              {
+                "key": "TotalTax",
+                "value": 1383
+              },
+              {
+                "key": "OtherTaxes",
+                "value": 236
+              }
+            ],
+            "YQTax": 800,
+            "AdditionalTxnFeeOfrd": 0,
+            "AdditionalTxnFeePub": 0,
+            "PGCharge": 0,
+            "OtherCharges": 0,
+            "ChargeBU": [
+              {
+                "key": "TBOMARKUP",
+                "value": 0
+              },
+              {
+                "key": "GLOBALPROCUREMENTCHARGE",
+                "value": 0
+              },
+              {
+                "key": "OTHERCHARGE",
+                "value": 0
+              },
+              {
+                "key": "CONVENIENCECHARGE",
+                "value": 0
+              }
+            ],
+            "Discount": 0,
+            "PublishedFare": 5308,
+            "CommissionEarned": 0,
+            "PLBEarned": 0,
+            "IncentiveEarned": 0,
+            "OfferedFare": 5308,
+            "TdsOnCommission": 0,
+            "TdsOnPLB": 0,
+            "TdsOnIncentive": 0,
+            "ServiceFee": 0,
+            "TotalBaggageCharges": 2525,
+            "TotalMealCharges": 400,
+            "TotalSeatCharges": 0,
+            "TotalSpecialServiceCharges": 0
+          },
+          "City": "New Delhi",
+          "CountryCode": "IN",
+          "Nationality": "IN",
+          "ContactNo": "",
+          "IsLeadPax": false,
+          "FFAirlineCode": null,
+          "FFNumber": null,
+          "Baggage": [
+            {
+              "AirlineCode": "6E",
+              "FlightNumber": "811",
+              "WayType": 2,
+              "Code": "XBPA",
+              "Description": 2,
+              "Weight": 5,
+              "Currency": "INR",
+              "Price": 2525,
+              "Origin": "DEL",
+              "Destination": "BLR",
+              "Text": ""
+            }
+          ],
+          "MealDynamic": [
+            {
+              "AirlineCode": "6E",
+              "FlightNumber": "811",
+              "WayType": 2,
+              "Code": "JNML",
+              "Description": 2,
+              "AirlineDescription": "Jain Meal",
+              "Quantity": 1,
+              "Currency": "INR",
+              "Price": 400,
+              "Origin": "DEL",
+              "Destination": "BLR"
+            }
+          ],
+          "Ssr": [
+            {
+              "Detail": "10/05/2017",
+              "SsrCode": "CHLD",
+              "SsrStatus": null,
+              "Status": 1
+            }
+          ],
+          "Ticket": {
+            "TicketId": 2425962,
+            "TicketNumber": "D4SYUR",
+            "IssueDate": "2026-05-10T12:10:33",
+            "ValidatingAirline": "708",
+            "Remarks": "",
+            "ServiceFeeDisplayType": "ShowInTax",
+            "Status": "OK",
+            "ConjunctionNumber": "",
+            "TicketType": "N"
+          },
+          "SegmentAdditionalInfo": [
+            {
+              "FareBasis": "S0IP",
+              "NVA": "",
+              "NVB": "",
+              "Baggage": "15 KG|5",
+              "Meal": "1 Platter",
+              "Seat": "",
+              "SpecialService": "",
+              "CabinBaggage": "7 KG"
+            }
+          ]
+        },
+        {
+          "BarcodeDetails": null,
+          "DocumentDetails": null,
+          "GuardianDetails": null,
+          "IsReissued": false,
+          "SegmentDetails": null,
+          "PaxId": 3423477,
+          "Title": "Mstr",
+          "FirstName": "KABIR",
+          "LastName": "SHARMA",
+          "PaxType": 3,
+          "DateOfBirth": "2025-01-20T00:00:00",
+          "Gender": 1,
+          "IsPANRequired": false,
+          "IsPassportRequired": false,
+          "PAN": "",
+          "PassportNo": "",
+          "AddressLine1": "45 Prithviraj Road",
+          "Fare": {
+            "CFARAmount": 0,
+            "DCFARAmount": 0,
+            "ServiceFeeDisplayType": 0,
+            "Currency": "INR",
+            "BaseFare": 2095,
+            "Tax": 105,
+            "TaxBreakup": [
+              {
+                "key": "K3",
+                "value": 0
+              }
+            ],
+            "YQTax": 0,
+            "AdditionalTxnFeeOfrd": 0,
+            "AdditionalTxnFeePub": 0,
+            "PGCharge": 0,
+            "OtherCharges": 0,
+            "ChargeBU": [
+              {
+                "key": "TBOMARKUP",
+                "value": 0
+              },
+              {
+                "key": "GLOBALPROCUREMENTCHARGE",
+                "value": 0
+              },
+              {
+                "key": "OTHERCHARGE",
+                "value": 0
+              },
+              {
+                "key": "CONVENIENCECHARGE",
+                "value": 0
+              }
+            ],
+            "Discount": 0,
+            "PublishedFare": 2200,
+            "CommissionEarned": 0,
+            "PLBEarned": 0,
+            "IncentiveEarned": 0,
+            "OfferedFare": 2200,
+            "TdsOnCommission": 0,
+            "TdsOnPLB": 0,
+            "TdsOnIncentive": 0,
+            "ServiceFee": 0,
+            "TotalBaggageCharges": 0,
+            "TotalMealCharges": 0,
+            "TotalSeatCharges": 0,
+            "TotalSpecialServiceCharges": 0
+          },
+          "City": "New Delhi",
+          "CountryCode": "IN",
+          "Nationality": "IN",
+          "ContactNo": "",
+          "IsLeadPax": false,
+          "FFAirlineCode": null,
+          "FFNumber": null,
+          "Ssr": [
+            {
+              "Detail": "20/01/2025",
+              "SsrCode": "INFT",
+              "SsrStatus": null,
+              "Status": 1
+            }
+          ],
+          "Ticket": {
+            "TicketId": 2425963,
+            "TicketNumber": "D4SYUR",
+            "IssueDate": "2026-05-10T12:10:33",
+            "ValidatingAirline": "708",
+            "Remarks": "",
+            "ServiceFeeDisplayType": "ShowInTax",
+            "Status": "OK",
+            "ConjunctionNumber": "",
+            "TicketType": "N"
+          },
+          "SegmentAdditionalInfo": [
+            {
+              "FareBasis": "S0IP",
+              "NVA": "",
+              "NVB": "",
+              "Baggage": "0 Kg",
+              "Meal": "0 Platter",
+              "Seat": "",
+              "SpecialService": "",
+              "CabinBaggage": ""
+            }
+          ]
+        }
+      ],
+      "CancellationCharges": null,
+      "Segments": [
+        {
+          "Baggage": "15 Kilograms",
+          "CabinBaggage": "7 KG",
+          "CabinClass": 2,
+          "SupplierFareClass": null,
+          "TripIndicator": 1,
+          "SegmentIndicator": 1,
+          "Airline": {
+            "AirlineCode": "6E",
+            "AirlineName": "IndiGo",
+            "FlightNumber": "811",
+            "FareClass": "SS",
+            "OperatingCarrier": ""
+          },
+          "AirlinePNR": "",
+          "Origin": {
+            "Airport": {
+              "AirportCode": "DEL",
+              "AirportName": "Indira Gandhi Airport",
+              "Terminal": "1",
+              "CityCode": "DEL",
+              "CityName": "Delhi",
+              "CountryCode": "IN",
+              "CountryName": "India"
+            },
+            "DepTime": "2026-06-15T18:20:00"
+          },
+          "Destination": {
+            "Airport": {
+              "AirportCode": "BLR",
+              "AirportName": "Kempegowda International Airport",
+              "Terminal": "1",
+              "CityCode": "BLR",
+              "CityName": "Bangalore",
+              "CountryCode": "IN",
+              "CountryName": "India"
+            },
+            "ArrTime": "2026-06-15T21:10:00"
+          },
+          "Duration": 170,
+          "GroundTime": 0,
+          "Mile": 0,
+          "StopOver": false,
+          "FlightInfoIndex": "1",
+          "StopPoint": "",
+          "StopPointArrivalTime": null,
+          "StopPointDepartureTime": null,
+          "Craft": "321",
+          "Remark": "Sale",
+          "IsETicketEligible": true,
+          "FlightStatus": "Confirmed",
+          "Status": "HK",
+          "FareClassification": {
+            "Color": "",
+            "Type": "Sale"
+          }
+        }
+      ],
+      "FareRules": [
+        {
+          "Origin": "DEL",
+          "Destination": "BLR",
+          "Airline": "6E",
+          "FareBasisCode": "S0IP",
+          "FareRuleDetail": "The FareBasisCode is: S0IP<br /><br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+          "FareRestriction": "",
+          "FareFamilyCode": "",
+          "FareRuleIndex": "",
+          "FareInclusions": []
+        }
+      ],
+      "MiniFareRules": [],
+      "PenaltyCharges": {
+        "ReissueCharge": "",
+        "CancellationCharge": ""
+      },
+      "Status": 5,
+      "Invoice": [
+        {
+          "CreditNoteGSTIN": null,
+          "GSTIN": null,
+          "InvoiceCreatedOn": "2026-05-10T12:10:33",
+          "InvoiceId": 9551,
+          "InvoiceNo": "DW/2627/9551",
+          "InvoiceAmount": 12204,
+          "Remarks": "",
+          "InvoiceStatus": 3
+        }
+      ],
+      "InvoiceAmount": 12204,
+      "InvoiceNo": "DW/2627/9551",
+      "InvoiceStatus": 3,
+      "InvoiceCreatedOn": "2026-05-10T12:10:33",
+      "Remarks": "",
+      "IsWebCheckInAllowed": false
+    }
+  }
+}

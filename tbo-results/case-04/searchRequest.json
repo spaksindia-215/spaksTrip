@@ -1,0 +1,21 @@
+{
+  "TokenId": "56939880-c0b2-42e4-9a4b-7397852902e3",
+  "EndUserIp": "1.1.1.1",
+  "AdultCount": "1",
+  "ChildCount": "1",
+  "InfantCount": "1",
+  "DirectFlight": "false",
+  "OneStopFlight": "false",
+  "JourneyType": "1",
+  "PreferredAirlines": null,
+  "Segments": [
+    {
+      "Origin": "DEL",
+      "Destination": "DXB",
+      "FlightCabinClass": "2",
+      "PreferredDepartureTime": "2026-07-01T00:00:00",
+      "PreferredArrivalTime": "2026-07-01T00:00:00"
+    }
+  ],
+  "Sources": null
+}

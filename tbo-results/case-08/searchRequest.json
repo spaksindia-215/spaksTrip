@@ -1,0 +1,28 @@
+{
+  "TokenId": "d6c3459b-bf4e-422f-a642-03a177b07115",
+  "EndUserIp": "1.1.1.1",
+  "AdultCount": "2",
+  "ChildCount": "0",
+  "InfantCount": "0",
+  "DirectFlight": "false",
+  "OneStopFlight": "false",
+  "JourneyType": "3",
+  "PreferredAirlines": null,
+  "Segments": [
+    {
+      "Origin": "DEL",
+      "Destination": "BOM",
+      "FlightCabinClass": "2",
+      "PreferredDepartureTime": "2026-06-15T00:00:00",
+      "PreferredArrivalTime": "2026-06-15T00:00:00"
+    },
+    {
+      "Origin": "BOM",
+      "Destination": "MAA",
+      "FlightCabinClass": "2",
+      "PreferredDepartureTime": "2026-06-20T00:00:00",
+      "PreferredArrivalTime": "2026-06-20T00:00:00"
+    }
+  ],
+  "Sources": null
+}

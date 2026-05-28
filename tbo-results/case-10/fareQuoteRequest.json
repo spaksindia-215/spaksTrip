@@ -1,0 +1,6 @@
+{
+  "TokenId": "{{TOKEN}}",
+  "EndUserIp": "1.1.1.1",
+  "ResultIndex": "{{RBD_RESULT_INDEX}}",
+  "TraceId": "{{RBD_TRACE_ID}}"
+}
