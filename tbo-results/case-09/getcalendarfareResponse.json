@@ -1,0 +1,344 @@
+{
+    "Response": {
+        "ResponseStatus": 1,
+        "Error": {
+            "ErrorCode": 0,
+            "ErrorMessage": ""
+        },
+        "TraceId": "418dedd9-388a-4156-b3a7-1350fb078cef",
+        "Origin": "DEL",
+        "Destination": "BOM",
+        "SearchResults": [
+            {
+                "AirlineCode": "6E",
+                "AirlineName": "Indigo",
+                "DepartureDate": "2026-06-01T20:00:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7028.0000,
+                "BaseFare": 5539.0000,
+                "Tax": 1489.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "AI",
+                "AirlineName": "Air India",
+                "DepartureDate": "2026-06-02T09:00:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 9763.0000,
+                "BaseFare": 7300.0000,
+                "Tax": 2463.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 399.0000
+            },
+            {
+                "AirlineCode": "AI",
+                "AirlineName": "Air India",
+                "DepartureDate": "2026-06-03T09:00:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 9763.0000,
+                "BaseFare": 7300.0000,
+                "Tax": 2463.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 399.0000
+            },
+            {
+                "AirlineCode": "6E",
+                "AirlineName": "Indigo",
+                "DepartureDate": "2026-06-04T12:00:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7028.0000,
+                "BaseFare": 5539.0000,
+                "Tax": 1489.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-05T08:50:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 2650.0000,
+                "BaseFare": 1009.0000,
+                "Tax": 1287.0000,
+                "OtherCharges": 354.0000,
+                "FuelSurcharge": 549.0000
+            },
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-06T08:50:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 2650.0000,
+                "BaseFare": 1009.0000,
+                "Tax": 1287.0000,
+                "OtherCharges": 354.0000,
+                "FuelSurcharge": 549.0000
+            },
+            {
+                "AirlineCode": "6E",
+                "AirlineName": "Indigo",
+                "DepartureDate": "2026-06-07T12:00:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7028.0000,
+                "BaseFare": 5539.0000,
+                "Tax": 1489.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "6E",
+                "AirlineName": "Indigo",
+                "DepartureDate": "2026-06-08T12:00:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7028.0000,
+                "BaseFare": 5539.0000,
+                "Tax": 1489.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "AI",
+                "AirlineName": "Air India",
+                "DepartureDate": "2026-06-09T06:30:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7795.0000,
+                "BaseFare": 6400.0000,
+                "Tax": 1395.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 399.0000
+            },
+            {
+                "AirlineCode": "6E",
+                "AirlineName": "Indigo",
+                "DepartureDate": "2026-06-10T20:45:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7028.0000,
+                "BaseFare": 5539.0000,
+                "Tax": 1489.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "SG",
+                "AirlineName": "Spicejet",
+                "DepartureDate": "2026-06-11T16:30:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 4801.7700,
+                "BaseFare": 3759.0000,
+                "Tax": 1041.0000,
+                "OtherCharges": 1.7700,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-12T08:50:00",
+                "IsLowestFareOfMonth": true,
+                "Fare": 2642.0000,
+                "BaseFare": 1001.0000,
+                "Tax": 1287.0000,
+                "OtherCharges": 354.0000,
+                "FuelSurcharge": 549.0000
+            },
+            {
+                "AirlineCode": "6E",
+                "AirlineName": "Indigo",
+                "DepartureDate": "2026-06-13T07:15:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7658.0000,
+                "BaseFare": 6139.0000,
+                "Tax": 1519.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-14T11:55:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 5595.0000,
+                "BaseFare": 4050.0000,
+                "Tax": 1545.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 549.0000
+            },
+            {
+                "AirlineCode": "6E",
+                "AirlineName": "Indigo",
+                "DepartureDate": "2026-06-15T20:00:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7028.0000,
+                "BaseFare": 5539.0000,
+                "Tax": 1489.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "SG",
+                "AirlineName": "Spicejet",
+                "DepartureDate": "2026-06-16T16:30:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 3922.7700,
+                "BaseFare": 2922.0000,
+                "Tax": 999.0000,
+                "OtherCharges": 1.7700,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-17T08:50:00",
+                "IsLowestFareOfMonth": true,
+                "Fare": 2642.0000,
+                "BaseFare": 1001.0000,
+                "Tax": 1287.0000,
+                "OtherCharges": 354.0000,
+                "FuelSurcharge": 549.0000
+            },
+            {
+                "AirlineCode": "6E",
+                "AirlineName": "Indigo",
+                "DepartureDate": "2026-06-18T20:00:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7658.0000,
+                "BaseFare": 6139.0000,
+                "Tax": 1519.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "6E",
+                "AirlineName": "Indigo",
+                "DepartureDate": "2026-06-19T20:00:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7028.0000,
+                "BaseFare": 5539.0000,
+                "Tax": 1489.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-20T08:50:00",
+                "IsLowestFareOfMonth": true,
+                "Fare": 2642.0000,
+                "BaseFare": 1001.0000,
+                "Tax": 1287.0000,
+                "OtherCharges": 354.0000,
+                "FuelSurcharge": 549.0000
+            },
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-21T18:35:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 2748.0000,
+                "BaseFare": 1001.0000,
+                "Tax": 1393.0000,
+                "OtherCharges": 354.0000,
+                "FuelSurcharge": 549.0000
+            },
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-22T08:50:00",
+                "IsLowestFareOfMonth": true,
+                "Fare": 2642.0000,
+                "BaseFare": 1001.0000,
+                "Tax": 1287.0000,
+                "OtherCharges": 354.0000,
+                "FuelSurcharge": 549.0000
+            },
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-23T08:50:00",
+                "IsLowestFareOfMonth": true,
+                "Fare": 2642.0000,
+                "BaseFare": 1001.0000,
+                "Tax": 1287.0000,
+                "OtherCharges": 354.0000,
+                "FuelSurcharge": 549.0000
+            },
+            {
+                "AirlineCode": "6E",
+                "AirlineName": "Indigo",
+                "DepartureDate": "2026-06-24T12:00:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7028.0000,
+                "BaseFare": 5539.0000,
+                "Tax": 1489.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "6E",
+                "AirlineName": "Indigo",
+                "DepartureDate": "2026-06-25T12:00:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 7028.0000,
+                "BaseFare": 5539.0000,
+                "Tax": 1489.0000,
+                "OtherCharges": 0.0000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "SG",
+                "AirlineName": "Spicejet",
+                "DepartureDate": "2026-06-26T16:30:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 4065.7700,
+                "BaseFare": 3059.0000,
+                "Tax": 1005.0000,
+                "OtherCharges": 1.7700,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "SG",
+                "AirlineName": "Spicejet",
+                "DepartureDate": "2026-06-27T16:30:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 3908.7700,
+                "BaseFare": 2908.0000,
+                "Tax": 999.0000,
+                "OtherCharges": 1.7700,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-28T16:00:00",
+                "IsLowestFareOfMonth": true,
+                "Fare": 2642.0000,
+                "BaseFare": 1001.0000,
+                "Tax": 1287.0000,
+                "OtherCharges": 354.0000,
+                "FuelSurcharge": 549.0000
+            },
+            {
+                "AirlineCode": "AI",
+                "AirlineName": "Air India",
+                "DepartureDate": "2026-06-29T18:30:00",
+                "IsLowestFareOfMonth": false,
+                "Fare": 10216.8000,
+                "BaseFare": 7525.0000,
+                "Tax": 2680.0000,
+                "OtherCharges": 11.8000,
+                "FuelSurcharge": 0.0000
+            },
+            {
+                "AirlineCode": "IX",
+                "AirlineName": "default",
+                "DepartureDate": "2026-06-30T08:50:00",
+                "IsLowestFareOfMonth": true,
+                "Fare": 2642.0000,
+                "BaseFare": 1001.0000,
+                "Tax": 1287.0000,
+                "OtherCharges": 354.0000,
+                "FuelSurcharge": 549.0000
+            }
+        ]
+    }
+}

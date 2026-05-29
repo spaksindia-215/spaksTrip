@@ -1,0 +1,15 @@
+{
+  "status": 200,
+  "response": {
+    "Response": {
+      "B2B2BStatus": false,
+      "Error": {
+        "ErrorCode": 20,
+        "ErrorMessage": "Agency do not have enough balance."
+      },
+      "ResponseStatus": 2,
+      "TraceId": "f3f8c472-41b7-40e4-8529-e03cabf5bdfd",
+      "Response": null
+    }
+  }
+}

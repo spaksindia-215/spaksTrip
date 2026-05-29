@@ -1,0 +1,1720 @@
+{
+  "status": 200,
+  "response": {
+    "Response": {
+      "ResultRecommendationType": 1,
+      "ResponseStatus": 1,
+      "Error": {
+        "ErrorCode": 0,
+        "ErrorMessage": ""
+      },
+      "TraceId": "f3f8c472-41b7-40e4-8529-e03cabf5bdfd",
+      "Origin": "DEL",
+      "Destination": "LHR",
+      "Results": [
+        [
+          {
+            "FareInclusions": [],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "IsUpsellAllowed": false,
+            "LastNameFormat": null,
+            "ResultIndex": "OB1[TBO]Z2Lwt0MJUz3fud0v3BsV2ZNydiKg6ddKcnkAZ4YP0WEIJwEbEZ44FwvDgyXUsrkJ2Juu1Vq5LjWsIt7BjDjUb/p0jJf7NIzYB2wAdkmhzKR6h9m+Tpql5zCRbh17nPLwnDhuc8wZ/RR3fE+Rp8WcAzuAhH4Vjme3mVhPAUtedSMcWw5TFX7ZX3JeL0I2a6KIuiSNVViD1txlkYj/zWxgxDcHmbwTFWhRL6LZm8McpjlnF8qvP2CXxoMNuCaeC4y/rZzATydAi1pa3uToWF6KRVyWGxzsqHK8jxMuuzyykTilWm85MeWFdXL6sOQgbxGLjwKNN4y3jo6HBSgEx/6hthXVP3YhZ0DH9abFxhR5GU/J87bcF+wH+8IY71t9upOAabEjUoj8WMgpOFegjHF1yesBzxqxsfqJccTkL0I+2pPgh6DXUwx9zQ5FmsHwUuOmGMV2ZFkiVHv+OtjQomoiohJROkM1s6Pk1Kxgcb2rr//blTztuFhj6mEQuS0lMkPdK4kp3lu5BosZDVJWG3l883dKios8ZVFC0wvpHs1xmDCh9y4tzZikdSvwVX67gm4o4U2xjJHIyAZ7z7yAwsQ6Lbx7Jsgyk5niGercPJIQlCtpT+IkN9JSGNL+iMbyhorIthT5Lg8yFIy3AcJaB29bewAHPByG6uezFzD6yOgjvF63mUeW692Mi4+LQY0JVXVb0p670fnbyNRh1wSDnjBBf0++CnLS3pO+gFPBpih7xb69G/QtPqfO6PTdlBYwNSONIHp3J6J+SetSN3g7l6/aybkohmIq8Y6Mer3XvBWwXhZ0nRGQkhSmuXck58M4vOVFpm7CTijg2EpP00Jlgep3cA==",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": "Aam janta airlines.",
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": "Included",
+                  "CabinClass": 0,
+                  "SupplierFareClass": "Publish",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "BA",
+                    "AirlineName": "British Airways",
+                    "FlightNumber": "142",
+                    "FareClass": "",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "DEL",
+                      "AirportName": "Indira Gandhi Airport",
+                      "Terminal": "3",
+                      "CityCode": "DEL",
+                      "CityName": "Delhi",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-07-15T01:35:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "LHR",
+                      "AirportName": "Heathrow",
+                      "Terminal": "5",
+                      "CityCode": "LON",
+                      "CityName": "London",
+                      "CountryCode": "GB",
+                      "CountryName": "United Kingdom"
+                    },
+                    "ArrTime": "2026-07-15T06:45:00"
+                  },
+                  "Availability": [
+                    {
+                      "Class": "J",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "C",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "D",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "R",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "I",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "W",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "E",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "T",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Y",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "B",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "H",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "K",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "M",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "L",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "V",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "S",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "N",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Q",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "G",
+                      "Seats": "9"
+                    }
+                  ],
+                  "Duration": 310,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "777",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": null
+                }
+              ]
+            ],
+            "LastTicketDate": "29May26",
+            "TicketAdvisory": null,
+            "AirlineCode": "BA",
+            "ValidatingAirline": "BA",
+            "FareClassification": {
+              "Color": "rgb(182,215,228) ",
+              "Type": "Publish"
+            }
+          },
+          {
+            "FareInclusions": [],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "IsUpsellAllowed": false,
+            "LastNameFormat": null,
+            "ResultIndex": "OB2[TBO]ZvxB+VuN6n4DmIQRYUcEieJTsEGgwCUn0QWCWyaCWkZF3hLZevWYGxQYftDlTfYa/WdwhbZqH0Lc78v3gH/z9n+L8V5gTqZKPj9i/EkOqbmnb7SoSM/nAUgyYdiqv5QCasNmuzsqaPLYW1k+W4hC0kwkt0DwZuxzRBrICjYlwgPAJPjwX0UF5xkn5VmAky49Y2XoHAIBlfMfQtMxB5qaevSAPDI9P/mqWF6zz96UZVgy0AwzdYcoPKihJ95IZL9FxtnvMBUr1kBcDRuQ1IxxOufi0sf+hgOxyVTHqmZdT6fqqI98cj+An9C163p1T9Tj1V8lbZOGtRXFf451XWG7O6SXumTuNYhMEjLQ5afhz2S77545iXuxRhFlGewz4CJPxjv5BUUWQKk6T7oJydkY2nPGx6doC9n3CuDfQO45CMI8/tb5sDZICYgNHEFU1gktgBUNGmpXYm5YHSEjbuce1bGrin4hxl3wzz3fZzTpPKU7o1SfCd7BKdAUWiOThfKTOEov5D2vk0xU141yRGYvP6mXyAnMYb9jwSBpJrVQV0Km2WTHIoiG2hyy8Psd3b2I5d3ARGE2LokgcRaGEYeM0N5lOvGETlhGD+BFAMqDLWSIVrfxmUWIq1AzVkmHoeew0mTcHMTa8lcudwQGKbM9bIfEQZdb+rE4E3Wj9fUaKz+dZu3z1rz8zlUOu3uWFulvsDtzsAMy0HmCGn2DhhtC40BjsozYfihIOeGnOKUz2o3SenL+/N73i9wZ1gDdauzAXqzbJ7Hxt4g17ezaxWHa0x7MryZ/rAkfA+stcHUCxpw4tqu8+qhv210kqGTpvCanza+k6cBV92AMxnTvTxF87Q==",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": null,
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": "Included",
+                  "CabinClass": 0,
+                  "SupplierFareClass": "Publish",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "AA",
+                    "AirlineName": "American Airlines ",
+                    "FlightNumber": "6662",
+                    "FareClass": "",
+                    "OperatingCarrier": "BA"
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "DEL",
+                      "AirportName": "Indira Gandhi Airport",
+                      "Terminal": "3",
+                      "CityCode": "DEL",
+                      "CityName": "Delhi",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-07-15T01:35:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "LHR",
+                      "AirportName": "Heathrow",
+                      "Terminal": "5",
+                      "CityCode": "LON",
+                      "CityName": "London",
+                      "CountryCode": "GB",
+                      "CountryName": "United Kingdom"
+                    },
+                    "ArrTime": "2026-07-15T06:50:00"
+                  },
+                  "Availability": [
+                    {
+                      "Class": "C",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "J",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "R",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "D",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "I",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "W",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "P",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "Y",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "B",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "H",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "K",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "M",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "L",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "G",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "V",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "S",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "N",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "Q",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "O",
+                      "Seats": "0"
+                    }
+                  ],
+                  "Duration": 315,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "777",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": null
+                }
+              ]
+            ],
+            "LastTicketDate": "29May26",
+            "TicketAdvisory": null,
+            "AirlineCode": "AA",
+            "ValidatingAirline": "AA",
+            "FareClassification": {
+              "Color": "rgb(182,215,228) ",
+              "Type": "Publish"
+            }
+          },
+          {
+            "FareInclusions": [],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "IsUpsellAllowed": true,
+            "LastNameFormat": null,
+            "ResultIndex": "OB3[TBO]fwJGSTeeXI49HWQGQ4cq2vANQx20z89FV6puWgR8wpK0Oka5MU2pshYhBCsaDcUKjQ3KXZWAUpGn/WkQzWS2sSBOrvaXdzYwlow5yhaeH2acQOYx6ZNG3Qf5UFjPY82YVi4s89CAKi0zx5rmvLiHycpZoOg7TywUHNXuJJTNQlsyfeatv3ZadCWwEYIGTCG99PgdbESJO4JkZhu8PY10YWqOO18GmtRIDwo2o0uS6KtbHsKrafr1SEDFB1OZ95dZVQH3kl6CuN8/mb/TPNRcHlBTGINyFAg6lyXSaUGuyAs46/3NPgg/x+/rGjrhZJWGtWRYuJMtPa4PMVFFu+396wQ2+tsqHmKk8VZHWunq6YgvpilDVgqIMnBJIgOfMLXWmeNa6n39Y370Nzirgd4aSpXjCQWDoK298xLH/uek1F43StwQNU6jlaMsr4sYMBGzoqLp2803EuMaR7z2qOnFiopjKE/rzdYAT6sc1i/kL6ndwShj8H9Hq6W68acKlfeBGfsDShE+4w72bwPCCihzq/doG+2OqIRKO7uPPZnrmv5ZiU0xx0up+Bwn3UBPHWfwaLcITi8oIW6wfT2kVUU07xI5Jq1u+wf+YJX5ZQ7cuHTnr8rEEBnto6DiYxwC5E+8AobiSAwVizrMOy4TxENsbypREiSloAYfobA/TjA5UvsCZ2AfunowsAbw/fwUtasiRqMuQXn083FmJCI2w0jNgT+lXBKx52ziiIJgiRG4BqdA92FF4kOBaqxm1dr6Xxt6iFl7yWdO7wUZiGdDsKfukKg+/xpxFTrZ+mQ63aNWH5xEp2kjeBeXpuW8vgKyJkJPlmQpHX081XsvPoOIodrdsw==",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": null,
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": "Included",
+                  "CabinClass": 0,
+                  "SupplierFareClass": null,
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "SQ",
+                    "AirlineName": "Singapore Airlines",
+                    "FlightNumber": "4921",
+                    "FareClass": "",
+                    "OperatingCarrier": "AI"
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "DEL",
+                      "AirportName": "Indira Gandhi Airport",
+                      "Terminal": "3",
+                      "CityCode": "DEL",
+                      "CityName": "Delhi",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-07-15T02:00:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "LHR",
+                      "AirportName": "Heathrow",
+                      "Terminal": "2",
+                      "CityCode": "LON",
+                      "CityName": "London",
+                      "CountryCode": "GB",
+                      "CountryName": "United Kingdom"
+                    },
+                    "ArrTime": "2026-07-15T07:30:00"
+                  },
+                  "Availability": [
+                    {
+                      "Class": "Z",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "C",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "J",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "U",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "D",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "Y",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "B",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "E",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "M",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "H",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "W",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "Q",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "N",
+                      "Seats": "4"
+                    }
+                  ],
+                  "Duration": 330,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "359",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": null
+                }
+              ]
+            ],
+            "LastTicketDate": "29May26",
+            "TicketAdvisory": null,
+            "AirlineCode": "SQ",
+            "ValidatingAirline": "SQ"
+          },
+          {
+            "FareInclusions": [],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "IsUpsellAllowed": true,
+            "LastNameFormat": null,
+            "ResultIndex": "OB4[TBO]bVCW3h2v+a4lOsF5boYLcaWb54bQPpQoofHL0HpjIqQnEz5pFlE9KSvZ2sC2zPvpK8gVdNr5HRjDUHIgAnnFyMP9dc7AB4p5GlzYxA0xjTiyCt86Z/g1ZijiokOHmVW0T7fKPD1PuvifT6PHqaHAmmTvzqbw4Ws1tvHm5HnFJ1ig/tZ17vbIkaWz/hehsOZI4lIRFo+K51JrkmXN5ijJWcdLi+I25Yb2RDYq4r0fsdr8FDoCc7VEvdfGaouosI5mHI7/jM63vW26l+bnENV89Q2qutzFxBN5nsofGYsP0hxlE/dMyTt/aOOFEUsmjfIbyVO1jYKG8EiDMEUkN3kEEwxt93rEnEjr0hhcPltOiyKb3RyS/Lwo1fcBCv9vnXRCOEtkTkWkv1Qmordvj6Z5XMADxwtQ3bQ/6tV1E2uScF6//ZvKNJ2w3/LjdOqJkm7dVssuJq70OTNO0Okhrnys1WQwr5FOgz7ze/nks6Er12rIRwDXzcJVAKizafEL2+lnMig1LBETo+Z/eduPK5xirySZldOxOgBbUygTkE3W86iuhkBG+Eez+gBq6Bn3mrHD1Tyvjt+5j39JYUtcSVJrJUT+8EKbNA4EKqSxay8yfXDMBidDA2ER56FPsivSEtIgL0etfURZKRZOW7Y99MDjk0caeNvF/SdY9m98HAYVyfPEnQuC0Qg2bpG7gYkOp2W6GiF4+AkaPOfTCX+S8nh48Lg+BnFSxFXJewRHoKaVEB1WlDlhAfSIWzL3zbRUYPagy0mFm4WiI900ml/b7+ILfNPpMC9yallQiq8NNWNTx/F8eBlMC/3hXIuVAmhdDKtjQbHciv+e4OONV75BwAmSNQ==",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": "We are testing Airline remark node.",
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": "Included",
+                  "CabinClass": 0,
+                  "SupplierFareClass": "Publish",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "AI",
+                    "AirlineName": "Air India",
+                    "FlightNumber": "161",
+                    "FareClass": "",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "DEL",
+                      "AirportName": "Indira Gandhi Airport",
+                      "Terminal": "3",
+                      "CityCode": "DEL",
+                      "CityName": "Delhi",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-07-15T02:35:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "LHR",
+                      "AirportName": "Heathrow",
+                      "Terminal": "2",
+                      "CityCode": "LON",
+                      "CityName": "London",
+                      "CountryCode": "GB",
+                      "CountryName": "United Kingdom"
+                    },
+                    "ArrTime": "2026-07-15T15:35:00"
+                  },
+                  "Availability": [
+                    {
+                      "Class": "C",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "D",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "J",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Z",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "R",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "A",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "N",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "E",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "Y",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "B",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "M",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "H",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "K",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Q",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "V",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "W",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "G",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "L",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "U",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "T",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "S",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "P",
+                      "Seats": "9"
+                    }
+                  ],
+                  "Duration": 780,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "359",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": null
+                }
+              ]
+            ],
+            "LastTicketDate": "29May26",
+            "TicketAdvisory": null,
+            "AirlineCode": "AI",
+            "ValidatingAirline": "AI",
+            "FareClassification": {
+              "Color": "rgb(182,215,228) ",
+              "Type": "Publish"
+            }
+          },
+          {
+            "FareInclusions": [],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "IsUpsellAllowed": false,
+            "LastNameFormat": null,
+            "ResultIndex": "OB5[TBO]IK3nhzbzwL3SqwflxfMpr9j/hXuPY6VNqp/E1RQuckkz+JTC1T7weafAyuLWym9WYq/PDsgP6Kc8dGLzGlpIUxM75RJY5EG9VHTlcQXghqzk3ONeRmi3okumiboXzTGcWEmlg6YmXF8VMgWmNyBcOqYkIkTF+0Ss0Kdxdyq6SAFdDmBcrgxFur8UiOxPBezAJgRFdwzjHDsGfCIySbIdlYy9QIfLZlA2evn6PvQpTpT6yKN2eI0Sdx1RI72R9TieeYlXlGKjrnz7M156I4Bmf4LEAr5/yX3zj5VJWRACfsXbfz2PKB5t8QfYG2VkFZWAOZ6LTi09JJCwu9jspjab/XjS0vOOtvOLGNdxA6yrPPcKkMZfaZVniHrT51FH3sI8dNm+j0wvnKEIdtlkc4wFIgSuyvYdGrJylcmZvq3zcUdnlVxsHhTvbeG2LktHgtZswWg9rr5dopqtjAYS6AF0eTmWOZk0G0iFjaOMfebKWsHWGDAJFrB57RJVMlO8e7AnjnjH/ro0vU/2ucfc7I2qnHBp59ZL7OK7/G5VteF43syC0M37P/1nsp+7rqkVoNj/E7mH3CmMvph9jP5bRoCd1X0yZBj+sqCUcabC62I6raPpqxx1os9Nu472C1clKNhwMUP6qJNrk38cFfM/iogV3/BIYAt+atuyl6/lnONuP/RP9Y6KWmexwLXuHF48KQ8A+S9uqybHvcaTdtQOylMtWwHqYAXQmOLRCrNqjQBuaH/a7U3sSxGvpeHV5yn/qmRELGzEL73hlpiqPpKqxZgiXAgomwdGRCddt1JgWNP1N3+SsZIlFEIFVCeQXe7BD5x1",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": null,
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": "Included",
+                  "CabinClass": 0,
+                  "SupplierFareClass": "Publish",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "VS",
+                    "AirlineName": "Virgin Atlantic Airways",
+                    "FlightNumber": "303",
+                    "FareClass": "",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "DEL",
+                      "AirportName": "Indira Gandhi Airport",
+                      "Terminal": "3",
+                      "CityCode": "DEL",
+                      "CityName": "Delhi",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-07-15T04:35:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "LHR",
+                      "AirportName": "Heathrow",
+                      "Terminal": "3",
+                      "CityCode": "LON",
+                      "CityName": "London",
+                      "CountryCode": "GB",
+                      "CountryName": "United Kingdom"
+                    },
+                    "ArrTime": "2026-07-15T09:50:00"
+                  },
+                  "Availability": [
+                    {
+                      "Class": "J",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "C",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "D",
+                      "Seats": "4"
+                    },
+                    {
+                      "Class": "I",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "Z",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "W",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "S",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "H",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "K",
+                      "Seats": "8"
+                    },
+                    {
+                      "Class": "Y",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "B",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "R",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "L",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "U",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "M",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "E",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Q",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "X",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "N",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "O",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "V",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "T",
+                      "Seats": "9"
+                    }
+                  ],
+                  "Duration": 315,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "351",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": null
+                }
+              ]
+            ],
+            "LastTicketDate": "29May26",
+            "TicketAdvisory": null,
+            "AirlineCode": "VS",
+            "ValidatingAirline": "VS",
+            "FareClassification": {
+              "Color": "rgb(182,215,228) ",
+              "Type": "Publish"
+            }
+          },
+          {
+            "FareInclusions": [],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "IsUpsellAllowed": true,
+            "LastNameFormat": null,
+            "ResultIndex": "OB6[TBO]8MOmooOckvvrU4td4564mOjQ0ZjdJbUV/pAkGnfCsn5IkA0NYiSJkfHoPWSsK4occULaAdg8zAYpgZBWUrX/lPzY1k2sAdfLAhjc9g5nzFv5jlmXXmOScgiZovxTvLWuGhieczq+uVmuewv6NPPTXn9vZeEc5ERSAy8QNVGB8z7qAkil3qbWXhAbFhWq1CMczT4SUgfYRfTqmfdKjp26RxLukkZ07dcJEjWP+H9JEyhaJbfjE/yQ2nLFQ+glJ3lYQvadnxaEIYxfUNu6fyeMo7sutk8wamgzZSZaJxAE91XvERwWJDkVHUdf/d4/nLCNJ+rjhKmf7KZyj5BaMyxk6EBirB3FFMD2sQr4+0kYUjPf0kp6xTC6C/4KAqcWSeR+YUiPSONUUMv8HiOftmxEloz78c2IcYKBpm88utf5+85zUKvP14c1NGTQFy3tRnX4NB1QJDpzMAT9O3I22Xspoo7fVwKtuGdZWBnMDkDRqhvHs7g7EAmatvh7dcPUXceOq0pzM2GPxcgFe4uPETpyA1r3lSue/3lrEjgMHlHWEO9bhSoy4aKPl6vh5EmdC+UNfVfdBOVLXKZec9UV26hOBEvuek97E3KsRScdnDXavFDVdNNeZ1xcQ4aSpLpK9LwchrvNI2KBx/0H1mndKLJoz2/rxsNBb1yPG4Uzfj8b/2O9/YD1KuQE0iG4/5Y8GkY62ihhPuJYNZkQQpEU2r4DoftBmSJkFGR68V0q7hxnI78aQ/8+HmPrMGawsnkXVeuKqZVt6RCqY/+zZpgsUVvWkmAXxO8tfUec8iv3WQrt+dBYMYKkKC5RQ7Pajo9DkFahts1vqap9Sv/45U9ubXQ1nw==",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": "We are testing Airline remark node.",
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": "Included",
+                  "CabinClass": 0,
+                  "SupplierFareClass": "Publish",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "AI",
+                    "AirlineName": "Air India",
+                    "FlightNumber": "111",
+                    "FareClass": "",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "DEL",
+                      "AirportName": "Indira Gandhi Airport",
+                      "Terminal": "3",
+                      "CityCode": "DEL",
+                      "CityName": "Delhi",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-07-15T06:00:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "LHR",
+                      "AirportName": "Heathrow",
+                      "Terminal": "2",
+                      "CityCode": "LON",
+                      "CityName": "London",
+                      "CountryCode": "GB",
+                      "CountryName": "United Kingdom"
+                    },
+                    "ArrTime": "2026-07-15T11:30:00"
+                  },
+                  "Availability": [
+                    {
+                      "Class": "C",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "D",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "J",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Z",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "R",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "A",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "N",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "E",
+                      "Seats": "8"
+                    },
+                    {
+                      "Class": "Y",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "B",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "M",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "H",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "K",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Q",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "V",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "W",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "G",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "L",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "U",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "T",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "S",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "P",
+                      "Seats": "9"
+                    }
+                  ],
+                  "Duration": 330,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "359",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": null
+                }
+              ]
+            ],
+            "LastTicketDate": "29May26",
+            "TicketAdvisory": null,
+            "AirlineCode": "AI",
+            "ValidatingAirline": "AI",
+            "FareClassification": {
+              "Color": "rgb(182,215,228) ",
+              "Type": "Publish"
+            }
+          },
+          {
+            "FareInclusions": [],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "IsUpsellAllowed": false,
+            "LastNameFormat": null,
+            "ResultIndex": "OB7[TBO]Ff2V5gtlVspu3iw7jYB2kuDIQbIYi89KRHajI79LGR5jpe1hlXFnCiIU/wULcD/UwNPqQm0+NPcTAFtvEEm+ZBlD1zY0cP1J2w3Z35m68HhAC82VPG5Vv0yGa5pcXToezr8YHMSbm/9bop4LLpFq0mnwQrvnXaXg04ggmAUfQsscVlhYtu/8ZtshAWdG4EpLy9CQ5fw01ZAGxIWrCuIsAhoO6DHWXrDp2DeZs61zh9QRJunBfPP2U+ulcIajQk8Ti6tR3XtJJdncOvJHl6jEVHzQQZn32ovyVUPqOTYs8ItKyAW1kxWwbNTub8xI3+mBd15B1IaqgktAIZXK57rPjm7ErmepWzFZ2TklV1xIqADLdUzmqeW9tTBd3QWqqqCubAktZFnv4Xyu7G/GAyOYIMCASQuyLw5r5OjtMrcG8LWDnwxyvE/O5ESLVf5nL/rnk6o22Emw+54ShOge3Oeo/P/x9QsmiWYF6UfnklXCJMJDlRFm7hYMqX+a9vtESazcVZ1U1tsOdN388FqWvHh1yGQDzLjaN0wJh5IybcOlMc+WATt9brpYuu/3Y2a0Pp0FMai3Mk0BlDG/IbAaYVSmfGgKsdcimx/U/i1j3qU8PQMFgVkJCkHEPrjtNmrD/VpALfdOzx2gxT5v+2zgujWwlAJNSwA3t0XwQe/b1fdxzZq82gg+LsXyYM6VjMsPzu6/Z3ZPmjNHP+kae9SmeTpScbeR27K5zB4gHCSOa5XtWOWEhnGp1mx9W36v8s0ypS+H2/gjkkpZu6P2Gi+/ZV/YrQryayYccu08XV4YE32LeVqC6MVTgSJxpzfQXG1jv36y/rtc9WBEU4fQSWvmkxLeXQ==",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": null,
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": "Included",
+                  "CabinClass": 0,
+                  "SupplierFareClass": "Publish",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "6X",
+                    "AirlineName": "SNCF",
+                    "FlightNumber": "256",
+                    "FareClass": "",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "DEL",
+                      "AirportName": "Indira Gandhi Airport",
+                      "Terminal": "",
+                      "CityCode": "DEL",
+                      "CityName": "Delhi",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-07-15T06:55:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "LHR",
+                      "AirportName": "Heathrow",
+                      "Terminal": "",
+                      "CityCode": "LON",
+                      "CityName": "London",
+                      "CountryCode": "GB",
+                      "CountryName": "United Kingdom"
+                    },
+                    "ArrTime": "2026-07-15T11:05:00"
+                  },
+                  "Availability": [
+                    {
+                      "Class": "F",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "A",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Z",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "J",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "D",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "I",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "U",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Y",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "B",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "H",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "K",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "M",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "L",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "V",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "N",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "O",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Q",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "S",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "G",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "X",
+                      "Seats": "9"
+                    }
+                  ],
+                  "Duration": 250,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "777",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": null
+                }
+              ]
+            ],
+            "LastTicketDate": "29May26",
+            "TicketAdvisory": null,
+            "AirlineCode": "6X",
+            "ValidatingAirline": "6X",
+            "FareClassification": {
+              "Color": "rgb(182,215,228) ",
+              "Type": "Publish"
+            }
+          },
+          {
+            "FareInclusions": [],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "IsUpsellAllowed": false,
+            "LastNameFormat": null,
+            "ResultIndex": "OB8[TBO]Oy3vwSh1UXRnxjer8jMMmEEzg8coo0mPeTwhGo80iFpE4kzehV5XO5P06NoUBFyb/qCN4gk+eV4PuM0lWlvEr1CiGiDPeHhXN5LhOm78ZkOoUUYJHLQXmlOT+z7ofOA317825K0UgvtueRDOLekYCU9X926wyyn1ZdrsRk81s5G8Wk0is3ltQ4lss4F47LO/9FSpENbjHQOWg7qJWdJ4sumXBkaGi8YUAlgxi9jQJjrduu9OIq3kInql5TDF9sPsBKTZDWLWekKE9wcQzfdRJIWtJxJPf400UJIskhIoPAQm7N16IqsyZj7WTh5Ccva00e4oaz3e1S8Mq8NTqzHgICsj9xDx1Pbl8zGWeeknIPBdsqF4h98/m7Hg8tjDGYUZ86VTuIWAcSOen3OpzMLkl3LRJCklNwCHo2PsxN9ppUjLYuBk/GySfYktzjGAY82NC4MzPR53r75IOP7BjvoWDo5rpDubnfjME3Wz0Bb/PbL/qYKQfHZWINT9T4thts0X+DADcDs/NBTqJdqiSjK5lvYtjFqiFN4bkwFNjdeA946CpQwtM82xMlRnsrTvKCKGI428bAXTDV5C9yBBW/xTH3DeAgEedoPrKCXpTjVGRc9zWydpiVXR/b4Aabdce2h4JaqRPEh2qb1lVr4HoM1hfpouhIkfxvkeqDCtHEDmuUe8dvDqfEHUXUS4BdqUzd+qioNMfN2Ye9tfYOA92ZNYM/n34JZMeVaIbZ4BXpohrrawW1Dow8EdYu81uPQcFOYJ2b6jLuOwU8dBuLPbYy8Prrs02Se5o8nytp3dKONmm88vXDmtvXS2lfB0HgJANtdku78n7MafsZV5U4NLVWNbSg==",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": "Aam janta airlines.",
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": "Included",
+                  "CabinClass": 0,
+                  "SupplierFareClass": "Publish",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "BA",
+                    "AirlineName": "British Airways",
+                    "FlightNumber": "256",
+                    "FareClass": "",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "DEL",
+                      "AirportName": "Indira Gandhi Airport",
+                      "Terminal": "3",
+                      "CityCode": "DEL",
+                      "CityName": "Delhi",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-07-15T10:05:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "LHR",
+                      "AirportName": "Heathrow",
+                      "Terminal": "5",
+                      "CityCode": "LON",
+                      "CityName": "London",
+                      "CountryCode": "GB",
+                      "CountryName": "United Kingdom"
+                    },
+                    "ArrTime": "2026-07-15T15:20:00"
+                  },
+                  "Availability": [
+                    {
+                      "Class": "J",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "C",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "D",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "R",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "I",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "W",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "E",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "T",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Y",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "B",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "H",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "K",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "M",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "L",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "V",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "S",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "N",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "Q",
+                      "Seats": "9"
+                    }
+                  ],
+                  "Duration": 315,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "788",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": null
+                }
+              ]
+            ],
+            "LastTicketDate": "29May26",
+            "TicketAdvisory": null,
+            "AirlineCode": "BA",
+            "ValidatingAirline": "BA",
+            "FareClassification": {
+              "Color": "rgb(182,215,228) ",
+              "Type": "Publish"
+            }
+          },
+          {
+            "FareInclusions": [],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "IsUpsellAllowed": false,
+            "LastNameFormat": null,
+            "ResultIndex": "OB9[TBO]FpF9g+088zuir6akMgHGIzQHKf/mv42PdL/sFzEuuoqhdVRX4uVWAyCNSn2TkeP3hBs0qVNKYrmJHGSqEJCC/UyF3wGURbNOaLDBWCVZCSSrHDbCozn+u5aUnj/lyaa4h8LLWdHoX6Ni9DPGQaMw046rPVBAR6ySVhGmwy7bt7eqJc9KL4xH7RIZ/f7WEpGiTNfYUJJOrPpkqhpdydeMKnAJtidE6rwiVyxmOa0PGwBBiSy71qj+WEGCwGmg9ziuaqFBCUY7ZagXo+9pFDpg4JTpyXkrtYYeSJvCNA9pdn6js1NA1Y4Gz/udo4RPNOEwGW2HwS7Lv9FRej2WCSFuDZfHaHnuJwg8pV0PKbQOamSB4ac+7FWYjt0Jt3tWSIsWITKrulrW118Y3GXABr4wd5TAjN8AUlM3yYByDMy/Rn78rNj1ZxggSQfqd/0W2ACqMphESLbY0D0QViv2UytYOm/aX8EkYJUhmRq3nVRe2/9kNp15ZKZMWqBFlsXC4I8RWvR/zbOzV3gCP9bsfgQ+JuaDd/QnmOM9p/b/DTr1ofqmg5jTY3Nbt7JpzKEtF7RJpIGnbn2M2e4gElmcF2Dm1VKY3CE4SxUv00vWhEMsezyyJj9vJg9hdM7SrLMRh3xNthza46YFxkdlecXTyb5RHeEdP04lfug1dedB+m+F7HE2RESBr27RQeIv3RTioZeqRxOFZflemB10tCC2luWM/uPtdQWKT4J69xiR4xI+ZaB/AAo++Qin+D4J3tghNbzXn4DoAcqFE4fyMXuAJLa927DtFQyvxBMvtUkvo+ja/E4g6DQmD8BI+V3NZI6HraQd9UmRSqQRyAUHEBMkXSq6xQ==",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": null,
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": "Included",
+                  "CabinClass": 0,
+                  "SupplierFareClass": "Publish",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "AA",
+                    "AirlineName": "American Airlines ",
+                    "FlightNumber": "6664",
+                    "FareClass": "",
+                    "OperatingCarrier": "BA"
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "DEL",
+                      "AirportName": "Indira Gandhi Airport",
+                      "Terminal": "3",
+                      "CityCode": "DEL",
+                      "CityName": "Delhi",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-07-15T10:05:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "LHR",
+                      "AirportName": "Heathrow",
+                      "Terminal": "5",
+                      "CityCode": "LON",
+                      "CityName": "London",
+                      "CountryCode": "GB",
+                      "CountryName": "United Kingdom"
+                    },
+                    "ArrTime": "2026-07-15T15:20:00"
+                  },
+                  "Availability": [
+                    {
+                      "Class": "C",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "J",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "R",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "D",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "I",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "W",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "P",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "Y",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "B",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "H",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "K",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "M",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "L",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "G",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "V",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "S",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "N",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "Q",
+                      "Seats": "7"
+                    },
+                    {
+                      "Class": "O",
+                      "Seats": "0"
+                    }
+                  ],
+                  "Duration": 315,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "788",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": null
+                }
+              ]
+            ],
+            "LastTicketDate": "29May26",
+            "TicketAdvisory": null,
+            "AirlineCode": "AA",
+            "ValidatingAirline": "AA",
+            "FareClassification": {
+              "Color": "rgb(182,215,228) ",
+              "Type": "Publish"
+            }
+          },
+          {
+            "FareInclusions": [],
+            "FirstNameFormat": null,
+            "IsBookableIfSeatNotAvailable": false,
+            "IsExclusiveFare": false,
+            "IsFreeMealAvailable": false,
+            "IsHoldAllowedWithSSR": false,
+            "IsHoldMandatoryWithSSR": false,
+            "IsUpsellAllowed": false,
+            "LastNameFormat": null,
+            "ResultIndex": "OB10[TBO]74KRwMncy5cken244geOBX1hBx6D2OAL6sOia59D+K5+e0SynDBw9pUxoVjmGMGSUY2dXMTqDxLOI68QElw4GLcZz0SUfpKpstt75+8ImotQlVDjeNhIMcz/fWGQy0zkO/mP91eA/+IF9Jgkv9mi86X2AM0E4haJB0eXQQ3WZ3b6bPoHcpK6BkRVs/D12QonqUrDVU9tM/dwDYHftePg/xlNgYEx2F/441VOhvTET8H+rCNIee+VLYS9rLnpOKrF3YXbCK1A6MI4wiABkpfpDxHpVyhGkovchq2cDAp46d7krZt0dIlNH1qXTlRbqLsQs1EbrnxIMEOS9ngKLnK1ngLHahoEGX83Luff65zg2AqTvUwNSaZugImRBoE4w4S1lr7ptkTQ6QsgaZVO/8jtL94EW8AvANG+CNlROwoKVbYdtsmZFo4yeDvQR/iaozFYd9YQiIWksiiVy6HrnYag1wW25cr8cz7e6HKJy41I+eptBjlF2iGMMYzVy9huWHcFQi0QiTb3c3PEcHIOC2YoqOdTjPDny/mKe7ha3QxxDZ3dO07+nEwYR/ZBy6OkyJ9Lgzspxo5G936ZP/03h39uLVpoGFR9OizJRYdLm6rUplXHqJ/e+MqRCYVxqYjE3w/aODOpYApShROAB7oaUgb/N75lMiNvgGvkWqwJXXxJGyi7wQXb4Jw0ih3JZyZ7A5biR7C8KyINSkKtuZV9FoMhArFin7G3KnYfNKhCU592F/zCaHnuKkPTgSSpbk8hzERV2Fi7Od2UFC4aUOgjmS9ZkvsHvRKnKjA7QihW5DJ5L1NyzYvYlWn/bV4s+fK4DkPgzMqAwgOLCWtpIYjlIJMjow==",
+            "Source": 4,
+            "IsLCC": false,
+            "IsRefundable": true,
+            "IsPanRequiredAtBook": false,
+            "IsPanRequiredAtTicket": false,
+            "IsPassportRequiredAtBook": false,
+            "IsPassportRequiredAtTicket": false,
+            "GSTAllowed": true,
+            "IsCouponAppilcable": true,
+            "IsGSTMandatory": false,
+            "AirlineRemark": null,
+            "IsPassportFullDetailRequiredAtBook": false,
+            "ResultFareType": "RegularFare",
+            "Segments": [
+              [
+                {
+                  "Baggage": null,
+                  "CabinBaggage": "Included",
+                  "CabinClass": 0,
+                  "SupplierFareClass": "Publish",
+                  "TripIndicator": 1,
+                  "SegmentIndicator": 1,
+                  "Airline": {
+                    "AirlineCode": "VS",
+                    "AirlineName": "Virgin Atlantic Airways",
+                    "FlightNumber": "301",
+                    "FareClass": "",
+                    "OperatingCarrier": ""
+                  },
+                  "Origin": {
+                    "Airport": {
+                      "AirportCode": "DEL",
+                      "AirportName": "Indira Gandhi Airport",
+                      "Terminal": "3",
+                      "CityCode": "DEL",
+                      "CityName": "Delhi",
+                      "CountryCode": "IN",
+                      "CountryName": "India"
+                    },
+                    "DepTime": "2026-07-15T11:05:00"
+                  },
+                  "Destination": {
+                    "Airport": {
+                      "AirportCode": "LHR",
+                      "AirportName": "Heathrow",
+                      "Terminal": "3",
+                      "CityCode": "LON",
+                      "CityName": "London",
+                      "CountryCode": "GB",
+                      "CountryName": "United Kingdom"
+                    },
+                    "ArrTime": "2026-07-15T16:15:00"
+                  },
+                  "Availability": [
+                    {
+                      "Class": "J",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "C",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "D",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "I",
+                      "Seats": "6"
+                    },
+                    {
+                      "Class": "Z",
+                      "Seats": "1"
+                    },
+                    {
+                      "Class": "W",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "S",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "H",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "K",
+                      "Seats": "6"
+                    },
+                    {
+                      "Class": "Y",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "B",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "R",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "L",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "U",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "M",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "E",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "Q",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "X",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "N",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "O",
+                      "Seats": "0"
+                    },
+                    {
+                      "Class": "V",
+                      "Seats": "9"
+                    },
+                    {
+                      "Class": "T",
+                      "Seats": "9"
+                    }
+                  ],
+                  "Duration": 310,
+                  "GroundTime": 0,
+                  "Mile": 0,
+                  "StopOver": false,
+                  "FlightInfoIndex": "",
+                  "StopPoint": "",
+                  "StopPointArrivalTime": "0001-01-01T00:00:00",
+                  "StopPointDepartureTime": "0001-01-01T00:00:00",
+                  "Craft": "789",
+                  "Remark": null,
+                  "IsETicketEligible": true,
+                  "FlightStatus": "Confirmed",
+                  "Status": "",
+                  "FareClassification": null
+                }
+              ]
+            ],
+            "LastTicketDate": "29May26",
+            "TicketAdvisory": null,
+            "AirlineCode": "VS",
+            "ValidatingAirline": "VS",
+            "FareClassification": {
+              "Color": "rgb(182,215,228) ",
+              "Type": "Publish"
+            }
+          }
+        ]
+      ]
+    }
+  }
+}

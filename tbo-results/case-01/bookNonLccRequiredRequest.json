@@ -1,0 +1,90 @@
+{
+  "TokenId": "92a7d26e-b9ef-43a0-96a1-c893f488fe66",
+  "EndUserIp": "1.1.1.1",
+  "ResultIndex": "OB1[TBO]39Adg1dHEtti2WCfjMvLT2Y8d2RXYpHc+k6JRZ2MZHwNQKmfdhWkQh7oihWgMnOWxJ+tT+LPYlWzipMTN5LRczfvUWKB7r7En/ebjakEOYGgWrzPCbymMGOCuIJcUj9x4qeFlDr0yL3jaOxYH93NPJr5VGKxkpY+6eShHcT3fHp0IRzpqWPyP0HMmV83H4TcRJA+O2cJ/eenPe9o16Xb70bqpDEAag5TYx8LHg35pYluSB6nO3mO2QMCqFhV3m88Yxe6wZ2YKAsYy+glj8kxeKK8SCb1kvDtCimAAwB2KYQwPPgJyRD0IYE6xsQILJ6CXtZkvSZKdSDPAeItw6Z9xgCEKLV/jIzfQCmhQejgaLss8BL4t/0XwqlhMNkaIJ0XKJoKphP81e2B8rOQIoCn+BZn2ueTXYQfdTzQpPv8ZGUV4Kbo7W/41ACUDcQ4Zc8YXRU6TW6ZOCNb3msa+WlQwSuvWZwCe+8RW+BV6Xj1tZQGIheo37Bh18fWAmii3ka9brYeR4z3SUA6UtneMgRkOzFv33QnY3KOGUZfNy+dB2XbTRUuz96NkFC3EeBS/lkqdRWe8ebH3KdD++Sdv1qvBr1LA+Be+OJ0GGmQ1ern/vLLMyVL87hySw0qr546HnGNZUk5NJPJAC7O0xBlBt34GCOQfezzU7DavDizH3L0bMr1RYuTIBeqp7G+KCa0p1oQ1sAFD5tsi289W64/B1DSlh91suRMmTQtH1ZRXW43dQ/OwyxNWj+CYungPEWkQ929UNFRlzEbRpRzYr7CO1q0oJuYbZdpm4DLz7oPXPRYTufUVvrJlGxZnwFvVLXYTb2coq0f++jXNmZxb6yj9dItprURyCGFSbAtk8rwNSnhAfzNIBmaQYEfSk8yzg0DCXVomtU7jQuvGwfCaRmGzM1NyFVkWIpBMYntfxvi8nfQAIfnTQF0iOPL4Bv4Ovjm9FeonNqhoeLfrGTtgqqW9zZGiFT5AN2RArX8Q+OEu5ywR8wUFDqviPpdE9mjJOh2Qk2Fj90vQsQ7D0hUoRCy5oeHm+Wt+sYRhrBHNXbah7m/dMocqWtAhCt63Xczhh7s6Wt5sz2FKNrJWAtvf5Fm21iFl9UNicWwi2o9qyoyuft/vx4OuZvHMmLHK+KDnQLXLHiH4yBxaNvbtxbmOuSfCwfwY9xjXDwdPXb9QZ4sYttJooo3u7liXpA6m+fJTlSfX2RtVm/TJK9WVdGsryWJssjNDlO2Bf+gZPEQmmZqOq0IviY=",
+  "TraceId": "e6f3539f-393f-4b5c-b007-0248ff5e9004",
+  "Passengers": [
+    {
+      "Title": "Mr",
+      "FirstName": "RAHUL",
+      "LastName": "SHARMA",
+      "PaxType": 1,
+      "DateOfBirth": "1985-03-15T00:00:00",
+      "Gender": 1,
+      "PassportNo": "",
+      "AddressLine1": "45 Prithviraj Road",
+      "City": "New Delhi",
+      "CountryCode": "IN",
+      "CountryName": "India",
+      "Nationality": "IN",
+      "Email": "rahul.sharma@example.com",
+      "ContactNo": "9810001234",
+      "IsLeadPax": true,
+      "GSTCompanyAddress": "",
+      "GSTCompanyContactNumber": "",
+      "GSTCompanyName": "",
+      "GSTNumber": "",
+      "GSTCompanyEmail": "",
+      "Fare": {
+        "Currency": "INR",
+        "BaseFare": 5032,
+        "Tax": 1819,
+        "TaxBreakup": [
+          {
+            "key": "K3",
+            "value": 304
+          },
+          {
+            "key": "YQTax",
+            "value": 698
+          },
+          {
+            "key": "YR",
+            "value": 340
+          },
+          {
+            "key": "INTax",
+            "value": 241
+          },
+          {
+            "key": "OtherTaxes",
+            "value": 236
+          }
+        ],
+        "YQTax": 698,
+        "AdditionalTxnFeeOfrd": 0,
+        "AdditionalTxnFeePub": 0,
+        "PGCharge": 0,
+        "OtherCharges": 0,
+        "ChargeBU": [
+          {
+            "key": "TBOMARKUP",
+            "value": 0
+          },
+          {
+            "key": "GLOBALPROCUREMENTCHARGE",
+            "value": 0
+          },
+          {
+            "key": "CONVENIENCECHARGE",
+            "value": 0
+          },
+          {
+            "key": "OTHERCHARGE",
+            "value": 0
+          }
+        ],
+        "Discount": 0,
+        "PublishedFare": 6851,
+        "CommissionEarned": 30.95,
+        "PLBEarned": 0,
+        "IncentiveEarned": 0,
+        "OfferedFare": 6832.43,
+        "TdsOnCommission": 12.38,
+        "TdsOnPLB": 0,
+        "TdsOnIncentive": 0,
+        "ServiceFee": 0
+      }
+    }
+  ]
+}

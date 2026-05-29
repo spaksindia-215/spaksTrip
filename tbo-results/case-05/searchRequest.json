@@ -1,0 +1,28 @@
+{
+  "TokenId": "3fdb6963-5392-424e-a565-2371091ea818",
+  "EndUserIp": "1.1.1.1",
+  "AdultCount": "2",
+  "ChildCount": "2",
+  "InfantCount": "1",
+  "DirectFlight": "false",
+  "OneStopFlight": "false",
+  "JourneyType": "2",
+  "PreferredAirlines": null,
+  "Segments": [
+    {
+      "Origin": "DEL",
+      "Destination": "LHR",
+      "FlightCabinClass": "2",
+      "PreferredDepartureTime": "2026-07-01T00:00:00",
+      "PreferredArrivalTime": "2026-07-01T00:00:00"
+    },
+    {
+      "Origin": "LHR",
+      "Destination": "DEL",
+      "FlightCabinClass": "2",
+      "PreferredDepartureTime": "2026-07-15T00:00:00",
+      "PreferredArrivalTime": "2026-07-15T00:00:00"
+    }
+  ],
+  "Sources": null
+}
