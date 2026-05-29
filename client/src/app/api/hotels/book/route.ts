@@ -24,6 +24,10 @@ export async function POST(request: NextRequest) {
       return err("roomsDetails must be a non-empty array.", 400);
     }
 
+    if (body?.isCorporate && !body?.corporatePan) {
+      return err("corporatePan is required when isCorporate=true.", 400);
+    }
+
     for (let i = 0; i < body.roomsDetails.length; i++) {
       const room = body.roomsDetails[i];
       if (!Array.isArray(room?.passengers) || room.passengers.length === 0) {
@@ -41,8 +45,16 @@ export async function POST(request: NextRequest) {
         if (!p.firstName || p.firstName.length < 2 || p.firstName.length > 25) {
           return err(`passenger firstName must be 2-25 characters.`, 400);
         }
+        // TBO requirement: firstName must contain only letters and spaces (no special chars, hyphens, apostrophes)
+        if (!/^[a-zA-Z\s]+$/.test(p.firstName)) {
+          return err(`passenger firstName can only contain letters and spaces.`, 400);
+        }
         if (!p.lastName || p.lastName.length < 2 || p.lastName.length > 25) {
           return err(`passenger lastName must be 2-25 characters.`, 400);
+        }
+        // TBO requirement: lastName must contain only letters and spaces (no special chars, hyphens, apostrophes)
+        if (!/^[a-zA-Z\s]+$/.test(p.lastName)) {
+          return err(`passenger lastName can only contain letters and spaces.`, 400);
         }
         // Age validation: required for children, optional for adults
         if (p.paxType === 2 && (!p.age || p.age < 0 || p.age > 17)) {
@@ -64,22 +76,40 @@ export async function POST(request: NextRequest) {
       arrivalTransportType: body.arrivalTransportType,
       arrivalTransportInfoId: body.arrivalTransportInfoId,
       arrivalTransportTime: body.arrivalTransportTime,
+      distributionType: body.distributionType ?? "b2c",
+      isCorporate: body.isCorporate,
+      corporatePan: body.corporatePan,
     };
 
     const result = await tboBookHotel(input);
     return NextResponse.json({ success: true, data: result });
   } catch (e) {
     const stack = e instanceof Error ? e.stack : String(e);
+    const errorMessage = e instanceof Error ? e.message : String(e);
+    const isTimeout = errorMessage.includes("timed out") || errorMessage.includes("timeout") || errorMessage.includes("120");
+
     console.error("[API /api/hotels/book] FAILED");
     console.error("  bookingCode:", bookingCode);
+    console.error("  isTimeout:", isTimeout);
     console.error("  stack:", stack);
 
     if (e instanceof TboBookingFailedError) {
-      return err(e.message, 422);
+      // For timeout errors, return 408 (Request Timeout) instead of 422
+      const statusCode = isTimeout ? 408 : 422;
+      return err(e.message, statusCode);
     }
     if (e instanceof TboError) {
       return err(`TBO error (${e.code}): ${e.message}`, 502);
     }
+
+    // Timeout errors should use 408 status code
+    if (isTimeout) {
+      return err(
+        errorMessage || "Booking request timed out. Please verify your booking status using the reference ID provided.",
+        408,
+      );
+    }
+
     const message = e instanceof Error ? e.message : "Hotel booking failed";
     return err(message, 500);
   }

@@ -346,7 +346,7 @@ export interface TboLccMealItem {
 }
 
 export interface TboPassengerRequest {
-  Title: string;         // "Mr", "Mrs", "Ms", "Mstr", "Miss"
+  Title: string;         // FLIGHTS ONLY: "Mr", "Mrs", "Ms", "Mstr", "Miss". HOTELS ONLY: "Mr", "Mrs", "Ms"
   FirstName: string;
   LastName: string;
   PaxType: number;       // 1=ADT, 2=CHD, 3=INF

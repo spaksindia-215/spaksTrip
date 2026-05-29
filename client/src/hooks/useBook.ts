@@ -13,6 +13,8 @@ export interface UseBookState {
   loading: boolean;
   error: string | null;
   result: BookResult | null;
+  timedOut: boolean; // Indicates booking request timed out but status unknown
+  clientRefId?: string; // Reference ID for timeout recovery
 }
 
 export function useBook() {
@@ -20,6 +22,7 @@ export function useBook() {
     loading: false,
     error: null,
     result: null,
+    timedOut: false,
   });
 
   const makeBooking = async (params: {
@@ -30,7 +33,7 @@ export function useBook() {
     guestNationality?: string;
     clientReferenceId?: string;
   }): Promise<BookResult | null> => {
-    setState({ loading: true, error: null, result: null });
+    setState({ loading: true, error: null, result: null, timedOut: false });
 
     try {
       // Build passengers array from guests
@@ -60,6 +63,20 @@ export function useBook() {
         }),
       });
 
+      // Handle timeout response (408 status code)
+      if (response.status === 408) {
+        const error = await response.json();
+        const timedOutState: UseBookState = {
+          loading: false,
+          error: error.error || "Booking request timed out. Verifying status...",
+          result: null,
+          timedOut: true,
+          clientRefId: params.clientReferenceId,
+        };
+        setState(timedOutState);
+        return null;
+      }
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error || "Booking failed");
@@ -75,11 +92,11 @@ export function useBook() {
         status: data.bookingStatus || "Unknown",
       };
 
-      setState({ loading: false, error: null, result });
+      setState({ loading: false, error: null, result, timedOut: false });
       return result;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Booking request failed";
-      setState({ loading: false, error: errorMessage, result: null });
+      setState({ loading: false, error: errorMessage, result: null, timedOut: false });
       return null;
     }
   };

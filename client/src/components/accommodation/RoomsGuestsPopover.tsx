@@ -1,6 +1,8 @@
 "use client";
 
+import { useMemo } from "react";
 import Popover from "@/components/ui/Popover";
+import { OCCUPANCY_LIMITS, validateOccupancy } from "@/lib/validators/occupancyValidation";
 
 type Props = {
   rooms: number;
@@ -65,6 +67,30 @@ function Counter({
 export default function RoomsGuestsPopover({ rooms, adults, children, onRoomsChange, onAdultsChange, onChildrenChange }: Props) {
   const summary = `${rooms} Room${rooms > 1 ? "s" : ""} · ${adults + children} Guest${adults + children !== 1 ? "s" : ""}`;
 
+  // Calculate dynamic max values based on TBO limits
+  const maxAdultsTotal = rooms * OCCUPANCY_LIMITS.MAX_ADULTS_PER_ROOM;
+  const maxChildrenTotal = rooms * OCCUPANCY_LIMITS.MAX_CHILDREN_PER_ROOM;
+
+  // Validate current occupancy
+  const occupancyValidation = useMemo(
+    () => validateOccupancy(rooms, adults, children),
+    [rooms, adults, children],
+  );
+
+  const handleAdultsChange = (value: number) => {
+    // Ensure we don't exceed max adults per room
+    if (value <= maxAdultsTotal) {
+      onAdultsChange(value);
+    }
+  };
+
+  const handleChildrenChange = (value: number) => {
+    // Ensure we don't exceed max children per room
+    if (value <= maxChildrenTotal) {
+      onChildrenChange(value);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-1">
       <span className="text-[12px] font-medium text-ink-muted">Rooms & Guests</span>
@@ -91,14 +117,50 @@ export default function RoomsGuestsPopover({ rooms, adults, children, onRoomsCha
         {({ close }) => (
           <div className="w-72 p-4">
             <div className="divide-y divide-border-soft">
-              <Counter label="Rooms" value={rooms} min={1} max={8} onChange={onRoomsChange} />
-              <Counter label="Adults" sub="Age 18+" value={adults} min={1} max={16} onChange={onAdultsChange} />
-              <Counter label="Children" sub="Age 0–17" value={children} min={0} max={8} onChange={onChildrenChange} />
+              <Counter
+                label="Rooms"
+                value={rooms}
+                min={1}
+                max={OCCUPANCY_LIMITS.MAX_ROOMS}
+                onChange={onRoomsChange}
+              />
+              <Counter
+                label="Adults"
+                sub="Age 18+ (max 10 per room)"
+                value={adults}
+                min={1}
+                max={maxAdultsTotal}
+                onChange={handleAdultsChange}
+              />
+              <Counter
+                label="Children"
+                sub="Age 0–17 (max 6 per room)"
+                value={children}
+                min={0}
+                max={maxChildrenTotal}
+                onChange={handleChildrenChange}
+              />
             </div>
+
+            {/* Validation Message */}
+            {!occupancyValidation.valid && (
+              <div className="mt-3 p-2 rounded-lg bg-danger-50 border border-danger-200">
+                <p className="text-[12px] text-danger-700 font-medium">{occupancyValidation.error}</p>
+              </div>
+            )}
+
+            {/* Warning for High Occupancy */}
+            {occupancyValidation.valid && occupancyValidation.warning && (
+              <div className="mt-3 p-2 rounded-lg bg-amber-50 border border-amber-200">
+                <p className="text-[12px] text-amber-700 font-medium">{occupancyValidation.warning}</p>
+              </div>
+            )}
+
             <button
               type="button"
               onClick={close}
-              className="mt-3 w-full rounded-lg bg-brand-600 py-2 text-[13px] font-semibold text-white hover:bg-brand-700 transition-colors"
+              disabled={!occupancyValidation.valid}
+              className="mt-3 w-full rounded-lg bg-brand-600 py-2 text-[13px] font-semibold text-white hover:bg-brand-700 transition-colors disabled:bg-ink-muted disabled:cursor-not-allowed"
             >
               Done
             </button>

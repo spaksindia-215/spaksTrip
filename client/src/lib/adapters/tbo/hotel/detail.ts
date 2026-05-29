@@ -13,6 +13,7 @@ import {
   mapBedType,
   mapCancelPolicies,
   type TboSearchCancelPolicy,
+  type DistributionType,
 } from "./hotelUtils";
 import type { TboStaticHotelDetail } from "../types";
 import type { Hotel, Room } from "@/lib/mock/hotels";
@@ -33,6 +34,8 @@ interface TboDetailSearchRoom {
   DayRates?: Array<Array<{ BasePrice: number }>>;
   TotalFare: number;
   TotalTax?: number;
+  ExtraGuestCharges?: number;
+  RecommendedSellingRate?: string;
   Inclusion?: string;
   RoomPromotion?: string[][];
   CancelPolicies?: TboDetailCancelPolicy[];
@@ -56,6 +59,9 @@ function mapRoom(r: TboDetailSearchRoom): Room {
   const name = r.Name?.[0] ?? "Room";
   const nightlyRate = r.DayRates?.[0]?.[0]?.BasePrice;
   const roomPromotion = r.RoomPromotion?.flat().filter(Boolean);
+  const rsp = r.RecommendedSellingRate ? Number(r.RecommendedSellingRate) : undefined;
+  // B2C rule: display price = RSP when present; never expose TotalFare (net/wholesale) directly
+  const displayPrice = (rsp && rsp > 0) ? rsp : r.TotalFare;
   return {
     id: r.BookingCode,
     name,
@@ -63,7 +69,7 @@ function mapRoom(r: TboDetailSearchRoom): Room {
     maxOccupancy: 2,
     bedType: mapBedType(name),
     sizeSqm: 0,
-    basePrice: r.TotalFare,
+    basePrice: displayPrice,
     amenities: r.Inclusion ? mapAmenities([r.Inclusion]) : [],
     refundable: r.IsRefundable,
     breakfast: (r.MealType ?? "").toLowerCase().includes("breakfast"),
@@ -71,6 +77,7 @@ function mapRoom(r: TboDetailSearchRoom): Room {
     totalFare: r.TotalFare,
     totalTax: r.TotalTax,
     nightlyRate: Number.isFinite(nightlyRate) ? nightlyRate : undefined,
+    recommendedSellingRate: (rsp && rsp > 0) ? rsp : undefined,
     cancelPolicies: mapCancelPolicies(r.CancelPolicies),
     roomPromotion: roomPromotion && roomPromotion.length > 0 ? roomPromotion : undefined,
     roomId: r.RoomID,
@@ -141,6 +148,7 @@ export async function tboGetHotelDetail(
   adults: number,
   children: number,
   rooms: number,
+  distributionType: DistributionType = "b2c",
 ): Promise<Hotel | null> {
   const roomCount = Math.max(1, rooms);
   const paxRooms = Array.from({ length: roomCount }, () => ({
@@ -167,7 +175,7 @@ export async function tboGetHotelDetail(
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      Authorization: basicAuthHeader(),
+      Authorization: basicAuthHeader(distributionType),
     },
     body: JSON.stringify(reqBody),
     cache: "no-store",

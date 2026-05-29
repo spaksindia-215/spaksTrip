@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tboGenerateVoucher } from "@/lib/adapters/tbo/hotel/generateVoucher";
 import type { GenerateVoucherInput } from "@/lib/adapters/tbo/hotel/generateVoucher";
+import { validateVoucherDeadline } from "@/lib/adapters/tbo/hotel/voucherDeadline";
 import { TboError, TboBookingFailedError } from "@/lib/adapters/tbo/errors";
 
 function err(message: string, status: number) {
@@ -9,6 +10,7 @@ function err(message: string, status: number) {
 
 // POST /api/hotels/voucher
 // Required: bookingId (integer)
+// Optional: lastVoucherDate (ISO date string) — deadline check
 // Optional: isCorporate, endUserIp
 // Optional: roomsDetails[].passengers[].{ paxId, pan }  — only when PAN was deferred at Book time
 export async function POST(request: NextRequest) {
@@ -17,6 +19,16 @@ export async function POST(request: NextRequest) {
 
     if (body?.bookingId == null) {
       return err("bookingId is required.", 400);
+    }
+
+    // Validate voucher deadline if provided
+    if (body.lastVoucherDate) {
+      try {
+        validateVoucherDeadline(body.lastVoucherDate);
+      } catch (deadlineErr) {
+        const msg = deadlineErr instanceof Error ? deadlineErr.message : "Voucher deadline exceeded";
+        return err(msg, 410); // 410 Gone - deadline passed
+      }
     }
 
     const bookingId = Number(body.bookingId);

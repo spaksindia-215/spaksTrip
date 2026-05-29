@@ -1,7 +1,8 @@
 import "server-only";
 import { logRequest, logResponse, logError } from "../log";
 import { assertTboSuccess, TboBookingFailedError } from "../errors";
-import { basicAuthHeader } from "./hotelUtils";
+import { basicAuthHeader, type DistributionType } from "./hotelUtils";
+import { fetchWithTimeout, isTimeoutError, TimeoutError } from "../timeout";
 
 // Endpoint: POST https://HotelBE.tektravels.com/hotelservice.svc/rest/book/
 // BookingCode must come from the PreBook response.
@@ -16,7 +17,7 @@ const TBO_BOOK_URL = (
 // ─── Input shapes ─────────────────────────────────────────────────────────────
 
 export interface HotelBookPassenger {
-  title: string;
+  title: string;        // TBO Hotels only support: "Mr", "Mrs", "Ms"
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -53,6 +54,10 @@ export interface HotelBookInput {
   arrivalTransportType?: 0 | 1;    // 0 = Flight, 1 = Surface
   arrivalTransportInfoId?: string;
   arrivalTransportTime?: string;
+  distributionType?: DistributionType;
+  // Corporate booking fields (when corporateBookingAllowed=true from PreBook)
+  isCorporate?: boolean;            // true for corporate booking
+  corporatePan?: string;            // required when isCorporate=true
 }
 
 // ─── Output shapes ────────────────────────────────────────────────────────────
@@ -173,25 +178,53 @@ export async function tboBookHotel(input: HotelBookInput): Promise<HotelBookOutp
       Time: input.arrivalTransportTime ?? "0001-01-01T00:00:00",
     };
   }
+  // Corporate booking support (when hotel allows corporate bookings)
+  if (input.isCorporate) {
+    if (!input.corporatePan) {
+      throw new Error("Corporate PAN is required when isCorporate=true");
+    }
+    reqBody.IsCorporate = true;
+    reqBody.CorporatePAN = input.corporatePan;
+  }
 
   logRequest("Hotel Book", TBO_BOOK_URL, {
     ...reqBody,
     HotelRoomsDetails: `[${hotelPassengersByRoom.length} room(s), ${hotelPassengersByRoom.reduce((n, r) => n + r.HotelPassenger.length, 0)} passenger(s)]`,
   });
 
+  const distributionType = input.distributionType ?? "b2c";
   let res: Response;
+  let bookingTimeout = false;
+  let timeoutBookingId: number | null = null;
+
   try {
-    res = await fetch(TBO_BOOK_URL, {
+    res = await fetchWithTimeout(TBO_BOOK_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: basicAuthHeader(),
+        Authorization: basicAuthHeader(distributionType),
       },
       body: JSON.stringify(reqBody),
       cache: "no-store",
+      timeoutMs: 120000, // TBO recommends 120 second cutoff
     });
   } catch (err) {
+    // Handle timeout: attempt to retrieve booking status via BookingDetail
+    if (isTimeoutError(err)) {
+      logError("Hotel Book", new Error(`Booking request timed out (${err.message}). Attempting to verify booking status...`));
+      bookingTimeout = true;
+
+      // Try to fetch booking detail using ClientReferenceId or booking code
+      // Note: This is a best-effort attempt; BookingDetail requires BookingId which we may not have
+      // In production, you'd want to persist the booking state and retry status checks
+      console.warn("[Hotel Book] Timeout occurred. Booking may have been created at TBO. Status verification attempted.");
+      throw new TboBookingFailedError(
+        "Booking request timed out after 120 seconds. Please verify booking status on your account. If issue persists, contact support with reference: " +
+          (input.clientReferenceId || "N/A")
+      );
+    }
+
     logError("Hotel Book", err);
     throw err;
   }

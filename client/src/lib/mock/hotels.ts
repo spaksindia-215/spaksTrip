@@ -61,6 +61,19 @@ export type CancelPolicy = {
   cancellationCharge: number;
 };
 
+export type Supplement = {
+  index: string;
+  type: string;
+  description: string;
+  price: number;
+  currency: string; // May differ from account default currency (hotel's local currency)
+};
+
+export type RateCondition = {
+  index?: string;
+  text: string; // Rate condition details (e.g., cancellation, modification rules)
+};
+
 export type Room = {
   id: string;
   name: string;
@@ -80,6 +93,10 @@ export type Room = {
   // B2C minimum selling price from TBO — displayed price must never go below this
   recommendedSellingRate?: number;
   cancelPolicies?: CancelPolicy[];
+  // Mandatory supplements (paid directly at hotel, may be in hotel's local currency)
+  supplements?: Supplement[];
+  // Rate conditions & promotions (from PreBook response)
+  rateConditions?: string[];
   roomPromotion?: string[];
   roomId?: string[];
   mealType?: string;
@@ -130,15 +147,18 @@ export type SearchFilters = {
 };
 
 export type HotelSearchInput = {
-  cityCode: string;
+  cityCode?: string;          // For city-based search (alternative to hotelCodes)
+  hotelCodes?: string[];      // For hotel code-based search (alternative to cityCode)
   checkIn: string;
   checkOut: string;
   rooms: number;
   adults: number;
   children: number;
+  childrenAges?: number[]; // Ages of children (0-17) for pricing accuracy
   guestNationality?: string;
   isDetailedResponse?: boolean;
   filters?: SearchFilters;
+  distributionType?: "b2c" | "b2b";
 };
 
 const HOTEL_NAMES = [
@@ -307,12 +327,13 @@ function buildHotel(rng: () => number, cityCode: string, index: number): Hotel {
 }
 
 export function generateHotels(input: HotelSearchInput): Hotel[] {
-  const seed = seedFromString(`${input.cityCode}-${input.checkIn}`);
+  const cityCode = input.cityCode || input.hotelCodes?.[0] || "DEFAULT";
+  const seed = seedFromString(`${cityCode}-${input.checkIn}`);
   const rng = mulberry32(seed);
   const count = rngInt(rng, 12, 20);
   const hotels: Hotel[] = [];
   for (let i = 0; i < count; i++) {
-    hotels.push(buildHotel(rng, input.cityCode, i));
+    hotels.push(buildHotel(rng, cityCode, i));
   }
   return hotels;
 }

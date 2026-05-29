@@ -15,9 +15,9 @@ export function validateGuestName(name: string): { valid: boolean; error?: strin
     return { valid: false, error: "Name must be at most 25 characters" };
   }
 
-  // Only allow letters, spaces, hyphens, and apostrophes (common in names)
-  if (!/^[a-zA-Z\s\-']+$/.test(trimmed)) {
-    return { valid: false, error: "Name can only contain letters, spaces, hyphens, and apostrophes" };
+  // TBO API requires: letters and spaces only (no special characters, hyphens, apostrophes, etc.)
+  if (!/^[a-zA-Z\s]+$/.test(trimmed)) {
+    return { valid: false, error: "Name can only contain letters and spaces" };
   }
 
   return { valid: true };

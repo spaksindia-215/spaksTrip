@@ -10,6 +10,11 @@ export type HotelGuest = {
   firstName: string; // 2-25 chars, no special characters
   lastName: string; // 2-25 chars, no special characters
   age?: number; // Optional; required for child passengers
+  // Identity documents (TBO requirement based on nationality and destination)
+  pan?: string; // Required: Indian nationals booking international hotels
+  passport?: string; // Required: Foreign nationals booking domestic hotels
+  passportIssueDate?: string; // ISO format: YYYY-MM-DD
+  passportExpDate?: string; // ISO format: YYYY-MM-DD
 };
 
 export type HotelPreBookInfo = {
@@ -18,6 +23,8 @@ export type HotelPreBookInfo = {
   roomPromotion?: string[];
   cancelPolicies?: Array<{ index: string; fromDate: string; chargeType: string; cancellationCharge: number }>;
   rateConditions?: string[];
+  // Mandatory supplements paid at hotel (may be in hotel's local currency)
+  supplements?: Array<{ index: string; type: string; description: string; price: number; currency: string }>;
   netAmount: number;
   panMandatory: boolean;
   passportMandatory: boolean;
@@ -42,11 +49,16 @@ export type HotelBooking = {
   taxes: number;
   status: "SELECTED" | "GUEST" | "PAYMENT" | "CONFIRMED";
   guestNationality: string;
-  createdAt: string;
+  createdAt: string; // When booking started (Search was performed)
   confirmedAt?: string;
   bookingReference?: string;
   // PreBook data
   preBook?: HotelPreBookInfo;
+  // Booking type: true = generate voucher immediately, false = hold booking
+  isVoucherBooking?: boolean; // TBO Hold functionality: false = hold, true = voucher now
+  // Session management (TBO session valid for 40 minutes from Search)
+  sessionStartedAt: string; // ISO timestamp when Search was performed
+  sessionExpiresAt: string; // ISO timestamp when session expires (40 min from search)
 };
 
 type State = {
@@ -68,7 +80,7 @@ type Actions = {
   setGuests: (guests: HotelGuest[]) => void;
   setContact: (contact: ContactInfo) => void;
   setAddOns: (addOns: Partial<HotelBooking["addOns"]>) => void;
-  setPreBook: (preBook: HotelPreBookInfo) => void;
+  setPreBook: (preBook: HotelPreBookInfo, netAmount: number) => void;
   confirm: (ref: string) => void;
   clearCurrent: () => void;
 };
@@ -96,6 +108,8 @@ export const useHotelBookingStore = create<State & Actions>()(
         const nights = nightsBetween(checkIn, checkOut);
         const addOns: HotelBooking["addOns"] = { breakfast: room.breakfast, insurance: false };
         const { taxes, total } = computeHotelTotals(room, nights, rooms, addOns);
+        const now = new Date();
+        const sessionExpiresAt = new Date(now.getTime() + 40 * 60 * 1000); // 40 minutes from now
         set({
           current: {
             id: `HTL-BK-${Date.now().toString(36)}`,
@@ -114,7 +128,9 @@ export const useHotelBookingStore = create<State & Actions>()(
             taxes,
             status: "SELECTED",
             guestNationality,
-            createdAt: new Date().toISOString(),
+            createdAt: now.toISOString(),
+            sessionStartedAt: now.toISOString(),
+            sessionExpiresAt: sessionExpiresAt.toISOString(),
           },
         });
       },
@@ -129,8 +145,20 @@ export const useHotelBookingStore = create<State & Actions>()(
           const { taxes, total } = computeHotelTotals(s.current.room, s.current.nights, s.current.rooms, addOns);
           return { current: { ...s.current, addOns, taxes, totalPrice: total } };
         }),
-      setPreBook: (preBook) =>
-        set((s) => (s.current ? { current: { ...s.current, preBook, status: "PAYMENT" } } : s)),
+      setPreBook: (preBook, netAmount) =>
+        set((s) => {
+          if (!s.current) return s;
+          // If netAmount differs from current totalPrice, update it (PreBook price is final)
+          const updatedTotal = netAmount ?? s.current.totalPrice;
+          return {
+            current: {
+              ...s.current,
+              preBook,
+              totalPrice: updatedTotal,
+              status: "PAYMENT",
+            },
+          };
+        }),
       confirm: (ref) =>
         set((s) => {
           if (!s.current) return s;

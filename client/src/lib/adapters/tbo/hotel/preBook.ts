@@ -1,7 +1,7 @@
 import "server-only";
 import { logRequest, logResponse, logError } from "../log";
 import { assertTboSuccess } from "../errors";
-import { basicAuthHeader, mapCancelPolicies, type TboSearchCancelPolicy } from "./hotelUtils";
+import { basicAuthHeader, mapCancelPolicies, mapSupplements, type TboSearchCancelPolicy, type TboSupplement, type DistributionType } from "./hotelUtils";
 import type { CancelPolicy } from "@/lib/mock/hotels";
 
 // Endpoint: POST {TBOHolidays}/PreBook (Basic Auth, agency creds).
@@ -40,6 +40,8 @@ interface TboPreBookRoom {
   IsRefundable: boolean;
   WithTransfers?: boolean;
   Amenities?: string[];
+  // Mandatory supplements (paid at hotel, may be in hotel's local currency)
+  Supplements?: TboSupplement[];
   // Validation fields returned by PreBook (not in Search)
   PanMandatory?: boolean;
   PassportMandatory?: boolean;
@@ -132,6 +134,8 @@ export interface PreBookRoom {
   isRefundable: boolean;
   withTransfers: boolean;
   amenities: string[];
+  // Mandatory supplements (paid directly at hotel, may be in hotel's local currency)
+  supplements?: Array<{ index: string; type: string; description: string; price: number; currency: string }>;
   // Per-room validation (subset that may differ per room)
   panMandatory: boolean;
   passportMandatory: boolean;
@@ -194,6 +198,7 @@ function mapRoom(r: TboPreBookRoom): PreBookRoom {
     isRefundable: r.IsRefundable,
     withTransfers: r.WithTransfers ?? false,
     amenities: r.Amenities ?? [],
+    supplements: r.Supplements ? mapSupplements(r.Supplements) : undefined,
     panMandatory: r.PanMandatory ?? false,
     passportMandatory: r.PassportMandatory ?? false,
     corporateBookingAllowed: r.CorporateBookingAllowed ?? false,
@@ -239,6 +244,7 @@ function mapValidationInfo(raw: TboPreBookValidationInfo | undefined): PreBookVa
 export interface HotelPreBookInput {
   bookingCode: string;
   paymentMode?: string;
+  distributionType?: DistributionType;
 }
 
 export async function tboPreBookHotel(
@@ -252,6 +258,7 @@ export async function tboPreBookHotel(
 
   logRequest("Hotel PreBook", url, reqBody);
 
+  const distributionType = input.distributionType ?? "b2c";
   let res: Response;
   try {
     res = await fetch(url, {
@@ -259,7 +266,7 @@ export async function tboPreBookHotel(
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: basicAuthHeader(),
+        Authorization: basicAuthHeader(distributionType),
       },
       body: JSON.stringify(reqBody),
       cache: "no-store",

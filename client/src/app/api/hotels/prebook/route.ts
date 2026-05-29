@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
     const result = await tboPreBookHotel({
       bookingCode,
       paymentMode: body?.paymentMode,
+      distributionType: body?.distributionType ?? "b2c",
     });
 
     return NextResponse.json({ success: true, data: result });

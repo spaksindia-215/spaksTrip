@@ -44,11 +44,13 @@ export function sortHotels(hotels: Hotel[], by: HotelSortBy): Hotel[] {
 
 export async function searchHotels(
   input: HotelSearchInput,
+  filters?: HotelFilters,
 ): Promise<{ hotels: Hotel[]; minPrice: number; maxPrice: number }> {
+  const searchInput = { ...input, filters };
   const res = await fetch("/api/hotels/search", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
+    body: JSON.stringify(searchInput),
   });
 
   let json: { success: boolean; data?: { hotels: Hotel[]; minPrice: number; maxPrice: number }; error?: string };

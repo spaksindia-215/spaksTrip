@@ -1,6 +1,7 @@
 import "server-only";
 import { logRequest, logResponse, logError } from "../log";
 import { assertTboSuccess } from "../errors";
+import { fetchWithTimeout, isTimeoutError } from "../timeout";
 
 // Endpoint: POST https://HotelBE.tektravels.com/hotelservice.svc/rest/SendChangeRequest
 // Endpoint: POST https://HotelBE.tektravels.com/hotelservice.svc/rest/GetChangeRequestStatus
@@ -131,7 +132,8 @@ export async function tboSendChangeRequest(
 
   let res: Response;
   try {
-    res = await fetch(TBO_SEND_CHANGE_URL, {
+    // Use 120 second timeout for cancel request per TBO recommendation
+    res = await fetchWithTimeout(TBO_SEND_CHANGE_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -140,8 +142,18 @@ export async function tboSendChangeRequest(
       },
       body: JSON.stringify(reqBody),
       cache: "no-store",
+      timeoutMs: 120000, // TBO cancel cutoff: 120 seconds
     });
   } catch (err) {
+    if (isTimeoutError(err)) {
+      logError(
+        "Hotel SendChangeRequest",
+        new Error(
+          `Cancel request timed out (120 seconds). Booking may or may not be cancelled. ` +
+          `Recommend verifying via BookingDetail API with bookingId: ${input.bookingId}`
+        )
+      );
+    }
     logError("Hotel SendChangeRequest", err);
     throw err;
   }

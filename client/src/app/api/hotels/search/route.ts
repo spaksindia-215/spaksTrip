@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tboSearchHotelsHolidays } from "@/lib/adapters/tbo/hotel/searchHolidays";
 import { TboNoResultsError, TboError } from "@/lib/adapters/tbo/errors";
+import { validateOccupancy, OCCUPANCY_LIMITS } from "@/lib/validators/occupancyValidation";
 import type { HotelSearchInput, SearchFilters } from "@/lib/mock/hotels";
 
 function err(message: string, status: number) {
@@ -28,20 +29,43 @@ export async function POST(request: NextRequest) {
     body = await request.json();
     console.log("[API /api/hotels/search] payload:", JSON.stringify(body));
 
-    if (!body?.cityCode) return err("cityCode is required.", 400);
+    // Either cityCode OR hotelCodes must be provided, not both
+    const hasCityCode = !!body?.cityCode;
+    const hasHotelCodes = Array.isArray(body?.hotelCodes) && body.hotelCodes.length > 0;
+
+    if (!hasCityCode && !hasHotelCodes) {
+      return err("Either cityCode or hotelCodes (non-empty array) is required.", 400);
+    }
+    if (hasCityCode && hasHotelCodes) {
+      return err("Provide either cityCode or hotelCodes, not both.", 400);
+    }
+
     if (!body?.checkIn || !body?.checkOut) return err("checkIn and checkOut are required.", 400);
     if (body.checkIn >= body.checkOut) return err("checkOut must be after checkIn.", 400);
 
+    const rooms = body.rooms ?? 1;
+    const adults = body.adults ?? 1;
+    const children = body.children ?? 0;
+
+    // TBO Occupancy Validation: max 8 rooms, max 10 adults per room, max 6 children per room
+    const occupancyValidation = validateOccupancy(rooms, adults, children);
+    if (!occupancyValidation.valid) {
+      return err(occupancyValidation.error || "Invalid occupancy configuration.", 400);
+    }
+
     const input: HotelSearchInput = {
       cityCode: body.cityCode,
+      hotelCodes: body.hotelCodes,
       checkIn: body.checkIn,
       checkOut: body.checkOut,
-      rooms: body.rooms ?? 1,
-      adults: body.adults ?? 1,
-      children: body.children ?? 0,
+      rooms,
+      adults,
+      children,
+      childrenAges: body.childrenAges,
       guestNationality: body.guestNationality,
       isDetailedResponse: body.isDetailedResponse,
       filters: body.filters as SearchFilters | undefined,
+      distributionType: body.distributionType ?? "b2c",
     };
 
     const result = await tboSearchHotelsHolidays(input);

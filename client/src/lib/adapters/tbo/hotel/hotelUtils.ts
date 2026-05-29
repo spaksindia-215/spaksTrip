@@ -1,15 +1,33 @@
 import "server-only";
-import type { Amenity, CancelPolicy } from "@/lib/mock/hotels";
+import type { Amenity, CancelPolicy, Supplement } from "@/lib/mock/hotels";
 import type { Room } from "@/lib/mock/hotels";
 
-export function basicAuthHeader(): string {
-  const user = process.env.TBO_HOLIDAYS_USER_NAME;
-  const pass = process.env.TBO_HOLIDAYS_PASSWORD;
-  if (!user || !pass) {
-    throw new Error(
-      "TBO Holidays agency credentials missing. Set TBO_HOLIDAYS_USER_NAME and TBO_HOLIDAYS_PASSWORD in .env.local",
-    );
+export type DistributionType = "b2c" | "b2b";
+
+export function basicAuthHeader(distributionType: DistributionType = "b2c"): string {
+  let user: string | undefined;
+  let pass: string | undefined;
+
+  if (distributionType === "b2b") {
+    // B2B channel: wholesale pricing (TotalFare)
+    user = process.env.TBO_HOLIDAYS_B2B_USER_NAME;
+    pass = process.env.TBO_HOLIDAYS_B2B_PASSWORD;
+    if (!user || !pass) {
+      throw new Error(
+        "TBO Holidays B2B credentials missing. Set TBO_HOLIDAYS_B2B_USER_NAME and TBO_HOLIDAYS_B2B_PASSWORD in .env.local",
+      );
+    }
+  } else {
+    // B2C channel: retail pricing (RecommendedSellingRate)
+    user = process.env.TBO_HOLIDAYS_USER_NAME;
+    pass = process.env.TBO_HOLIDAYS_PASSWORD;
+    if (!user || !pass) {
+      throw new Error(
+        "TBO Holidays B2C credentials missing. Set TBO_HOLIDAYS_USER_NAME and TBO_HOLIDAYS_PASSWORD in .env.local",
+      );
+    }
   }
+
   return "Basic " + Buffer.from(`${user}:${pass}`).toString("base64");
 }
 
@@ -76,5 +94,24 @@ export function mapCancelPolicies(raw: TboSearchCancelPolicy[] | undefined): Can
     fromDate: p.FromDate,
     chargeType: p.ChargeType,
     cancellationCharge: p.CancellationCharge,
+  }));
+}
+
+export interface TboSupplement {
+  Index: number | string;
+  Type: string;
+  Description: string;
+  Price: number;
+  Currency: string;
+}
+
+export function mapSupplements(raw: TboSupplement[] | undefined): Supplement[] {
+  if (!raw) return [];
+  return raw.map((s) => ({
+    index: String(s.Index),
+    type: s.Type,
+    description: s.Description,
+    price: s.Price,
+    currency: s.Currency, // May differ from account default currency
   }));
 }

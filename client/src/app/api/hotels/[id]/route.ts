@@ -24,6 +24,7 @@ export async function GET(
       return err("checkIn and checkOut query params are required.", 400);
     }
 
+    const distributionType = sp.get("distributionType") ?? "b2c";
     const hotel = await tboGetHotelDetail(
       decodeURIComponent(id),
       checkIn,
@@ -31,6 +32,7 @@ export async function GET(
       adults,
       children,
       rooms,
+      distributionType as "b2c" | "b2b",
     );
 
     if (!hotel) return err("Hotel not found.", 404);

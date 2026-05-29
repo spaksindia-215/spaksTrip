@@ -7,12 +7,15 @@ import Footer from "@/components/landing/Footer";
 import HotelBookingStepper from "@/components/accommodation/HotelBookingStepper";
 import HotelAmenitiesGrid from "@/components/accommodation/HotelAmenitiesGrid";
 import RoomCard from "@/components/accommodation/RoomCard";
+import PriceChangeModal from "@/components/accommodation/PriceChangeModal";
+import SessionTimeoutModal from "@/components/accommodation/SessionTimeoutModal";
 import { getHotel } from "@/services/hotels";
 import { useHotelBookingStore } from "@/state/hotelBookingStore";
 import type { HotelPreBookInfo } from "@/state/hotelBookingStore";
 import { useToast } from "@/components/ui/Toast";
 import type { Hotel, Room } from "@/lib/mock/hotels";
 import Skeleton from "@/components/ui/Skeleton";
+import { validateSession } from "@/lib/validators/sessionValidation";
 
 export default function HotelDetailPage() {
   return (
@@ -58,6 +61,26 @@ function HotelDetailInner() {
   const [hotel, setHotel] = useState<Hotel | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeImg, setActiveImg] = useState(0);
+  const [priceChangeState, setPriceChangeState] = useState<{
+    isOpen: boolean;
+    originalPrice: number;
+    newPrice: number;
+    changePercent: number;
+    preBookInfo: HotelPreBookInfo | null;
+    hotelId: string;
+  }>({
+    isOpen: false,
+    originalPrice: 0,
+    newPrice: 0,
+    changePercent: 0,
+    preBookInfo: null,
+    hotelId: "",
+  });
+  const [sessionTimeoutState, setSessionTimeoutState] = useState({
+    isOpen: false,
+    minutesRemaining: 0,
+    secondsRemaining: 0,
+  });
 
   useEffect(() => {
     getHotel(decodeURIComponent(id), { checkIn, checkOut, rooms, adults, children }).then((h) => {
@@ -74,7 +97,11 @@ function HotelDetailInner() {
     }
 
     // Initialize booking with Search data first
-    startHotelBooking({ hotel, room, checkIn, checkOut, rooms, adults, children, guestNationality });
+    const bookingData = { hotel, room, checkIn, checkOut, rooms, adults, children, guestNationality };
+    startHotelBooking(bookingData);
+
+    // We'll check session validity after getting current from store
+    // Note: current will update after startHotelBooking, so we need to use the new booking's session time
 
     // Get booking code from room (from Search response)
     const bookingCode = (room as any).id; // Using room ID as booking code
@@ -112,6 +139,7 @@ function HotelDetailInner() {
         roomPromotion: firstRoom.roomPromotion,
         cancelPolicies: firstRoom.cancelPolicies,
         rateConditions: preBookData.rateConditions,
+        supplements: firstRoom.supplements,
         netAmount: firstRoom.netAmount || firstRoom.totalFare,
         panMandatory: firstRoom.panMandatory,
         passportMandatory: firstRoom.passportMandatory,
@@ -119,30 +147,62 @@ function HotelDetailInner() {
         paxNameMaxLength: firstRoom.paxNameMaxLength,
       };
 
-      setPreBook(preBookInfo);
+      // Detect price change: compare Search price vs PreBook price
+      // Search price: room.basePrice × nights × rooms + taxes
+      const searchTotalPrice = Math.round(room.basePrice * nights * rooms * 1.12); // Approx with 12% tax
+      const preBookNetAmount = preBookInfo.netAmount;
+      const priceChanged = Math.abs(searchTotalPrice - preBookNetAmount) > 100; // Allow 100 INR variance
 
-      // Detect price change
-      const priceChanged = preBookInfo.netAmount !== room.basePrice;
       if (priceChanged) {
-        toast.push({
-          title: "Price Updated",
-          description: `₹${room.basePrice.toLocaleString()} → ₹${preBookInfo.netAmount.toLocaleString()}`,
-          tone: "warn",
+        // Show modal and wait for user confirmation before proceeding
+        const changePercent = ((preBookNetAmount - searchTotalPrice) / searchTotalPrice) * 100;
+        setPriceChangeState({
+          isOpen: true,
+          originalPrice: searchTotalPrice,
+          newPrice: preBookNetAmount,
+          changePercent,
+          preBookInfo,
+          hotelId: id,
         });
+      } else {
+        // No price change, proceed directly
+        setPreBook(preBookInfo, preBookNetAmount);
+        router.push(`/hotel/${encodeURIComponent(id)}/guest?${sp.toString()}`);
       }
-
-      // Proceed to guest page with PreBook data
-      router.push(`/hotel/${encodeURIComponent(id)}/guest?${sp.toString()}`);
     } catch (error) {
       console.error("PreBook error:", error);
       toast.push({ title: "Failed to lock in rate. Please try again.", tone: "warn" });
     }
   };
 
+  const handlePriceChangeAccept = () => {
+    if (priceChangeState.preBookInfo) {
+      setPreBook(priceChangeState.preBookInfo, priceChangeState.newPrice);
+      setPriceChangeState({ ...priceChangeState, isOpen: false });
+      router.push(`/hotel/${encodeURIComponent(id)}/guest?${sp.toString()}`);
+    }
+  };
+
+  const handlePriceChangeReject = () => {
+    setPriceChangeState({ ...priceChangeState, isOpen: false });
+    // Clear current booking and stay on detail page
+    // User can select a different room
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-surface-muted">
       <Header />
       <HotelBookingStepper active="room" />
+
+      {/* Price Change Confirmation Modal */}
+      <PriceChangeModal
+        isOpen={priceChangeState.isOpen}
+        originalPrice={priceChangeState.originalPrice}
+        newPrice={priceChangeState.newPrice}
+        changePercent={priceChangeState.changePercent}
+        onAccept={handlePriceChangeAccept}
+        onReject={handlePriceChangeReject}
+      />
 
       <main className="flex-1">
         <div className="mx-auto max-w-5xl px-4 md:px-6 py-6">

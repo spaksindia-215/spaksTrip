@@ -14,6 +14,7 @@ import { useToast } from "@/components/ui/Toast";
 import { useBook } from "@/hooks/useBook";
 
 type Method = "card" | "upi" | "netbanking" | "wallet";
+type BookingOption = "hold" | "voucher"; // Hold = defer voucher, Voucher = confirm immediately
 
 export default function HotelPaymentPage() {
   return (
@@ -43,6 +44,7 @@ function PaymentInner() {
   const { loading, error, makeBooking } = useBook();
 
   const [method, setMethod] = useState<Method>("upi");
+  const [bookingOption, setBookingOption] = useState<BookingOption>("hold"); // Default: Hold booking
   const [cardNumber, setCardNumber] = useState("");
   const [cardName, setCardName] = useState("");
   const [exp, setExp] = useState("");
@@ -81,14 +83,32 @@ function PaymentInner() {
     const result = await makeBooking({
       bookingCode: current.preBook!.bookingCode,
       netAmount: current.preBook!.netAmount,
-      isVoucherBooking: false,
+      isVoucherBooking: bookingOption === "voucher", // true = voucher now, false = hold
       guests: current.guests,
       guestNationality: current.guestNationality,
       clientReferenceId: current.id,
     });
 
     if (!result) {
-      toast.push({ title: error || "Booking failed. Please try again.", tone: "warn" });
+      // Check if timeout occurred
+      if (loading === false && error) {
+        toast.push({
+          title: "Booking Request Timed Out",
+          description: error,
+          tone: "warn",
+        });
+        // Show additional timeout recovery message
+        toast.push({
+          title: "Next Steps",
+          description:
+            `1. Check your email for confirmation\n` +
+            `2. Check your account dashboard\n` +
+            `3. Reference ID: ${current.id}`,
+          tone: "info",
+        });
+      } else {
+        toast.push({ title: error || "Booking failed. Please try again.", tone: "warn" });
+      }
       return;
     }
 
@@ -132,6 +152,41 @@ function PaymentInner() {
                   </p>
                 </div>
               </div>
+
+              {/* Booking Option: Hold vs Voucher */}
+              <section className="rounded-xl bg-blue-50 border border-blue-200 p-4 shadow-(--shadow-xs)">
+                <h2 className="text-[15px] font-bold text-blue-900 mb-3">Booking Option</h2>
+                <div className="flex flex-col gap-3">
+                  <label className="flex items-start gap-3 p-3 rounded-lg bg-white border-2 cursor-pointer transition-colors"
+                    style={{ borderColor: bookingOption === "hold" ? "rgb(59, 130, 246)" : "rgb(229, 231, 235)" }}>
+                    <input type="radio" name="booking-option" value="hold" checked={bookingOption === "hold"}
+                      onChange={() => setBookingOption("hold")} className="mt-1" />
+                    <div className="flex-1">
+                      <p className="text-[13px] font-semibold text-ink">Hold Booking</p>
+                      <p className="text-[12px] text-ink-soft mt-1">
+                        Keep booking on hold. Generate voucher later before the deadline.
+                      </p>
+                      {current?.preBook?.cancelPolicies && current.preBook.cancelPolicies.length > 0 && (
+                        <p className="text-[11px] text-blue-700 mt-2 font-medium">
+                          ⏰ Generate voucher by: {current.preBook.cancelPolicies[0]?.fromDate}
+                        </p>
+                      )}
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-3 p-3 rounded-lg bg-white border-2 cursor-pointer transition-colors"
+                    style={{ borderColor: bookingOption === "voucher" ? "rgb(34, 197, 94)" : "rgb(229, 231, 235)" }}>
+                    <input type="radio" name="booking-option" value="voucher" checked={bookingOption === "voucher"}
+                      onChange={() => setBookingOption("voucher")} className="mt-1" />
+                    <div className="flex-1">
+                      <p className="text-[13px] font-semibold text-ink">Confirm Now (Generate Voucher)</p>
+                      <p className="text-[12px] text-ink-soft mt-1">
+                        Generate voucher immediately and confirm your booking.
+                      </p>
+                    </div>
+                  </label>
+                </div>
+              </section>
 
               {/* Payment methods */}
               <section className="rounded-xl bg-white border border-border-soft shadow-(--shadow-xs) overflow-hidden">

@@ -10,11 +10,14 @@ import Checkbox from "@/components/ui/Checkbox";
 import Button from "@/components/ui/Button";
 import GuestDetailsForm from "@/components/accommodation/GuestDetailsForm";
 import PreBookDetailsSection from "@/components/accommodation/PreBookDetailsSection";
+import SessionTimeoutModal from "@/components/accommodation/SessionTimeoutModal";
 import { formatINR } from "@/lib/format";
 import { useHotelBookingStore, type HotelGuest } from "@/state/hotelBookingStore";
 import { useToast } from "@/components/ui/Toast";
 import { useParams } from "next/navigation";
 import { validateGuestName, validateGuestAge, validateNoDuplicateFirstNames } from "@/lib/validators/guestValidation";
+import { getIdentityRequirement, validatePAN, validatePassport, validatePassportExpiry } from "@/lib/validators/nationalityValidation";
+import { validateSession } from "@/lib/validators/sessionValidation";
 
 function buildGuestList(roomCount: number, existingGuests: HotelGuest[] = []): HotelGuest[] {
   if (existingGuests.length > 0) {
@@ -70,10 +73,40 @@ function GuestInner() {
   const [insurance, setInsurance] = useState(() => current?.addOns.insurance ?? false);
   const [submitting, setSubmitting] = useState(false);
   const [guestErrors, setGuestErrors] = useState<Array<Partial<Record<keyof HotelGuest, string>>>>([]);
+  const [sessionStatus, setSessionStatus] = useState(() =>
+    current ? validateSession(current.sessionExpiresAt) : null
+  );
+  const sessionCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!current) router.replace("/hotel");
   }, [current, router]);
+
+  // Monitor session timeout
+  useEffect(() => {
+    if (!current) return;
+
+    const checkSession = () => {
+      const status = validateSession(current.sessionExpiresAt);
+      setSessionStatus(status);
+
+      if (status.isExpired) {
+        // Session expired, show modal and prevent further actions
+        if (sessionCheckIntervalRef.current) {
+          clearInterval(sessionCheckIntervalRef.current);
+        }
+      }
+    };
+
+    checkSession();
+    sessionCheckIntervalRef.current = setInterval(checkSession, 1000);
+
+    return () => {
+      if (sessionCheckIntervalRef.current) {
+        clearInterval(sessionCheckIntervalRef.current);
+      }
+    };
+  }, [current]);
 
   useEffect(() => {
     if (!current) return;
@@ -93,9 +126,13 @@ function GuestInner() {
 
   const validateGuests = (): boolean => {
     const errors: Array<Partial<Record<keyof HotelGuest, string>>> = [];
+    const guestNationality = current?.guestNationality ?? "IN";
+    const hotelCountry = current?.hotel.country;
 
-    for (const guest of guests) {
+    for (let i = 0; i < guests.length; i++) {
+      const guest = guests[i];
       const guestErr: Partial<Record<keyof HotelGuest, string>> = {};
+      const isLeadPassenger = i === 0;
 
       // Validate title
       if (!guest.title) {
@@ -120,6 +157,43 @@ function GuestInner() {
         guestErr.age = ageValidation.error;
       }
 
+      // Validate identity documents for lead passenger
+      // Rules: Respect BOTH nationality-based rules AND PreBook response requirements
+      if (isLeadPassenger) {
+        const identityReq = getIdentityRequirement(guestNationality, hotelCountry);
+        const preBookPanMandatory = current?.preBook?.panMandatory || false;
+        const preBookPassportMandatory = current?.preBook?.passportMandatory || false;
+
+        // PAN validation: required if nationality rules OR PreBook says mandatory
+        const panRequired = identityReq.panRequired || preBookPanMandatory;
+        if (panRequired) {
+          const panVal = validatePAN(guest.pan ?? "");
+          if (!panVal.valid) {
+            guestErr.pan = panVal.error;
+          }
+        }
+
+        // Passport validation: required if nationality rules OR PreBook says mandatory
+        const passportRequired = identityReq.passportRequired || preBookPassportMandatory;
+        if (passportRequired) {
+          const passportVal = validatePassport(guest.passport ?? "");
+          if (!passportVal.valid) {
+            guestErr.passport = passportVal.error;
+          }
+          if (guest.passportExpDate) {
+            const expiryVal = validatePassportExpiry(guest.passportExpDate);
+            if (!expiryVal.valid) {
+              guestErr.passportExpDate = expiryVal.error;
+            }
+          } else {
+            guestErr.passportExpDate = "Passport expiry date is required";
+          }
+          if (!guest.passportIssueDate) {
+            guestErr.passportIssueDate = "Passport issue date is required";
+          }
+        }
+      }
+
       errors.push(guestErr);
     }
 
@@ -141,6 +215,16 @@ function GuestInner() {
   };
 
   const onContinue = () => {
+    // Check session before proceeding
+    if (!sessionStatus || !sessionStatus.isValid) {
+      toast.push({
+        title: "Session Expired",
+        description: "Your booking session has expired. Please start a new search.",
+        tone: "danger",
+      });
+      return;
+    }
+
     if (!validateGuests()) return;
 
     if (!email.trim() || !email.includes("@")) {
@@ -158,12 +242,65 @@ function GuestInner() {
     router.push(`/hotel/${encodeURIComponent(id)}/payment?${sp.toString()}`);
   };
 
+  const handleSessionTimeout = () => {
+    // Clear current booking and redirect to new search
+    router.replace("/hotel");
+  };
+
   const addOnTotal = (breakfast ? 650 * current.nights * current.rooms : 0) + (insurance ? 499 : 0);
 
   return (
     <div className="min-h-screen flex flex-col bg-surface-muted">
       <Header />
       <HotelBookingStepper active="guest" />
+
+      {/* Session Timeout Modal */}
+      <SessionTimeoutModal
+        isOpen={sessionStatus?.isExpired ?? false}
+        minutesRemaining={sessionStatus?.minutesRemaining ?? 0}
+        secondsRemaining={sessionStatus?.secondsRemaining ?? 0}
+        onNewSearch={handleSessionTimeout}
+      />
+
+      {/* Session Warning Banner */}
+      {sessionStatus?.isWarning && !sessionStatus?.isExpired && (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 md:px-6 py-3">
+          <div className="max-w-5xl mx-auto">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <svg
+                  viewBox="0 0 24 24"
+                  width={20}
+                  height={20}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-amber-600"
+                  aria-hidden
+                >
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3.05h16.94a2 2 0 0 0 1.71-3.05L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                  <line x1="12" y1="9" x2="12" y2="13" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                <div className="flex-1">
+                  <p className="text-[13px] font-semibold text-amber-900">
+                    Session Timeout Warning
+                  </p>
+                  <p className="text-[12px] text-amber-800">
+                    Your booking session expires in {sessionStatus.minutesRemaining}m {sessionStatus.secondsRemaining}s.
+                    Complete your booking quickly or start a new search.
+                  </p>
+                </div>
+              </div>
+              <span className="text-[13px] font-bold text-amber-900 shrink-0 font-mono">
+                {sessionStatus.minutesRemaining}:{String(sessionStatus.secondsRemaining).padStart(2, "0")}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       <main className="flex-1">
         <div className="mx-auto max-w-5xl px-4 md:px-6 py-6">
@@ -185,6 +322,11 @@ function GuestInner() {
                         guest={g}
                         onChange={(updatedGuest) => updateGuest(i, updatedGuest)}
                         errors={guestErrors[i]}
+                        guestNationality={current?.guestNationality}
+                        hotelCountry={current?.hotel.country}
+                        isLeadPassenger={i === 0}
+                        preBookPanMandatory={current?.preBook?.panMandatory}
+                        preBookPassportMandatory={current?.preBook?.passportMandatory}
                       />
                     </div>
                   ))}
