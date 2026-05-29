@@ -77,6 +77,8 @@ export type Room = {
   totalFare?: number;
   totalTax?: number;
   nightlyRate?: number;
+  // B2C minimum selling price from TBO — displayed price must never go below this
+  recommendedSellingRate?: number;
   cancelPolicies?: CancelPolicy[];
   roomPromotion?: string[];
   roomId?: string[];

@@ -28,6 +28,7 @@ type State = {
   rooms: number;
   adults: number;
   children: number;
+  nationality: string;
   recent: RecentHotelSearch[];
 };
 
@@ -39,6 +40,7 @@ type Actions = {
   setRooms: (n: number) => void;
   setAdults: (n: number) => void;
   setChildren: (n: number) => void;
+  setNationality: (n: string) => void;
   pushRecent: (r: RecentHotelSearch) => void;
   reset: () => void;
 };
@@ -51,6 +53,7 @@ const initial: State = {
   rooms: 1,
   adults: 2,
   children: 0,
+  nationality: "IN",
   recent: [],
 };
 
@@ -65,6 +68,7 @@ export const useHotelSearchStore = create<State & Actions>()(
       setRooms: (rooms) => set({ rooms }),
       setAdults: (adults) => set({ adults }),
       setChildren: (children) => set({ children }),
+      setNationality: (nationality) => set({ nationality }),
       pushRecent: (r) =>
         set((s) => ({
           recent: [r, ...s.recent.filter((x) => x.id !== r.id)].slice(0, 8),
@@ -79,7 +83,7 @@ export const useHotelSearchStore = create<State & Actions>()(
       storage: createJSONStorage(() =>
         typeof window !== "undefined" ? window.localStorage : (undefined as unknown as Storage),
       ),
-      partialize: (s) => ({ recent: s.recent, rooms: s.rooms, adults: s.adults }),
+      partialize: (s) => ({ recent: s.recent, rooms: s.rooms, adults: s.adults, nationality: s.nationality }),
     },
   ),
 );

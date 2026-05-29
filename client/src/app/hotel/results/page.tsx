@@ -34,12 +34,13 @@ function PageFallback() {
 
 function HotelResultsInner() {
   const sp = useSearchParams();
-  const cityCode = sp.get("city") ?? "DEL";
+  const cityCode = sp.get("city") ?? "";
   const checkIn = sp.get("checkIn") ?? "";
   const checkOut = sp.get("checkOut") ?? "";
   const rooms = Number(sp.get("rooms") ?? 1);
   const adults = Number(sp.get("adults") ?? 2);
   const children = Number(sp.get("children") ?? 0);
+  const nationality = sp.get("nationality") ?? "IN";
 
   const nights = useMemo(() => {
     if (!checkIn || !checkOut) return 1;
@@ -54,7 +55,7 @@ function HotelResultsInner() {
 
   const { status, hotels, priceRange } = useHotelSearch(
     cityCode && checkIn && checkOut
-      ? { cityCode, checkIn, checkOut, rooms, adults, children }
+      ? { cityCode, checkIn, checkOut, rooms, adults, children, guestNationality: nationality }
       : null,
   );
 

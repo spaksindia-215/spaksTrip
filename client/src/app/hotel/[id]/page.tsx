@@ -9,6 +9,7 @@ import HotelAmenitiesGrid from "@/components/accommodation/HotelAmenitiesGrid";
 import RoomCard from "@/components/accommodation/RoomCard";
 import { getHotel } from "@/services/hotels";
 import { useHotelBookingStore } from "@/state/hotelBookingStore";
+import type { HotelPreBookInfo } from "@/state/hotelBookingStore";
 import { useToast } from "@/components/ui/Toast";
 import type { Hotel, Room } from "@/lib/mock/hotels";
 import Skeleton from "@/components/ui/Skeleton";
@@ -41,13 +42,14 @@ function HotelDetailInner() {
   const sp = useSearchParams();
   const router = useRouter();
   const toast = useToast();
-  const { startHotelBooking } = useHotelBookingStore();
+  const { startHotelBooking, setPreBook } = useHotelBookingStore();
 
   const checkIn = sp.get("checkIn") ?? "";
   const checkOut = sp.get("checkOut") ?? "";
   const rooms = Number(sp.get("rooms") ?? 1);
   const adults = Number(sp.get("adults") ?? 2);
   const children = Number(sp.get("children") ?? 0);
+  const guestNationality = sp.get("nationality") ?? "IN";
 
   const nights = checkIn && checkOut
     ? Math.max(1, Math.round((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86400000))
@@ -64,14 +66,77 @@ function HotelDetailInner() {
     });
   }, [id, checkIn, checkOut, rooms, adults, children]);
 
-  const onSelectRoom = (room: Room) => {
+  const onSelectRoom = async (room: Room) => {
     if (!hotel) return;
     if (!checkIn || !checkOut) {
       toast.push({ title: "Missing check-in or check-out dates", tone: "warn" });
       return;
     }
-    startHotelBooking({ hotel, room, checkIn, checkOut, rooms, adults, children });
-    router.push(`/hotel/${encodeURIComponent(id)}/guest?${sp.toString()}`);
+
+    // Initialize booking with Search data first
+    startHotelBooking({ hotel, room, checkIn, checkOut, rooms, adults, children, guestNationality });
+
+    // Get booking code from room (from Search response)
+    const bookingCode = (room as any).id; // Using room ID as booking code
+    if (!bookingCode) {
+      toast.push({ title: "Invalid room data. Please try again.", tone: "warn" });
+      return;
+    }
+
+    // Call PreBook to lock in rate and get final details
+    try {
+      const preBookRes = await fetch("/api/hotels/prebook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingCode }),
+      });
+
+      if (!preBookRes.ok) {
+        const error = await preBookRes.json();
+        toast.push({ title: `PreBook failed: ${error.error}`, tone: "warn" });
+        return;
+      }
+
+      const { data: preBookData } = await preBookRes.json();
+      const firstRoom = preBookData.rooms?.[0];
+
+      if (!firstRoom) {
+        toast.push({ title: "PreBook returned invalid data. Please try again.", tone: "warn" });
+        return;
+      }
+
+      // Store PreBook info in booking store
+      const preBookInfo: HotelPreBookInfo = {
+        bookingCode: firstRoom.bookingCode,
+        inclusion: firstRoom.inclusion,
+        roomPromotion: firstRoom.roomPromotion,
+        cancelPolicies: firstRoom.cancelPolicies,
+        rateConditions: preBookData.rateConditions,
+        netAmount: firstRoom.netAmount || firstRoom.totalFare,
+        panMandatory: firstRoom.panMandatory,
+        passportMandatory: firstRoom.passportMandatory,
+        paxNameMinLength: firstRoom.paxNameMinLength,
+        paxNameMaxLength: firstRoom.paxNameMaxLength,
+      };
+
+      setPreBook(preBookInfo);
+
+      // Detect price change
+      const priceChanged = preBookInfo.netAmount !== room.basePrice;
+      if (priceChanged) {
+        toast.push({
+          title: "Price Updated",
+          description: `₹${room.basePrice.toLocaleString()} → ₹${preBookInfo.netAmount.toLocaleString()}`,
+          tone: "warn",
+        });
+      }
+
+      // Proceed to guest page with PreBook data
+      router.push(`/hotel/${encodeURIComponent(id)}/guest?${sp.toString()}`);
+    } catch (error) {
+      console.error("PreBook error:", error);
+      toast.push({ title: "Failed to lock in rate. Please try again.", tone: "warn" });
+    }
   };
 
   return (

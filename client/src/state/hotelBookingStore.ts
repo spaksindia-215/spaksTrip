@@ -6,8 +6,23 @@ import type { Hotel, Room } from "@/lib/mock/hotels";
 import type { ContactInfo } from "./bookingStore";
 
 export type HotelGuest = {
-  firstName: string;
-  lastName: string;
+  title: "Mr" | "Mrs" | "Ms"; // TBO requires Mr/Mrs/Ms only
+  firstName: string; // 2-25 chars, no special characters
+  lastName: string; // 2-25 chars, no special characters
+  age?: number; // Optional; required for child passengers
+};
+
+export type HotelPreBookInfo = {
+  bookingCode: string;
+  inclusion?: string;
+  roomPromotion?: string[];
+  cancelPolicies?: Array<{ index: string; fromDate: string; chargeType: string; cancellationCharge: number }>;
+  rateConditions?: string[];
+  netAmount: number;
+  panMandatory: boolean;
+  passportMandatory: boolean;
+  paxNameMinLength: number;
+  paxNameMaxLength: number;
 };
 
 export type HotelBooking = {
@@ -26,9 +41,12 @@ export type HotelBooking = {
   totalPrice: number;
   taxes: number;
   status: "SELECTED" | "GUEST" | "PAYMENT" | "CONFIRMED";
+  guestNationality: string;
   createdAt: string;
   confirmedAt?: string;
   bookingReference?: string;
+  // PreBook data
+  preBook?: HotelPreBookInfo;
 };
 
 type State = {
@@ -45,10 +63,12 @@ type Actions = {
     rooms: number;
     adults: number;
     children: number;
+    guestNationality: string;
   }) => void;
   setGuests: (guests: HotelGuest[]) => void;
   setContact: (contact: ContactInfo) => void;
   setAddOns: (addOns: Partial<HotelBooking["addOns"]>) => void;
+  setPreBook: (preBook: HotelPreBookInfo) => void;
   confirm: (ref: string) => void;
   clearCurrent: () => void;
 };
@@ -72,7 +92,7 @@ export const useHotelBookingStore = create<State & Actions>()(
     (set) => ({
       current: null,
       bookings: [],
-      startHotelBooking: ({ hotel, room, checkIn, checkOut, rooms, adults, children }) => {
+      startHotelBooking: ({ hotel, room, checkIn, checkOut, rooms, adults, children, guestNationality }) => {
         const nights = nightsBetween(checkIn, checkOut);
         const addOns: HotelBooking["addOns"] = { breakfast: room.breakfast, insurance: false };
         const { taxes, total } = computeHotelTotals(room, nights, rooms, addOns);
@@ -93,6 +113,7 @@ export const useHotelBookingStore = create<State & Actions>()(
             totalPrice: total,
             taxes,
             status: "SELECTED",
+            guestNationality,
             createdAt: new Date().toISOString(),
           },
         });
@@ -108,6 +129,8 @@ export const useHotelBookingStore = create<State & Actions>()(
           const { taxes, total } = computeHotelTotals(s.current.room, s.current.nights, s.current.rooms, addOns);
           return { current: { ...s.current, addOns, taxes, totalPrice: total } };
         }),
+      setPreBook: (preBook) =>
+        set((s) => (s.current ? { current: { ...s.current, preBook, status: "PAYMENT" } } : s)),
       confirm: (ref) =>
         set((s) => {
           if (!s.current) return s;

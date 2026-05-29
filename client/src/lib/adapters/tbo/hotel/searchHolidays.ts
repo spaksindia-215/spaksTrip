@@ -25,9 +25,9 @@ const TBO_HOLIDAYS_URL =
   (process.env.TBO_HOLIDAYS_SEARCH_URL ?? process.env.TBO_HOLIDAYS_HOTEL_API_URL ?? "https://affiliate.tektravels.com/HotelAPI").replace(/\/$/, "");
 
 // TBO won't accept arbitrarily large code lists in one HotelSearch call.
-// 200 per batch is a safe ceiling; first page of results is also capped to
-// keep dev-mode latency reasonable.
-const HOTEL_CODES_PER_BATCH = 200;
+// TBO recommends max 100 codes per request for optimal latency and reliability.
+// Multiple parallel requests are preferred over larger batches.
+const HOTEL_CODES_PER_BATCH = 100;
 const MAX_HOTELS_PER_SEARCH = 200;
 
 type TboCancelPolicy = TboSearchCancelPolicy;
@@ -83,6 +83,9 @@ function mapSearchRoom(r: TboHolidaysSearchRoom): Room {
   const nightlyRate = r.DayRates?.[0]?.[0]?.BasePrice;
   // Flatten all room-promotion strings from the nested array
   const roomPromotion = r.RoomPromotion?.flat().filter(Boolean);
+  const rsp = r.RecommendedSellingRate ? Number(r.RecommendedSellingRate) : undefined;
+  // B2C rule: display price = RSP when present; never expose TotalFare (net/wholesale) directly
+  const displayPrice = (rsp && rsp > 0) ? rsp : r.TotalFare;
   return {
     id: r.BookingCode,
     name,
@@ -90,7 +93,7 @@ function mapSearchRoom(r: TboHolidaysSearchRoom): Room {
     maxOccupancy: 2,
     bedType: mapBedType(name),
     sizeSqm: 0,
-    basePrice: r.TotalFare,
+    basePrice: displayPrice,
     amenities: r.Inclusion ? mapAmenities([r.Inclusion]) : [],
     refundable: r.IsRefundable,
     breakfast: (r.MealType ?? "").toLowerCase().includes("breakfast"),
@@ -99,6 +102,7 @@ function mapSearchRoom(r: TboHolidaysSearchRoom): Room {
     totalFare: r.TotalFare,
     totalTax: r.TotalTax,
     nightlyRate: Number.isFinite(nightlyRate) ? nightlyRate : undefined,
+    recommendedSellingRate: (rsp && rsp > 0) ? rsp : undefined,
     cancelPolicies: mapCancelPolicies(r.CancelPolicies),
     roomPromotion: roomPromotion && roomPromotion.length > 0 ? roomPromotion : undefined,
     roomId: r.RoomID,

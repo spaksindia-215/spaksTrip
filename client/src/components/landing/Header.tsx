@@ -1263,11 +1263,11 @@ function MegaMenu({
       <motion.div
         role="menu"
         variants={{
-          rest: { opacity: 0, y: 10, scale: 0.98 },
-          hover: { opacity: 1, y: 0, scale: 1 },
+          rest: { opacity: 0, y: 10, scale: 0.98, pointerEvents: "none" },
+          hover: { opacity: 1, y: 0, scale: 1, pointerEvents: "auto" },
         }}
         transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-auto overflow-hidden rounded-2xl border border-slate-200/70 bg-white/95 shadow-[0_24px_60px_-15px_rgba(15,23,42,0.28)] backdrop-blur-xl ring-1 ring-black/5"
+        className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white/95 shadow-[0_24px_60px_-15px_rgba(15,23,42,0.28)] backdrop-blur-xl ring-1 ring-black/5"
       >
         <div className="flex items-center justify-between border-b border-slate-100 bg-gradient-to-r from-blue-50/60 to-transparent px-5 py-3">
           <div className="flex items-center gap-2.5">

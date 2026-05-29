@@ -10,13 +10,14 @@ import { toIsoDate } from "@/lib/format";
 import DestinationField from "./DestinationField";
 import CitySelector from "./CitySelector";
 import RoomsGuestsPopover from "./RoomsGuestsPopover";
+import NationalitySelector from "./NationalitySelector";
 
 export default function HotelSearchForm() {
   const router = useRouter();
   const toast = useToast();
   const {
-    destination, checkIn, checkOut, rooms, adults, children,
-    setDestination, setCheckIn, setCheckOut, setRooms, setAdults, setChildren, pushRecent,
+    destination, checkIn, checkOut, rooms, adults, children, nationality,
+    setDestination, setCheckIn, setCheckOut, setRooms, setAdults, setChildren, setNationality, pushRecent,
   } = useHotelSearchStore();
 
   const [submitting, setSubmitting] = useState(false);
@@ -51,21 +52,25 @@ export default function HotelSearchForm() {
       rooms: String(rooms),
       adults: String(adults),
       children: String(children),
+      nationality,
     });
 
     if (destination.kind === "country") {
       params.set("country", destination.code);
-      if (selectedCity) {
-        params.set("city", selectedCity.code);
-        params.set("cityName", selectedCity.name);
+      // Prefer the standalone CitySelector selection; fall back to city embedded in DestinationField
+      const effectiveCity = selectedCity ?? (destination.city ?? null);
+      if (!effectiveCity) {
+        setSubmitting(false);
+        toast.push({ title: "Please select a city to search hotels", tone: "warn" });
+        return;
       }
-      const label = selectedCity
-        ? `${selectedCity.name}, ${destination.name}`
-        : destination.name;
+      params.set("city", effectiveCity.code);
+      params.set("cityName", effectiveCity.name);
+      const label = `${effectiveCity.name}, ${destination.name}`;
       pushRecent({
-        id: `country-${destination.code}-${selectedCity?.code ?? ""}-${checkIn}`,
+        id: `country-${destination.code}-${effectiveCity.code}-${checkIn}`,
         label: `${label} · ${checkIn}`,
-        cityCode: selectedCity?.code ?? destination.code,
+        cityCode: effectiveCity.code,
         when: new Date().toISOString(),
       });
     } else {
@@ -84,6 +89,7 @@ export default function HotelSearchForm() {
   return (
     <div className="rounded-2xl bg-white p-5 shadow-(--shadow-lg) md:p-6">
       <div className="grid gap-3 md:grid-cols-[1fr_1fr_1.4fr_1fr] lg:grid-cols-[1fr_1fr_1.5fr_1fr_auto]">
+
         <DestinationField 
           value={destination} 
           onChange={(dest) => {
@@ -129,6 +135,16 @@ export default function HotelSearchForm() {
             Search Hotels
           </Button>
         </div>
+      </div>
+
+      {/* Nationality row — passed as GuestNationality to TBO API */}
+      <div className="mt-3 flex flex-wrap items-start gap-x-6 gap-y-2">
+        <div className="w-56">
+          <NationalitySelector value={nationality} onChange={setNationality} />
+        </div>
+        <p className="self-end text-[11px] text-ink-muted pb-1 leading-tight max-w-xs">
+          Affects hotel pricing and availability. International destinations require Indian nationality (TBO India).
+        </p>
       </div>
     </div>
   );

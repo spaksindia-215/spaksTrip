@@ -11,7 +11,7 @@ import Radio from "@/components/ui/Radio";
 import { formatINR } from "@/lib/format";
 import { useHotelBookingStore } from "@/state/hotelBookingStore";
 import { useToast } from "@/components/ui/Toast";
-import { sleep } from "@/services/delay";
+import { useBook } from "@/hooks/useBook";
 
 type Method = "card" | "upi" | "netbanking" | "wallet";
 
@@ -40,6 +40,7 @@ function PaymentInner() {
   const router = useRouter();
   const toast = useToast();
   const { current, confirm } = useHotelBookingStore();
+  const { loading, error, makeBooking } = useBook();
 
   const [method, setMethod] = useState<Method>("upi");
   const [cardNumber, setCardNumber] = useState("");
@@ -49,7 +50,6 @@ function PaymentInner() {
   const [upi, setUpi] = useState("");
   const [netBank, setNetBank] = useState("HDFC");
   const [wallet, setWallet] = useState("Paytm");
-  const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     if (!current) router.replace("/hotel");
@@ -58,6 +58,12 @@ function PaymentInner() {
   if (!current) return null;
 
   const validate = (): string | null => {
+    if (current.guestNationality !== "IN") {
+      return "Only Indian nationals (IN) can book through SpaksTrip per TBO India requirements";
+    }
+    if (!current.preBook?.bookingCode) {
+      return "Booking data missing. Please try again.";
+    }
     if (method === "card") {
       if (cardNumber.replace(/\s/g, "").length < 14) return "Enter a valid card number";
       if (!cardName.trim()) return "Name on card is required";
@@ -71,11 +77,27 @@ function PaymentInner() {
   const onPay = async () => {
     const err = validate();
     if (err) { toast.push({ title: err, tone: "warn" }); return; }
-    setProcessing(true);
-    await sleep(1400);
-    const ref = `HTLSPX${Math.floor(Math.random() * 900000 + 100000)}`;
-    confirm(ref);
-    toast.push({ title: "Payment successful", description: `Booking ID: ${ref}`, tone: "success" });
+
+    const result = await makeBooking({
+      bookingCode: current.preBook!.bookingCode,
+      netAmount: current.preBook!.netAmount,
+      isVoucherBooking: false,
+      guests: current.guests,
+      guestNationality: current.guestNationality,
+      clientReferenceId: current.id,
+    });
+
+    if (!result) {
+      toast.push({ title: error || "Booking failed. Please try again.", tone: "warn" });
+      return;
+    }
+
+    confirm(result.bookingRefNo || result.bookingId?.toString() || current.id);
+    toast.push({
+      title: "Booking confirmed!",
+      description: `Ref: ${result.bookingRefNo || result.bookingId}`,
+      tone: "success",
+    });
     router.push(`/hotel/${encodeURIComponent(id)}/confirmation?${sp.toString()}`);
   };
 
@@ -173,12 +195,13 @@ function PaymentInner() {
                 </div>
               </section>
 
-              <div className="rounded-xl bg-warn-50 text-warn-600 text-[12px] font-medium px-4 py-3 flex items-start gap-2">
+              <div className="rounded-xl bg-blue-50 text-blue-600 text-[12px] font-medium px-4 py-3 flex items-start gap-2">
                 <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden className="mt-0.5 shrink-0">
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                  <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
                 </svg>
-                Payment processing is not enabled in this environment yet.
+                Your booking will be confirmed with TBO Hotels upon payment completion.
               </div>
             </div>
 
@@ -212,7 +235,7 @@ function PaymentInner() {
                   </div>
                 </div>
               </div>
-              <Button variant="accent" size="lg" onClick={onPay} loading={processing} fullWidth>
+              <Button variant="accent" size="lg" onClick={onPay} loading={loading} fullWidth>
                 Pay {formatINR(current.totalPrice)}
               </Button>
             </aside>

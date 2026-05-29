@@ -8,19 +8,25 @@ import HotelBookingStepper from "@/components/accommodation/HotelBookingStepper"
 import Input from "@/components/ui/Input";
 import Checkbox from "@/components/ui/Checkbox";
 import Button from "@/components/ui/Button";
+import GuestDetailsForm from "@/components/accommodation/GuestDetailsForm";
+import PreBookDetailsSection from "@/components/accommodation/PreBookDetailsSection";
 import { formatINR } from "@/lib/format";
 import { useHotelBookingStore, type HotelGuest } from "@/state/hotelBookingStore";
 import { useToast } from "@/components/ui/Toast";
 import { useParams } from "next/navigation";
+import { validateGuestName, validateGuestAge, validateNoDuplicateFirstNames } from "@/lib/validators/guestValidation";
 
 function buildGuestList(roomCount: number, existingGuests: HotelGuest[] = []): HotelGuest[] {
   if (existingGuests.length > 0) {
     return existingGuests.map((guest) => ({
+      title: guest.title ?? "Mr",
       firstName: guest.firstName ?? "",
       lastName: guest.lastName ?? "",
+      age: guest.age,
     }));
   }
   return Array.from({ length: roomCount }, () => ({
+    title: "Mr" as const,
     firstName: "",
     lastName: "",
   }));
@@ -63,6 +69,7 @@ function GuestInner() {
   const [breakfast, setBreakfast] = useState(() => current?.addOns.breakfast ?? false);
   const [insurance, setInsurance] = useState(() => current?.addOns.insurance ?? false);
   const [submitting, setSubmitting] = useState(false);
+  const [guestErrors, setGuestErrors] = useState<Array<Partial<Record<keyof HotelGuest, string>>>>([]);
 
   useEffect(() => {
     if (!current) router.replace("/hotel");
@@ -73,21 +80,69 @@ function GuestInner() {
     if (initializedBookingIdRef.current === current.id) return;
     initializedBookingIdRef.current = current.id;
     setLocalGuests(buildGuestList(current.rooms, current.guests));
+    setGuestErrors([]);
   }, [current?.id]);
 
   if (!current) return null;
 
-  const updateGuest = (i: number, field: keyof HotelGuest, value: string) => {
-    setLocalGuests((prev) => prev.map((g, idx) => idx === i ? { ...g, [field]: value } : g));
+  const updateGuest = (i: number, updatedGuest: HotelGuest) => {
+    setLocalGuests((prev) => prev.map((g, idx) => (idx === i ? updatedGuest : g)));
+    // Clear error for this guest when user edits
+    setGuestErrors((prev) => prev.map((e, idx) => (idx === i ? {} : e)));
+  };
+
+  const validateGuests = (): boolean => {
+    const errors: Array<Partial<Record<keyof HotelGuest, string>>> = [];
+
+    for (const guest of guests) {
+      const guestErr: Partial<Record<keyof HotelGuest, string>> = {};
+
+      // Validate title
+      if (!guest.title) {
+        guestErr.title = "Please select a title";
+      }
+
+      // Validate firstName
+      const firstNameValidation = validateGuestName(guest.firstName);
+      if (!firstNameValidation.valid) {
+        guestErr.firstName = firstNameValidation.error;
+      }
+
+      // Validate lastName
+      const lastNameValidation = validateGuestName(guest.lastName);
+      if (!lastNameValidation.valid) {
+        guestErr.lastName = lastNameValidation.error;
+      }
+
+      // Validate age if provided
+      const ageValidation = validateGuestAge(guest.age);
+      if (!ageValidation.valid) {
+        guestErr.age = ageValidation.error;
+      }
+
+      errors.push(guestErr);
+    }
+
+    // Check for duplicate first names
+    const duplicateCheck = validateNoDuplicateFirstNames(guests);
+    if (!duplicateCheck.valid) {
+      toast.push({ title: duplicateCheck.error || "Invalid guest names", tone: "warn" });
+      return false;
+    }
+
+    const hasErrors = errors.some((e) => Object.keys(e).length > 0);
+    if (hasErrors) {
+      setGuestErrors(errors);
+      toast.push({ title: "Please fix errors in guest details", tone: "warn" });
+      return false;
+    }
+
+    return true;
   };
 
   const onContinue = () => {
-    for (const g of guests) {
-      if (!g.firstName.trim() || !g.lastName.trim()) {
-        toast.push({ title: "Enter name for all rooms", tone: "warn" });
-        return;
-      }
-    }
+    if (!validateGuests()) return;
+
     if (!email.trim() || !email.includes("@")) {
       toast.push({ title: "Enter a valid email address", tone: "warn" });
       return;
@@ -114,29 +169,23 @@ function GuestInner() {
         <div className="mx-auto max-w-5xl px-4 md:px-6 py-6">
           <div className="grid md:grid-cols-[1fr_320px] gap-5">
             <div className="flex flex-col gap-4">
+              {/* PreBook Details */}
+              {current.preBook && (
+                <PreBookDetailsSection preBook={current.preBook} />
+              )}
+
               {/* Guest names */}
               <section className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
                 <h2 className="text-[16px] font-bold text-ink mb-4">Guest Details</h2>
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-6">
                   {guests.map((g, i) => (
-                    <div key={i} className="flex flex-col gap-3">
-                      <p className="text-[13px] font-semibold text-ink-muted">Room {i + 1} — Primary Guest</p>
-                      <div className="grid sm:grid-cols-2 gap-3">
-                        <Input
-                          id={`guest-first-name-${i}`}
-                          label="First Name"
-                          value={g.firstName}
-                          onChange={(e) => updateGuest(i, "firstName", e.target.value)}
-                          placeholder="As on ID"
-                        />
-                        <Input
-                          id={`guest-last-name-${i}`}
-                          label="Last Name"
-                          value={g.lastName}
-                          onChange={(e) => updateGuest(i, "lastName", e.target.value)}
-                          placeholder="As on ID"
-                        />
-                      </div>
+                    <div key={i} className="flex flex-col gap-3 pb-4 border-b border-border-soft last:pb-0 last:border-0">
+                      <GuestDetailsForm
+                        roomNumber={i + 1}
+                        guest={g}
+                        onChange={(updatedGuest) => updateGuest(i, updatedGuest)}
+                        errors={guestErrors[i]}
+                      />
                     </div>
                   ))}
                 </div>

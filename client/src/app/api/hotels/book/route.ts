@@ -34,11 +34,19 @@ export async function POST(request: NextRequest) {
         return err(`roomsDetails[${i}] must have exactly one passenger with leadPassenger=true.`, 400);
       }
       for (const p of room.passengers as HotelBookPassenger[]) {
-        if (!p.firstName || p.firstName.length < 2) {
-          return err(`passenger firstName must be at least 2 characters.`, 400);
+        // Validate title (Mr/Mrs/Ms only, per TBO requirement)
+        if (!p.title || !["Mr", "Mrs", "Ms"].includes(p.title)) {
+          return err(`passenger title must be one of: Mr, Mrs, Ms`, 400);
         }
-        if (!p.lastName || p.lastName.length < 2) {
-          return err(`passenger lastName must be at least 2 characters.`, 400);
+        if (!p.firstName || p.firstName.length < 2 || p.firstName.length > 25) {
+          return err(`passenger firstName must be 2-25 characters.`, 400);
+        }
+        if (!p.lastName || p.lastName.length < 2 || p.lastName.length > 25) {
+          return err(`passenger lastName must be 2-25 characters.`, 400);
+        }
+        // Age validation: required for children, optional for adults
+        if (p.paxType === 2 && (!p.age || p.age < 0 || p.age > 17)) {
+          return err(`child passenger must have age between 0-17.`, 400);
         }
       }
     }
