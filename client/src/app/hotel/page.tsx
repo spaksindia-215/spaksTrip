@@ -1,5 +1,6 @@
 import HotelHero from "@/components/accommodation/HotelHero";
 import TopHotelChoices from "@/components/accommodation/TopHotelChoices";
+import HotelPartnerCTA from "@/components/accommodation/HotelPartnerCTA";
 import WhyChooseUsOYO from "@/components/shared/WhyChooseUsOYO";
 import BackToTop from "@/components/landing/BackToTop";
 import Footer from "@/components/landing/Footer";
@@ -12,6 +13,7 @@ export default function HotelPage() {
       <main>
         <HotelHero />
         <TopHotelChoices />
+        <HotelPartnerCTA />
         <WhyChooseUsOYO />
       </main>
       <Footer />
