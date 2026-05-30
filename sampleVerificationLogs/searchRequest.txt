@@ -1,0 +1,34 @@
+==================================================================
+STEP 2 — SEARCH (DEL <-> BLR) — REQUEST
+==================================================================
+POST https://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Search
+Content-Type: application/json
+
+{
+  "TokenId": "8f2f721f-bdfe-4119-b1d9-be35a37fe543",
+  "EndUserIp": "1.1.1.1",
+  "AdultCount": "2",
+  "ChildCount": "1",
+  "InfantCount": "1",
+  "DirectFlight": "false",
+  "OneStopFlight": "false",
+  "JourneyType": "2",
+  "PreferredAirlines": null,
+  "Segments": [
+    {
+      "Origin": "DEL",
+      "Destination": "BLR",
+      "FlightCabinClass": "2",
+      "PreferredDepartureTime": "2026-06-20T00:00:00",
+      "PreferredArrivalTime": "2026-06-20T00:00:00"
+    },
+    {
+      "Origin": "BLR",
+      "Destination": "DEL",
+      "FlightCabinClass": "2",
+      "PreferredDepartureTime": "2026-06-27T00:00:00",
+      "PreferredArrivalTime": "2026-06-27T00:00:00"
+    }
+  ],
+  "Sources": null
+}

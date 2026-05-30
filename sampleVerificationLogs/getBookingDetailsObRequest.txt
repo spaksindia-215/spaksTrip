@@ -1,0 +1,12 @@
+==================================================================
+STEP 10 — GETBOOKINGDETAILS (OB) — REQUEST
+==================================================================
+POST https://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/GetBookingDetails
+Content-Type: application/json
+
+{
+  "TokenId": "8f2f721f-bdfe-4119-b1d9-be35a37fe543",
+  "EndUserIp": "1.1.1.1",
+  "BookingId": "2135586",
+  "PNR": "NFMB4U"
+}

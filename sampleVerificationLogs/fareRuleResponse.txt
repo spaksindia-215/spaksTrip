@@ -1,0 +1,15 @@
+==================================================================
+STEP 3 — FARERULE (OB,IB) — RESPONSE (HTTP 200)
+==================================================================
+
+{
+  "Response": {
+    "Error": {
+      "ErrorCode": 3,
+      "ErrorMessage": "This combination is not allowed by supplier"
+    },
+    "FareRules": null,
+    "ResponseStatus": 3,
+    "TraceId": "d854176d-1c7a-474f-a47e-abd4916f6536"
+  }
+}

@@ -1,0 +1,414 @@
+{
+  "info": {
+    "_postman_id": "tbo-case6-only-2026",
+    "name": "TBO Air API — Case 6 only (LCC Special Return JT=5)",
+    "description": "Case 6 only — LCC Special Return (JT=5) DEL↔MAA, 2A+1C, one PNR.\n\nEach step's body is a plain JSON block, edit-in-place friendly:\n - In Postman: import this file, click a request, edit Body → raw.\n - In text editor: open this file, find the step name, edit `request.body.raw`.\n - In source: edit test-cases/generate_case6_only.js, regenerate.\n\nFlow: Authenticate → Search → FareRule (OB,IB) → FareQuote (OB,IB) → Ticket → GetBookingDetails.\nVariables auto-captured: TOKEN, TRACE_ID, OB/IB_RESULT_INDEX, FQ_TRACE_ID, FQ_RESULT_INDEX, IS_LCC, BOOKING_ID, PNR, per-pax fare.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "TBO_USERNAME",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "TBO_PASSWORD",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "END_USER_IP",
+      "value": "1.1.1.1",
+      "type": "string"
+    },
+    {
+      "key": "TOKEN",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "TRACE_ID",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "OB_RESULT_INDEX",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "IB_RESULT_INDEX",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "FQ_TRACE_ID",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "FQ_RESULT_INDEX",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "IS_LCC",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "BOOKING_ID",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "PNR",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ADT_BASE_FARE",
+      "value": "0",
+      "type": "string"
+    },
+    {
+      "key": "ADT_TAX",
+      "value": "0",
+      "type": "string"
+    },
+    {
+      "key": "ADT_YQ_TAX",
+      "value": "0",
+      "type": "string"
+    },
+    {
+      "key": "CHD_BASE_FARE",
+      "value": "0",
+      "type": "string"
+    },
+    {
+      "key": "CHD_TAX",
+      "value": "0",
+      "type": "string"
+    },
+    {
+      "key": "CHD_YQ_TAX",
+      "value": "0",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Case 6 — LCC Special Return · 2A+1C · 6E DEL↔MAA (JT=5, one PNR)",
+      "item": [
+        {
+          "name": "Step 1 — Authenticate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ClientId\": \"ApiIntegrationNew\",\n  \"UserName\": \"{{TBO_USERNAME}}\",\n  \"Password\": \"{{TBO_PASSWORD}}\",\n  \"EndUserIp\": \"{{END_USER_IP}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://sharedapi.tektravels.com/SharedData.svc/rest/Authenticate",
+              "protocol": "https",
+              "host": [
+                "sharedapi",
+                "tektravels",
+                "com"
+              ],
+              "path": [
+                "SharedData.svc",
+                "rest",
+                "Authenticate"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var r = pm.response.json();",
+                  "var tok = r && (r.TokenId || (r.Response && (r.Response.TokenId || (r.Response.TokenAgentDetails && r.Response.TokenAgentDetails.TokenId))));",
+                  "if (tok) { pm.collectionVariables.set('TOKEN', tok); console.log('TOKEN:', tok); }",
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 2 — Search (JT=5, 2A+1C, DEL↔MAA)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"TokenId\": \"{{TOKEN}}\",\n  \"EndUserIp\": \"{{END_USER_IP}}\",\n  \"AdultCount\": \"2\",\n  \"ChildCount\": \"1\",\n  \"InfantCount\": \"0\",\n  \"DirectFlight\": \"false\",\n  \"OneStopFlight\": \"false\",\n  \"JourneyType\": \"5\",\n  \"PreferredAirlines\": null,\n  \"Segments\": [\n    {\n      \"Origin\": \"DEL\",\n      \"Destination\": \"MAA\",\n      \"FlightCabinClass\": \"2\",\n      \"PreferredDepartureTime\": \"2026-06-15T00:00:00\",\n      \"PreferredArrivalTime\": \"2026-06-15T00:00:00\"\n    },\n    {\n      \"Origin\": \"MAA\",\n      \"Destination\": \"DEL\",\n      \"FlightCabinClass\": \"2\",\n      \"PreferredDepartureTime\": \"2026-06-22T00:00:00\",\n      \"PreferredArrivalTime\": \"2026-06-22T00:00:00\"\n    }\n  ],\n  \"Sources\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Search",
+              "protocol": "https",
+              "host": [
+                "api",
+                "tektravels",
+                "com"
+              ],
+              "path": [
+                "BookingEngineService_Air",
+                "AirService.svc",
+                "rest",
+                "Search"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var r = pm.response.json();",
+                  "var resp = r && r.Response;",
+                  "if (resp && resp.TraceId) pm.collectionVariables.set('TRACE_ID', resp.TraceId);",
+                  "function flatten(x) { return Array.isArray(x) ? x[0] : x; }",
+                  "function pickLcc(arr) {",
+                  "  if (!Array.isArray(arr) || !arr.length) return null;",
+                  "  var lcc = arr.find(function (f) { var fl = flatten(f); return fl && fl.IsLCC === true; });",
+                  "  return lcc ? flatten(lcc) : flatten(arr[0]);",
+                  "}",
+                  "var results = resp && resp.Results;",
+                  "if (Array.isArray(results) && results.length && Array.isArray(results[0])) {",
+                  "  var ob = pickLcc(results[0]);",
+                  "  var ib = pickLcc(results[1]);",
+                  "  if (ob && ob.ResultIndex) pm.collectionVariables.set('OB_RESULT_INDEX', ob.ResultIndex);",
+                  "  if (ib && ib.ResultIndex) pm.collectionVariables.set('IB_RESULT_INDEX', ib.ResultIndex);",
+                  "  console.log('Auto OB:', ob && ob.ResultIndex);",
+                  "  console.log('Auto IB:', ib && ib.ResultIndex);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 3 — FareRule (OB,IB comma-separated)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"TokenId\": \"{{TOKEN}}\",\n  \"EndUserIp\": \"{{END_USER_IP}}\",\n  \"ResultIndex\": \"{{OB_RESULT_INDEX}},{{IB_RESULT_INDEX}}\",\n  \"TraceId\": \"{{TRACE_ID}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/FareRule",
+              "protocol": "https",
+              "host": [
+                "api",
+                "tektravels",
+                "com"
+              ],
+              "path": [
+                "BookingEngineService_Air",
+                "AirService.svc",
+                "rest",
+                "FareRule"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Step 4 — FareQuote (OB,IB comma-separated — returns FQ_RESULT_INDEX)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"TokenId\": \"{{TOKEN}}\",\n  \"EndUserIp\": \"{{END_USER_IP}}\",\n  \"ResultIndex\": \"{{OB_RESULT_INDEX}},{{IB_RESULT_INDEX}}\",\n  \"TraceId\": \"{{TRACE_ID}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/FareQuote",
+              "protocol": "https",
+              "host": [
+                "api",
+                "tektravels",
+                "com"
+              ],
+              "path": [
+                "BookingEngineService_Air",
+                "AirService.svc",
+                "rest",
+                "FareQuote"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var r = pm.response.json();",
+                  "var resp = r && r.Response;",
+                  "var res  = resp && resp.Results;",
+                  "if (resp && resp.TraceId) pm.collectionVariables.set('FQ_TRACE_ID', resp.TraceId);",
+                  "if (res && res.ResultIndex) {",
+                  "  pm.collectionVariables.set('FQ_RESULT_INDEX', res.ResultIndex);",
+                  "  console.log('FQ_RESULT_INDEX:', res.ResultIndex);",
+                  "}",
+                  "if (res && res.IsLCC !== undefined) pm.collectionVariables.set('IS_LCC', String(res.IsLCC));",
+                  "if (res && res.FareBreakdown) {",
+                  "  res.FareBreakdown.forEach(function (bd) {",
+                  "    var c = bd.PassengerCount || 1;",
+                  "    var pt = bd.PassengerType;",
+                  "    var b = String(bd.BaseFare / c);",
+                  "    var t = String(bd.Tax / c);",
+                  "    var y = String((bd.YQTax || 0) / c);",
+                  "    if (pt === 1) { pm.collectionVariables.set('ADT_BASE_FARE', b); pm.collectionVariables.set('ADT_TAX', t); pm.collectionVariables.set('ADT_YQ_TAX', y); }",
+                  "    else if (pt === 2) { pm.collectionVariables.set('CHD_BASE_FARE', b); pm.collectionVariables.set('CHD_TAX', t); pm.collectionVariables.set('CHD_YQ_TAX', y); }",
+                  "  });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 5 — Ticket (LCC, use FQ_RESULT_INDEX — covers both legs)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"PreferredCurrency\": \"INR\",\n  \"AgentReferenceNo\": \"\",\n  \"IsBaseCurrencyRequired\": true,\n  \"TokenId\": \"{{TOKEN}}\",\n  \"EndUserIp\": \"{{END_USER_IP}}\",\n  \"TraceId\": \"{{FQ_TRACE_ID}}\",\n  \"ResultIndex\": \"{{FQ_RESULT_INDEX}}\",\n  \"Passengers\": [\n    {\n      \"Title\": \"Mr\",\n      \"FirstName\": \"RAHUL\",\n      \"LastName\": \"SHARMA\",\n      \"PaxType\": 1,\n      \"DateOfBirth\": \"1985-03-15T00:00:00\",\n      \"Gender\": 1,\n      \"AddressLine1\": \"45 Prithviraj Road\",\n      \"City\": \"New Delhi\",\n      \"CountryCode\": \"IN\",\n      \"CountryName\": \"India\",\n      \"Nationality\": \"IN\",\n      \"Email\": \"rahul.sharma@example.com\",\n      \"ContactNo\": \"9810001234\",\n      \"IsLeadPax\": true,\n      \"GSTCompanyAddress\": \"\",\n      \"GSTCompanyContactNumber\": \"\",\n      \"GSTCompanyName\": \"\",\n      \"GSTNumber\": \"\",\n      \"GSTCompanyEmail\": \"\",\n      \"Fare\": {\n        \"Currency\": \"INR\",\n        \"BaseFare\": \"{{ADT_BASE_FARE}}\",\n        \"Tax\": \"{{ADT_TAX}}\",\n        \"TaxBreakup\": [],\n        \"YQTax\": \"{{ADT_YQ_TAX}}\",\n        \"AdditionalTxnFeeOfrd\": 0,\n        \"AdditionalTxnFeePub\": 0,\n        \"PGCharge\": 0,\n        \"OtherCharges\": 0,\n        \"ChargeBU\": [],\n        \"Discount\": 0,\n        \"PublishedFare\": 0,\n        \"CommissionEarned\": 0,\n        \"PLBEarned\": 0,\n        \"IncentiveEarned\": 0,\n        \"OfferedFare\": 0,\n        \"TdsOnCommission\": 0,\n        \"TdsOnPLB\": 0,\n        \"TdsOnIncentive\": 0,\n        \"ServiceFee\": 0\n      },\n      \"Baggage\": [],\n      \"MealDynamic\": [],\n      \"SeatDynamic\": []\n    },\n    {\n      \"Title\": \"Mrs\",\n      \"FirstName\": \"PRIYA\",\n      \"LastName\": \"SHARMA\",\n      \"PaxType\": 1,\n      \"DateOfBirth\": \"1988-07-22T00:00:00\",\n      \"Gender\": 2,\n      \"AddressLine1\": \"45 Prithviraj Road\",\n      \"City\": \"New Delhi\",\n      \"CountryCode\": \"IN\",\n      \"CountryName\": \"India\",\n      \"Nationality\": \"IN\",\n      \"Email\": \"\",\n      \"ContactNo\": \"\",\n      \"IsLeadPax\": false,\n      \"GSTCompanyAddress\": \"\",\n      \"GSTCompanyContactNumber\": \"\",\n      \"GSTCompanyName\": \"\",\n      \"GSTNumber\": \"\",\n      \"GSTCompanyEmail\": \"\",\n      \"Fare\": {\n        \"Currency\": \"INR\",\n        \"BaseFare\": \"{{ADT_BASE_FARE}}\",\n        \"Tax\": \"{{ADT_TAX}}\",\n        \"TaxBreakup\": [],\n        \"YQTax\": \"{{ADT_YQ_TAX}}\",\n        \"AdditionalTxnFeeOfrd\": 0,\n        \"AdditionalTxnFeePub\": 0,\n        \"PGCharge\": 0,\n        \"OtherCharges\": 0,\n        \"ChargeBU\": [],\n        \"Discount\": 0,\n        \"PublishedFare\": 0,\n        \"CommissionEarned\": 0,\n        \"PLBEarned\": 0,\n        \"IncentiveEarned\": 0,\n        \"OfferedFare\": 0,\n        \"TdsOnCommission\": 0,\n        \"TdsOnPLB\": 0,\n        \"TdsOnIncentive\": 0,\n        \"ServiceFee\": 0\n      },\n      \"Baggage\": [],\n      \"MealDynamic\": [],\n      \"SeatDynamic\": []\n    },\n    {\n      \"Title\": \"Mstr\",\n      \"FirstName\": \"ROHAN\",\n      \"LastName\": \"SHARMA\",\n      \"PaxType\": 2,\n      \"DateOfBirth\": \"2017-05-10T00:00:00\",\n      \"Gender\": 1,\n      \"AddressLine1\": \"45 Prithviraj Road\",\n      \"City\": \"New Delhi\",\n      \"CountryCode\": \"IN\",\n      \"CountryName\": \"India\",\n      \"Nationality\": \"IN\",\n      \"Email\": \"\",\n      \"ContactNo\": \"\",\n      \"IsLeadPax\": false,\n      \"GSTCompanyAddress\": \"\",\n      \"GSTCompanyContactNumber\": \"\",\n      \"GSTCompanyName\": \"\",\n      \"GSTNumber\": \"\",\n      \"GSTCompanyEmail\": \"\",\n      \"Fare\": {\n        \"Currency\": \"INR\",\n        \"BaseFare\": \"{{CHD_BASE_FARE}}\",\n        \"Tax\": \"{{CHD_TAX}}\",\n        \"TaxBreakup\": [],\n        \"YQTax\": \"{{CHD_YQ_TAX}}\",\n        \"AdditionalTxnFeeOfrd\": 0,\n        \"AdditionalTxnFeePub\": 0,\n        \"PGCharge\": 0,\n        \"OtherCharges\": 0,\n        \"ChargeBU\": [],\n        \"Discount\": 0,\n        \"PublishedFare\": 0,\n        \"CommissionEarned\": 0,\n        \"PLBEarned\": 0,\n        \"IncentiveEarned\": 0,\n        \"OfferedFare\": 0,\n        \"TdsOnCommission\": 0,\n        \"TdsOnPLB\": 0,\n        \"TdsOnIncentive\": 0,\n        \"ServiceFee\": 0\n      },\n      \"Baggage\": [],\n      \"MealDynamic\": [],\n      \"SeatDynamic\": []\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Ticket",
+              "protocol": "https",
+              "host": [
+                "api",
+                "tektravels",
+                "com"
+              ],
+              "path": [
+                "BookingEngineService_Air",
+                "AirService.svc",
+                "rest",
+                "Ticket"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var r = pm.response.json();",
+                  "var inner = (r && r.Response && r.Response.Response) || (r && r.Response) || {};",
+                  "var fi = inner.FlightItinerary || null;",
+                  "if (fi) {",
+                  "  var nums = (fi.Passenger || []).map(function (p) { return p.Ticket && p.Ticket.TicketNumber; }).filter(Boolean);",
+                  "  console.log('Tickets:', nums.join(', '));",
+                  "  console.log('Status:', fi.BookingStatus, '(1=Confirmed)');",
+                  "  if (fi.BookingId) pm.collectionVariables.set('BOOKING_ID', String(fi.BookingId));",
+                  "  if (fi.PNR) pm.collectionVariables.set('PNR', fi.PNR);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 6 — GetBookingDetails",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"TokenId\": \"{{TOKEN}}\",\n  \"EndUserIp\": \"{{END_USER_IP}}\",\n  \"BookingId\": \"{{BOOKING_ID}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/GetBookingDetails",
+              "protocol": "https",
+              "host": [
+                "api",
+                "tektravels",
+                "com"
+              ],
+              "path": [
+                "BookingEngineService_Air",
+                "AirService.svc",
+                "rest",
+                "GetBookingDetails"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
