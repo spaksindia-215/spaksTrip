@@ -1,49 +1,100 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+"use client";
+
+import { useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import BackToTop from "@/components/landing/BackToTop";
 import Footer from "@/components/landing/Footer";
 import Header from "@/components/landing/Header";
 import AddYourTaxiForm from "@/components/transport/AddYourTaxiForm";
-import type { ApiAuthUser } from "@/lib/authClient";
-import {
-  TAXI_PACKAGE_DESTINATIONS_ROUTE,
-  isTaxiManagerRole,
-} from "@/lib/taxiRoles";
+import { isTaxiManagerRole } from "@/lib/taxiRoles";
+import { useAuthStore } from "@/state/authStore";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:4000";
-const ADD_TAXI_PATH = "/taxi-package/add-your-taxi";
-const LOGIN_REDIRECT = `/auth?redirect=${encodeURIComponent(ADD_TAXI_PATH)}`;
+const ROUTE = "/taxi-package/add-your-taxi";
 
-async function requireTaxiManager(): Promise<ApiAuthUser> {
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
-  if (!cookieHeader) {
-    redirect(LOGIN_REDIRECT);
+export default function AddYourTaxiPage() {
+  const router = useRouter();
+  const user = useAuthStore((state) => state.user);
+  const status = useAuthStore((state) => state.status);
+  const hydrate = useAuthStore((state) => state.hydrate);
+
+  useEffect(() => {
+    if (status === "idle") {
+      void hydrate();
+    }
+  }, [hydrate, status]);
+
+  useEffect(() => {
+    if (status !== "ready") return;
+    if (!user) {
+      router.replace(`/auth?redirect=${encodeURIComponent(ROUTE)}`);
+    }
+  }, [router, status, user]);
+
+  if (status !== "ready" || !user) {
+    return (
+      <div className="min-h-screen bg-surface-muted text-ink">
+        <Header />
+        <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+          <div className="rounded-[28px] border border-border-soft bg-white p-8 text-center shadow-(--shadow-xs)">
+            <p className="text-[14px] text-ink-muted">Checking access to taxi submission...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
-  const response = await fetch(new URL("/api/auth/me", API_BASE), {
-    cache: "no-store",
-    headers: { cookie: cookieHeader },
-  });
-
-  if (response.status >= 400 && response.status < 500) {
-    redirect(LOGIN_REDIRECT);
-  }
-
-  if (!response.ok) {
-    throw new Error("Unable to validate taxi partner session");
-  }
-
-  const { user } = (await response.json()) as { user: ApiAuthUser };
   if (!isTaxiManagerRole(user.role)) {
-    redirect(TAXI_PACKAGE_DESTINATIONS_ROUTE);
+    return (
+      <div className="min-h-screen bg-surface-muted text-ink">
+        <Header />
+        <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+          <div className="mx-auto max-w-xl rounded-[28px] border border-danger-100 bg-white p-10 text-center shadow-(--shadow-sm)">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-danger-50">
+              <svg
+                viewBox="0 0 24 24"
+                width={28}
+                height={28}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-danger-500"
+                aria-hidden
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+              </svg>
+            </div>
+            <h2 className="mt-5 text-2xl font-black text-ink">Access Restricted</h2>
+            <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-ink-muted">
+              Only <strong className="text-ink">Partners</strong> and{" "}
+              <strong className="text-ink">Agents</strong> can list taxis on this platform.
+              Customer accounts do not have access to taxi operator features.
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <Link
+                href="/taxi-package"
+                className="inline-flex items-center justify-center rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+              >
+                Browse Taxi Packages
+              </Link>
+              <Link
+                href="/auth?mode=register"
+                className="inline-flex items-center justify-center rounded-xl border border-border-soft px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-surface-muted"
+              >
+                Register as Partner
+              </Link>
+            </div>
+          </div>
+        </main>
+        <Footer />
+        <BackToTop />
+      </div>
+    );
   }
-
-  return user;
-}
-
-export default async function AddYourTaxiPage() {
-  await requireTaxiManager();
 
   return (
     <div className="min-h-screen bg-surface-muted text-ink">

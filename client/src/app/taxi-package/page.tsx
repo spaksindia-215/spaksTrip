@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import BackToTop from "@/components/landing/BackToTop";
 import Footer from "@/components/landing/Footer";
 import Header from "@/components/landing/Header";
-import TaxiPackageLanding from "@/components/transport/TaxiPackageLanding";
+import TaxiLandingPage from "@/components/taxi/TaxiLandingPage";
 import {
   TAXI_PACKAGE_DESTINATIONS_ROUTE,
   shouldOpenTaxiDestinations,
@@ -37,7 +37,7 @@ export default function TaxiPackagePage() {
   return (
     <div className="min-h-screen bg-white text-ink">
       <Header />
-      <TaxiPackageLanding />
+      <TaxiLandingPage />
       <Footer />
       <BackToTop />
     </div>
