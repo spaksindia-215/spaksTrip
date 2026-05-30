@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import type { Hotel } from "@/lib/mock/hotels";
 import { formatINR } from "@/lib/format";
@@ -47,12 +48,22 @@ type Props = {
 
 export default function HotelResultCard({ hotel, checkIn, checkOut, rooms, adults, children, nights }: Props) {
   const href = `/hotel/${hotel.id}?checkIn=${checkIn}&checkOut=${checkOut}&rooms=${rooms}&adults=${adults}&children=${children}`;
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const hasMultipleImages = hotel.images.length > 1;
+
+  const goToPreviousImage = () => {
+    setCurrentImageIndex((prev) => (prev === 0 ? hotel.images.length - 1 : prev - 1));
+  };
+
+  const goToNextImage = () => {
+    setCurrentImageIndex((prev) => (prev === hotel.images.length - 1 ? 0 : prev + 1));
+  };
 
   return (
     <article className="flex flex-col sm:flex-row overflow-hidden rounded-xl bg-white border border-border-soft shadow-(--shadow-xs) hover:shadow-(--shadow-sm) transition-shadow">
-      <div className="relative h-48 sm:h-auto sm:w-52 shrink-0 overflow-hidden">
+      <div className="relative h-48 sm:h-auto sm:w-52 shrink-0 overflow-hidden group">
         <img
-          src={hotel.images[0]}
+          src={hotel.images[currentImageIndex]}
           alt={hotel.name}
           className="h-full w-full object-cover"
           loading="lazy"
@@ -60,13 +71,54 @@ export default function HotelResultCard({ hotel, checkIn, checkOut, rooms, adult
         <span className="absolute top-2 left-2 rounded-full bg-brand-900/80 px-2 py-0.5 text-[11px] font-semibold text-white">
           {hotel.propertyType.charAt(0).toUpperCase() + hotel.propertyType.slice(1)}
         </span>
+
+        {hasMultipleImages && (
+          <>
+            <button
+              type="button"
+              onClick={goToPreviousImage}
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-all opacity-0 group-hover:opacity-100"
+              aria-label="Previous image"
+            >
+              <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={goToNextImage}
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-all opacity-0 group-hover:opacity-100"
+              aria-label="Next image"
+            >
+              <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+              {hotel.images.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setCurrentImageIndex(idx)}
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${
+                    idx === currentImageIndex ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/80'
+                  }`}
+                  aria-label={`View image ${idx + 1}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col justify-between gap-3 p-4">
         <div className="flex flex-col gap-1.5">
           <div className="flex flex-wrap items-start justify-between gap-2">
-            <div>
-              <h3 className="text-[16px] font-bold text-ink leading-snug">{hotel.name}</h3>
+            <div className="flex flex-col gap-1.5 flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="text-[16px] font-bold text-ink leading-snug">{hotel.name}</h3>
+                <StarRating stars={hotel.starRating} />
+              </div>
               {hotel.chain && <p className="text-[12px] text-ink-muted">{hotel.chain}</p>}
             </div>
             <div className="flex flex-col items-end gap-1">
@@ -77,7 +129,6 @@ export default function HotelResultCard({ hotel, checkIn, checkOut, rooms, adult
                 <span className="text-[12px] font-semibold text-ink">{hotel.reviewLabel}</span>
                 <span className="text-[11px] text-ink-muted">({hotel.reviewCount.toLocaleString()})</span>
               </div>
-              <StarRating stars={hotel.starRating} />
             </div>
           </div>
 

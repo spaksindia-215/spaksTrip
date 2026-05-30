@@ -224,12 +224,49 @@ function HotelDetailInner() {
             <div className="flex flex-col gap-6">
               {/* Photo gallery */}
               <div className="flex flex-col gap-2">
-                <div className="relative h-72 md:h-96 overflow-hidden rounded-xl">
+                <div className="relative h-72 md:h-96 overflow-hidden rounded-xl group">
                   <img
                     src={hotel.images[activeImg]}
                     alt={`${hotel.name} photo ${activeImg + 1}`}
                     className="h-full w-full object-cover"
                   />
+                  {hotel.images.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setActiveImg((prev) => (prev === 0 ? hotel.images.length - 1 : prev - 1))}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-all opacity-0 group-hover:opacity-100"
+                        aria-label="Previous image"
+                      >
+                        <svg viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                          <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveImg((prev) => (prev === hotel.images.length - 1 ? 0 : prev + 1))}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-all opacity-0 group-hover:opacity-100"
+                        aria-label="Next image"
+                      >
+                        <svg viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                          <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                      </button>
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 bg-black/20 px-2 py-1.5 rounded-full">
+                        {hotel.images.map((_, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => setActiveImg(idx)}
+                            className={`transition-all ${
+                              idx === activeImg ? 'bg-white w-2 h-2' : 'bg-white/60 hover:bg-white/80 w-1.5 h-1.5'
+                            } rounded-full`}
+                            aria-label={`View image ${idx + 1}`}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
                 <div className="flex gap-2 overflow-x-auto pb-1">
                   {hotel.images.map((img, i) => (
