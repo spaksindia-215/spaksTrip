@@ -1,4 +1,5 @@
 import CabSearchForm from "@/components/transport/CabSearchForm";
+import TaxiPartnerCTA from "@/components/transport/TaxiPartnerCTA";
 import WhyChooseUsOYO from "@/components/shared/WhyChooseUsOYO";
 import BackToTop from "@/components/landing/BackToTop";
 import Footer from "@/components/landing/Footer";
@@ -10,6 +11,7 @@ export default function CabsPage() {
       <Header />
       <main>
         <CabSearchForm />
+        <TaxiPartnerCTA />
         <WhyChooseUsOYO />
       </main>
       <Footer />
