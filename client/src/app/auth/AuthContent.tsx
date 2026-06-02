@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthForm from "@/components/auth/AuthForm";
 import { useAuthStore } from "@/state/authStore";
+import { dashboardPathForRole } from "@/lib/roleRoutes";
 
 export default function AuthContent() {
   const router = useRouter();
@@ -23,8 +24,9 @@ export default function AuthContent() {
 
   useEffect(() => {
     if (status !== "ready" || !user) return;
-    router.replace(user.role === "partner" ? "/partner/dashboard" : "/");
-  }, [router, status, user]);
+    // Honor the page the user was redirected from; otherwise the role dashboard.
+    router.replace(redirect ?? dashboardPathForRole(user.role));
+  }, [redirect, router, status, user]);
 
   const subtitle = useMemo(() => {
     if (initialMode === "register") {
@@ -135,11 +137,7 @@ export default function AuthContent() {
                   return;
                 }
 
-                router.replace(
-                  authenticatedUser.role === "partner"
-                    ? "/partner/dashboard"
-                    : "/",
-                );
+                router.replace(dashboardPathForRole(authenticatedUser.role));
               }}
             />
           </section>

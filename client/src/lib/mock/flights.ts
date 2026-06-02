@@ -47,6 +47,9 @@ export type FlightOffer = {
   returnResultIndex?: string;
   /** Inbound leg segments — populated alongside returnResultIndex. */
   returnSegments?: FlightSegment[];
+  /** Named tax/fee line items from TBO Fare.TaxBreakup + OtherCharges + ServiceFee.
+   *  Only present for live TBO results; absent for mock data. */
+  taxBreakdown?: { key: string; amount: number }[];
 };
 
 const AIRCRAFT = ["A320neo", "A321", "B737-800", "B737 MAX", "A350-900", "B777-300ER", "A380", "ATR-72"];

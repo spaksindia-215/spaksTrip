@@ -140,7 +140,7 @@ export default function DateRangePicker({
         onClick={() => { setOpen((o) => !o); setPickingTo(false); }}
         aria-expanded={open}
         aria-controls={panelId}
-        className="flex w-full gap-0 rounded-xl border border-border bg-white h-14 items-center text-left hover:border-brand-500 shadow-sm transition-all"
+        className="flex w-full  gap-0 rounded-md border border-border bg-white h-12 items-center text-left hover:border-brand-500 shadow-sm transition-all"
       >
         <DateCell label={labelFrom} value={value.from} placeholder={placeholderFrom} />
         {mode === "range" && (
@@ -158,7 +158,7 @@ export default function DateRangePicker({
           role="dialog"
           aria-modal="true"
           style={{ position: "fixed", top: coords.top, left: coords.left, zIndex: 9999 }}
-          className="rounded-2xl border border-border-soft bg-white p-5 shadow-xl animate-pop-in w-[min(680px,calc(100vw-1rem))] max-h-[85vh] overflow-auto"
+          className="rounded-2xl border border-border-soft bg-white p-5 shadow-xl animate-pop-in w-[min(600px,calc(90vw-1rem))] max-h-[80vh] overflow-auto"
         >
           <div className="flex items-center justify-between mb-4 px-1">
             <button

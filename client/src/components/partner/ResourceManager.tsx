@@ -39,6 +39,13 @@ const TYPE_COPY: Record<
     badge: "brand" | "accent" | "success" | "info";
   }
 > = {
+  cruise: {
+    singular: "Cruise",
+    plural: "Cruises",
+    eyebrow: "Cruise sailings and cabin inventory",
+    tint: "hsl(204 78% 48%)",
+    badge: "info",
+  },
   taxi: {
     singular: "Taxi",
     plural: "Taxis",
@@ -46,12 +53,12 @@ const TYPE_COPY: Record<
     tint: "hsl(32 78% 48%)",
     badge: "accent",
   },
-  bus: {
-    singular: "Bus",
-    plural: "Buses",
-    eyebrow: "Tour bus routes and coach capacity",
-    tint: "hsl(204 78% 48%)",
-    badge: "info",
+  taxi_package: {
+    singular: "Taxi Package",
+    plural: "Taxi Packages",
+    eyebrow: "Multi-day cab bundles and sightseeing circuits",
+    tint: "hsl(32 60% 40%)",
+    badge: "accent",
   },
   tour: {
     singular: "Tour",
@@ -60,9 +67,9 @@ const TYPE_COPY: Record<
     tint: "hsl(152 62% 40%)",
     badge: "success",
   },
-  package: {
-    singular: "Package",
-    plural: "Packages",
+  tour_package: {
+    singular: "Tour Package",
+    plural: "Tour Packages",
     eyebrow: "Holiday bundles and long-form itineraries",
     tint: "hsl(347 74% 54%)",
     badge: "brand",

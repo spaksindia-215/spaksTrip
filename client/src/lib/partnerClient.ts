@@ -1,6 +1,7 @@
 import { api } from "@/lib/api";
+import type { Booking } from "@/lib/customerClient";
 
-export type ResourceType = "taxi" | "bus" | "tour" | "package" | "hotel";
+export type ResourceType = "cruise" | "taxi" | "taxi_package" | "tour" | "tour_package";
 
 export type PartnerResource = {
   id: string;
@@ -59,5 +60,10 @@ export const partnerClient = {
 
   async remove(id: string): Promise<void> {
     await api<null>(`/api/partner/resources/${id}`, { method: "DELETE" });
+  },
+
+  async bookings(): Promise<Booking[]> {
+    const response = await api<{ items: Booking[] }>("/api/partner/bookings");
+    return response.items;
   },
 };

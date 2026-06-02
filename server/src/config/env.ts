@@ -16,6 +16,12 @@ export const env = {
   refreshSecret: required("REFRESH_TOKEN_SECRET"),
   accessTtl: process.env.ACCESS_TOKEN_TTL ?? "15m",
   refreshTtl: process.env.REFRESH_TOKEN_TTL ?? "7d",
+  // Recipient for "new pending registration" notifications (used by the mailer).
+  superadminEmail: process.env.SUPERADMIN_EMAIL ?? "admin@spakstrip.local",
+  // Superadmin panel: env password gate (no DB role) + secret for signing the
+  // admin-session cookie. If the password is empty, admin login is disabled.
+  superadminPassword: process.env.SUPERADMIN_PASSWORD ?? "",
+  adminSessionSecret: process.env.ADMIN_SESSION_SECRET ?? process.env.ACCESS_TOKEN_SECRET ?? "",
 };
 
 export const isProd = env.nodeEnv === "production";

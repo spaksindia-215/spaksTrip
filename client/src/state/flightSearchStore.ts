@@ -27,7 +27,7 @@ type State = {
   returnDate: string | null;       // also duplicated here for ROUND trips
   cabin: CabinClass;
   pax: PaxCounts;
-  directOnly: boolean;
+  preferredStops: (0 | 1 | 2)[];
   fareCategory: FareCategory;
   recent: Array<{
     id: string;
@@ -48,7 +48,7 @@ type Actions = {
   setReturnDate: (d: string | null) => void;
   setCabin: (c: CabinClass) => void;
   setPax: (p: Partial<PaxCounts>) => void;
-  setDirectOnly: (v: boolean) => void;
+  setPreferredStops: (v: (0 | 1 | 2)[]) => void;
   setFareCategory: (c: FareCategory) => void;
   pushRecent: (r: State["recent"][number]) => void;
   reset: () => void;
@@ -62,7 +62,7 @@ const initial: State = {
   returnDate: null,
   cabin: "ECONOMY",
   pax: { adults: 1, children: 0, infants: 0 },
-  directOnly: false,
+  preferredStops: [],
   fareCategory: "regular",
   recent: [],
 };
@@ -99,7 +99,7 @@ export const useFlightSearchStore = create<State & Actions>()(
       setReturnDate: (d) => set({ returnDate: d }),
       setCabin: (c) => set({ cabin: c }),
       setPax: (p) => set((s) => ({ pax: { ...s.pax, ...p } })),
-      setDirectOnly: (v) => set({ directOnly: v }),
+      setPreferredStops: (v) => set({ preferredStops: v }),
       setFareCategory: (c) => set({ fareCategory: c }),
       pushRecent: (r) =>
         set((s) => {

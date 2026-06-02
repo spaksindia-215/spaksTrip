@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/state/authStore";
+import { dashboardPathForRole } from "@/lib/roleRoutes";
 
 export default function RoleGate() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function RoleGate() {
   useEffect(() => {
     if (status !== "ready") return;
     if (pathname === "/auth" && user) {
-      router.replace(user.role === "partner" ? "/partner/dashboard" : "/");
+      router.replace(dashboardPathForRole(user.role));
     }
   }, [pathname, router, status, user]);
 

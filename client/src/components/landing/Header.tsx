@@ -9,6 +9,7 @@ import Logo from "./Logo";
 import { cn } from "@/lib/cn";
 import RoleGate from "@/components/auth/RoleGate";
 import { useAuthStore } from "@/state/authStore";
+import { dashboardPathForRole } from "@/lib/roleRoutes";
 import { useLocaleStore, useCountryLocale } from "@/state/localeStore";
 import { getCountryFlagUrl } from "@/lib/countryFlags";
 
@@ -118,7 +119,7 @@ const NAV_ITEMS: NavItem[] = [
       { labelKey: "Bookings", href: "/self-drive/bookings" },
     ],
   },
-  { labelKey: "Packages", href: "/partner/packages", partnerOnly: true },
+  { labelKey: "Packages", href: "/partner/tour-packages", partnerOnly: true },
   { labelKey: "Queues", href: "/queues", partnerOnly: true },
   { labelKey: "Accounts", href: "/accounts", partnerOnly: true },
   { labelKey: "Reports", href: "/reports", partnerOnly: true },
@@ -497,7 +498,16 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleOutside);
   }, [openDropdown]);
 
-  const profileHref = user?.role === "partner" ? "/partner/dashboard" : "/my-trips";
+  // Role-aware portal links so the dashboard is always reachable from the header.
+  const dashboardHref = user ? dashboardPathForRole(user.role) : "/";
+  const profileHref =
+    user?.role === "customer"
+      ? "/customer/profile"
+      : user?.role === "agent" || user?.role === "b2b_agent"
+        ? "/agent/profile"
+        : user?.role === "partner"
+          ? "/partner/dashboard"
+          : "/my-trips";
   const isPartner = user?.role === "partner";
   const visibleNavItems = NAV_ITEMS.filter((item) => !item.partnerOnly || isPartner);
 
@@ -551,10 +561,10 @@ export default function Header() {
             {user ? (
               <div className="relative flex items-center gap-2">
                 <Link
-                  href="/my-trips"
+                  href={dashboardHref}
                   className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold text-white/85 transition-colors hover:text-white"
                 >
-                  {t("header.my_trips")}
+                  {user.role === "customer" ? t("header.my_trips") : "Dashboard"}
                 </Link>
                 <span className="text-white/40">·</span>
                 <motion.button
@@ -596,6 +606,13 @@ export default function Header() {
                         <p className="text-[12px] text-ink-muted">{user.email}</p>
                       </div>
                       <div className="pt-2">
+                        <Link
+                          href={dashboardHref}
+                          className="block rounded-xl px-3 py-2 text-[13px] font-medium text-ink transition-colors hover:bg-blue-50 hover:text-brand-700"
+                          onClick={() => setOpenDropdown(null)}
+                        >
+                          Dashboard
+                        </Link>
                         <Link
                           href={profileHref}
                           className="block rounded-xl px-3 py-2 text-[13px] font-medium text-ink transition-colors hover:bg-blue-50 hover:text-brand-700"
@@ -852,6 +869,13 @@ export default function Header() {
           <div className="border-t border-slate-100 px-4 py-4 sm:px-6">
             {user ? (
               <div className="flex flex-col gap-2">
+                <Link
+                  href={dashboardHref}
+                  className="rounded-xl border border-slate-200 px-4 py-3 text-[14px] font-semibold text-ink transition-colors hover:bg-blue-50"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Dashboard
+                </Link>
                 <Link
                   href={profileHref}
                   className="rounded-xl border border-slate-200 px-4 py-3 text-[14px] font-semibold text-ink transition-colors hover:bg-blue-50"

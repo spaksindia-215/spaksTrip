@@ -123,7 +123,7 @@ export default function FareCalendar({ from, to, cabin, depart, onDateChange }: 
                 aria-label={`${formatWeekday(date)} ${formatDayMonth(date)}${fare ? ` ₹${fare.totalFare}` : ""}`}
                 onClick={() => !active && onDateChange(date)}
                 className={[
-                  "shrink-0 snap-start w-22 flex flex-col items-center gap-0.5 rounded-lg ]rder py-2.5 px-1 transition-all",
+                  "shrink-0 snap-start w-22 flex flex-col items-center gap-0.5 rounded-lg border py-2.5 px-1 transition-all",
                   active
                     ? "border-brand-600 bg-brand-50"
                     : "border-transparent hover:border-border-soft hover:bg-surface-muted cursor-pointer",

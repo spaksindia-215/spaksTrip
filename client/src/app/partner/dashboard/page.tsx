@@ -8,18 +8,18 @@ import { ApiError } from "@/lib/api";
 import { formatINRShort } from "@/lib/format";
 import { partnerClient, type ResourceType } from "@/lib/partnerClient";
 
-const RESOURCE_TYPES: ResourceType[] = ["taxi", "bus", "tour", "package", "hotel"];
+const RESOURCE_TYPES: ResourceType[] = ["cruise", "taxi", "taxi_package", "tour", "tour_package"];
 
 const COPY: Record<
   ResourceType,
   { label: string; tint: string; blurb: string; href: string; badge: "brand" | "accent" | "success" | "info" }
 > = {
-  hotel: {
-    label: "Hotels",
-    tint: "hsl(224 78% 54%)",
-    blurb: "List and manage your hotel properties",
-    href: "/partner/hotels",
-    badge: "brand",
+  cruise: {
+    label: "Cruises",
+    tint: "hsl(204 78% 48%)",
+    blurb: "Cruise sailings and cabin inventory",
+    href: "/partner/cruises",
+    badge: "info",
   },
   taxi: {
     label: "Taxis",
@@ -28,12 +28,12 @@ const COPY: Record<
     href: "/partner/taxis",
     badge: "accent",
   },
-  bus: {
-    label: "Buses",
-    tint: "hsl(204 78% 48%)",
-    blurb: "Coach capacity and route inventory",
-    href: "/partner/buses",
-    badge: "info",
+  taxi_package: {
+    label: "Taxi Packages",
+    tint: "hsl(32 60% 40%)",
+    blurb: "Multi-day cab bundles and sightseeing circuits",
+    href: "/partner/taxi-packages",
+    badge: "accent",
   },
   tour: {
     label: "Tours",
@@ -42,11 +42,11 @@ const COPY: Record<
     href: "/partner/tours",
     badge: "success",
   },
-  package: {
-    label: "Packages",
+  tour_package: {
+    label: "Tour Packages",
     tint: "hsl(347 74% 54%)",
     blurb: "Complete trip bundles and itineraries",
-    href: "/partner/packages",
+    href: "/partner/tour-packages",
     badge: "brand",
   },
 };

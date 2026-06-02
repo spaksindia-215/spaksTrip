@@ -32,7 +32,7 @@ export default function AirportField({ label, placeholder, value, onChange }: Pr
       search={search}
       minQuery={0}
       renderValue={(o) => (
-        <span className="flex flex-col">
+        <span className=" shadow-sm flex flex-col">
           <span className="text-[15px] font-bold text-ink leading-tight">
             {o.value}{" "}
             <span className="text-[13px] font-semibold text-ink-soft">

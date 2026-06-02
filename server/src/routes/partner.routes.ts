@@ -6,6 +6,7 @@ import {
   createResource,
   updateResource,
   deleteResource,
+  listBookings,
 } from "../controllers/partner.controller";
 
 const router = Router();
@@ -13,6 +14,7 @@ const router = Router();
 router.use(authMiddleware, roleMiddleware("partner"));
 
 router.get("/resources", listResources);
+router.get("/bookings", listBookings);
 router.post("/resources", createResource);
 router.put("/resources/:id", updateResource);
 router.delete("/resources/:id", deleteResource);

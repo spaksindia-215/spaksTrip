@@ -15,10 +15,13 @@ type Props = {
 
 const NAV_ITEMS = [
   { href: "/partner/dashboard", label: "Dashboard" },
+  { href: "/partner/cruises", label: "Cruises" },
   { href: "/partner/taxis", label: "Taxis" },
-  { href: "/partner/buses", label: "Buses" },
+  { href: "/partner/taxi-packages", label: "Taxi Packages" },
   { href: "/partner/tours", label: "Tours" },
-  { href: "/partner/packages", label: "Packages" },
+  { href: "/partner/tour-packages", label: "Tour Packages" },
+  { href: "/partner/bookings", label: "Bookings" },
+  { href: "/partner/api", label: "API" },
 ];
 
 export default function PartnerShell({ user, children }: Props) {

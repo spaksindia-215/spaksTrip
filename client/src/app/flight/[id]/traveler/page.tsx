@@ -277,21 +277,11 @@ function TravelerInner() {
                       </div>
 
                       <div className="mt-3 grid sm:grid-cols-[1fr_1fr] gap-3">
-                        <div className="flex flex-col gap-1">
-                          <label className="text-[13px] font-medium text-ink-soft">Date of birth</label>
-                          <input
-                            type="date"
-                            value={t.dob ?? ""}
-                            onChange={(e) => update(t.id, { dob: e.target.value || null })}
-                            className="h-11 rounded-md border border-border bg-white px-3 text-[14px] font-medium text-ink outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-                            aria-invalid={Boolean(errors[`${t.id}.dob`]) || undefined}
-                          />
-                          {errors[`${t.id}.dob`] && (
-                            <p className="text-[12px] font-medium text-danger-600">
-                              {errors[`${t.id}.dob`]}
-                            </p>
-                          )}
-                        </div>
+                        <DobPicker
+                          value={t.dob}
+                          onChange={(v) => update(t.id, { dob: v })}
+                          error={errors[`${t.id}.dob`]}
+                        />
                         <div className="flex flex-col gap-1">
                           <label className="text-[13px] font-medium text-ink-soft">Gender</label>
                           <div className="flex items-center gap-4 h-11">
@@ -525,6 +515,112 @@ function SSRSelect({
           <option key={o.value} value={o.value}>{o.label}</option>
         ))}
       </select>
+    </div>
+  );
+}
+
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] as const;
+
+function DobPicker({
+  value,
+  onChange,
+  error,
+}: {
+  value: string | null;
+  onChange: (v: string | null) => void;
+  error?: string;
+}) {
+  // Local state holds each part independently so partial selections survive re-renders
+  const [day, setDay] = useState<number>(0);
+  const [month, setMonth] = useState<number>(0);
+  const [year, setYear] = useState<number>(0);
+
+  // Sync inward only when the external value changes (pre-fill / reset)
+  useEffect(() => {
+    if (value) {
+      const [y, m, d] = value.split("-").map(Number);
+      setYear(y ?? 0);
+      setMonth(m ?? 0);
+      setDay(d ?? 0);
+    } else {
+      setYear(0); setMonth(0); setDay(0);
+    }
+  }, [value]);
+
+  const currentYear = new Date().getFullYear();
+  const maxDays = month ? new Date(year || 2000, month, 0).getDate() : 31;
+
+  const emit = (d: number, m: number, y: number) => {
+    const clampedDay = m ? Math.min(d, new Date(y || 2000, m, 0).getDate()) : d;
+    if (clampedDay && m && y) {
+      onChange(`${y}-${String(m).padStart(2, "0")}-${String(clampedDay).padStart(2, "0")}`);
+    } else {
+      onChange(null);
+    }
+  };
+
+  const sel = (hasError: boolean) =>
+    `h-11 w-full rounded-md border bg-white px-2 text-[14px] font-medium text-ink outline-none focus:ring-2 focus:ring-brand-500/20 ${
+      hasError ? "border-danger-500 focus:border-danger-500" : "border-border focus:border-brand-500"
+    }`;
+
+  return (
+    <div className="flex flex-col gap-1">
+      <label className="text-[13px] font-medium text-ink-soft">Date of birth</label>
+      <div className="grid grid-cols-[2fr_3fr_3fr] gap-2">
+        <select
+          aria-label="Day"
+          value={day || ""}
+          onChange={(e) => {
+            const d = Number(e.target.value);
+            setDay(d);
+            emit(d, month, year);
+          }}
+          className={sel(Boolean(error))}
+        >
+          <option value="">DD</option>
+          {Array.from({ length: maxDays }, (_, i) => i + 1).map((d) => (
+            <option key={d} value={d}>{d}</option>
+          ))}
+        </select>
+
+        <select
+          aria-label="Month"
+          value={month || ""}
+          onChange={(e) => {
+            const m = Number(e.target.value);
+            const clampedDay = m ? Math.min(day, new Date(year || 2000, m, 0).getDate()) : day;
+            setMonth(m);
+            if (clampedDay !== day) setDay(clampedDay);
+            emit(clampedDay, m, year);
+          }}
+          className={sel(Boolean(error))}
+        >
+          <option value="">MMM</option>
+          {MONTHS.map((name, i) => (
+            <option key={name} value={i + 1}>{name}</option>
+          ))}
+        </select>
+
+        <select
+          aria-label="Year"
+          value={year || ""}
+          onChange={(e) => {
+            const y = Number(e.target.value);
+            const clampedDay = month ? Math.min(day, new Date(y, month, 0).getDate()) : day;
+            setYear(y);
+            if (clampedDay !== day) setDay(clampedDay);
+            emit(clampedDay, month, y);
+          }}
+          className={sel(Boolean(error))}
+        >
+          <option value="">YYYY</option>
+          {Array.from({ length: currentYear - 1919 }, (_, i) => currentYear - i).map((yr) => (
+            <option key={yr} value={yr}>{yr}</option>
+          ))}
+        </select>
+      </div>
+      {error && <p className="text-[12px] font-medium text-danger-600">{error}</p>}
     </div>
   );
 }

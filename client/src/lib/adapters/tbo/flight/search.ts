@@ -107,6 +107,20 @@ function mapFareFamilies(
   ];
 }
 
+function buildTaxBreakdown(fare: TboFlightResult["Fare"]): FlightOffer["taxBreakdown"] {
+  if (!fare) return undefined;
+  const items: { key: string; amount: number }[] = [];
+
+  for (const t of fare.TaxBreakup ?? []) {
+    if (t.value > 0) items.push({ key: t.key, amount: Math.round(t.value) });
+  }
+  // OtherCharges and ServiceFee are top-level on TboFare, not in TaxBreakup
+  if (fare.OtherCharges > 0) items.push({ key: "OtherCharges", amount: Math.round(fare.OtherCharges) });
+  if (fare.ServiceFee > 0) items.push({ key: "ServiceFee", amount: Math.round(fare.ServiceFee) });
+
+  return items.length > 0 ? items : undefined;
+}
+
 function mapResult(result: TboFlightResult): FlightOffer {
   const outboundSegs: TboSegmentGroup[] = result.Segments?.[0] ?? [];
   const segments = outboundSegs.map(mapSegment);
@@ -146,6 +160,7 @@ function mapResult(result: TboFlightResult): FlightOffer {
     ),
     refundable: result.IsRefundable,
     baggage: { cabin: baggageCabin, checkin: baggageCheckin },
+    taxBreakdown: buildTaxBreakdown(result.Fare),
   };
 }
 

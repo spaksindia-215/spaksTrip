@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Popover from "@/components/ui/Popover";
 import type { CabinClass } from "@/lib/mock/flights";
 import type { PaxCounts } from "@/state/flightSearchStore";
@@ -33,7 +32,7 @@ export default function PassengerSelector({
           type="button"
           ref={ref}
           onClick={toggle}
-          className="flex w-full flex-col gap-0.5 rounded-md border border-border bg-white h-14 px-4 text-left hover:border-brand-400 transition-colors"
+          className="flex min-w-[240px] h-12 flex-col justify-center gap-0.5 rounded-md border border-border bg-white shadow-sm px-4 text-left hover:border-brand-400 transition-colors"
         >
           <span className="text-[11px] font-medium text-ink-muted">Travellers & Cabin</span>
           <span className="text-[14px] font-semibold text-ink truncate">

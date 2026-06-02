@@ -1,6 +1,6 @@
 import { Schema, model, Types, HydratedDocument } from "mongoose";
 
-export const RESOURCE_TYPES = ["taxi", "bus", "tour", "package"] as const;
+export const RESOURCE_TYPES = ["cruise", "taxi", "taxi_package", "tour", "tour_package"] as const;
 export type ResourceType = (typeof RESOURCE_TYPES)[number];
 
 export interface IPartnerResource {

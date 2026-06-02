@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type ReactNode } from "react";
-import Checkbox from "@/components/ui/Checkbox";
 import Button from "@/components/ui/Button";
 import DateRangePicker, { type DateRange } from "@/components/ui/DateRangePicker";
 import { useFlightSearchStore, type FareCategory } from "@/state/flightSearchStore";
@@ -23,8 +22,8 @@ type FareCategoryOption = {
 };
 
 const FareIconProps = {
-  width: 22,
-  height: 22,
+  width: 15,
+  height: 15,
   viewBox: "0 0 24 24",
   fill: "none",
   stroke: "currentColor",
@@ -91,7 +90,7 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
     returnDate,
     cabin,
     pax,
-    directOnly,
+    preferredStops,
     fareCategory,
     setTripType,
     setLeg,
@@ -101,7 +100,7 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
     setReturnDate,
     setCabin,
     setPax,
-    setDirectOnly,
+    setPreferredStops,
     setFareCategory,
     pushRecent,
   } = useFlightSearchStore();
@@ -145,9 +144,10 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
       children: String(pax.children),
       infants: String(pax.infants),
       trip: tripType,
-      direct: directOnly ? "1" : "0",
+      direct: preferredStops.length === 1 && preferredStops[0] === 0 ? "1" : "0",
       fareCategory,
     });
+    if (preferredStops.length > 0) params.set("stops", preferredStops.join(","));
     if (tripType === "ROUND" && returnDate) params.set("return", returnDate);
     if (tripType === "MULTI" && legs[1]?.from && legs[1]?.to && legs[1]?.date) {
       params.set("from2", legs[1].from.code);
@@ -177,16 +177,32 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
           : "rounded-xl bg-white p-4 shadow-(--shadow-sm) border border-border-soft"
       }
     >
-      {/* Row 1: Trip type + Non-stop */}
+      {/* Row 1: Trip type + Stops filter */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <TripTypeTabs value={tripType} onChange={setTripType} />
-        <div className="flex items-center gap-4">
-          <Checkbox
-            id="direct-only"
-            label="Non-stop"
-            checked={directOnly}
-            onChange={(e) => setDirectOnly(e.target.checked)}
-          />
+        <div className="flex items-center gap-1.5">
+          {([0, 1, 2] as const).map((s) => {
+            const active = preferredStops.includes(s);
+            return (
+              <button
+                key={s}
+                type="button"
+                onClick={() => {
+                  const cur = new Set(preferredStops);
+                  if (cur.has(s)) cur.delete(s); else cur.add(s);
+                  setPreferredStops(Array.from(cur) as (0 | 1 | 2)[]);
+                }}
+                className={cn(
+                  "rounded-full border px-3 py-1 text-[12px] font-semibold transition-colors",
+                  active
+                    ? "border-brand-500 bg-brand-50 text-brand-700"
+                    : "border-border bg-white text-ink-soft hover:border-brand-300 hover:text-ink",
+                )}
+              >
+                {s === 0 ? "Non-stop" : s === 1 ? "1 Stop" : "2+ Stops"}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -201,7 +217,7 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
             type="button"
             aria-label="Swap origin and destination"
             onClick={() => swapLeg(0)}
-            className="self-end mb-0.75 grid h-11 w-11 place-items-center rounded-full border border-border bg-white text-ink-soft hover:border-brand-500 hover:text-brand-600 transition-colors"
+            className="self-end  grid h-12 w-11 place-items-center rounded-md border border-border bg-white text-ink-soft hover:border-brand-500 hover:text-brand-600 transition-colors"
           >
             <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <polyline points="16 3 21 8 16 13" />
@@ -228,12 +244,14 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
               }}
             />
           </div>
-          <PassengerSelector
-            pax={pax}
-            cabin={cabin}
-            onPaxChange={setPax}
-            onCabinChange={setCabin}
-          />
+          <div className="flex flex-col justify-end">
+            <PassengerSelector
+              pax={pax}
+              cabin={cabin}
+              onPaxChange={setPax}
+              onCabinChange={setCabin}
+            />
+          </div>
         </div>
       ) : (
         <div className="mt-4 flex flex-col gap-3">
@@ -320,7 +338,7 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
         <span className="text-[11px] font-semibold text-ink-muted uppercase tracking-wide">
           Fare Type
         </span>
-        <div className="mt-2 grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-2 flex flex-wrap gap-2">
           {FARE_CATEGORIES.map((cat) => {
             const active = fareCategory === cat.value;
             return (
@@ -330,7 +348,7 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
                 onClick={() => setFareCategory(cat.value)}
                 aria-pressed={active}
                 className={cn(
-                  "relative flex items-center gap-3 rounded-xl border p-3 text-left transition-colors",
+                  "relative flex items-center gap-2 rounded-lg border py-1.5 px-2.5 text-left transition-colors",
                   active
                     ? "border-brand-500 bg-brand-50/40"
                     : "border-border-soft bg-white hover:border-brand-300",
@@ -338,24 +356,24 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
               >
                 <span
                   className={cn(
-                    "grid h-11 w-11 shrink-0 place-items-center rounded-full",
+                    "grid h-7 w-7 shrink-0 place-items-center rounded-full",
                     active ? "bg-brand-500 text-white" : "bg-surface-muted text-ink-muted",
                   )}
                   aria-hidden
                 >
                   {cat.icon}
                 </span>
-                <div className="min-w-0 flex-1 pr-6">
-                  <div className="text-[14px] font-semibold text-ink leading-tight">
+                <div className="min-w-0 pr-4">
+                  <div className="text-[12px] font-semibold text-ink leading-tight">
                     {cat.label}
                   </div>
-                  <div className="mt-0.5 text-[12px] text-ink-muted leading-snug">
+                  <div className="mt-0.5 text-[11px] text-ink-muted leading-snug">
                     {cat.description}
                   </div>
                 </div>
                 <span
                   className={cn(
-                    "absolute top-2.5 right-2.5 grid h-5 w-5 place-items-center rounded-full border transition-colors",
+                    "absolute top-2 right-2 grid h-4 w-4 place-items-center rounded-full border transition-colors",
                     active
                       ? "border-brand-500 bg-brand-500 text-white"
                       : "border-border bg-white",
@@ -365,8 +383,8 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
                   {active && (
                     <svg
                       viewBox="0 0 24 24"
-                      width={12}
-                      height={12}
+                      width={9}
+                      height={9}
                       fill="none"
                       stroke="currentColor"
                       strokeWidth={3}

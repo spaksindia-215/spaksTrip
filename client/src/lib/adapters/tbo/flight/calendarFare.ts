@@ -31,12 +31,13 @@ export interface CalendarFareInput {
 interface TboCalendarResult {
   AirlineCode: string;
   AirlineName: string;
-  DepartureTime: string; // "yyyy-MM-ddTHH:mm:ss"
+  DepartureDate: string; // "yyyy-MM-ddTHH:mm:ss"
   IsLowestFareOfMonth: boolean;
+  Fare: number;
   BaseFare: number;
   Tax: number;
-  YQTax: number;
-  OtherCharge: number;
+  FuelSurcharge: number;
+  OtherCharges: number;
 }
 
 interface TboCalendarResponse {
@@ -54,11 +55,11 @@ interface TboCalendarResponse {
 
 function mapResult(r: TboCalendarResult): CalendarFareDay {
   return {
-    date: r.DepartureTime.slice(0, 10),
-    totalFare: Math.round(r.BaseFare + r.Tax + r.OtherCharge),
+    date: r.DepartureDate.slice(0, 10),
+    totalFare: Math.round(r.Fare ?? r.BaseFare + r.Tax + r.OtherCharges),
     baseFare: r.BaseFare,
     tax: r.Tax,
-    isLowestFareOfMonth: r.IsLowestFareOfMonth,
+    isLowestFareOfMonth: r.IsLowestFareOfMonth ?? false,
     airlineCode: r.AirlineCode,
     airlineName: r.AirlineName,
   };
@@ -75,7 +76,7 @@ function buildSegment(
     Destination: to,
     FlightCabinClass: CABIN_TO_TBO[cabin] ?? "2",
     PreferredDepartureTime: departureTime,
-    // TBO calendar fare is domestic-only; sending the correct cabin int still required
+    PreferredArrivalTime: departureTime,
   };
 }
 
@@ -140,9 +141,13 @@ export async function tboGetCalendarFare(
 
     const body = {
       ...tboBase(token),
+      AdultCount: "1",
+      ChildCount: "0",
+      InfantCount: "0",
+      DirectFlight: "false",
+      OneStopFlight: "false",
       JourneyType: "1",
       PreferredAirlines: null,
-      // TBO expects a flat segment array (same shape as Search), NOT nested [[...]]
       Segments: [buildSegment(input.from, input.to, input.cabin, departureTime)],
       Sources: null,
     };
@@ -177,6 +182,11 @@ export async function tboUpdateCalendarFareOfDay(
 
     const body = {
       ...tboBase(token),
+      AdultCount: "1",
+      ChildCount: "0",
+      InfantCount: "0",
+      DirectFlight: "false",
+      OneStopFlight: "false",
       JourneyType: "1",
       PreferredAirlines: null,
       Segments: [buildSegment(input.from, input.to, input.cabin, departureTime)],

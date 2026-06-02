@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import { PartnerResourceModel, RESOURCE_TYPES, type ResourceType } from "../models/PartnerResource";
+import { BookingModel } from "../models/Booking";
 import {
   validateResourceCreate,
   validateResourceUpdate,
@@ -76,6 +77,21 @@ export async function updateResource(
     );
     if (!doc) throw new HttpError(404, "Resource not found");
     res.json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// Bookings placed against this partner's inventory (scoped by partnerId).
+export async function listBookings(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const items = await BookingModel.find({ partnerId }).sort({ createdAt: -1 });
+    res.json({ items: items.map((i) => i.toJSON()) });
   } catch (e) {
     next(e);
   }

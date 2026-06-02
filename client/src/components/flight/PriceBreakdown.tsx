@@ -1,6 +1,27 @@
 import type { FlightBooking } from "@/state/bookingStore";
 import { formatINR } from "@/lib/format";
 
+const TAX_LABELS: Record<string, string> = {
+  K3: "Passenger Service Fee",
+  YQTax: "Fuel Surcharge",
+  YQ: "Fuel Surcharge",
+  YR: "Airline Surcharge",
+  OtherTaxes: "Other Taxes",
+  OtherCharges: "Other Charges",
+  ServiceFee: "Convenience Fee",
+  IN: "IGST",
+  UK: "Education Cess",
+  PN: "Passenger Noise Fee",
+  CUTE: "CUTE / Airport Fee",
+  PSF: "Passenger Security Fee",
+  UDF: "User Development Fee",
+  ADF: "Airport Development Fee",
+};
+
+function taxLabel(key: string): string {
+  return TAX_LABELS[key] ?? key;
+}
+
 export default function PriceBreakdown({
   booking,
   showTotal = true,
@@ -31,7 +52,30 @@ export default function PriceBreakdown({
             value={formatINR(Math.round(base * 0.1) * pax.infants)}
           />
         )}
-        <Row label="Taxes & fees" value={formatINR(booking.taxes + booking.fees)} />
+        {offer.taxBreakdown && offer.taxBreakdown.length > 0 ? (
+          offer.taxBreakdown.map(({ key, amount }) => (
+            <Row key={key} label={taxLabel(key)} value={formatINR(amount)} />
+          ))
+        ) : (
+          // Mock data: split booking.taxes into realistic named components
+          <>
+            {booking.taxes > 0 && (() => {
+              const yq  = Math.round(booking.taxes * 0.40);
+              const yr  = Math.round(booking.taxes * 0.22);
+              const k3  = Math.round(booking.taxes * 0.18);
+              const oth = booking.taxes - yq - yr - k3;
+              return (
+                <>
+                  <Row label="Fuel Surcharge (YQ)" value={formatINR(yq)} />
+                  <Row label="Airline Surcharge (YR)" value={formatINR(yr)} />
+                  <Row label="Passenger Service Fee" value={formatINR(k3)} />
+                  {oth > 0 && <Row label="Other Taxes" value={formatINR(oth)} />}
+                </>
+              );
+            })()}
+            {booking.fees > 0 && <Row label="Convenience Fee" value={formatINR(booking.fees)} />}
+          </>
+        )}
         {addOns.seats > 0 && <Row label="Seat selection" value={formatINR(addOns.seats)} />}
         {addOns.meals > 0 && <Row label="Meals" value={formatINR(addOns.meals)} />}
         {addOns.baggage > 0 && <Row label="Extra baggage" value={formatINR(addOns.baggage)} />}

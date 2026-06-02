@@ -34,7 +34,7 @@ function mapUser(user: ApiAuthUser, displayNameOverride?: string): AuthUser {
   return {
     id: user.id,
     email: user.email,
-    displayName: displayNameOverride?.trim() || toDisplayName(user.email),
+    displayName: displayNameOverride?.trim() || user.name?.trim() || toDisplayName(user.email),
     role: user.role,
   };
 }
