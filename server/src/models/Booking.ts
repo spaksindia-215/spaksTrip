@@ -1,5 +1,6 @@
 import { Schema, model, Types, HydratedDocument } from "mongoose";
 import { ROLES, type Role } from "./User";
+import type { AnyBookingDetails } from "./bookingDetails";
 
 export const PRODUCT_TYPES = ["flight", "hotel", "taxi", "tour", "cruise", "package"] as const;
 export type ProductType = (typeof PRODUCT_TYPES)[number];
@@ -19,7 +20,7 @@ export interface IBooking {
   currency: string;
   holdExpiresAt?: Date;
   cancelRequestedAt?: Date;
-  details: Record<string, unknown>;
+  details: AnyBookingDetails;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -39,6 +39,13 @@ const TYPE_COPY: Record<
     badge: "brand" | "accent" | "success" | "info";
   }
 > = {
+  hotel: {
+    singular: "Hotel",
+    plural: "Hotels",
+    eyebrow: "Property listings with rooms and amenities",
+    tint: "hsl(265 60% 52%)",
+    badge: "brand",
+  },
   cruise: {
     singular: "Cruise",
     plural: "Cruises",
@@ -74,21 +81,86 @@ const TYPE_COPY: Record<
     tint: "hsl(347 74% 54%)",
     badge: "brand",
   },
+};
+
+// Valid per-type skeletons so the details editor starts from a correct shape
+// (server validates these fields per type). Typed form fields replace this JSON
+// editor in a follow-up step.
+const DETAIL_TEMPLATES: Record<ResourceType, Record<string, unknown>> = {
   hotel: {
-    singular: "Hotel",
-    plural: "Hotels",
-    eyebrow: "Accommodations and lodging options",
-    tint: "hsl(215 70% 50%)",
-    badge: "info",
+    starRating: 3,
+    propertyType: "hotel",
+    city: "",
+    country: "",
+    address: "",
+    amenities: [],
+    rooms: [
+      {
+        name: "",
+        type: "standard",
+        bedType: "double",
+        maxOccupancy: 2,
+        basePrice: 0,
+        refundable: true,
+        breakfast: false,
+      },
+    ],
+  },
+  cruise: {
+    cruiseLine: "",
+    ship: "",
+    departurePort: "",
+    route: "",
+    durationNights: 1,
+    cabinTypes: [],
+    amenities: [],
+  },
+  taxi: {
+    vehicleType: "Sedan",
+    brand: "",
+    model: "",
+    registrationNumber: "",
+    seatingCapacity: 4,
+    fuelType: "Petrol",
+    transmission: "Manual",
+    acAvailable: true,
+    operatingCity: "",
+    serviceAreas: [],
+    minimumFare: 0,
+    pricePerKm: 0,
+    driverIncluded: true,
+    selfDriveAvailable: false,
+    amenities: [],
+  },
+  taxi_package: {
+    vehicleType: "Sedan",
+    seatingCapacity: 4,
+    operatingCity: "",
+    durationDays: 1,
+    durationNights: 0,
+    itinerary: [],
+    inclusions: [],
+  },
+  tour: {
+    destination: "",
+    languages: [],
+    inclusions: [],
+  },
+  tour_package: {
+    destinations: [],
+    durationDays: 1,
+    durationNights: 0,
+    itinerary: [],
+    inclusions: [],
   },
 };
 
-function buildInitialForm(item?: PartnerResource | null): FormState {
+function buildInitialForm(type: ResourceType, item?: PartnerResource | null): FormState {
   return {
     title: item?.title ?? "",
     description: item?.description ?? "",
     price: item ? String(item.price) : "",
-    metadata: item ? JSON.stringify(item.metadata, null, 2) : "{}",
+    metadata: JSON.stringify(item ? item.metadata : DETAIL_TEMPLATES[type], null, 2),
   };
 }
 
@@ -113,7 +185,7 @@ export default function ResourceManager({ type }: Props) {
   const [editing, setEditing] = useState<PartnerResource | null>(null);
   const [pendingDelete, setPendingDelete] = useState<PartnerResource | null>(null);
   const [deleting, setDeleting] = useState(false);
-  const [form, setForm] = useState<FormState>(() => buildInitialForm());
+  const [form, setForm] = useState<FormState>(() => buildInitialForm(type));
 
   const isEditing = Boolean(editing);
   const sectionTitle = useMemo(() => copy.plural, [copy.plural]);
@@ -168,13 +240,13 @@ export default function ResourceManager({ type }: Props) {
 
   const openCreate = () => {
     setEditing(null);
-    setForm(buildInitialForm());
+    setForm(buildInitialForm(type));
     setDrawerOpen(true);
   };
 
   const openEdit = (item: PartnerResource) => {
     setEditing(item);
-    setForm(buildInitialForm(item));
+    setForm(buildInitialForm(type, item));
     setDrawerOpen(true);
   };
 
@@ -182,7 +254,7 @@ export default function ResourceManager({ type }: Props) {
     if (saving) return;
     setDrawerOpen(false);
     setEditing(null);
-    setForm(buildInitialForm());
+    setForm(buildInitialForm(type));
   };
 
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {

@@ -1,7 +1,7 @@
 import { Schema, model, Types, HydratedDocument } from "mongoose";
+import { RESOURCE_TYPES, type ResourceType, type AnyResourceDetails } from "./partnerInventory";
 
-export const RESOURCE_TYPES = ["cruise", "taxi", "taxi_package", "tour", "tour_package"] as const;
-export type ResourceType = (typeof RESOURCE_TYPES)[number];
+export { RESOURCE_TYPES, type ResourceType } from "./partnerInventory";
 
 export interface IPartnerResource {
   partnerId: Types.ObjectId;
@@ -9,7 +9,8 @@ export interface IPartnerResource {
   title: string;
   description: string;
   price: number;
-  metadata: Record<string, unknown>;
+  // Structured, per-type inventory detail (shape determined by `type`).
+  metadata: AnyResourceDetails;
   createdAt: Date;
   updatedAt: Date;
 }

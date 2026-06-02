@@ -15,6 +15,7 @@ type Props = {
 
 const NAV_ITEMS = [
   { href: "/partner/dashboard", label: "Dashboard" },
+  { href: "/partner/hotels", label: "Hotels" },
   { href: "/partner/cruises", label: "Cruises" },
   { href: "/partner/taxis", label: "Taxis" },
   { href: "/partner/taxi-packages", label: "Taxi Packages" },

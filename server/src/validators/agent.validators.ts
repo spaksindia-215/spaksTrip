@@ -1,5 +1,6 @@
 import { HttpError } from "../middleware/error";
 import { PRODUCT_TYPES, type ProductType } from "../models/Booking";
+import type { AnyBookingDetails } from "../models/bookingDetails";
 
 const MAX_HOLD_MINUTES = 1440; // 24h cap
 const DEFAULT_HOLD_MINUTES = 30;
@@ -11,7 +12,7 @@ export interface BookingCreateInput {
   pnr?: string;
   status: "active" | "held";
   holdMinutes: number;
-  details: Record<string, unknown>;
+  details: AnyBookingDetails;
 }
 
 function isObject(v: unknown): v is Record<string, unknown> {
@@ -53,6 +54,6 @@ export function validateBookingCreate(body: unknown): BookingCreateInput {
     pnr: typeof pnr === "string" && pnr.trim() ? pnr.trim() : undefined,
     status: resolvedStatus,
     holdMinutes: resolvedHold,
-    details: isObject(details) ? details : {},
+    details: isObject(details) ? (details as AnyBookingDetails) : {},
   };
 }

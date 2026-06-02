@@ -1,7 +1,13 @@
 import { api } from "@/lib/api";
 import type { Booking } from "@/lib/customerClient";
 
-export type ResourceType = "cruise" | "taxi" | "taxi_package" | "tour" | "tour_package";
+export type ResourceType =
+  | "hotel"
+  | "cruise"
+  | "taxi"
+  | "taxi_package"
+  | "tour"
+  | "tour_package";
 
 export type PartnerResource = {
   id: string;
