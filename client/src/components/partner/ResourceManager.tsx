@@ -133,13 +133,22 @@ const DETAIL_TEMPLATES: Record<ResourceType, Record<string, unknown>> = {
     amenities: [],
   },
   taxi_package: {
-    vehicleType: "Sedan",
-    seatingCapacity: 4,
-    operatingCity: "",
+    slug: "",
+    pickupLocation: "",
+    dropLocation: "",
     durationDays: 1,
     durationNights: 0,
-    itinerary: [],
-    inclusions: [],
+    coverImage: "",
+    galleryImages: [],
+    itinerary: [
+      {
+        day: 1,
+        title: "Day 1",
+        description: "Describe the first day of the itinerary",
+      },
+    ],
+    inclusions: ["Vehicle and driver", "Fuel", "Toll charges"],
+    basePrice: 0,
   },
   tour: {
     destination: "",
@@ -342,7 +351,7 @@ export default function ResourceManager({ type }: Props) {
     setDeleting(true);
 
     try {
-      await partnerClient.remove(pendingDelete.id);
+      await partnerClient.remove(pendingDelete.id, pendingDelete.type);
       setItems((current) => current.filter((item) => item.id !== pendingDelete.id));
       toast.push({
         title: `${copy.singular} deleted`,
@@ -434,10 +443,13 @@ export default function ResourceManager({ type }: Props) {
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div>
-                      <div className="mb-2">
+                      <div className="mb-2 flex items-center gap-1.5">
                         <Badge tone={copy.badge} size="sm">
                           {copy.singular}
                         </Badge>
+                        {item.status === "pending" && <Badge tone="warn" size="sm">Pending Review</Badge>}
+                        {item.status === "rejected" && <Badge tone="danger" size="sm">Rejected</Badge>}
+                        {item.status === "approved" && <Badge tone="success" size="sm">Approved</Badge>}
                       </div>
                       <h2 className="text-[16px] font-bold text-ink">{item.title}</h2>
                       <p className="mt-1 text-[13px] text-ink-muted">

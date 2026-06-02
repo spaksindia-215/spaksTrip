@@ -17,8 +17,24 @@ export type AdminUser = {
   createdAt: string;
 };
 
+export type AdminListing = {
+  id: string;
+  resourceType: string;
+  type: string;
+  title: string;
+  description: string;
+  price: number;
+  status: "pending" | "approved" | "rejected";
+  partnerId: string;
+  partnerName: string | null;
+  partnerEmail: string | null;
+  createdAt: string;
+  metadata: Record<string, unknown>;
+};
+
 type ListResponse = { items: AdminUser[] };
 type UserResponse = { user: AdminUser };
+type ListingsResponse = { items: AdminListing[] };
 
 // Admin endpoints never participate in user-JWT refresh — skipRefresh avoids a
 // pointless /api/auth/refresh round-trip on 401 (which just means "no admin session").
@@ -75,5 +91,26 @@ export const adminClient = {
       skipRefresh: true,
     });
     return res.user;
+  },
+
+  async pendingListings(): Promise<AdminListing[]> {
+    const res = await api<ListingsResponse>("/api/admin/listings/pending", { skipRefresh: true });
+    return res.items;
+  },
+
+  async approveListing(id: string, type: string): Promise<void> {
+    await api<unknown>(`/api/admin/listings/${id}/approve`, {
+      method: "POST",
+      body: { type },
+      skipRefresh: true,
+    });
+  },
+
+  async rejectListing(id: string, type: string): Promise<void> {
+    await api<unknown>(`/api/admin/listings/${id}/reject`, {
+      method: "POST",
+      body: { type },
+      skipRefresh: true,
+    });
   },
 };

@@ -34,8 +34,13 @@ type EditorErrors = Partial<Record<keyof TaxiListingEditorDraft, string>>;
 
 export default function MyTaxiDashboard() {
   const toast = useToast();
-  const listings = useSyncExternalStore(subscribeTaxiListings, getStoredTaxiListings, () => []);
-  const [editing, setEditing] = useState<TaxiListing | null>(null);
+const EMPTY_LISTINGS: TaxiListing[] = [];
+
+const listings = useSyncExternalStore(
+  subscribeTaxiListings,
+  getStoredTaxiListings,
+  () => EMPTY_LISTINGS
+);  const [editing, setEditing] = useState<TaxiListing | null>(null);
   const [editDraft, setEditDraft] = useState<TaxiListingEditorDraft | null>(null);
   const [errors, setErrors] = useState<EditorErrors>({});
   const [saving, setSaving] = useState(false);

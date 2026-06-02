@@ -10,6 +10,9 @@ import type {
 const TAXI_LISTING_STORAGE_KEY = "spakstrip.list-your-taxi.listings";
 const TAXI_LISTING_EVENT = "spakstrip:list-your-taxi:updated";
 
+let cachedSnapshot: TaxiListing[] | null = null;
+let cachedRawValue: string | null = null;
+
 const PHONE_PATTERN = /^[+\d][\d\s-]{9,14}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -257,10 +260,29 @@ export function getStoredTaxiListings(): TaxiListing[] {
 
   try {
     const raw = window.localStorage.getItem(TAXI_LISTING_STORAGE_KEY);
-    if (!raw) return [];
+
+    if (!raw) {
+      if (cachedRawValue !== raw) {
+        cachedRawValue = raw;
+        cachedSnapshot = [];
+      }
+      return cachedSnapshot || [];
+    }
+
+    if (cachedRawValue === raw && cachedSnapshot !== null) {
+      return cachedSnapshot;
+    }
+
     const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) return [];
-    return parsed as TaxiListing[];
+    if (!Array.isArray(parsed)) {
+      cachedRawValue = raw;
+      cachedSnapshot = [];
+      return [];
+    }
+
+    cachedRawValue = raw;
+    cachedSnapshot = parsed as TaxiListing[];
+    return cachedSnapshot;
   } catch {
     return [];
   }
@@ -268,7 +290,10 @@ export function getStoredTaxiListings(): TaxiListing[] {
 
 export function saveStoredTaxiListings(listings: TaxiListing[]) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(TAXI_LISTING_STORAGE_KEY, JSON.stringify(listings));
+  const serialized = JSON.stringify(listings);
+  window.localStorage.setItem(TAXI_LISTING_STORAGE_KEY, serialized);
+  cachedRawValue = serialized;
+  cachedSnapshot = listings;
   window.dispatchEvent(new Event(TAXI_LISTING_EVENT));
 }
 

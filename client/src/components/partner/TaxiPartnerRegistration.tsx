@@ -97,34 +97,78 @@ export default function TaxiPartnerRegistration() {
       setIsSubmitting(true);
       setError(null);
 
-      const formData = new FormData();
+      const vehicleTypeMap: Record<string, string> = {
+        hatchback: "Hatchback",
+        sedan: "Sedan",
+        suv: "SUV",
+        luxury: "Luxury",
+        tempoTraveller: "Tempo Traveller",
+        miniBus: "MUV",
+        bus: "MUV",
+      };
+      const fuelTypeMap: Record<string, string> = {
+        petrol: "Petrol",
+        diesel: "Diesel",
+        cng: "CNG",
+        electric: "Electric",
+        hybrid: "Hybrid",
+      };
 
-      formData.append("taxi", JSON.stringify(taxiData));
-      formData.append("documents", JSON.stringify(documentData));
-      formData.append("serviceArea", JSON.stringify(serviceAreaData));
-      formData.append("pricing", JSON.stringify(pricingData));
-      formData.append("availability", JSON.stringify(availabilityData));
+      const vehicleType = vehicleTypeMap[taxiData.vehicleType ?? ""] ?? taxiData.vehicleType ?? "Sedan";
+      const fuelType = fuelTypeMap[taxiData.fuelType ?? ""] ?? taxiData.fuelType ?? "Petrol";
+      const operatingCity = serviceAreaData.operatingCity ?? "";
 
-      Object.entries(documentData).forEach(([key, file]) => {
-        if (file instanceof File) {
-          formData.append(`document_${key}`, file);
-        }
-      });
+      const serviceAreas: string[] = [operatingCity].filter(Boolean);
+      if (serviceAreaData.operatingState) serviceAreas.push(serviceAreaData.operatingState);
 
-      if (taxiData.vehicleImages) {
-        taxiData.vehicleImages.forEach((file, index) => {
-          formData.append(`vehicleImage_${index}`, file);
-        });
-      }
+      const availableRoutes: string[] = [];
+      if (serviceAreaData.airportTransfer) availableRoutes.push("Airport Transfer");
+      if (serviceAreaData.localRental) availableRoutes.push("Local Rental");
+      if (serviceAreaData.outstationAvailable) availableRoutes.push("Outstation");
+      if (serviceAreaData.oneWayAvailable) availableRoutes.push("One-Way");
+      if (serviceAreaData.roundTripAvailable) availableRoutes.push("Round Trip");
 
-      const response = await fetch("/api/partner/taxis", {
+      const body = {
+        type: "taxi",
+        title: taxiData.taxiName || `${taxiData.vehicleBrand ?? ""} ${taxiData.vehicleModel ?? ""}`.trim(),
+        description: taxiData.vehicleDescription ?? "",
+        price: pricingData.baseFare ?? 0,
+        metadata: {
+          vehicleType,
+          brand: taxiData.vehicleBrand ?? "",
+          model: taxiData.vehicleModel ?? "",
+          registrationNumber: taxiData.registrationNumber ?? "",
+          seatingCapacity: taxiData.seatingCapacity ?? 0,
+          fuelType,
+          transmission: "Manual",
+          acAvailable: taxiData.acAvailable ?? true,
+          luggageCapacity: taxiData.luggageCapacity,
+          yearOfManufacture: taxiData.vehicleYear,
+          operatingCity,
+          serviceAreas,
+          availableRoutes,
+          minimumFare: pricingData.baseFare ?? 0,
+          pricePerKm: pricingData.perKmCharge ?? 0,
+          driverIncluded: Boolean(taxiData.driverName),
+          selfDriveAvailable: false,
+          amenities: [],
+        },
+      };
+
+      const response = await fetch("/api/partner/resources", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Failed to submit taxi registration");
+        const data = await response.json().catch(() => ({})) as Record<string, unknown>;
+        throw new Error(
+          (typeof data.error === "string" ? data.error : null) ??
+          (typeof data.message === "string" ? data.message : null) ??
+          "Failed to submit taxi registration",
+        );
       }
 
       alert("Taxi registered successfully! It will be reviewed by our admin team.");

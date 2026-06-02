@@ -14,6 +14,7 @@ import {
   upsertTaxiListing,
   validateTaxiListingDraft,
 } from "@/lib/taxiListing";
+import { api, ApiError } from "@/lib/api";
 import { cn } from "@/lib/cn";
 import {
   TAXI_AMENITIES,
@@ -109,14 +110,51 @@ export default function TaxiListingForm() {
     setSubmitting(true);
 
     try {
-      await new Promise((resolve) => window.setTimeout(resolve, 900));
       const listing = createTaxiListingFromDraft(draft);
+
+      await api("/api/partner/resources", {
+        method: "POST",
+        body: {
+          type: "taxi",
+          title: `${listing.brand} ${listing.model} - ${listing.vehicleType}`,
+          description: listing.description,
+          price: listing.minimumFare,
+          metadata: {
+            vehicleType: listing.vehicleType,
+            brand: listing.brand,
+            model: listing.model,
+            registrationNumber: listing.registrationNumber,
+            seatingCapacity: listing.seatingCapacity,
+            fuelType: listing.fuelType,
+            transmission: listing.transmission,
+            acAvailable: listing.acAvailable,
+            luggageCapacity: listing.luggageCapacity,
+            yearOfManufacture: listing.yearOfManufacture,
+            operatingCity: listing.operatingCity,
+            serviceAreas: listing.serviceAreas,
+            availableRoutes: listing.availableRoutes,
+            minimumFare: listing.minimumFare,
+            pricePerKm: listing.pricePerKm,
+            driverIncluded: listing.driverIncluded,
+            selfDriveAvailable: listing.selfDriveAvailable,
+            amenities: listing.amenities,
+          },
+        },
+      });
+
       upsertTaxiListing(listing);
       setSubmittedName(listing.fullName);
       toast.push({
         title: "Taxi listing submitted",
         description: "Redirecting you to your taxi dashboard.",
         tone: "success",
+      });
+    } catch (err) {
+      const message = err instanceof ApiError ? err.message : "Something went wrong. Please try again.";
+      toast.push({
+        title: "Submission failed",
+        description: message,
+        tone: "error",
       });
     } finally {
       setSubmitting(false);

@@ -16,6 +16,7 @@ export type PartnerResource = {
   title: string;
   description: string;
   price: number;
+  status: "pending" | "approved" | "rejected";
   metadata: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
@@ -64,8 +65,8 @@ export const partnerClient = {
     return response.item;
   },
 
-  async remove(id: string): Promise<void> {
-    await api<null>(`/api/partner/resources/${id}`, { method: "DELETE" });
+  async remove(id: string, type: ResourceType): Promise<void> {
+    await api<null>(`/api/partner/resources/${id}?type=${encodeURIComponent(type)}`, { method: "DELETE" });
   },
 
   async bookings(): Promise<Booking[]> {

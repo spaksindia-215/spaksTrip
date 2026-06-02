@@ -9,7 +9,7 @@ import Modal from "@/components/ui/Modal";
 import Tabs from "@/components/ui/Tabs";
 import { useToast } from "@/components/ui/Toast";
 import { ApiError } from "@/lib/api";
-import { adminClient, type AdminUser } from "@/lib/adminClient";
+import { adminClient, type AdminUser, type AdminListing } from "@/lib/adminClient";
 import type { UserRole } from "@/lib/authClient";
 
 const CREDIT_MIN = 8000;
@@ -46,10 +46,14 @@ export default function SuperadminPage() {
   const [password, setPassword] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
 
-  const [tab, setTab] = useState<"pending" | "users">("pending");
+  const [tab, setTab] = useState<"pending" | "listings" | "users">("pending");
 
   const [pending, setPending] = useState<AdminUser[]>([]);
   const [pendingLoading, setPendingLoading] = useState(true);
+
+  const [listings, setListings] = useState<AdminListing[]>([]);
+  const [listingsLoading, setListingsLoading] = useState(true);
+  const [listingActionLoading, setListingActionLoading] = useState<string | null>(null);
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [usersLoading, setUsersLoading] = useState(true);
@@ -94,6 +98,9 @@ export default function SuperadminPage() {
         if (tab === "pending") {
           const items = await adminClient.pending();
           if (active) setPending(items);
+        } else if (tab === "listings") {
+          const items = await adminClient.pendingListings();
+          if (active) setListings(items);
         } else {
           const items = await adminClient.users(userFilter === "all" ? undefined : userFilter);
           if (active) setUsers(items);
@@ -105,6 +112,7 @@ export default function SuperadminPage() {
       } finally {
         if (active) {
           setPendingLoading(false);
+          setListingsLoading(false);
           setUsersLoading(false);
         }
       }
@@ -140,6 +148,34 @@ export default function SuperadminPage() {
       await adminClient.logout();
     } finally {
       setSession("out");
+    }
+  };
+
+  const handleApproveListing = async (listing: AdminListing) => {
+    setListingActionLoading(listing.id);
+    try {
+      await adminClient.approveListing(listing.id, listing.resourceType);
+      setListings((prev) => prev.filter((l) => l.id !== listing.id));
+      toast.push({ title: "Listing approved", tone: "success" });
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : "Approval failed";
+      toast.push({ title: "Error", description: message, tone: "danger" });
+    } finally {
+      setListingActionLoading(null);
+    }
+  };
+
+  const handleRejectListing = async (listing: AdminListing) => {
+    setListingActionLoading(listing.id);
+    try {
+      await adminClient.rejectListing(listing.id, listing.resourceType);
+      setListings((prev) => prev.filter((l) => l.id !== listing.id));
+      toast.push({ title: "Listing rejected", tone: "success" });
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : "Rejection failed";
+      toast.push({ title: "Error", description: message, tone: "danger" });
+    } finally {
+      setListingActionLoading(null);
     }
   };
 
@@ -283,12 +319,72 @@ export default function SuperadminPage() {
           onChange={(value) => setTab(value)}
           items={[
             { value: "pending", label: "Pending Approvals" },
+            { value: "listings", label: "Pending Listings" },
             { value: "users", label: "All Users" },
           ]}
           variant="underline"
         />
 
-        {tab === "pending" ? (
+        {tab === "listings" ? (
+          <section className="mt-6">
+            {listingsLoading ? (
+              <p className="py-12 text-center text-sm text-ink-muted">Loading…</p>
+            ) : listings.length === 0 ? (
+              <EmptyState title="No pending listings" subtitle="New taxi, hotel, and other resource listings submitted by partners will appear here." />
+            ) : (
+              <div className="flex flex-col gap-3">
+                {listings.map((listing) => {
+                  const isActing = listingActionLoading === listing.id;
+                  const typeLabel = listing.resourceType.replace("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
+                  return (
+                    <article
+                      key={listing.id}
+                      className="flex flex-col gap-3 rounded-xl border border-border-soft bg-white p-4 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[15px] font-semibold text-ink">{listing.title}</span>
+                          <Badge tone="brand" size="sm">{typeLabel}</Badge>
+                        </div>
+                        <p className="text-[13px] text-ink-muted">
+                          {listing.partnerName ?? "Unknown partner"} · {listing.partnerEmail ?? ""}
+                        </p>
+                        <p className="text-[12px] text-ink-subtle">
+                          Price: ₹{listing.price.toLocaleString("en-IN")}
+                          {typeof listing.metadata?.operatingCity === "string"
+                            ? ` · ${listing.metadata.operatingCity}`
+                            : typeof listing.metadata?.city === "string"
+                            ? ` · ${listing.metadata.city}`
+                            : ""}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          variant="primary"
+                          size="sm"
+                          loading={isActing}
+                          onClick={() => handleApproveListing(listing)}
+                        >
+                          Approve
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="danger"
+                          size="sm"
+                          loading={isActing}
+                          onClick={() => handleRejectListing(listing)}
+                        >
+                          Reject
+                        </Button>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        ) : tab === "pending" ? (
           <section className="mt-6">
             {pendingLoading ? (
               <p className="py-12 text-center text-sm text-ink-muted">Loading…</p>

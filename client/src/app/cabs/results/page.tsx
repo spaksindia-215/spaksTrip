@@ -106,10 +106,10 @@ function CabResultsContent({
             <div className="flex flex-col gap-3" aria-live="polite">
               {displayed.length === 0 ? (
                 <InventoryUnavailable
-                  title="Cab inventory is currently unavailable"
-                  subtitle="This cab flow no longer uses generated vehicles. Connect a live supplier to restore results."
+                  title="No cabs available for this route"
+                  subtitle="No verified taxi partners have registered for this area yet. Try changing your pickup city or check back soon."
                   href="/cabs"
-                  ctaLabel="Back to Cab Search"
+                  ctaLabel="Modify Search"
                 />
               ) : (
                 displayed.map((cab) => (

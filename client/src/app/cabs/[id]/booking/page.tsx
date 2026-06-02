@@ -8,9 +8,8 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Badge from "@/components/ui/Badge";
 import { formatINR } from "@/lib/format";
-import { getCab, type CabOffer } from "@/services/cabs";
+import { getCab, createTaxiBooking, type CabOffer } from "@/services/cabs";
 import { useToast } from "@/components/ui/Toast";
-import { sleep } from "@/services/delay";
 
 export default function CabBookingPage() {
   return (
@@ -44,6 +43,7 @@ function CabBookingInner() {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [confirmed, setConfirmed] = useState<string | null>(null);
@@ -55,10 +55,35 @@ function CabBookingInner() {
   const onBook = async () => {
     if (!name.trim()) { toast.push({ title: "Enter your name", tone: "warn" }); return; }
     if (!phone.replace(/\D/g, "").length) { toast.push({ title: "Enter phone number", tone: "warn" }); return; }
+    if (!date) { toast.push({ title: "Travel date is required", tone: "warn" }); return; }
+    if (!cab) return;
     setSubmitting(true);
-    await sleep(1200);
-    setConfirmed(`CAB${Math.floor(Math.random() * 900000 + 100000)}`);
-    toast.push({ title: "Cab booked successfully!", tone: "success" });
+    try {
+      const [firstName = "", ...lastParts] = name.trim().split(" ");
+      const booking = await createTaxiBooking({
+        taxiId: cab.id,
+        pickupLocation: from,
+        dropLocation: to,
+        pickupDate: date,
+        pickupTime: time,
+        vehicleType: cab.type,
+        passengers: 1,
+        amount: cab.basePrice,
+        customerDetails: {
+          email,
+          phone,
+          firstName,
+          lastName: lastParts.join(" "),
+          address,
+        },
+      });
+      setConfirmed(booking.id);
+      toast.push({ title: "Cab booking confirmed!", tone: "success" });
+    } catch {
+      toast.push({ title: "Booking failed. Please try again.", tone: "danger" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -136,22 +161,21 @@ function CabBookingInner() {
             <p className="text-[20px] font-extrabold text-ink shrink-0">{formatINR(cab.basePrice)}</p>
           </div>
 
-          {/* Passenger details */}
+          {/* Contact & Passenger details */}
           <div className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs) mb-4">
-            <h2 className="text-[15px] font-bold text-ink mb-3">Passenger Details</h2>
+            <h2 className="text-[15px] font-bold text-ink mb-3">Contact Info</h2>
             <div className="flex flex-col gap-3">
-              <Input label="Full Name" value={name} onChange={(e) => setName(e.target.value)} placeholder="As on ID" />
+              <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com" />
               <Input label="Phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 98765 43210" />
-              <Input label="Pickup Address (optional)" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Door / landmark for pickup" />
             </div>
           </div>
 
-          <div className="rounded-xl bg-warn-50 text-warn-600 text-[12px] font-medium px-4 py-3 mb-4 flex items-start gap-2">
-            <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden className="mt-0.5 shrink-0">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-              <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
-            </svg>
-            Live cab booking is not available on this flow yet.
+          <div className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs) mb-4">
+            <h2 className="text-[15px] font-bold text-ink mb-3">Traveler Info</h2>
+            <div className="flex flex-col gap-3">
+              <Input label="Full Name" value={name} onChange={(e) => setName(e.target.value)} placeholder="As on ID" />
+              <Input label="Pickup Address (optional)" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Door / landmark for pickup" />
+            </div>
           </div>
 
           <Button variant="accent" size="xl" onClick={onBook} loading={submitting} fullWidth>
