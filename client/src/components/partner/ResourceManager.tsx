@@ -67,6 +67,13 @@ const TYPE_COPY: Record<
     tint: "hsl(347 74% 54%)",
     badge: "brand",
   },
+  hotel: {
+    singular: "Hotel",
+    plural: "Hotels",
+    eyebrow: "Accommodations and lodging options",
+    tint: "hsl(215 70% 50%)",
+    badge: "info",
+  },
 };
 
 function buildInitialForm(item?: PartnerResource | null): FormState {

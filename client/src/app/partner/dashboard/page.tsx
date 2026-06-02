@@ -8,12 +8,19 @@ import { ApiError } from "@/lib/api";
 import { formatINRShort } from "@/lib/format";
 import { partnerClient, type ResourceType } from "@/lib/partnerClient";
 
-const RESOURCE_TYPES: ResourceType[] = ["taxi", "bus", "tour", "package"];
+const RESOURCE_TYPES: ResourceType[] = ["taxi", "bus", "tour", "package", "hotel"];
 
 const COPY: Record<
   ResourceType,
   { label: string; tint: string; blurb: string; href: string; badge: "brand" | "accent" | "success" | "info" }
 > = {
+  hotel: {
+    label: "Hotels",
+    tint: "hsl(224 78% 54%)",
+    blurb: "List and manage your hotel properties",
+    href: "/partner/hotels",
+    badge: "brand",
+  },
   taxi: {
     label: "Taxis",
     tint: "hsl(32 78% 48%)",

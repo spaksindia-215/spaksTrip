@@ -1,6 +1,6 @@
 import { api } from "@/lib/api";
 
-export type ResourceType = "taxi" | "bus" | "tour" | "package";
+export type ResourceType = "taxi" | "bus" | "tour" | "package" | "hotel";
 
 export type PartnerResource = {
   id: string;
