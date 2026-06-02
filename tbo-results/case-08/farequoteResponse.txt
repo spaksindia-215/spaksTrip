@@ -6,11 +6,9 @@
         "ErrorCode": 0,
         "ErrorMessage": ""
       },
-      "FlightDetailChangeInfo": "FlightCabinClassChanged",
+      "FlightDetailChangeInfo": null,
       "IsPriceChanged": false,
-      "ItineraryChangeList": [
-        2
-      ],
+      "ItineraryChangeList": [],
       "ResponseStatus": 1,
       "Results": {
         "FareInclusions": [],
@@ -22,7 +20,7 @@
         "IsHoldMandatoryWithSSR": false,
         "LastNameFormat": "For Canada: If LastName is missing, set LastName as \"LNU\" and FirstName as \"Given Name(s) Title\" (e.g., LNU/JEREMY BROWN MR).\r\nFor UAE: If LastName is missing but full name exists in GivenName (e.g., \"Maryam Ali\"), set LastName as full name and FirstName as \"FNU Title\" (e.g., MARYAM ALI/FNU MS).\r\nFor Australia & New Zealand: If only one name exists on the passport, repeat the name as both LastName and FirstName (e.g., JONES/JONES MR).",
         "RequiredFieldValidators": {},
-        "ResultIndex": "OB9[TBO]qxGMHPkAGP4ga0D3p1sRGIunoL7N7ydCzcX16YrfMXWta1v0cELo+R8wjdZ4Mggaalm7iWA7c1Jo3htF34yAJuxnpWvvyVnIKnGyPK4e6Vmf+p/VS6tFmd93oHAed9dzuIhcJblX2OHAIaqRjy5FEYS1q112vfxRPa/gvmnbEt+rSGu8a2dJ2HxrvwYR8poeGUUpgLx3dh6NbVFuOFD2WeMvBrQmLAEFA7Wf7hFg6zja/ZVPrQOunI6EF2rZdYpmMmSngfyGzpAKKtJe2+BSyBOpJM2l05yZi0t3ICegXutpAilR5q+4XvLhqFWomfPck9+hGFRX0yXvjmliFL+p6Ypd5zh58Ijk1PFXszchcgVO0NCoFGR7jvyLnoBXLRlBiCY1T7vC2w/ox+bGlX33R7r8tT7PV5X/YJM0gGDw3wAkbgkRXtvAhOn1Zp8dUruxQBTc+G2alcGRV+W0qZa3hF6ZPU1PtRSUNO9IqZNtsf1WOsNb5R6cY9VQAD7eLe9Qp5hbdkZNJpSyEgdplnL884rPfhezlRJrbq10yPwGVEYwIEpi9C8M7qGDUfgnKWRAfnd/obIqrvsbZbriQLEwD1wZwpGcYCdKAVqlNew3vkpE61+y5qXBc5KcuXIa+rLaJ3W2btrvkTo2yjwKuvG43nylMOATyNcMAcVNXwLVkaHepvyZjrmmPXjvgzD3kDZFJRzZ0kNZxQWjgXl0KD3MyzItr5mk6O9m58JycJrQg1FIddXOhCpLvI2nL28w2XQ6zcR+sZL+9kDCEnf/OnWtl3T+vNklZlXjfSi9APMR0suAZL7fCqc+tVBmSTnQu7h08EgpdTUdafVTzlYmHxJB+jCn1kyYxACyHPQDoTYL59KpAmn1TrkO7KyanDLyUnPE+MbgSOQWAs1WzEwChVaiJUhvvAg0qX+ANHi0kG1uHWtYU9RJeDpMmF7csIQdBVONk/UAq2csqRjOnw3oCq8c+DbsHVB73kgH1QzcIAHTLEGkwPHLn8WUM3rYLMc9/+t8aEFPmTLRZTUqzc+Mw7ktjfG+cOaLVC1+vJSNGjDkj39yce4LSJCL1D74r7xYmtoLNG3rawp+624S7+oyi7T1yzL+NV/b81vfYsV0z0h0HqTw3ltxgXN9roLDKzrD6LP0KLWrGGPAZjD4MYJhj80PvS0VK7tZLPryqFleErC4ootQjDNl71qfMMPjpWCIX4D1CUu+CTNHAKxwr3yug2+wkg==",
+        "ResultIndex": "OB11[TBO]sZTcmzaWdRJxLSZYqsybjP+2UpXv5C7UdIl/mXpZz9PTj6f3ZBkw1aSvgpcAyncfJthtex14DkPQDLXxm0EleOlHS1uBVhFHsz/clMybHby0wyVa7GmcEe1Cv/l3jNanOXJY7Fmfvs7eySx79fTeNrNvCEFFMXDT6tR1E/rg1abXxgwyCt/b6etvyxEIXCAuyqFZmvoxWh2TRRvUWx1wUZG1fHCOKxH6eGnP+Wgs0Hx38fl8YuJ5KEy8gYxiYkBf7eqi7NQVrssV66LlTOU6pS/S5JIWhE48KOs8sTIkmH8Yog8ohCV0mQ30aHHEpHdbUs4U0mQKKdszfQDf+Ktccd7HEm3Em4vrO9aoxSXW4fYCOR962v2q7IDyOhHWC6FRjdyeet5Mydh6rsU4+JfLBXLcAOC5Bot4MFIBM5dWJCQdkmmEt1oTXy+4dTR7rDg4tgJx12nJv3x2tx6GG3mL/o9fe15PvIdDVnJStoCRKf+le/8EvCRij7LzB6bKuVH59JICT/wuwPSrS1OO8acd7yquwFXKRZOCTfnie7fq+h4en4hKTheyFjZJ+a3LVO40b1wIOqokqg/6rrnwtxKCWlfImQx9392AjVj3hgKqijiL2nTf5pZj9SsEEVEDqNH263LxHgN7xrlhQaCzt68v2VtBb5LrkiyAfEscMFeHBP2+kp25FG/lSu8irvHxf/O0HVBGoPmP2p4C+QDDIAGKL8Ak9xqYQK7XtsBwQ5m43GYQ4EG6iCDwLVhqlGMYjq+Lf9O28NsUwCKuqjVrbNlUSKFNSQWjPWrWyDPDqogDT8DgJgEpy0oDkjZRuPzrAHcTQjc8dM4m7HADG9GdMNiRFFyB6lw2kbU+h0WxMIfxHPRzkx1OYfS/sIqSs5tbOul93z+7MgWjNFF396uAtmSr6Qz13nk2JRccnUEVJG7GFj0Kihvn9cCJrUfXxXc6lZxhbo7jTrwMgPT5hh8Je+MQuxqme4b2n0lMxPoItaqYc3S6VArSxS4LIfRSfPcNINS3Lx92x5RhjyUuJ39F+Uo8JYRb/1J+OA1WvUu7CcL2RjFlKK8Ww00ZrTyVao7g96//pEJLQ1Sof7Vvr3c6T7EeFwTODdKCG54ON/vAnyA3cx8uSHVFeIgNMFCT0dAST0j8FSECzBKmbqMJXTeScBTaMWOTpYbxtx0/8FPzmNjraTP6V35nCjXGSqpPe1Pko3BwVBhn+L2BzKFBoKv2aoOrDQ==",
         "Source": 77,
         "IsLCC": false,
         "IsRefundable": true,
@@ -42,8 +40,8 @@
           "DCFARAmount": 0,
           "ServiceFeeDisplayType": 0,
           "Currency": "INR",
-          "BaseFare": 21728,
-          "Tax": 5948,
+          "BaseFare": 22014,
+          "Tax": 5962,
           "TaxBreakup": [
             {
               "key": "K3",
@@ -59,7 +57,7 @@
             },
             {
               "key": "OtherTaxes",
-              "value": 3072
+              "value": 3086
             }
           ],
           "YQTax": 1098,
@@ -86,12 +84,12 @@
             }
           ],
           "Discount": 0,
-          "PublishedFare": 27676,
-          "CommissionEarned": 184.76,
+          "PublishedFare": 27976,
+          "CommissionEarned": 187.19,
           "PLBEarned": 0,
           "IncentiveEarned": 0,
-          "OfferedFare": 27565.14,
-          "TdsOnCommission": 73.9,
+          "OfferedFare": 27863.69,
+          "TdsOnCommission": 74.88,
           "TdsOnPLB": 0,
           "TdsOnIncentive": 0,
           "ServiceFee": 0,
@@ -123,8 +121,8 @@
             "Currency": "INR",
             "PassengerType": 1,
             "PassengerCount": 2,
-            "BaseFare": 21728,
-            "Tax": 5948,
+            "BaseFare": 22014,
+            "Tax": 5962,
             "TransactionFee": 0,
             "YQTax": 1098,
             "TaxBreakUp": [
@@ -138,7 +136,7 @@
               },
               {
                 "key": "OtherTaxes",
-                "value": 3072
+                "value": 3086
               }
             ],
             "AdditionalTxnFeePub": 0,
@@ -151,7 +149,7 @@
           [
             {
               "Baggage": "15 KG",
-              "CabinBaggage": "Included",
+              "CabinBaggage": null,
               "CabinClass": 2,
               "SupplierFareClass": "PublishNDC",
               "TripIndicator": 1,
@@ -207,7 +205,7 @@
           [
             {
               "Baggage": "15 KG",
-              "CabinBaggage": "Included",
+              "CabinBaggage": null,
               "CabinClass": 2,
               "SupplierFareClass": "PublishNDC",
               "TripIndicator": 2,
@@ -261,7 +259,7 @@
             }
           ]
         ],
-        "LastTicketDate": "26May26",
+        "LastTicketDate": "02Jun26",
         "TicketAdvisory": null,
         "FareRules": [
           {
@@ -536,7 +534,7 @@
           "Type": "PublishNDC"
         }
       },
-      "TraceId": "79b8c161-6d7a-4f98-9a42-b8d2e99935dd"
+      "TraceId": "eb972ea8-4363-475c-90bb-d9047e372a35"
     }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "TokenId": "5885a7d1-82b5-42b2-bdd8-700fcf62dfed",
+  "TokenId": "39a78cfe-5e09-43cb-8259-7d284f6ae9aa",
   "EndUserIp": "1.1.1.1",
-  "BookingId": 2134140
+  "BookingId": "2136621"
 }

@@ -1,578 +1,558 @@
 {
-  "status": 200,
-  "response": {
     "Response": {
-      "B2B2BStatus": false,
-      "Error": {
-        "ErrorCode": 0,
-        "ErrorMessage": ""
-      },
-      "ResponseStatus": 1,
-      "TraceId": "79b8c161-6d7a-4f98-9a42-b8d2e99935dd",
-      "Response": {
-        "ItineraryChangeList": null,
-        "PNR": "8JMST8",
-        "BookingId": 2133007,
-        "SSRDenied": false,
-        "SSRMessage": null,
-        "IsPriceChanged": false,
-        "IsTimeChanged": false,
-        "FlightItinerary": {
-          "AgentRemarks": "",
-          "CommentDetails": null,
-          "FareClassification": "PublishNDC#lightblue",
-          "IsPartialVoidAllowed": true,
-          "IsSeatsBooked": false,
-          "IssuancePcc": "DELWI2216",
-          "JourneyType": 3,
-          "SearchCombinationType": 2,
-          "SupplierFareClasses": "",
-          "TBOConfNo": "TBF3GAHD2",
-          "TBOTripID": null,
-          "TripIndicator": 1,
-          "BookingAllowedForRoamer": true,
-          "BookingId": 2133007,
-          "IsCouponAppilcable": true,
-          "IsManual": false,
-          "PNR": "8JMST8",
-          "IsDomestic": true,
-          "ResultFareType": "RegularFare",
-          "Source": 77,
-          "Origin": "DEL",
-          "Destination": "MAA",
-          "AirlineCode": "AI",
-          "LastTicketDate": "2026-05-27T22:55:00",
-          "ValidatingAirlineCode": "AI",
-          "AirlineRemark": "We are testing Airline remark node",
-          "IsLCC": false,
-          "NonRefundable": false,
-          "FareType": "RV",
-          "CreditNoteNo": null,
-          "Fare": {
-            "CFARAmount": 0,
-            "DCFARAmount": 0,
-            "ServiceFeeDisplayType": 0,
-            "Currency": "INR",
-            "BaseFare": 21728,
-            "Tax": 5948,
-            "TaxBreakup": [
-              {
-                "key": "K3",
-                "value": 1232
-              },
-              {
-                "key": "YQTax",
-                "value": 2196
-              },
-              {
-                "key": "YR",
-                "value": 680
-              },
-              {
-                "key": "INTax",
-                "value": 896
-              },
-              {
-                "key": "TotalTax",
-                "value": 5948
-              },
-              {
-                "key": "OtherTaxes",
-                "value": 944
-              }
-            ],
-            "YQTax": 1098,
-            "AdditionalTxnFeeOfrd": 0,
-            "AdditionalTxnFeePub": 0,
-            "PGCharge": 0,
-            "OtherCharges": 0,
-            "ChargeBU": [
-              {
-                "key": "TBOMARKUP",
-                "value": 0
-              },
-              {
-                "key": "GLOBALPROCUREMENTCHARGE",
-                "value": 0
-              },
-              {
-                "key": "OTHERCHARGE",
-                "value": 0
-              },
-              {
-                "key": "CONVENIENCECHARGE",
-                "value": 0
-              }
-            ],
-            "Discount": 0,
-            "PublishedFare": 27676,
-            "CommissionEarned": 184.76,
-            "PLBEarned": 0,
-            "IncentiveEarned": 0,
-            "OfferedFare": 27565.14,
-            "TdsOnCommission": 73.9,
-            "TdsOnPLB": 0,
-            "TdsOnIncentive": 0,
-            "ServiceFee": 0,
-            "TotalBaggageCharges": 0,
-            "TotalMealCharges": 0,
-            "TotalSeatCharges": 0,
-            "TotalSpecialServiceCharges": 0
-          },
-          "CreditNoteCreatedOn": null,
-          "Passenger": [
-            {
-              "BarcodeDetails": null,
-              "DocumentDetails": null,
-              "GuardianDetails": null,
-              "IsReissued": false,
-              "SegmentDetails": null,
-              "PaxId": 3435113,
-              "Title": "Mr",
-              "FirstName": "RAHUL",
-              "LastName": "SHARMA",
-              "PaxType": 1,
-              "DateOfBirth": "1985-03-15T00:00:00",
-              "Gender": 1,
-              "IsPANRequired": false,
-              "IsPassportRequired": false,
-              "PAN": "",
-              "PassportNo": "",
-              "AddressLine1": "45 Prithviraj Road",
-              "Fare": {
-                "CFARAmount": 0,
-                "DCFARAmount": 0,
-                "ServiceFeeDisplayType": 0,
-                "Currency": "INR",
-                "BaseFare": 10864,
-                "Tax": 2974,
-                "TaxBreakup": [
-                  {
-                    "key": "K3",
-                    "value": 616
-                  },
-                  {
-                    "key": "YQTax",
-                    "value": 1098
-                  },
-                  {
-                    "key": "YR",
-                    "value": 340
-                  },
-                  {
-                    "key": "INTax",
-                    "value": 448
-                  },
-                  {
-                    "key": "TotalTax",
-                    "value": 2974
-                  },
-                  {
-                    "key": "OtherTaxes",
-                    "value": 472
-                  }
-                ],
-                "YQTax": 549,
-                "AdditionalTxnFeeOfrd": 0,
-                "AdditionalTxnFeePub": 0,
-                "PGCharge": 0,
-                "OtherCharges": 0,
-                "ChargeBU": [
-                  {
-                    "key": "TBOMARKUP",
-                    "value": 0
-                  },
-                  {
-                    "key": "GLOBALPROCUREMENTCHARGE",
-                    "value": 0
-                  },
-                  {
-                    "key": "OTHERCHARGE",
-                    "value": 0
-                  },
-                  {
-                    "key": "CONVENIENCECHARGE",
-                    "value": 0
-                  }
-                ],
-                "Discount": 0,
-                "PublishedFare": 13838,
-                "CommissionEarned": 92.38,
-                "PLBEarned": 0,
-                "IncentiveEarned": 0,
-                "OfferedFare": 13782.57,
-                "TdsOnCommission": 36.95,
-                "TdsOnPLB": 0,
-                "TdsOnIncentive": 0,
-                "ServiceFee": 0,
-                "TotalBaggageCharges": 0,
-                "TotalMealCharges": 0,
-                "TotalSeatCharges": 0,
-                "TotalSpecialServiceCharges": 0
-              },
-              "City": "New Delhi",
-              "CountryCode": "IN",
-              "Nationality": "IN",
-              "ContactNo": "+91 9810001234",
-              "Email": "rahul.sharma@example.com",
-              "IsLeadPax": true,
-              "FFAirlineCode": null,
-              "FFNumber": null,
-              "Ssr": [],
-              "Ticket": {
-                "TicketId": 2436238,
-                "TicketNumber": "2182311299",
-                "IssueDate": "2026-05-26T05:30:00",
-                "ValidatingAirline": "098",
-                "Remarks": "",
-                "ServiceFeeDisplayType": "ShowInTax",
-                "Status": "OK",
-                "ConjunctionNumber": "",
-                "TicketType": "N"
-              },
-              "SegmentAdditionalInfo": [
-                {
-                  "FareBasis": "SK1YXYII",
-                  "NVA": "",
-                  "NVB": "",
-                  "Baggage": "15 KG",
-                  "Meal": null,
-                  "Seat": null,
-                  "SpecialService": null,
-                  "CabinBaggage": "Not Known"
-                },
-                {
-                  "FareBasis": "UU1YXSII",
-                  "NVA": "",
-                  "NVB": "",
-                  "Baggage": "15 KG",
-                  "Meal": null,
-                  "Seat": null,
-                  "SpecialService": null,
-                  "CabinBaggage": "Not Known"
-                }
-              ]
-            },
-            {
-              "BarcodeDetails": null,
-              "DocumentDetails": null,
-              "GuardianDetails": null,
-              "IsReissued": false,
-              "SegmentDetails": null,
-              "PaxId": 3435114,
-              "Title": "Mr",
-              "FirstName": "AMIT",
-              "LastName": "KUMAR",
-              "PaxType": 1,
-              "DateOfBirth": "1982-11-08T00:00:00",
-              "Gender": 1,
-              "IsPANRequired": false,
-              "IsPassportRequired": false,
-              "PAN": "",
-              "PassportNo": "",
-              "AddressLine1": "12 Connaught Place",
-              "Fare": {
-                "CFARAmount": 0,
-                "DCFARAmount": 0,
-                "ServiceFeeDisplayType": 0,
-                "Currency": "INR",
-                "BaseFare": 10864,
-                "Tax": 2974,
-                "TaxBreakup": [
-                  {
-                    "key": "K3",
-                    "value": 616
-                  },
-                  {
-                    "key": "YQTax",
-                    "value": 1098
-                  },
-                  {
-                    "key": "YR",
-                    "value": 340
-                  },
-                  {
-                    "key": "INTax",
-                    "value": 448
-                  },
-                  {
-                    "key": "TotalTax",
-                    "value": 2974
-                  },
-                  {
-                    "key": "OtherTaxes",
-                    "value": 472
-                  }
-                ],
-                "YQTax": 549,
-                "AdditionalTxnFeeOfrd": 0,
-                "AdditionalTxnFeePub": 0,
-                "PGCharge": 0,
-                "OtherCharges": 0,
-                "ChargeBU": [
-                  {
-                    "key": "TBOMARKUP",
-                    "value": 0
-                  },
-                  {
-                    "key": "GLOBALPROCUREMENTCHARGE",
-                    "value": 0
-                  },
-                  {
-                    "key": "OTHERCHARGE",
-                    "value": 0
-                  },
-                  {
-                    "key": "CONVENIENCECHARGE",
-                    "value": 0
-                  }
-                ],
-                "Discount": 0,
-                "PublishedFare": 13838,
-                "CommissionEarned": 92.38,
-                "PLBEarned": 0,
-                "IncentiveEarned": 0,
-                "OfferedFare": 13782.57,
-                "TdsOnCommission": 36.95,
-                "TdsOnPLB": 0,
-                "TdsOnIncentive": 0,
-                "ServiceFee": 0,
-                "TotalBaggageCharges": 0,
-                "TotalMealCharges": 0,
-                "TotalSeatCharges": 0,
-                "TotalSpecialServiceCharges": 0
-              },
-              "City": "New Delhi",
-              "CountryCode": "IN",
-              "Nationality": "IN",
-              "ContactNo": "",
-              "IsLeadPax": false,
-              "FFAirlineCode": null,
-              "FFNumber": null,
-              "Ssr": [],
-              "Ticket": {
-                "TicketId": 2436239,
-                "TicketNumber": "2182311298",
-                "IssueDate": "2026-05-26T05:30:00",
-                "ValidatingAirline": "098",
-                "Remarks": "",
-                "ServiceFeeDisplayType": "ShowInTax",
-                "Status": "OK",
-                "ConjunctionNumber": "",
-                "TicketType": "N"
-              },
-              "SegmentAdditionalInfo": [
-                {
-                  "FareBasis": "SK1YXYII",
-                  "NVA": "",
-                  "NVB": "",
-                  "Baggage": "15 KG",
-                  "Meal": null,
-                  "Seat": null,
-                  "SpecialService": null,
-                  "CabinBaggage": "Not Known"
-                },
-                {
-                  "FareBasis": "UU1YXSII",
-                  "NVA": "",
-                  "NVB": "",
-                  "Baggage": "15 KG",
-                  "Meal": null,
-                  "Seat": null,
-                  "SpecialService": null,
-                  "CabinBaggage": "Not Known"
-                }
-              ]
-            }
-          ],
-          "CancellationCharges": null,
-          "Segments": [
-            {
-              "Baggage": "15 KG",
-              "CabinBaggage": null,
-              "CabinClass": 2,
-              "SupplierFareClass": null,
-              "TripIndicator": 1,
-              "SegmentIndicator": 1,
-              "Airline": {
-                "AirlineCode": "AI",
-                "AirlineName": "Air India",
-                "FlightNumber": "9486",
-                "FareClass": "S",
-                "OperatingCarrier": "IX"
-              },
-              "AirlinePNR": "8JMAQT",
-              "Origin": {
-                "Airport": {
-                  "AirportCode": "DEL",
-                  "AirportName": "Indira Gandhi Airport",
-                  "Terminal": "1",
-                  "CityCode": "DEL",
-                  "CityName": "Delhi",
-                  "CountryCode": "IN",
-                  "CountryName": "India"
-                },
-                "DepTime": "2026-06-15T09:15:00"
-              },
-              "Destination": {
-                "Airport": {
-                  "AirportCode": "BOM",
-                  "AirportName": "Chhatrapati Shivaji International Airport",
-                  "Terminal": "2",
-                  "CityCode": "BOM",
-                  "CityName": "Mumbai",
-                  "CountryCode": "IN",
-                  "CountryName": "India"
-                },
-                "ArrTime": "2026-06-15T11:40:00"
-              },
-              "AccumulatedDuration": 145,
-              "Duration": 145,
-              "GroundTime": 0,
-              "Mile": 0,
-              "StopOver": false,
-              "FlightInfoIndex": "1",
-              "StopPoint": "",
-              "StopPointArrivalTime": null,
-              "StopPointDepartureTime": null,
-              "Craft": "737",
-              "Remark": null,
-              "IsETicketEligible": true,
-              "FlightStatus": "Confirmed",
-              "Status": "HK",
-              "FareClassification": null
-            },
-            {
-              "Baggage": "15 KG",
-              "CabinBaggage": null,
-              "CabinClass": 2,
-              "SupplierFareClass": null,
-              "TripIndicator": 2,
-              "SegmentIndicator": 2,
-              "Airline": {
-                "AirlineCode": "AI",
-                "AirlineName": "Air India",
-                "FlightNumber": "435",
-                "FareClass": "U",
-                "OperatingCarrier": "AI"
-              },
-              "AirlinePNR": "8JMAQT",
-              "Origin": {
-                "Airport": {
-                  "AirportCode": "BOM",
-                  "AirportName": "Chhatrapati Shivaji International Airport",
-                  "Terminal": "2",
-                  "CityCode": "BOM",
-                  "CityName": "Mumbai",
-                  "CountryCode": "IN",
-                  "CountryName": "India"
-                },
-                "DepTime": "2026-06-20T18:10:00"
-              },
-              "Destination": {
-                "Airport": {
-                  "AirportCode": "MAA",
-                  "AirportName": "Chennai International Airport",
-                  "Terminal": "4",
-                  "CityCode": "MAA",
-                  "CityName": "Chennai",
-                  "CountryCode": "IN",
-                  "CountryName": "India"
-                },
-                "ArrTime": "2026-06-20T20:10:00"
-              },
-              "AccumulatedDuration": 120,
-              "Duration": 120,
-              "GroundTime": 0,
-              "Mile": 0,
-              "StopOver": false,
-              "FlightInfoIndex": "2",
-              "StopPoint": "",
-              "StopPointArrivalTime": null,
-              "StopPointDepartureTime": null,
-              "Craft": "319",
-              "Remark": null,
-              "IsETicketEligible": true,
-              "FlightStatus": "Confirmed",
-              "Status": "HK",
-              "FareClassification": null
-            }
-          ],
-          "FareRules": [
-            {
-              "Origin": "BOM",
-              "Destination": "MAA",
-              "Airline": "AI",
-              "FareBasisCode": "UU1YXSII",
-              "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Allowed with Restriction<br />Change after departure - No Show: Allowed with Restriction<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
-              "FareRestriction": "",
-              "FareFamilyCode": "",
-              "FareRuleIndex": "",
-              "FareInclusions": []
-            },
-            {
-              "Origin": "DEL",
-              "Destination": "BOM",
-              "Airline": "AI",
-              "FareBasisCode": "SK1YXYII",
-              "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Not Allowed<br />Change after departure - No Show: Not Allowed<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
-              "FareRestriction": "",
-              "FareFamilyCode": "",
-              "FareRuleIndex": "",
-              "FareInclusions": []
-            }
-          ],
-          "MiniFareRules": [
-            {
-              "CFARExcludedDetails": null,
-              "JourneyPoints": "DEL-BOM-MAA",
-              "Type": "Reissue",
-              "From": "",
-              "To": "",
-              "Unit": "",
-              "Details": "INR 6000*",
-              "OnlineReissueAllowed": true,
-              "OnlineRefundAllowed": false
-            },
-            {
-              "CFARExcludedDetails": null,
-              "JourneyPoints": "DEL-BOM-MAA",
-              "Type": "Cancellation",
-              "From": "",
-              "To": "",
-              "Unit": "",
-              "Details": "INR 10000*",
-              "OnlineReissueAllowed": false,
-              "OnlineRefundAllowed": true
-            }
-          ],
-          "PenaltyCharges": {
-            "ReissueCharge": "",
-            "CancellationCharge": ""
-          },
-          "Status": 5,
-          "Invoice": [
-            {
-              "CreditNoteGSTIN": null,
-              "GSTIN": null,
-              "InvoiceCreatedOn": "2026-05-26T07:19:52",
-              "InvoiceId": 14015,
-              "InvoiceNo": "DW/2627/14015",
-              "InvoiceAmount": 27565,
-              "Remarks": "",
-              "InvoiceStatus": 3
-            }
-          ],
-          "InvoiceAmount": 27565,
-          "InvoiceNo": "DW/2627/14015",
-          "InvoiceStatus": 3,
-          "InvoiceCreatedOn": "2026-05-26T07:19:52",
-          "Remarks": "",
-          "IsWebCheckInAllowed": false
+        "B2B2BStatus": false,
+        "Error": {
+            "ErrorCode": 0,
+            "ErrorMessage": ""
         },
-        "Message": "",
-        "TicketStatus": 1
-      }
+        "ResponseStatus": 1,
+        "TraceId": "eb972ea8-4363-475c-90bb-d9047e372a35",
+        "Response": {
+            "ItineraryChangeList": null,
+            "PNR": "9QS2DU",
+            "BookingId": 2136759,
+            "SSRDenied": false,
+            "SSRMessage": null,
+            "IsPriceChanged": false,
+            "IsTimeChanged": false,
+            "FlightItinerary": {
+                "AgentRemarks": "",
+                "CommentDetails": null,
+                "FareClassification": "PublishNDC#lightblue",
+                "IsPartialVoidAllowed": true,
+                "IsSeatsBooked": false,
+                "IssuancePcc": "DELWI2216",
+                "JourneyType": 3,
+                "SearchCombinationType": 2,
+                "SupplierFareClasses": "",
+                "TBOConfNo": "TBFHNM4SY",
+                "TBOTripID": null,
+                "TripIndicator": 1,
+                "BookingAllowedForRoamer": true,
+                "BookingId": 2136759,
+                "IsCouponAppilcable": true,
+                "IsManual": false,
+                "PNR": "9QS2DU",
+                "IsDomestic": true,
+                "ResultFareType": "RegularFare",
+                "Source": 77,
+                "Origin": "DEL",
+                "Destination": "MAA",
+                "AirlineCode": "AI",
+                "LastTicketDate": "2026-06-03T22:55:00",
+                "ValidatingAirlineCode": "AI",
+                "AirlineRemark": "We are testing Airline remark node",
+                "IsLCC": false,
+                "NonRefundable": false,
+                "FareType": "RV",
+                "CreditNoteNo": null,
+                "Fare": {
+                    "CFARAmount": 0,
+                    "DCFARAmount": 0,
+                    "ServiceFeeDisplayType": 0,
+                    "Currency": "INR",
+                    "BaseFare": 22014,
+                    "Tax": 5962,
+                    "TaxBreakup": [
+                        {
+                            "key": "K3",
+                            "value": 1246
+                        },
+                        {
+                            "key": "YQTax",
+                            "value": 2196
+                        },
+                        {
+                            "key": "YR",
+                            "value": 680
+                        },
+                        {
+                            "key": "INTax",
+                            "value": 896
+                        },
+                        {
+                            "key": "TotalTax",
+                            "value": 5962
+                        },
+                        {
+                            "key": "OtherTaxes",
+                            "value": 944
+                        }
+                    ],
+                    "YQTax": 1098,
+                    "AdditionalTxnFeeOfrd": 0,
+                    "AdditionalTxnFeePub": 0,
+                    "PGCharge": 0,
+                    "OtherCharges": 0,
+                    "ChargeBU": [
+                        {
+                            "key": "TBOMARKUP",
+                            "value": 0
+                        },
+                        {
+                            "key": "GLOBALPROCUREMENTCHARGE",
+                            "value": 0
+                        },
+                        {
+                            "key": "OTHERCHARGE",
+                            "value": 0
+                        },
+                        {
+                            "key": "CONVENIENCECHARGE",
+                            "value": 0
+                        }
+                    ],
+                    "Discount": 0,
+                    "PublishedFare": 27976,
+                    "CommissionEarned": 187.2,
+                    "PLBEarned": 0,
+                    "IncentiveEarned": 0,
+                    "OfferedFare": 27863.68,
+                    "TdsOnCommission": 74.88,
+                    "TdsOnPLB": 0,
+                    "TdsOnIncentive": 0,
+                    "ServiceFee": 0,
+                    "TotalBaggageCharges": 0,
+                    "TotalMealCharges": 0,
+                    "TotalSeatCharges": 0,
+                    "TotalSpecialServiceCharges": 0
+                },
+                "CreditNoteCreatedOn": null,
+                "Passenger": [
+                    {
+                        "BarcodeDetails": null,
+                        "DocumentDetails": null,
+                        "GuardianDetails": null,
+                        "IsReissued": false,
+                        "SegmentDetails": null,
+                        "PaxId": 3438987,
+                        "Title": "Mr",
+                        "FirstName": "RAHUL",
+                        "LastName": "AGNIHOTRI",
+                        "PaxType": 1,
+                        "DateOfBirth": "1985-03-15T00:00:00",
+                        "Gender": 1,
+                        "IsPANRequired": false,
+                        "IsPassportRequired": false,
+                        "PAN": "",
+                        "PassportNo": "",
+                        "AddressLine1": "45 Prithviraj Road",
+                        "Fare": {
+                            "CFARAmount": 0,
+                            "DCFARAmount": 0,
+                            "ServiceFeeDisplayType": 0,
+                            "Currency": "INR",
+                            "BaseFare": 11007,
+                            "Tax": 2981,
+                            "TaxBreakup": [
+                                {
+                                    "key": "K3",
+                                    "value": 623
+                                },
+                                {
+                                    "key": "YQTax",
+                                    "value": 1098
+                                },
+                                {
+                                    "key": "YR",
+                                    "value": 340
+                                },
+                                {
+                                    "key": "INTax",
+                                    "value": 448
+                                },
+                                {
+                                    "key": "TotalTax",
+                                    "value": 2981
+                                },
+                                {
+                                    "key": "OtherTaxes",
+                                    "value": 472
+                                }
+                            ],
+                            "YQTax": 549,
+                            "AdditionalTxnFeeOfrd": 0,
+                            "AdditionalTxnFeePub": 0,
+                            "PGCharge": 0,
+                            "OtherCharges": 0,
+                            "ChargeBU": [
+                                {
+                                    "key": "TBOMARKUP",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "GLOBALPROCUREMENTCHARGE",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "OTHERCHARGE",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "CONVENIENCECHARGE",
+                                    "value": 0
+                                }
+                            ],
+                            "Discount": 0,
+                            "PublishedFare": 13988,
+                            "CommissionEarned": 93.6,
+                            "PLBEarned": 0,
+                            "IncentiveEarned": 0,
+                            "OfferedFare": 13931.84,
+                            "TdsOnCommission": 37.44,
+                            "TdsOnPLB": 0,
+                            "TdsOnIncentive": 0,
+                            "ServiceFee": 0,
+                            "TotalBaggageCharges": 0,
+                            "TotalMealCharges": 0,
+                            "TotalSeatCharges": 0,
+                            "TotalSpecialServiceCharges": 0
+                        },
+                        "City": "New Delhi",
+                        "CountryCode": "IN",
+                        "Nationality": "IN",
+                        "ContactNo": "+91 9810001234",
+                        "Email": "rahul.sharma@example.com",
+                        "IsLeadPax": true,
+                        "FFAirlineCode": null,
+                        "FFNumber": null,
+                        "Ssr": [],
+                        "Ticket": {
+                            "TicketId": 2439489,
+                            "TicketNumber": "2182312507",
+                            "IssueDate": "2026-06-02T05:30:00",
+                            "ValidatingAirline": "098",
+                            "Remarks": "",
+                            "ServiceFeeDisplayType": "ShowInTax",
+                            "Status": "OK",
+                            "ConjunctionNumber": "",
+                            "TicketType": "N"
+                        },
+                        "SegmentAdditionalInfo": [
+                            {
+                                "FareBasis": "SK1YXYII",
+                                "NVA": "",
+                                "NVB": "",
+                                "Baggage": "15 KG",
+                                "Meal": null,
+                                "Seat": null,
+                                "SpecialService": null,
+                                "CabinBaggage": "Not Known"
+                            },
+                            {
+                                "FareBasis": "UU1YXSII",
+                                "NVA": "",
+                                "NVB": "",
+                                "Baggage": "15 KG",
+                                "Meal": null,
+                                "Seat": null,
+                                "SpecialService": null,
+                                "CabinBaggage": "Not Known"
+                            }
+                        ]
+                    },
+                    {
+                        "BarcodeDetails": null,
+                        "DocumentDetails": null,
+                        "GuardianDetails": null,
+                        "IsReissued": false,
+                        "SegmentDetails": null,
+                        "PaxId": 3438988,
+                        "Title": "Mr",
+                        "FirstName": "AMIT",
+                        "LastName": "Bachchan",
+                        "PaxType": 1,
+                        "DateOfBirth": "1982-11-08T00:00:00",
+                        "Gender": 1,
+                        "IsPANRequired": false,
+                        "IsPassportRequired": false,
+                        "PAN": "",
+                        "PassportNo": "",
+                        "AddressLine1": "12 Connaught Place",
+                        "Fare": {
+                            "CFARAmount": 0,
+                            "DCFARAmount": 0,
+                            "ServiceFeeDisplayType": 0,
+                            "Currency": "INR",
+                            "BaseFare": 11007,
+                            "Tax": 2981,
+                            "TaxBreakup": [
+                                {
+                                    "key": "K3",
+                                    "value": 623
+                                },
+                                {
+                                    "key": "YQTax",
+                                    "value": 1098
+                                },
+                                {
+                                    "key": "YR",
+                                    "value": 340
+                                },
+                                {
+                                    "key": "INTax",
+                                    "value": 448
+                                },
+                                {
+                                    "key": "TotalTax",
+                                    "value": 2981
+                                },
+                                {
+                                    "key": "OtherTaxes",
+                                    "value": 472
+                                }
+                            ],
+                            "YQTax": 549,
+                            "AdditionalTxnFeeOfrd": 0,
+                            "AdditionalTxnFeePub": 0,
+                            "PGCharge": 0,
+                            "OtherCharges": 0,
+                            "ChargeBU": [
+                                {
+                                    "key": "TBOMARKUP",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "GLOBALPROCUREMENTCHARGE",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "OTHERCHARGE",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "CONVENIENCECHARGE",
+                                    "value": 0
+                                }
+                            ],
+                            "Discount": 0,
+                            "PublishedFare": 13988,
+                            "CommissionEarned": 93.6,
+                            "PLBEarned": 0,
+                            "IncentiveEarned": 0,
+                            "OfferedFare": 13931.84,
+                            "TdsOnCommission": 37.44,
+                            "TdsOnPLB": 0,
+                            "TdsOnIncentive": 0,
+                            "ServiceFee": 0,
+                            "TotalBaggageCharges": 0,
+                            "TotalMealCharges": 0,
+                            "TotalSeatCharges": 0,
+                            "TotalSpecialServiceCharges": 0
+                        },
+                        "City": "New Delhi",
+                        "CountryCode": "IN",
+                        "Nationality": "IN",
+                        "ContactNo": "",
+                        "IsLeadPax": false,
+                        "FFAirlineCode": null,
+                        "FFNumber": null,
+                        "Ssr": [],
+                        "Ticket": {
+                            "TicketId": 2439490,
+                            "TicketNumber": "2182312508",
+                            "IssueDate": "2026-06-02T05:30:00",
+                            "ValidatingAirline": "098",
+                            "Remarks": "",
+                            "ServiceFeeDisplayType": "ShowInTax",
+                            "Status": "OK",
+                            "ConjunctionNumber": "",
+                            "TicketType": "N"
+                        },
+                        "SegmentAdditionalInfo": [
+                            {
+                                "FareBasis": "SK1YXYII",
+                                "NVA": "",
+                                "NVB": "",
+                                "Baggage": "15 KG",
+                                "Meal": null,
+                                "Seat": null,
+                                "SpecialService": null,
+                                "CabinBaggage": "Not Known"
+                            },
+                            {
+                                "FareBasis": "UU1YXSII",
+                                "NVA": "",
+                                "NVB": "",
+                                "Baggage": "15 KG",
+                                "Meal": null,
+                                "Seat": null,
+                                "SpecialService": null,
+                                "CabinBaggage": "Not Known"
+                            }
+                        ]
+                    }
+                ],
+                "CancellationCharges": null,
+                "Segments": [
+                    {
+                        "Baggage": "15 KG",
+                        "CabinBaggage": null,
+                        "CabinClass": 2,
+                        "SupplierFareClass": null,
+                        "TripIndicator": 1,
+                        "SegmentIndicator": 1,
+                        "Airline": {
+                            "AirlineCode": "AI",
+                            "AirlineName": "Air India",
+                            "FlightNumber": "9486",
+                            "FareClass": "S",
+                            "OperatingCarrier": "IX"
+                        },
+                        "AirlinePNR": "9QRN8W",
+                        "Origin": {
+                            "Airport": {
+                                "AirportCode": "DEL",
+                                "AirportName": "Indira Gandhi Airport",
+                                "Terminal": "1",
+                                "CityCode": "DEL",
+                                "CityName": "Delhi",
+                                "CountryCode": "IN",
+                                "CountryName": "India"
+                            },
+                            "DepTime": "2026-06-15T09:15:00"
+                        },
+                        "Destination": {
+                            "Airport": {
+                                "AirportCode": "BOM",
+                                "AirportName": "Chhatrapati Shivaji International Airport",
+                                "Terminal": "2",
+                                "CityCode": "BOM",
+                                "CityName": "Mumbai",
+                                "CountryCode": "IN",
+                                "CountryName": "India"
+                            },
+                            "ArrTime": "2026-06-15T11:40:00"
+                        },
+                        "AccumulatedDuration": 145,
+                        "Duration": 145,
+                        "GroundTime": 0,
+                        "Mile": 0,
+                        "StopOver": false,
+                        "FlightInfoIndex": "1",
+                        "StopPoint": "",
+                        "StopPointArrivalTime": null,
+                        "StopPointDepartureTime": null,
+                        "Craft": "737",
+                        "Remark": null,
+                        "IsETicketEligible": true,
+                        "FlightStatus": "Confirmed",
+                        "Status": "HK",
+                        "FareClassification": null
+                    },
+                    {
+                        "Baggage": "15 KG",
+                        "CabinBaggage": null,
+                        "CabinClass": 2,
+                        "SupplierFareClass": null,
+                        "TripIndicator": 2,
+                        "SegmentIndicator": 2,
+                        "Airline": {
+                            "AirlineCode": "AI",
+                            "AirlineName": "Air India",
+                            "FlightNumber": "435",
+                            "FareClass": "U",
+                            "OperatingCarrier": "AI"
+                        },
+                        "AirlinePNR": "9QRN8W",
+                        "Origin": {
+                            "Airport": {
+                                "AirportCode": "BOM",
+                                "AirportName": "Chhatrapati Shivaji International Airport",
+                                "Terminal": "2",
+                                "CityCode": "BOM",
+                                "CityName": "Mumbai",
+                                "CountryCode": "IN",
+                                "CountryName": "India"
+                            },
+                            "DepTime": "2026-06-20T18:10:00"
+                        },
+                        "Destination": {
+                            "Airport": {
+                                "AirportCode": "MAA",
+                                "AirportName": "Chennai International Airport",
+                                "Terminal": "4",
+                                "CityCode": "MAA",
+                                "CityName": "Chennai",
+                                "CountryCode": "IN",
+                                "CountryName": "India"
+                            },
+                            "ArrTime": "2026-06-20T20:10:00"
+                        },
+                        "AccumulatedDuration": 120,
+                        "Duration": 120,
+                        "GroundTime": 0,
+                        "Mile": 0,
+                        "StopOver": false,
+                        "FlightInfoIndex": "2",
+                        "StopPoint": "",
+                        "StopPointArrivalTime": null,
+                        "StopPointDepartureTime": null,
+                        "Craft": "319",
+                        "Remark": null,
+                        "IsETicketEligible": true,
+                        "FlightStatus": "Confirmed",
+                        "Status": "HK",
+                        "FareClassification": null
+                    }
+                ],
+                "FareRules": [
+                    {
+                        "Origin": "BOM",
+                        "Destination": "MAA",
+                        "Airline": "AI",
+                        "FareBasisCode": "UU1YXSII",
+                        "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Allowed with Restriction<br />Change after departure - No Show: Allowed with Restriction<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+                        "FareRestriction": "",
+                        "FareFamilyCode": "",
+                        "FareRuleIndex": "",
+                        "FareInclusions": []
+                    },
+                    {
+                        "Origin": "DEL",
+                        "Destination": "BOM",
+                        "Airline": "AI",
+                        "FareBasisCode": "SK1YXYII",
+                        "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Not Allowed<br />Change after departure - No Show: Not Allowed<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+                        "FareRestriction": "",
+                        "FareFamilyCode": "",
+                        "FareRuleIndex": "",
+                        "FareInclusions": []
+                    }
+                ],
+                "MiniFareRules": [
+                    {
+                        "CFARExcludedDetails": null,
+                        "JourneyPoints": "DEL-BOM-MAA",
+                        "Type": "Reissue",
+                        "From": "",
+                        "To": "",
+                        "Unit": "",
+                        "Details": "INR 6000*",
+                        "OnlineReissueAllowed": true,
+                        "OnlineRefundAllowed": false
+                    },
+                    {
+                        "CFARExcludedDetails": null,
+                        "JourneyPoints": "DEL-BOM-MAA",
+                        "Type": "Cancellation",
+                        "From": "",
+                        "To": "",
+                        "Unit": "",
+                        "Details": "INR 10000*",
+                        "OnlineReissueAllowed": false,
+                        "OnlineRefundAllowed": true
+                    }
+                ],
+                "PenaltyCharges": {
+                    "ReissueCharge": "",
+                    "CancellationCharge": ""
+                },
+                "Status": 5,
+                "IsWebCheckInAllowed": false
+            },
+            "Message": "",
+            "TicketStatus": 1
+        }
     }
-  }
 }

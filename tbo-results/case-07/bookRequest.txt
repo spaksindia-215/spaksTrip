@@ -1,8 +1,8 @@
 {
-  "TokenId": "5885a7d1-82b5-42b2-bdd8-700fcf62dfed",
+  "TokenId": "39a78cfe-5e09-43cb-8259-7d284f6ae9aa",
   "EndUserIp": "1.1.1.1",
-  "ResultIndex": "OB2[TBO]o+8+MsCrEwUjzISRr6LabeCHq0xwklrFM3aW1eTx/bOXFGE8PrI+OPgvO9gwaFq2q5OPxbqie9rGWZDiCHvqdQwcfFD2OrQpD6MIU69Ajzqgg2wPu5SMBwgXsDqUVdL7nezdh793cvCyOfJNPuTbtKGlMHm8cbURl3Z6wLR9bk2GcnRqt5ve4lwYSbEwWDH1TyA5SVCvO+9Y1BsnDcCIKm0WGItaIeaj8HXcBwInJIa7vOB6/EQ7j742ivnc8TvSZ+4VmoPeHYoR5XtexWoQScFazOWMP55tBC8XYod+3ZNUDbnrFDmO+bveeJpqUOvlS984ULVZZkyV9AmweG4lR21UzrrduKz7rDLXYLiWpZLtg2sCEcBcKdsRCPK7Nc2NnNiwY6Cvh0OW1k0WH9iv3TbvzQdSv8IGkdO1Tc2dz3qvKktD+Tdw9MNxuwYBJyhkdAZPV9jW5WmU/G6eHbVJFhudABaO5YzfKcaTCgfu7tDI/qNRL43tdJ33PpPPOzXb8AcQWTR2v9K89ThU87Z6IPpAziEGfIangPrwbyhg6roY5TImmk3Ji7WjJOvF2QXMvMp9rXk7W0BPj/uiQUnZjD53/Nkozc6f+nO4+GXIrbwxWTWUnuy5DBFqvt0F99mPG9S/5PlTINi2E4uUPtsFvd98UpbNsXAeA7UPRo8irtoCcdGK2wCE1pYSR1Kn23Lya6MstUbbAKxW7ptanvKAmTsQEKwCGuU1t+6vUNjviMca89Se2f4XfWFXlHWaYyWf6CPnPDAWJWQ5Em03stHyzkFLUli5uZxkqjOGmMGyzVLc5L7PLDGK/o85A6vXSD2Hk4wuwvSWvwL7NVK6uZqj8LNJwu1kQ9ZNapLXpES+gcg0GqCWk+zLMhakEVsxafYkJZIdogxUUHLtgEiihovjcixDWEtp8JdWyR+lvMUox7HQzQrsIrkdmYE8brDv2ae09O4ennxLDKco5ThNQwJMR0Y+Kv0B6rzgN0yP0oi87sLFP75wR23zAk3fyS8ZMuC77ItRg9/Gh+jVNObiTg13mqglpJaA/M03NHiFLzYtJwvZPULxKFvfl/+76xzXdr8WSQAJ60GodjoSifuqjcxecz2sRFniJbPaExEbioZUfZQgId9iAKt1qo1NhfO6yaiwOAPyD8lF8P7uSmx1jbBhyNo+twBe9Kk0mx+7bxmxjy/wLQM0Ae1PmhB7Q8rvkT2E04cEyy1ik8YRcM4XLSpHT755fWWrkiCHlZR8z8htHpAqWN68aQ71zwOYucSqARUObbPq5LzFAyZECdFz+PAgOg==",
-  "TraceId": "4d586e05-77f6-4145-9ced-723497533ee5",
+  "ResultIndex": "OB1[TBO]b6zsTQ75Ndu76E5+QMzgcdsmIGc9nSzl/zoC6u4sqpZ8RiGu1tXj6i0y9j+n3DjR/FhfdqAeiO2GCooFEf7rNKwddnp0JMDsVDI20L2BZMGjz67W0lEGE4EaBCQ6nu0ZeID+Zwo2RxZHM3tmd7QkTylWksTFSIiaW4eXP+8G2QlFc0taws06A/uBdjDnOhk3kaijCe9V+FNiIBHaPsZb0yimxEtN9Mycbyucrq6vjXvzC6eTk7FlIO0UFlvcrfjbGjQBirpiRpaaCLTB33ioDKs13VNkBx/TZmFbxaNClOuJ8CYn1DQuzHa3BPiBl151WwKMVtBjfR8yuv7Db1ALyFv4Y9+1V6W4YQtBFGr2a6cLmkDGyL2DY2cPiddF3tE/gUeOV8hCVrMKVUxhMxudPj80t3vIFy0e28mHkJAHqgkKV1RKukCanewVdG4qOIF0WAO1oiJksv0uBpEF9RJshj8aE6DtCzLGZHa0VP2iC8aHLD3GrK96ovB4T7uYy75YmLU7Z8L3WrW81ZTb7Gy8798CD9XYg6g9a/Nfgo0rJ11fbX/b8rL7bVx2cjnub+0c5vByGRS0zTeLOFXi2TNX10SzDIcjzAjIcWHhyN4BANR+BiAhNC3NKnGRc9ujNdjrtxNQDrY0GyoPYtpRjMWUbTWZD3cT0y5QyR9GC6ytC2gRrScmU6Oumc5yJVYDODS7ozvYu7kk9bWZqaa/2lfTP5j8fxddHD90nBQ/TVvbdwkqHsVQV1RD4iXpotuJDBWeMacxR45dU4KoeHAfAbvsCtBcvYpJR1HYZj+dX3OAjL2SJZhbhvZo2X2bgvc2YRMPYtmCqc46t92y1gdf5zlRrCuKxexg49bVzbNZO+L5ak6GrTA48W5alQMmEo6+DsW6JpGcoCkocGzfi6Iu4bcigM9N7ux6Bnp8RszFzCyps85X5XSo/eIE9hX36S9s6BbvsaIwSPr3huo/+WzT0zeuXFfaMoqRRwysZcJF6Bv4PMdF5UjMUExhYLPS77pXrZrk13ESc8pWGsZVA5HzEqAbHfw35VpHUDazfi0yDb/NnBnZtMN0GplX8MPua6pqH1UTDvqwEvr4bXMkYQpAw3XC4a6gmok7OUjtECPMdpAAbsFFrtafgZLzfdbwHvCMxA/h8W4UxdhklOCrQWZ8hh8rU9vsnNMqp2L2I48WaxFlBpOM2OLd25lJTEEhghSnxcC2ynsMHWCNcDSM3PboC1ej3pe6bL9bW2OvVpuwbI8kYIGDzPMP0C5/Wlq8MsLgzCUO",
+  "TraceId": "e5c48240-1e69-4a09-9621-1be07cebf0ff",
   "Passengers": [
     {
       "Title": "Mr",
@@ -11,8 +11,6 @@
       "PaxType": 1,
       "DateOfBirth": "1985-03-15T00:00:00",
       "Gender": 1,
-      "PassportNo": "",
-      "PassportExpiry": "2030-01-01T00:00:00",
       "AddressLine1": "45 Prithviraj Road",
       "City": "New Delhi",
       "CountryCode": "IN",
@@ -28,16 +26,10 @@
       "GSTCompanyEmail": "",
       "Fare": {
         "Currency": "INR",
-        "BaseFare": 28558,
-        "Tax": 6496,
-        "TaxBreakup": [
-          { "key": "YR", "value": 680 },
-          { "key": "INTax", "value": 1734 },
-          { "key": "YQTax", "value": 1596 },
-          { "key": "K3", "value": 1542 },
-          { "key": "OtherTaxes", "value": 944 }
-        ],
-        "YQTax": 1596,
+        "BaseFare": 13500,
+        "Tax": 3171,
+        "TaxBreakup": [],
+        "YQTax": 1098,
         "AdditionalTxnFeeOfrd": 0,
         "AdditionalTxnFeePub": 0,
         "PGCharge": 0,
@@ -53,14 +45,6 @@
         "TdsOnPLB": 0,
         "TdsOnIncentive": 0,
         "ServiceFee": 0
-      },
-      "Meal": {
-        "Code": "",
-        "Description": 2
-      },
-      "Seat": {
-        "Code": "",
-        "Description": 2
       }
     },
     {
@@ -70,8 +54,6 @@
       "PaxType": 1,
       "DateOfBirth": "1988-07-22T00:00:00",
       "Gender": 2,
-      "PassportNo": "",
-      "PassportExpiry": "2030-01-01T00:00:00",
       "AddressLine1": "45 Prithviraj Road",
       "City": "New Delhi",
       "CountryCode": "IN",
@@ -87,16 +69,10 @@
       "GSTCompanyEmail": "",
       "Fare": {
         "Currency": "INR",
-        "BaseFare": 28558,
-        "Tax": 6496,
-        "TaxBreakup": [
-          { "key": "YR", "value": 680 },
-          { "key": "INTax", "value": 1734 },
-          { "key": "YQTax", "value": 1596 },
-          { "key": "K3", "value": 1542 },
-          { "key": "OtherTaxes", "value": 944 }
-        ],
-        "YQTax": 1596,
+        "BaseFare": 13500,
+        "Tax": 3171,
+        "TaxBreakup": [],
+        "YQTax": 1098,
         "AdditionalTxnFeeOfrd": 0,
         "AdditionalTxnFeePub": 0,
         "PGCharge": 0,
@@ -112,14 +88,6 @@
         "TdsOnPLB": 0,
         "TdsOnIncentive": 0,
         "ServiceFee": 0
-      },
-      "Meal": {
-        "Code": "",
-        "Description": 2
-      },
-      "Seat": {
-        "Code": "",
-        "Description": 2
       }
     },
     {
@@ -129,8 +97,6 @@
       "PaxType": 2,
       "DateOfBirth": "2017-05-10T00:00:00",
       "Gender": 1,
-      "PassportNo": "",
-      "PassportExpiry": "2030-01-01T00:00:00",
       "AddressLine1": "45 Prithviraj Road",
       "City": "New Delhi",
       "CountryCode": "IN",
@@ -146,16 +112,10 @@
       "GSTCompanyEmail": "",
       "Fare": {
         "Currency": "INR",
-        "BaseFare": 25704,
-        "Tax": 6354,
-        "TaxBreakup": [
-          { "key": "YR", "value": 680 },
-          { "key": "INTax", "value": 1734 },
-          { "key": "YQTax", "value": 1596 },
-          { "key": "K3", "value": 1400 },
-          { "key": "OtherTaxes", "value": 944 }
-        ],
-        "YQTax": 1596,
+        "BaseFare": 12150,
+        "Tax": 3104,
+        "TaxBreakup": [],
+        "YQTax": 1098,
         "AdditionalTxnFeeOfrd": 0,
         "AdditionalTxnFeePub": 0,
         "PGCharge": 0,
@@ -171,14 +131,6 @@
         "TdsOnPLB": 0,
         "TdsOnIncentive": 0,
         "ServiceFee": 0
-      },
-      "Meal": {
-        "Code": "",
-        "Description": 2
-      },
-      "Seat": {
-        "Code": "",
-        "Description": 2
       }
     },
     {
@@ -188,8 +140,6 @@
       "PaxType": 2,
       "DateOfBirth": "2016-08-20T00:00:00",
       "Gender": 2,
-      "PassportNo": "",
-      "PassportExpiry": "2030-01-01T00:00:00",
       "AddressLine1": "45 Prithviraj Road",
       "City": "New Delhi",
       "CountryCode": "IN",
@@ -205,16 +155,10 @@
       "GSTCompanyEmail": "",
       "Fare": {
         "Currency": "INR",
-        "BaseFare": 25704,
-        "Tax": 6354,
-        "TaxBreakup": [
-          { "key": "YR", "value": 680 },
-          { "key": "INTax", "value": 1734 },
-          { "key": "YQTax", "value": 1596 },
-          { "key": "K3", "value": 1400 },
-          { "key": "OtherTaxes", "value": 944 }
-        ],
-        "YQTax": 1596,
+        "BaseFare": 12150,
+        "Tax": 3104,
+        "TaxBreakup": [],
+        "YQTax": 1098,
         "AdditionalTxnFeeOfrd": 0,
         "AdditionalTxnFeePub": 0,
         "PGCharge": 0,
@@ -230,14 +174,6 @@
         "TdsOnPLB": 0,
         "TdsOnIncentive": 0,
         "ServiceFee": 0
-      },
-      "Meal": {
-        "Code": "",
-        "Description": 2
-      },
-      "Seat": {
-        "Code": "",
-        "Description": 2
       }
     },
     {
@@ -247,8 +183,6 @@
       "PaxType": 3,
       "DateOfBirth": "2025-01-20T00:00:00",
       "Gender": 1,
-      "PassportNo": "",
-      "PassportExpiry": "2030-01-01T00:00:00",
       "AddressLine1": "45 Prithviraj Road",
       "City": "New Delhi",
       "CountryCode": "IN",
@@ -266,10 +200,7 @@
         "Currency": "INR",
         "BaseFare": 4000,
         "Tax": 557,
-        "TaxBreakup": [
-          { "key": "YR", "value": 340 },
-          { "key": "K3", "value": 217 }
-        ],
+        "TaxBreakup": [],
         "YQTax": 0,
         "AdditionalTxnFeeOfrd": 0,
         "AdditionalTxnFeePub": 0,
@@ -286,14 +217,6 @@
         "TdsOnPLB": 0,
         "TdsOnIncentive": 0,
         "ServiceFee": 0
-      },
-      "Meal": {
-        "Code": "",
-        "Description": 2
-      },
-      "Seat": {
-        "Code": "NoSeat",
-        "Description": 2
       }
     }
   ]
