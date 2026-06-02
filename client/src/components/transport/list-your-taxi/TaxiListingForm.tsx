@@ -154,7 +154,7 @@ export default function TaxiListingForm() {
       toast.push({
         title: "Submission failed",
         description: message,
-        tone: "error",
+        tone: "danger",
       });
     } finally {
       setSubmitting(false);
