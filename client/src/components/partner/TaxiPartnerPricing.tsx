@@ -53,8 +53,7 @@ export default function TaxiPartnerPricing({ data, onDataChange }: Props) {
                 placeholder="Minimum charges per trip"
                 value={data.baseFare || ""}
                 onChange={(e) => handleChange("baseFare", parseFloat(e.target.value))}
-                error={!!errors.baseFare}
-                helperText={errors.baseFare}
+                error={errors.baseFare}
               />
               <p className="text-xs text-ink-muted mt-1">
                 Minimum charges even for short trips
@@ -72,8 +71,7 @@ export default function TaxiPartnerPricing({ data, onDataChange }: Props) {
                 placeholder="Charge per kilometer"
                 value={data.perKmCharge || ""}
                 onChange={(e) => handleChange("perKmCharge", parseFloat(e.target.value))}
-                error={!!errors.perKmCharge}
-                helperText={errors.perKmCharge}
+                error={errors.perKmCharge}
               />
               <p className="text-xs text-ink-muted mt-1">
                 Charges for every kilometer traveled

@@ -66,8 +66,7 @@ export default function TaxiPartnerInfo({ data, onDataChange }: Props) {
             placeholder="e.g., My Premium Cab"
             value={data.taxiName || ""}
             onChange={(e) => handleChange("taxiName", e.target.value)}
-            error={!!errors.taxiName}
-            helperText={errors.taxiName}
+            error={errors.taxiName}
           />
         </div>
 
@@ -99,8 +98,7 @@ export default function TaxiPartnerInfo({ data, onDataChange }: Props) {
             placeholder="e.g., DL-01-AB-1234"
             value={data.registrationNumber || ""}
             onChange={(e) => handleChange("registrationNumber", e.target.value)}
-            error={!!errors.registrationNumber}
-            helperText={errors.registrationNumber}
+            error={errors.registrationNumber}
           />
         </div>
 
@@ -113,8 +111,7 @@ export default function TaxiPartnerInfo({ data, onDataChange }: Props) {
             placeholder="Full name of driver"
             value={data.driverName || ""}
             onChange={(e) => handleChange("driverName", e.target.value)}
-            error={!!errors.driverName}
-            helperText={errors.driverName}
+            error={errors.driverName}
           />
         </div>
 
@@ -127,8 +124,7 @@ export default function TaxiPartnerInfo({ data, onDataChange }: Props) {
             placeholder="10-digit mobile number"
             value={data.driverMobileNumber || ""}
             onChange={(e) => handleChange("driverMobileNumber", e.target.value)}
-            error={!!errors.driverMobileNumber}
-            helperText={errors.driverMobileNumber}
+            error={errors.driverMobileNumber}
           />
         </div>
 
@@ -141,8 +137,7 @@ export default function TaxiPartnerInfo({ data, onDataChange }: Props) {
             placeholder="e.g., Honda, Toyota, Mahindra"
             value={data.vehicleBrand || ""}
             onChange={(e) => handleChange("vehicleBrand", e.target.value)}
-            error={!!errors.vehicleBrand}
-            helperText={errors.vehicleBrand}
+            error={errors.vehicleBrand}
           />
         </div>
 
@@ -155,8 +150,7 @@ export default function TaxiPartnerInfo({ data, onDataChange }: Props) {
             placeholder="e.g., City, Innova, XUV"
             value={data.vehicleModel || ""}
             onChange={(e) => handleChange("vehicleModel", e.target.value)}
-            error={!!errors.vehicleModel}
-            helperText={errors.vehicleModel}
+            error={errors.vehicleModel}
           />
         </div>
 
@@ -188,8 +182,7 @@ export default function TaxiPartnerInfo({ data, onDataChange }: Props) {
             placeholder="Number of seats"
             value={data.seatingCapacity || ""}
             onChange={(e) => handleChange("seatingCapacity", parseInt(e.target.value))}
-            error={!!errors.seatingCapacity}
-            helperText={errors.seatingCapacity}
+            error={errors.seatingCapacity}
           />
         </div>
 
@@ -203,8 +196,7 @@ export default function TaxiPartnerInfo({ data, onDataChange }: Props) {
             placeholder="Luggage capacity in kg"
             value={data.luggageCapacity || ""}
             onChange={(e) => handleChange("luggageCapacity", parseInt(e.target.value))}
-            error={!!errors.luggageCapacity}
-            helperText={errors.luggageCapacity}
+            error={errors.luggageCapacity}
           />
         </div>
 

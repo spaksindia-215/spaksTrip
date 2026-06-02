@@ -117,8 +117,7 @@ export default function TaxiPartnerServiceArea({ data, onDataChange }: Props) {
             placeholder="e.g., Delhi, Mumbai, Bangalore"
             value={data.operatingCity || ""}
             onChange={(e) => handleChange("operatingCity", e.target.value)}
-            error={!!errors.operatingCity}
-            helperText={errors.operatingCity}
+            error={errors.operatingCity}
           />
         </div>
       </div>

@@ -120,7 +120,7 @@ export default function UnifiedPartnerVerification({ onVerificationComplete, isE
 
       toast.push({
         title: isEditing ? "Verification updated successfully" : "Verification submitted successfully",
-        tone: "good",
+        tone: "success",
       });
 
       if (onVerificationComplete) {
@@ -130,7 +130,7 @@ export default function UnifiedPartnerVerification({ onVerificationComplete, isE
       console.error("Error submitting verification:", error);
       toast.push({
         title: error instanceof Error ? error.message : "Failed to submit verification",
-        tone: "critical",
+        tone: "danger",
       });
     } finally {
       setSubmitting(false);
