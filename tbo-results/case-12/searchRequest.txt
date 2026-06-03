@@ -1,5 +1,5 @@
 {
-  "TokenId": "e441deee-be17-4a9b-8bea-2a74c75aaa9d",
+  "TokenId": "bdf876f5-179b-456b-b155-e10fa75f17d4",
   "EndUserIp": "1.1.1.1",
   "AdultCount": "2",
   "ChildCount": "2",
@@ -7,17 +7,19 @@
   "DirectFlight": "false",
   "OneStopFlight": "false",
   "JourneyType": "2",
-  "PreferredAirlines": null,
+  "PreferredAirlines": [
+    "AI"
+  ],
   "Segments": [
     {
       "Origin": "DEL",
-      "Destination": "LHR",
+      "Destination": "DXB",
       "FlightCabinClass": "2",
       "PreferredDepartureTime": "2026-08-25T00:00:00",
       "PreferredArrivalTime": "2026-08-25T00:00:00"
     },
     {
-      "Origin": "LHR",
+      "Origin": "DXB",
       "Destination": "DEL",
       "FlightCabinClass": "2",
       "PreferredDepartureTime": "2026-09-08T00:00:00",

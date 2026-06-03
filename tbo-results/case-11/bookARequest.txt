@@ -1,18 +1,18 @@
 {
-  "TokenId": "9283c27b-1620-485e-a8c8-2375a1acb6a4",
+  "TokenId": "50c5a42b-e6b9-40a8-bb0b-f477bfdf00f5",
   "EndUserIp": "1.1.1.1",
-  "ResultIndex": "OB16[TBO]1xn3sDzmrYOY6w9Ih6f5Lg0dSr7VNXSlKmZs09InlXUevNqDKrAHlWMiq0sgEg9QnRtfmlNW+z6MXY0krC9xCXjZo1xfWgh3hsrCYjsfNrc5aC0bcc+Va7bonM/qjmsuJS/4dckuzer8jA1I6NqMzo/tpSzX/8EWjsD5lQH/54nAFXbTuQJUElx8nqvIsGEl8klhCYkoYa2jNeShJRqswaFWHLAWoxed+c7+DUePQXbAQLtK/XoMKD+Rj+i7OGhyBQOegzjbcGK5B1zboB46qKmaULsIHuBByu3lTHRdMKPQ8Tihx2neoFIdIsfb+r9kpqBdsJNfISOUVYuYTo/p7wLECgFfExh1PrhBJ8S1eqV0pyxDXf/4FpFLq8aYHwg2Bd+Wh4FWDlCWNKsCKKz7+nAsq8BsdvUUCc2X4h6rj18xK3R+QwJ6N7JkwUAdd4+5rwiZy99+I35tIzP8AmW2aZiG3XzB9Oi0kmYK9jRvVH9+YMoYnbiwbVcJqvO2za5Pbkl2AE4wb0cJWXI3CpZEXE2ZDT+hrV6e13UP4yyxrnTVsNlpwTlwztv3DlYWbvbJaOOAGLLPO4lfcKTLNL3md+RLiAkScnjW+bg1RW3ivsJVySo91tpP6TUNhYDQdDa35ukpWY17ZAjhBYqpRs3OApx/l0qXHQtACxXyCZqeNbDRQfA0GHEOqSiph4E/ewY2VU2raVXslbpCOAGQuMGf8qoH68rtwcezUfV337azijW8YuD6M7CCqekRwsCupTGYeSWeujOUK0VYNy2zoRZ9Bp7HiydmIQoRnkX3LhSXqUhq6hb3tcny/A5pNs8na0nGPVTQ9xJ76GEJxOjrMsCrnQKyrZykRuMeBrfRFa3RtaYcX1QtoeJNTLqWJG+kJVh4UZWielCyAMhqMnVb5eEeNcZiy33p15D9TJpAYlP2uFjuuPP2kgraXNLS0ujgHG8SWKmX04qNC1QrsGjIb/nkBBD3b1NKtAe4Tsu+qyqp4LEu/mt1P7PR0CTAEqmjPo/t+KhGt1UZOPTj2horeLFe4wwnyslTaOi3oVL1wlhG63Go6RiktZry6uZ8xTOC1Y4tbQBuVylD/Gu4gf0+SsqVzLAECSOA6LjsZUyypINeGHVH9BXTQvJcgywUY+iEC+CUd9ldEat1t5reykAGzjjOQ4vFYKlmHK3NNoJT2L016vILZGO2UCfowSKKNJ0Qm7W54PFiUUEWBydYOoZW4WZMYg==",
-  "TraceId": "37c6c759-5019-4da8-a9ed-5649290086e7",
+  "ResultIndex": "OB187[TBO]XZBYMlRsk2bFysq5c018sDhTyKkAfq+8mZDIpTYUPqMjONxVfLdo2HYho7vfac8WL6dbb12mcEH9Omqtx8PWZ7hnHTieEfN0susNB5Yq768GDxE8dPk6ehodrC5RAEZ04r7ZM8EUAA4rlOhrx/ZEfkXNF2mlyAdOTG/+UpWFNIJfSQjC5/7eYL+FzA2v1sVRNvwp6wRzGSDpyoOBCW8Su8LBHjZxMfFMKDzmlxzyJAH5Lm0anEno5whvmCxLjxjiF8QN6cV6Y651Mt28l47fW2a3OBWY3wA92xIigMypZsPxOeLrV3x9Z31Th0451oBc2yHlwDFxYlme64zoQnzq7dYijFwyg/C7YJA2fQqrrj8IyIkzUGV2Mul67JDLs9Xb2sFDt7GzzPhfMlvVDS0+jWhOGQUTdeAdE6pTrzDwCLywGl23CccILy1lrhFC7vwWXSIAwKd+W8YVghwtm38ts3zQ1VY6mJP/KjzrcAZ+FoOtAYDTRrluTj26Vnh+hJr+FBObj5HTzcJD6Wg06BxtCVIinkMspYvCMzo8Fsg0mHo3iNmS/+y5m1javC7gnABRM23ZcFM8WqYQlnZhpfLuFHJ7RgAI/J5ufCkMuAEUQsglLJsjHMkgKYGs7jCoz4OS9rVbbzqfuePv1YTfjlyisrXv/fns1DjZJMsXxOXLCA2SND6ttDJz2YsDK4/Kxq9pnYKRDENKTMNj3aTgkXPWV225TXgMiOwuCS1n1GDKfg4p1aDeG9WUpWghxAZBHjJpKVNKjBCW2dRPsnvXvKE6ehdKVeliJTUH7hDDGDeCHI5/zNYskc90DmWHMLwIPO63r4s26K7fbr9dokIJCv+vuDsuYdqBm+tO04hPClqnwUqdb+NEE+DS42DWunACrux4TpNDwW6cbzhIB4rg9IjoA9t7/JTG2nLXEcN/kBI4FyU3oIflXBiTOe1rKVPzca2GWR5f/RnEPkvPjQnGYpjX1lN+N0gvgGL4P6Z0412XsUHlb52NUosdVrb7zcWhFxa8Jye/CKMe7tOCt1gTyl2RJacong5bODnEevEdpA7OyRY8CzGlqj5aC/4UWyhEPHrJ9227eTOx4S/G3ob0VpIMdrZxq0/JkGNNysgZgDShC1cxRuTCQ+27NewF9k7A6Onk0x+o1H2piRISIem1wFy4nQ==",
+  "TraceId": "e9b3c602-1fec-4915-8c91-7c45cc715073",
   "Passengers": [
     {
       "Title": "Mr",
-      "FirstName": "RAHUL",
-      "LastName": "SHARMA",
+      "FirstName": "ROHIT",
+      "LastName": "RAO",
       "PaxType": 1,
-      "DateOfBirth": "1985-03-15T00:00:00",
+      "DateOfBirth": "1982-04-10T00:00:00",
       "Gender": 1,
-      "PassportNo": "Z1234567",
-      "PassportExpiry": "2030-12-31T00:00:00",
+      "PassportNo": "Z7710001",
+      "PassportExpiry": "2030-04-10T00:00:00",
       "AddressLine1": "45 Prithviraj Road",
       "City": "New Delhi",
       "CountryCode": "IN",
@@ -28,10 +28,10 @@
       "GSTCompanyEmail": "",
       "Fare": {
         "Currency": "INR",
-        "BaseFare": 19825,
-        "Tax": 7151,
+        "BaseFare": 11625,
+        "Tax": 8071,
         "TaxBreakup": [],
-        "YQTax": 0,
+        "YQTax": 2409,
         "AdditionalTxnFeeOfrd": 0,
         "AdditionalTxnFeePub": 0,
         "PGCharge": 0,
@@ -47,17 +47,19 @@
         "TdsOnPLB": 0,
         "TdsOnIncentive": 0,
         "ServiceFee": 0
-      }
+      },
+      "PassportIssueDate": "2022-04-10T00:00:00",
+      "PassportIssueCountryCode": "IN"
     },
     {
       "Title": "Mrs",
-      "FirstName": "PRIYA",
-      "LastName": "SHARMA",
+      "FirstName": "NEHA",
+      "LastName": "RAO",
       "PaxType": 1,
-      "DateOfBirth": "1988-07-22T00:00:00",
+      "DateOfBirth": "1985-09-18T00:00:00",
       "Gender": 2,
-      "PassportNo": "Z7654321",
-      "PassportExpiry": "2030-06-30T00:00:00",
+      "PassportNo": "Z7710002",
+      "PassportExpiry": "2031-09-18T00:00:00",
       "AddressLine1": "45 Prithviraj Road",
       "City": "New Delhi",
       "CountryCode": "IN",
@@ -73,10 +75,10 @@
       "GSTCompanyEmail": "",
       "Fare": {
         "Currency": "INR",
-        "BaseFare": 19825,
-        "Tax": 7151,
+        "BaseFare": 11625,
+        "Tax": 8071,
         "TaxBreakup": [],
-        "YQTax": 0,
+        "YQTax": 2408,
         "AdditionalTxnFeeOfrd": 0,
         "AdditionalTxnFeePub": 0,
         "PGCharge": 0,
@@ -92,17 +94,19 @@
         "TdsOnPLB": 0,
         "TdsOnIncentive": 0,
         "ServiceFee": 0
-      }
+      },
+      "PassportIssueDate": "2023-09-18T00:00:00",
+      "PassportIssueCountryCode": "IN"
     },
     {
       "Title": "Mstr",
-      "FirstName": "ROHAN",
-      "LastName": "SHARMA",
+      "FirstName": "VEER",
+      "LastName": "RAO",
       "PaxType": 2,
-      "DateOfBirth": "2017-05-10T00:00:00",
+      "DateOfBirth": "2018-06-12T00:00:00",
       "Gender": 1,
-      "PassportNo": "Z5555555",
-      "PassportExpiry": "2030-12-31T00:00:00",
+      "PassportNo": "Z7710003",
+      "PassportExpiry": "2031-06-12T00:00:00",
       "AddressLine1": "45 Prithviraj Road",
       "City": "New Delhi",
       "CountryCode": "IN",
@@ -118,10 +122,10 @@
       "GSTCompanyEmail": "",
       "Fare": {
         "Currency": "INR",
-        "BaseFare": 14870,
-        "Tax": 6903,
+        "BaseFare": 8720,
+        "Tax": 7925,
         "TaxBreakup": [],
-        "YQTax": 0,
+        "YQTax": 2409,
         "AdditionalTxnFeeOfrd": 0,
         "AdditionalTxnFeePub": 0,
         "PGCharge": 0,
@@ -137,17 +141,19 @@
         "TdsOnPLB": 0,
         "TdsOnIncentive": 0,
         "ServiceFee": 0
-      }
+      },
+      "PassportIssueDate": "2023-06-12T00:00:00",
+      "PassportIssueCountryCode": "IN"
     },
     {
       "Title": "Miss",
-      "FirstName": "RIYA",
-      "LastName": "SHARMA",
+      "FirstName": "KIARA",
+      "LastName": "RAO",
       "PaxType": 2,
-      "DateOfBirth": "2016-08-20T00:00:00",
+      "DateOfBirth": "2019-10-05T00:00:00",
       "Gender": 2,
-      "PassportNo": "Z6666666",
-      "PassportExpiry": "2030-12-31T00:00:00",
+      "PassportNo": "Z7710004",
+      "PassportExpiry": "2032-10-05T00:00:00",
       "AddressLine1": "45 Prithviraj Road",
       "City": "New Delhi",
       "CountryCode": "IN",
@@ -163,10 +169,10 @@
       "GSTCompanyEmail": "",
       "Fare": {
         "Currency": "INR",
-        "BaseFare": 14870,
-        "Tax": 6903,
+        "BaseFare": 8720,
+        "Tax": 7925,
         "TaxBreakup": [],
-        "YQTax": 0,
+        "YQTax": 2408,
         "AdditionalTxnFeeOfrd": 0,
         "AdditionalTxnFeePub": 0,
         "PGCharge": 0,
@@ -182,7 +188,9 @@
         "TdsOnPLB": 0,
         "TdsOnIncentive": 0,
         "ServiceFee": 0
-      }
+      },
+      "PassportIssueDate": "2024-10-05T00:00:00",
+      "PassportIssueCountryCode": "IN"
     }
   ]
 }

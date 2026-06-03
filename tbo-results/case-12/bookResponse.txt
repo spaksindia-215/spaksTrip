@@ -6,18 +6,15 @@
         "ErrorCode": 0,
         "ErrorMessage": ""
       },
-      "TraceId": "c99faac8-15dc-48fd-ac04-e1157474e19d",
+      "TraceId": "e33f617b-76be-4917-938a-e6757528b09d",
       "ResponseStatus": 1,
       "Response": {
-        "ItineraryChangeList": [
-          6,
-          5
-        ],
-        "PNR": "9QVDTA",
-        "BookingId": 2136790,
+        "ItineraryChangeList": null,
+        "PNR": "9WLZ8T",
+        "BookingId": 2137500,
         "SSRDenied": false,
         "SSRMessage": null,
-        "Status": 5,
+        "Status": 1,
         "IsPriceChanged": false,
         "IsTimeChanged": false,
         "FlightItinerary": {
@@ -27,33 +24,34 @@
           "JourneyType": 2,
           "SearchCombinationType": 2,
           "SupplierFareClasses": null,
-          "TBOConfNo": "TBFPAXJ1T",
+          "TBOConfNo": "TBFYSTCPJ",
           "TBOTripID": null,
           "TripIndicator": 1,
           "BookingAllowedForRoamer": true,
-          "BookingId": 2136790,
+          "BookingId": 2137500,
           "IsCouponAppilcable": true,
           "IsManual": false,
-          "PNR": "9QVDTA",
+          "PNR": "9WLZ8T",
           "IsDomestic": false,
           "ResultFareType": "RegularFare",
           "Source": 77,
           "Origin": "DEL",
-          "Destination": "LHR",
-          "AirlineCode": "BA",
-          "ValidatingAirlineCode": "BA",
-          "AirlineRemark": "Aam janta airlines",
+          "Destination": "DXB",
+          "AirlineCode": "AI",
+          "LastTicketDate": "2026-06-04T22:55:00",
+          "ValidatingAirlineCode": "AI",
+          "AirlineRemark": "We are testing Airline remark node",
           "IsLCC": false,
           "NonRefundable": false,
-          "FareType": "RP",
+          "FareType": "RV",
           "CreditNoteNo": null,
           "Fare": {
             "CFARAmount": 0,
             "DCFARAmount": 0,
             "ServiceFeeDisplayType": 0,
             "Currency": "INR",
-            "BaseFare": 63420,
-            "Tax": 216300,
+            "BaseFare": 81540,
+            "Tax": 70412,
             "TaxBreakup": [
               {
                 "key": "K3",
@@ -61,26 +59,26 @@
               },
               {
                 "key": "YQTax",
-                "value": 134872
+                "value": 38536
               },
               {
                 "key": "YR",
-                "value": 6936
+                "value": 1280
               },
               {
                 "key": "OtherTaxes",
-                "value": 74492
+                "value": 30596
               },
               {
                 "key": "TotalTax",
-                "value": 216300
+                "value": 70412
               }
             ],
-            "YQTax": 67436,
+            "YQTax": 19268,
             "AdditionalTxnFeeOfrd": 0,
             "AdditionalTxnFeePub": 0,
             "PGCharge": 0,
-            "OtherCharges": 708,
+            "OtherCharges": 0,
             "ChargeBU": [
               {
                 "key": "TBOMARKUP",
@@ -92,7 +90,7 @@
               },
               {
                 "key": "OTHERCHARGE",
-                "value": 708
+                "value": 0
               },
               {
                 "key": "CONVENIENCECHARGE",
@@ -100,12 +98,12 @@
               }
             ],
             "Discount": 0,
-            "PublishedFare": 280428,
-            "CommissionEarned": 0,
+            "PublishedFare": 151952,
+            "CommissionEarned": 1737.26,
             "PLBEarned": 0,
             "IncentiveEarned": 0,
-            "OfferedFare": 280428,
-            "TdsOnCommission": 0,
+            "OfferedFare": 150909.64,
+            "TdsOnCommission": 694.9,
             "TdsOnPLB": 0,
             "TdsOnIncentive": 0,
             "ServiceFee": 0,
@@ -123,14 +121,14 @@
                   {
                     "Index": 1,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/KARAN           9QVDTA DELLHRBA 0142 237Y00000000 000",
+                    "Content": "M1NAIR/KARAN           9WLZ8T DELDXBAI 0917 237Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   },
                   {
                     "Index": 2,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/KARAN           9QVDTA LHRDELBA 0257 251Y00000000 000",
+                    "Content": "M1NAIR/KARAN           9WLZ8T DXBDELAI 2210 251Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   }
@@ -152,18 +150,20 @@
               "SegmentDetails": [
                 {
                   "CheckedInBaggage": {
-                    "NoOfPiece": "0"
+                    "Unit": "KG",
+                    "Value": "25"
                   },
                   "FlightInfoIndex": "1"
                 },
                 {
                   "CheckedInBaggage": {
-                    "NoOfPiece": "0"
+                    "Unit": "KG",
+                    "Value": "25"
                   },
                   "FlightInfoIndex": "2"
                 }
               ],
-              "PaxId": 3439020,
+              "PaxId": 3439770,
               "Title": "Mr",
               "FirstName": "KARAN",
               "LastName": "NAIR",
@@ -181,8 +181,8 @@
                 "DCFARAmount": 0,
                 "ServiceFeeDisplayType": 0,
                 "Currency": "INR",
-                "BaseFare": 18120,
-                "Tax": 60786,
+                "BaseFare": 23425,
+                "Tax": 17755,
                 "TaxBreakup": [
                   {
                     "key": "K3",
@@ -190,26 +190,26 @@
                   },
                   {
                     "key": "YQTax",
-                    "value": 33718
+                    "value": 9634
                   },
                   {
                     "key": "YR",
-                    "value": 1734
+                    "value": 320
                   },
                   {
                     "key": "OtherTaxes",
-                    "value": 25334
+                    "value": 7801
                   },
                   {
                     "key": "TotalTax",
-                    "value": 60786
+                    "value": 17755
                   }
                 ],
-                "YQTax": 16859,
+                "YQTax": 4817,
                 "AdditionalTxnFeeOfrd": 0,
                 "AdditionalTxnFeePub": 0,
                 "PGCharge": 0,
-                "OtherCharges": 177,
+                "OtherCharges": 0,
                 "ChargeBU": [
                   {
                     "key": "TBOMARKUP",
@@ -221,7 +221,7 @@
                   },
                   {
                     "key": "OTHERCHARGE",
-                    "value": 177
+                    "value": 0
                   },
                   {
                     "key": "CONVENIENCECHARGE",
@@ -229,12 +229,12 @@
                   }
                 ],
                 "Discount": 0,
-                "PublishedFare": 79083,
-                "CommissionEarned": 0,
+                "PublishedFare": 41180,
+                "CommissionEarned": 484.17,
                 "PLBEarned": 0,
                 "IncentiveEarned": 0,
-                "OfferedFare": 79083,
-                "TdsOnCommission": 0,
+                "OfferedFare": 40889.5,
+                "TdsOnCommission": 193.67,
                 "TdsOnPLB": 0,
                 "TdsOnIncentive": 0,
                 "ServiceFee": 0,
@@ -260,20 +260,20 @@
               "GSTNumber": "",
               "SegmentAdditionalInfo": [
                 {
-                  "FareBasis": "SLNC00B6",
+                  "FareBasis": "GP2YXSDY",
                   "NVA": "",
                   "NVB": "",
-                  "Baggage": "0 Kg",
+                  "Baggage": "25 KG",
                   "Meal": "0 Platter",
                   "Seat": "",
                   "SpecialService": "",
                   "CabinBaggage": ""
                 },
                 {
-                  "FareBasis": "SLNC00B6",
+                  "FareBasis": "GP2YXSDY",
                   "NVA": "",
                   "NVB": "",
-                  "Baggage": "0 Kg",
+                  "Baggage": "25 KG",
                   "Meal": "0 Platter",
                   "Seat": "",
                   "SpecialService": "",
@@ -288,14 +288,14 @@
                   {
                     "Index": 1,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/DEEPA           9QVDTA DELLHRBA 0142 237Y00000000 000",
+                    "Content": "M1NAIR/DEEPA           9WLZ8T DELDXBAI 0917 237Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   },
                   {
                     "Index": 2,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/DEEPA           9QVDTA LHRDELBA 0257 251Y00000000 000",
+                    "Content": "M1NAIR/DEEPA           9WLZ8T DXBDELAI 2210 251Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   }
@@ -317,18 +317,20 @@
               "SegmentDetails": [
                 {
                   "CheckedInBaggage": {
-                    "NoOfPiece": "0"
+                    "Unit": "KG",
+                    "Value": "25"
                   },
                   "FlightInfoIndex": "1"
                 },
                 {
                   "CheckedInBaggage": {
-                    "NoOfPiece": "0"
+                    "Unit": "KG",
+                    "Value": "25"
                   },
                   "FlightInfoIndex": "2"
                 }
               ],
-              "PaxId": 3439021,
+              "PaxId": 3439771,
               "Title": "Mrs",
               "FirstName": "DEEPA",
               "LastName": "NAIR",
@@ -346,8 +348,8 @@
                 "DCFARAmount": 0,
                 "ServiceFeeDisplayType": 0,
                 "Currency": "INR",
-                "BaseFare": 18120,
-                "Tax": 60786,
+                "BaseFare": 23425,
+                "Tax": 17755,
                 "TaxBreakup": [
                   {
                     "key": "K3",
@@ -355,26 +357,26 @@
                   },
                   {
                     "key": "YQTax",
-                    "value": 33718
+                    "value": 9634
                   },
                   {
                     "key": "YR",
-                    "value": 1734
+                    "value": 320
                   },
                   {
                     "key": "OtherTaxes",
-                    "value": 25334
+                    "value": 7801
                   },
                   {
                     "key": "TotalTax",
-                    "value": 60786
+                    "value": 17755
                   }
                 ],
-                "YQTax": 16859,
+                "YQTax": 4817,
                 "AdditionalTxnFeeOfrd": 0,
                 "AdditionalTxnFeePub": 0,
                 "PGCharge": 0,
-                "OtherCharges": 177,
+                "OtherCharges": 0,
                 "ChargeBU": [
                   {
                     "key": "TBOMARKUP",
@@ -386,7 +388,7 @@
                   },
                   {
                     "key": "OTHERCHARGE",
-                    "value": 177
+                    "value": 0
                   },
                   {
                     "key": "CONVENIENCECHARGE",
@@ -394,12 +396,12 @@
                   }
                 ],
                 "Discount": 0,
-                "PublishedFare": 79083,
-                "CommissionEarned": 0,
+                "PublishedFare": 41180,
+                "CommissionEarned": 484.17,
                 "PLBEarned": 0,
                 "IncentiveEarned": 0,
-                "OfferedFare": 79083,
-                "TdsOnCommission": 0,
+                "OfferedFare": 40889.5,
+                "TdsOnCommission": 193.67,
                 "TdsOnPLB": 0,
                 "TdsOnIncentive": 0,
                 "ServiceFee": 0,
@@ -424,20 +426,20 @@
               "GSTNumber": "",
               "SegmentAdditionalInfo": [
                 {
-                  "FareBasis": "SLNC00B6",
+                  "FareBasis": "GP2YXSDY",
                   "NVA": "",
                   "NVB": "",
-                  "Baggage": "0 Kg",
+                  "Baggage": "25 KG",
                   "Meal": "0 Platter",
                   "Seat": "",
                   "SpecialService": "",
                   "CabinBaggage": ""
                 },
                 {
-                  "FareBasis": "SLNC00B6",
+                  "FareBasis": "GP2YXSDY",
                   "NVA": "",
                   "NVB": "",
-                  "Baggage": "0 Kg",
+                  "Baggage": "25 KG",
                   "Meal": "0 Platter",
                   "Seat": "",
                   "SpecialService": "",
@@ -452,14 +454,14 @@
                   {
                     "Index": 1,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/ADITYA          9QVDTA DELLHRBA 0142 237Y00000000 000",
+                    "Content": "M1NAIR/ADITYA          9WLZ8T DELDXBAI 0917 237Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   },
                   {
                     "Index": 2,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/ADITYA          9QVDTA LHRDELBA 0257 251Y00000000 000",
+                    "Content": "M1NAIR/ADITYA          9WLZ8T DXBDELAI 2210 251Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   }
@@ -481,18 +483,20 @@
               "SegmentDetails": [
                 {
                   "CheckedInBaggage": {
-                    "NoOfPiece": "0"
+                    "Unit": "KG",
+                    "Value": "25"
                   },
                   "FlightInfoIndex": "1"
                 },
                 {
                   "CheckedInBaggage": {
-                    "NoOfPiece": "0"
+                    "Unit": "KG",
+                    "Value": "25"
                   },
                   "FlightInfoIndex": "2"
                 }
               ],
-              "PaxId": 3439022,
+              "PaxId": 3439772,
               "Title": "Mstr",
               "FirstName": "ADITYA",
               "LastName": "NAIR",
@@ -510,8 +514,8 @@
                 "DCFARAmount": 0,
                 "ServiceFeeDisplayType": 0,
                 "Currency": "INR",
-                "BaseFare": 13590,
-                "Tax": 47364,
+                "BaseFare": 17345,
+                "Tax": 17451,
                 "TaxBreakup": [
                   {
                     "key": "K3",
@@ -519,26 +523,26 @@
                   },
                   {
                     "key": "YQTax",
-                    "value": 33718
+                    "value": 9634
                   },
                   {
                     "key": "YR",
-                    "value": 1734
+                    "value": 320
                   },
                   {
                     "key": "OtherTaxes",
-                    "value": 11912
+                    "value": 7497
                   },
                   {
                     "key": "TotalTax",
-                    "value": 47364
+                    "value": 17451
                   }
                 ],
-                "YQTax": 16859,
+                "YQTax": 4817,
                 "AdditionalTxnFeeOfrd": 0,
                 "AdditionalTxnFeePub": 0,
                 "PGCharge": 0,
-                "OtherCharges": 177,
+                "OtherCharges": 0,
                 "ChargeBU": [
                   {
                     "key": "TBOMARKUP",
@@ -550,7 +554,7 @@
                   },
                   {
                     "key": "OTHERCHARGE",
-                    "value": 177
+                    "value": 0
                   },
                   {
                     "key": "CONVENIENCECHARGE",
@@ -558,12 +562,12 @@
                   }
                 ],
                 "Discount": 0,
-                "PublishedFare": 61131,
-                "CommissionEarned": 0,
+                "PublishedFare": 34796,
+                "CommissionEarned": 384.46,
                 "PLBEarned": 0,
                 "IncentiveEarned": 0,
-                "OfferedFare": 61131,
-                "TdsOnCommission": 0,
+                "OfferedFare": 34565.32,
+                "TdsOnCommission": 153.78,
                 "TdsOnPLB": 0,
                 "TdsOnIncentive": 0,
                 "ServiceFee": 0,
@@ -588,20 +592,20 @@
               "GSTNumber": "",
               "SegmentAdditionalInfo": [
                 {
-                  "FareBasis": "SLNC00B6",
+                  "FareBasis": "GP2YXSDY",
                   "NVA": "",
                   "NVB": "",
-                  "Baggage": "0 Kg",
+                  "Baggage": "25 KG",
                   "Meal": "0 Platter",
                   "Seat": "",
                   "SpecialService": "",
                   "CabinBaggage": ""
                 },
                 {
-                  "FareBasis": "SLNC00B6",
+                  "FareBasis": "GP2YXSDY",
                   "NVA": "",
                   "NVB": "",
-                  "Baggage": "0 Kg",
+                  "Baggage": "25 KG",
                   "Meal": "0 Platter",
                   "Seat": "",
                   "SpecialService": "",
@@ -616,14 +620,14 @@
                   {
                     "Index": 1,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/MEERA           9QVDTA DELLHRBA 0142 237Y00000000 000",
+                    "Content": "M1NAIR/MEERA           9WLZ8T DELDXBAI 0917 237Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   },
                   {
                     "Index": 2,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/MEERA           9QVDTA LHRDELBA 0257 251Y00000000 000",
+                    "Content": "M1NAIR/MEERA           9WLZ8T DXBDELAI 2210 251Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   }
@@ -645,18 +649,20 @@
               "SegmentDetails": [
                 {
                   "CheckedInBaggage": {
-                    "NoOfPiece": "0"
+                    "Unit": "KG",
+                    "Value": "25"
                   },
                   "FlightInfoIndex": "1"
                 },
                 {
                   "CheckedInBaggage": {
-                    "NoOfPiece": "0"
+                    "Unit": "KG",
+                    "Value": "25"
                   },
                   "FlightInfoIndex": "2"
                 }
               ],
-              "PaxId": 3439023,
+              "PaxId": 3439773,
               "Title": "Miss",
               "FirstName": "MEERA",
               "LastName": "NAIR",
@@ -674,8 +680,8 @@
                 "DCFARAmount": 0,
                 "ServiceFeeDisplayType": 0,
                 "Currency": "INR",
-                "BaseFare": 13590,
-                "Tax": 47364,
+                "BaseFare": 17345,
+                "Tax": 17451,
                 "TaxBreakup": [
                   {
                     "key": "K3",
@@ -683,26 +689,26 @@
                   },
                   {
                     "key": "YQTax",
-                    "value": 33718
+                    "value": 9634
                   },
                   {
                     "key": "YR",
-                    "value": 1734
+                    "value": 320
                   },
                   {
                     "key": "OtherTaxes",
-                    "value": 11912
+                    "value": 7497
                   },
                   {
                     "key": "TotalTax",
-                    "value": 47364
+                    "value": 17451
                   }
                 ],
-                "YQTax": 16859,
+                "YQTax": 4817,
                 "AdditionalTxnFeeOfrd": 0,
                 "AdditionalTxnFeePub": 0,
                 "PGCharge": 0,
-                "OtherCharges": 177,
+                "OtherCharges": 0,
                 "ChargeBU": [
                   {
                     "key": "TBOMARKUP",
@@ -714,7 +720,7 @@
                   },
                   {
                     "key": "OTHERCHARGE",
-                    "value": 177
+                    "value": 0
                   },
                   {
                     "key": "CONVENIENCECHARGE",
@@ -722,12 +728,12 @@
                   }
                 ],
                 "Discount": 0,
-                "PublishedFare": 61131,
-                "CommissionEarned": 0,
+                "PublishedFare": 34796,
+                "CommissionEarned": 384.46,
                 "PLBEarned": 0,
                 "IncentiveEarned": 0,
-                "OfferedFare": 61131,
-                "TdsOnCommission": 0,
+                "OfferedFare": 34565.32,
+                "TdsOnCommission": 153.78,
                 "TdsOnPLB": 0,
                 "TdsOnIncentive": 0,
                 "ServiceFee": 0,
@@ -752,20 +758,20 @@
               "GSTNumber": "",
               "SegmentAdditionalInfo": [
                 {
-                  "FareBasis": "SLNC00B6",
+                  "FareBasis": "GP2YXSDY",
                   "NVA": "",
                   "NVB": "",
-                  "Baggage": "0 Kg",
+                  "Baggage": "25 KG",
                   "Meal": "0 Platter",
                   "Seat": "",
                   "SpecialService": "",
                   "CabinBaggage": ""
                 },
                 {
-                  "FareBasis": "SLNC00B6",
+                  "FareBasis": "GP2YXSDY",
                   "NVA": "",
                   "NVB": "",
-                  "Baggage": "0 Kg",
+                  "Baggage": "25 KG",
                   "Meal": "0 Platter",
                   "Seat": "",
                   "SpecialService": "",
@@ -777,20 +783,20 @@
           "CancellationCharges": null,
           "Segments": [
             {
-              "Baggage": null,
+              "Baggage": "25 KG",
               "CabinBaggage": null,
               "CabinClass": 2,
               "SupplierFareClass": null,
               "TripIndicator": 1,
               "SegmentIndicator": 1,
               "Airline": {
-                "AirlineCode": "BA",
-                "AirlineName": "British Airways",
-                "FlightNumber": "142",
-                "FareClass": "S",
-                "OperatingCarrier": "BA"
+                "AirlineCode": "AI",
+                "AirlineName": "Air India",
+                "FlightNumber": "917",
+                "FareClass": "G",
+                "OperatingCarrier": "AI"
               },
-              "AirlinePNR": "ZRZI9N",
+              "AirlinePNR": "9WLKB8",
               "Origin": {
                 "Airport": {
                   "AirportCode": "DEL",
@@ -801,22 +807,22 @@
                   "CountryCode": "IN",
                   "CountryName": "India"
                 },
-                "DepTime": "2026-08-25T01:35:00"
+                "DepTime": "2026-08-25T09:50:00"
               },
               "Destination": {
                 "Airport": {
-                  "AirportCode": "LHR",
-                  "AirportName": "Heathrow",
-                  "Terminal": "5",
-                  "CityCode": "LON",
-                  "CityName": "London",
-                  "CountryCode": "GB",
-                  "CountryName": "United Kingdom"
+                  "AirportCode": "DXB",
+                  "AirportName": "Dubai",
+                  "Terminal": "1",
+                  "CityCode": "DXB",
+                  "CityName": "Dubai",
+                  "CountryCode": "AE",
+                  "CountryName": "United Arab Emirates"
                 },
-                "ArrTime": "2026-08-25T06:45:00"
+                "ArrTime": "2026-08-25T12:10:00"
               },
-              "AccumulatedDuration": 580,
-              "Duration": 580,
+              "AccumulatedDuration": 230,
+              "Duration": 230,
               "GroundTime": 0,
               "Mile": 0,
               "StopOver": false,
@@ -824,7 +830,7 @@
               "StopPoint": "",
               "StopPointArrivalTime": "0001-01-01T00:00:00",
               "StopPointDepartureTime": "0001-01-01T00:00:00",
-              "Craft": "777",
+              "Craft": "320",
               "Remark": "",
               "IsETicketEligible": true,
               "FlightStatus": "Confirmed",
@@ -832,31 +838,31 @@
               "FareClassification": null
             },
             {
-              "Baggage": null,
+              "Baggage": "25 KG",
               "CabinBaggage": null,
               "CabinClass": 2,
               "SupplierFareClass": null,
               "TripIndicator": 2,
-              "SegmentIndicator": 2,
+              "SegmentIndicator": 1,
               "Airline": {
-                "AirlineCode": "BA",
-                "AirlineName": "British Airways",
-                "FlightNumber": "257",
-                "FareClass": "O",
-                "OperatingCarrier": "BA"
+                "AirlineCode": "AI",
+                "AirlineName": "Air India",
+                "FlightNumber": "2210",
+                "FareClass": "T",
+                "OperatingCarrier": "AI"
               },
-              "AirlinePNR": "ZRZI9N",
+              "AirlinePNR": "9WLKB8",
               "Origin": {
                 "Airport": {
-                  "AirportCode": "LHR",
-                  "AirportName": "Heathrow",
-                  "Terminal": "5",
-                  "CityCode": "LON",
-                  "CityName": "London",
-                  "CountryCode": "GB",
-                  "CountryName": "United Kingdom"
+                  "AirportCode": "DXB",
+                  "AirportName": "Dubai",
+                  "Terminal": "1",
+                  "CityCode": "DXB",
+                  "CityName": "Dubai",
+                  "CountryCode": "AE",
+                  "CountryName": "United Arab Emirates"
                 },
-                "DepTime": "2026-09-08T18:50:00"
+                "DepTime": "2026-09-08T00:15:00"
               },
               "Destination": {
                 "Airport": {
@@ -868,10 +874,10 @@
                   "CountryCode": "IN",
                   "CountryName": "India"
                 },
-                "ArrTime": "2026-09-09T08:00:00"
+                "ArrTime": "2026-09-08T05:00:00"
               },
-              "AccumulatedDuration": 520,
-              "Duration": 520,
+              "AccumulatedDuration": 195,
+              "Duration": 195,
               "GroundTime": 0,
               "Mile": 0,
               "StopOver": false,
@@ -879,7 +885,7 @@
               "StopPoint": "",
               "StopPointArrivalTime": "0001-01-01T00:00:00",
               "StopPointDepartureTime": "0001-01-01T00:00:00",
-              "Craft": "788",
+              "Craft": "789",
               "Remark": "",
               "IsETicketEligible": true,
               "FlightStatus": "Confirmed",
@@ -890,30 +896,53 @@
           "FareRules": [
             {
               "Origin": "DEL",
-              "Destination": "LHR",
-              "Airline": "BA",
-              "FareBasisCode": "SLNC00B6",
-              "FareRuleDetail": "<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+              "Destination": "DXB",
+              "Airline": "AI",
+              "FareBasisCode": "GP2YXSDY",
+              "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Not Allowed<br />Change after departure - No Show: Not Allowed<br /><br /><b><u>Child</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Not Allowed<br />Change after departure - No Show: Not Allowed<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
               "FareRestriction": "",
               "FareFamilyCode": "",
               "FareRuleIndex": ""
             },
             {
-              "Origin": "LHR",
+              "Origin": "DXB",
               "Destination": "DEL",
-              "Airline": "BA",
-              "FareBasisCode": "OLNC00B6",
-              "FareRuleDetail": "<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+              "Airline": "AI",
+              "FareBasisCode": "TL2YXSDY",
+              "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Allowed with Restriction<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Allowed with Restriction<br />Change after departure - No Show: Allowed with Restriction<br /><br /><b><u>Child</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Allowed with Restriction<br />Change after departure - No Show: Allowed with Restriction<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
               "FareRestriction": "",
               "FareFamilyCode": "",
               "FareRuleIndex": ""
             }
           ],
+          "MiniFareRules": [
+            {
+              "CFARExcludedDetails": "",
+              "JourneyPoints": "DEL-DXB-DEL",
+              "Type": "Reissue",
+              "From": "",
+              "To": "",
+              "Unit": "",
+              "Details": "INR 12000*",
+              "OnlineReissueAllowed": true,
+              "OnlineRefundAllowed": false
+            },
+            {
+              "CFARExcludedDetails": "",
+              "JourneyPoints": "DEL-DXB-DEL",
+              "Type": "Cancellation",
+              "From": "",
+              "To": "",
+              "Unit": "",
+              "Details": "INR 8000*",
+              "OnlineReissueAllowed": false,
+              "OnlineRefundAllowed": true
+            }
+          ],
           "PenaltyCharges": {},
           "Status": 1,
           "IsWebCheckInAllowed": false
-        },
-        "FlightDetailChangeInfo": "BaggageChanged"
+        }
       }
     }
   }

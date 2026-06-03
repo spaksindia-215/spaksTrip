@@ -8,55 +8,37 @@
       },
       "FareRules": [
         {
-          "Airline": "BA",
-          "DepartureTime": "2026-08-25T01:35:00",
-          "Destination": "LHR",
-          "FareBasisCode": "SLNC00B6",
+          "Airline": "AI",
+          "DepartureTime": "2026-08-25T09:50:00",
+          "Destination": "DXB",
+          "FareBasisCode": "GP2YXSDY",
           "FareInclusions": null,
           "FareRestriction": "",
-          "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Change: Not Allowed<br />Change: Allowed<br />Change: Not Allowed<br />Cancellation: Not Allowed<br />Cancellation: Not Allowed<br />Cancellation: Not Allowed<br /><br /><b><u>Child</b></u><br /><br />Change: Not Allowed<br />Change: Allowed<br />Change: Not Allowed<br />Cancellation: Not Allowed<br />Cancellation: Not Allowed<br />Cancellation: Not Allowed<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+          "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Not Allowed<br />Change after departure - No Show: Not Allowed<br /><br /><b><u>Child</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Not Allowed<br />Change after departure - No Show: Not Allowed<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
           "FlightId": -2147483648,
           "MiniFarRules": {
             "Currency": "INR",
             "Rules": [
               {
-                "DepartureType": "After Departure",
-                "FromDuration": null,
-                "PaxPenalties": [
-                  {
-                    "AirlineFee": 0,
-                    "Currency": "INR",
-                    "PassengerType": 1
-                  },
-                  {
-                    "AirlineFee": 0,
-                    "Currency": "INR",
-                    "PassengerType": 2
-                  }
-                ],
-                "ToDuration": null,
-                "Type": 1
-              },
-              {
                 "DepartureType": "Before Departure",
                 "FromDuration": null,
                 "PaxPenalties": [
                   {
-                    "AirlineFee": 10000,
+                    "AirlineFee": 8000,
                     "Currency": "INR",
                     "PassengerType": 1
                   },
                   {
-                    "AirlineFee": 10000,
+                    "AirlineFee": 8000,
                     "Currency": "INR",
                     "PassengerType": 2
                   }
                 ],
                 "ToDuration": null,
-                "Type": 1
+                "Type": 0
               },
               {
-                "DepartureType": "No Show",
+                "DepartureType": "No Show Before Departure",
                 "FromDuration": null,
                 "PaxPenalties": [
                   {
@@ -71,7 +53,7 @@
                   }
                 ],
                 "ToDuration": null,
-                "Type": 1
+                "Type": 0
               },
               {
                 "DepartureType": "After Departure",
@@ -92,7 +74,7 @@
                 "Type": 0
               },
               {
-                "DepartureType": "Before Departure",
+                "DepartureType": "No Show After Departure",
                 "FromDuration": null,
                 "PaxPenalties": [
                   {
@@ -110,7 +92,43 @@
                 "Type": 0
               },
               {
-                "DepartureType": "No Show",
+                "DepartureType": "Before Departure",
+                "FromDuration": null,
+                "PaxPenalties": [
+                  {
+                    "AirlineFee": 12000,
+                    "Currency": "INR",
+                    "PassengerType": 1
+                  },
+                  {
+                    "AirlineFee": 12000,
+                    "Currency": "INR",
+                    "PassengerType": 2
+                  }
+                ],
+                "ToDuration": null,
+                "Type": 1
+              },
+              {
+                "DepartureType": "No Show Before Departure",
+                "FromDuration": null,
+                "PaxPenalties": [
+                  {
+                    "AirlineFee": 12000,
+                    "Currency": "INR",
+                    "PassengerType": 1
+                  },
+                  {
+                    "AirlineFee": 12000,
+                    "Currency": "INR",
+                    "PassengerType": 2
+                  }
+                ],
+                "ToDuration": null,
+                "Type": 1
+              },
+              {
+                "DepartureType": "After Departure",
                 "FromDuration": null,
                 "PaxPenalties": [
                   {
@@ -125,63 +143,63 @@
                   }
                 ],
                 "ToDuration": null,
-                "Type": 0
+                "Type": 1
+              },
+              {
+                "DepartureType": "No Show After Departure",
+                "FromDuration": null,
+                "PaxPenalties": [
+                  {
+                    "AirlineFee": 0,
+                    "Currency": "INR",
+                    "PassengerType": 1
+                  },
+                  {
+                    "AirlineFee": 0,
+                    "Currency": "INR",
+                    "PassengerType": 2
+                  }
+                ],
+                "ToDuration": null,
+                "Type": 1
               }
             ]
           },
           "Origin": "DEL",
-          "ReturnDate": "2026-08-25T01:35:00"
+          "ReturnDate": "2026-08-25T09:50:00"
         },
         {
-          "Airline": "BA",
-          "DepartureTime": "2026-09-08T18:50:00",
+          "Airline": "AI",
+          "DepartureTime": "2026-09-08T00:15:00",
           "Destination": "DEL",
-          "FareBasisCode": "OLNC00B6",
+          "FareBasisCode": "TL2YXSDY",
           "FareInclusions": null,
           "FareRestriction": "",
-          "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Change: Allowed<br />Change: Allowed<br />Change: Not Allowed<br />Cancellation: Not Allowed<br />Cancellation: Not Allowed<br />Cancellation: Not Allowed<br /><br /><b><u>Child</b></u><br /><br />Change: Allowed<br />Change: Allowed<br />Change: Not Allowed<br />Cancellation: Not Allowed<br />Cancellation: Not Allowed<br />Cancellation: Not Allowed<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
+          "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Allowed with Restriction<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Allowed with Restriction<br />Change after departure - No Show: Allowed with Restriction<br /><br /><b><u>Child</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Allowed with Restriction<br />Change after departure - No Show: Allowed with Restriction<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
           "FlightId": -2147483648,
           "MiniFarRules": {
             "Currency": "INR",
             "Rules": [
               {
-                "DepartureType": "After Departure",
-                "FromDuration": null,
-                "PaxPenalties": [
-                  {
-                    "AirlineFee": 10000,
-                    "Currency": "INR",
-                    "PassengerType": 1
-                  },
-                  {
-                    "AirlineFee": 10000,
-                    "Currency": "INR",
-                    "PassengerType": 2
-                  }
-                ],
-                "ToDuration": null,
-                "Type": 1
-              },
-              {
                 "DepartureType": "Before Departure",
                 "FromDuration": null,
                 "PaxPenalties": [
                   {
-                    "AirlineFee": 10000,
+                    "AirlineFee": 8000,
                     "Currency": "INR",
                     "PassengerType": 1
                   },
                   {
-                    "AirlineFee": 10000,
+                    "AirlineFee": 8000,
                     "Currency": "INR",
                     "PassengerType": 2
                   }
                 ],
                 "ToDuration": null,
-                "Type": 1
+                "Type": 0
               },
               {
-                "DepartureType": "No Show",
+                "DepartureType": "No Show Before Departure",
                 "FromDuration": null,
                 "PaxPenalties": [
                   {
@@ -196,13 +214,31 @@
                   }
                 ],
                 "ToDuration": null,
-                "Type": 1
+                "Type": 0
               },
               {
                 "DepartureType": "After Departure",
                 "FromDuration": null,
                 "PaxPenalties": [
                   {
+                    "AirlineFee": 8000,
+                    "Currency": "INR",
+                    "PassengerType": 1
+                  },
+                  {
+                    "AirlineFee": 0,
+                    "Currency": "INR",
+                    "PassengerType": 2
+                  }
+                ],
+                "ToDuration": null,
+                "Type": 0
+              },
+              {
+                "DepartureType": "No Show After Departure",
+                "FromDuration": null,
+                "PaxPenalties": [
+                  {
                     "AirlineFee": 0,
                     "Currency": "INR",
                     "PassengerType": 1
@@ -221,45 +257,81 @@
                 "FromDuration": null,
                 "PaxPenalties": [
                   {
-                    "AirlineFee": 0,
+                    "AirlineFee": 12000,
                     "Currency": "INR",
                     "PassengerType": 1
                   },
                   {
-                    "AirlineFee": 0,
+                    "AirlineFee": 12000,
                     "Currency": "INR",
                     "PassengerType": 2
                   }
                 ],
                 "ToDuration": null,
-                "Type": 0
+                "Type": 1
               },
               {
-                "DepartureType": "No Show",
+                "DepartureType": "No Show Before Departure",
                 "FromDuration": null,
                 "PaxPenalties": [
                   {
-                    "AirlineFee": 0,
+                    "AirlineFee": 12000,
                     "Currency": "INR",
                     "PassengerType": 1
                   },
                   {
-                    "AirlineFee": 0,
+                    "AirlineFee": 12000,
                     "Currency": "INR",
                     "PassengerType": 2
                   }
                 ],
                 "ToDuration": null,
-                "Type": 0
+                "Type": 1
+              },
+              {
+                "DepartureType": "After Departure",
+                "FromDuration": null,
+                "PaxPenalties": [
+                  {
+                    "AirlineFee": 12000,
+                    "Currency": "INR",
+                    "PassengerType": 1
+                  },
+                  {
+                    "AirlineFee": 12000,
+                    "Currency": "INR",
+                    "PassengerType": 2
+                  }
+                ],
+                "ToDuration": null,
+                "Type": 1
+              },
+              {
+                "DepartureType": "No Show After Departure",
+                "FromDuration": null,
+                "PaxPenalties": [
+                  {
+                    "AirlineFee": 12000,
+                    "Currency": "INR",
+                    "PassengerType": 1
+                  },
+                  {
+                    "AirlineFee": 12000,
+                    "Currency": "INR",
+                    "PassengerType": 2
+                  }
+                ],
+                "ToDuration": null,
+                "Type": 1
               }
             ]
           },
-          "Origin": "LHR",
-          "ReturnDate": "2026-09-08T18:50:00"
+          "Origin": "DXB",
+          "ReturnDate": "2026-09-08T00:15:00"
         }
       ],
       "ResponseStatus": 1,
-      "TraceId": "c99faac8-15dc-48fd-ac04-e1157474e19d"
+      "TraceId": "e33f617b-76be-4917-938a-e6757528b09d"
     }
   }
 }
