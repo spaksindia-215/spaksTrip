@@ -138,7 +138,7 @@ const NAV_ITEMS: NavItem[] = [
       { labelKey: "nav.tourist_visa", href: "#" },
     ],
   },
-  { labelKey: "Life insurance", href: "/insurance" },
+  { labelKey: "insaurance", href: "/insurance" },
 ];
 
 const COUNTRIES = [
@@ -328,7 +328,7 @@ function NavIcon({ labelKey, className }: { labelKey: string; className?: string
           <path d="M9 16h6" />
         </svg>
       );
-    case "Life insurance":
+    case "insaurance":
       return (
         <svg {...common}>
           <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />

@@ -10,7 +10,27 @@ function err(message: string, status: number) {
 // POST /api/hotels/book
 // Body matches HotelBookInput — bookingCode from PreBook, netAmount from PreBook,
 // roomsDetails with at least one passenger per room (leadPassenger=true for one adult).
+//
+// IMPORTANT: The normal hotel payment flow no longer calls this route.
+// Payment goes through /api/hotels/razorpay/verify-payment, which calls
+// tboBookHotel() directly after signature verification.
+// This route is guarded by INTERNAL_API_TOKEN to prevent unauthenticated
+// direct booking (bypassing payment). Set that variable in production.
 export async function POST(request: NextRequest) {
+  const internalToken = process.env.INTERNAL_API_TOKEN;
+  if (internalToken) {
+    const provided = request.headers.get("x-internal-token");
+    if (provided !== internalToken) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Direct booking requires payment verification. Use /api/hotels/razorpay/verify-payment.",
+        },
+        { status: 403 },
+      );
+    }
+  }
   let bookingCode: string | undefined;
 
   try {
