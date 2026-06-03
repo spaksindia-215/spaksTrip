@@ -1,7 +1,0 @@
-{
-  "EndUserIp": "1.1.1.1",
-  "TokenId": "94ba72d3-fb60-498c-b36e-110cb0aa082e",
-  "TraceId": "f26ffb8e-e71a-4b3b-9639-68df0bafaa3a",
-  "PNR": "94DN5T",
-  "BookingId": 2135214
-}

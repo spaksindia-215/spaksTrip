@@ -1,6 +1,0 @@
-{
-  "TokenId": "d40a42f0-6d96-4b2b-82e6-c26e642832e9",
-  "EndUserIp": "1.1.1.1",
-  "BookingId": "2137724",
-  "PNR": "9XVJBB"
-}
