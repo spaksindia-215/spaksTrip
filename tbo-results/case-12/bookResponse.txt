@@ -6,12 +6,12 @@
         "ErrorCode": 0,
         "ErrorMessage": ""
       },
-      "TraceId": "e33f617b-76be-4917-938a-e6757528b09d",
+      "TraceId": "dfcfb743-bf8c-4364-8172-e3255ea69e57",
       "ResponseStatus": 1,
       "Response": {
         "ItineraryChangeList": null,
-        "PNR": "9WLZ8T",
-        "BookingId": 2137500,
+        "PNR": "9XVJBB",
+        "BookingId": 2137724,
         "SSRDenied": false,
         "SSRMessage": null,
         "Status": 1,
@@ -24,14 +24,14 @@
           "JourneyType": 2,
           "SearchCombinationType": 2,
           "SupplierFareClasses": null,
-          "TBOConfNo": "TBFYSTCPJ",
+          "TBOConfNo": "TBFGFJJT0",
           "TBOTripID": null,
           "TripIndicator": 1,
           "BookingAllowedForRoamer": true,
-          "BookingId": 2137500,
+          "BookingId": 2137724,
           "IsCouponAppilcable": true,
           "IsManual": false,
-          "PNR": "9WLZ8T",
+          "PNR": "9XVJBB",
           "IsDomestic": false,
           "ResultFareType": "RegularFare",
           "Source": 77,
@@ -50,8 +50,8 @@
             "DCFARAmount": 0,
             "ServiceFeeDisplayType": 0,
             "Currency": "INR",
-            "BaseFare": 81540,
-            "Tax": 70412,
+            "BaseFare": 88160,
+            "Tax": 70746,
             "TaxBreakup": [
               {
                 "key": "K3",
@@ -67,11 +67,11 @@
               },
               {
                 "key": "OtherTaxes",
-                "value": 30596
+                "value": 30930
               },
               {
                 "key": "TotalTax",
-                "value": 70412
+                "value": 70746
               }
             ],
             "YQTax": 19268,
@@ -98,12 +98,12 @@
               }
             ],
             "Discount": 0,
-            "PublishedFare": 151952,
-            "CommissionEarned": 1737.26,
+            "PublishedFare": 158906,
+            "CommissionEarned": 0,
             "PLBEarned": 0,
             "IncentiveEarned": 0,
-            "OfferedFare": 150909.64,
-            "TdsOnCommission": 694.9,
+            "OfferedFare": 158906,
+            "TdsOnCommission": 0,
             "TdsOnPLB": 0,
             "TdsOnIncentive": 0,
             "ServiceFee": 0,
@@ -121,14 +121,14 @@
                   {
                     "Index": 1,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/KARAN           9WLZ8T DELDXBAI 0917 237Y000000000000",
+                    "Content": "M1NAIR/KARAN           9XVJBB DELDXBAI 0929 237Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   },
                   {
                     "Index": 2,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/KARAN           9WLZ8T DXBDELAI 2210 251Y000000000000",
+                    "Content": "M1NAIR/KARAN           9XVJBB DXBDELAI 2210 251Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   }
@@ -163,7 +163,7 @@
                   "FlightInfoIndex": "2"
                 }
               ],
-              "PaxId": 3439770,
+              "PaxId": 3439998,
               "Title": "Mr",
               "FirstName": "KARAN",
               "LastName": "NAIR",
@@ -181,8 +181,8 @@
                 "DCFARAmount": 0,
                 "ServiceFeeDisplayType": 0,
                 "Currency": "INR",
-                "BaseFare": 23425,
-                "Tax": 17755,
+                "BaseFare": 25190,
+                "Tax": 17844,
                 "TaxBreakup": [
                   {
                     "key": "K3",
@@ -198,11 +198,11 @@
                   },
                   {
                     "key": "OtherTaxes",
-                    "value": 7801
+                    "value": 7890
                   },
                   {
                     "key": "TotalTax",
-                    "value": 17755
+                    "value": 17844
                   }
                 ],
                 "YQTax": 4817,
@@ -229,12 +229,12 @@
                   }
                 ],
                 "Discount": 0,
-                "PublishedFare": 41180,
-                "CommissionEarned": 484.17,
+                "PublishedFare": 43034,
+                "CommissionEarned": 0,
                 "PLBEarned": 0,
                 "IncentiveEarned": 0,
-                "OfferedFare": 40889.5,
-                "TdsOnCommission": 193.67,
+                "OfferedFare": 43034,
+                "TdsOnCommission": 0,
                 "TdsOnPLB": 0,
                 "TdsOnIncentive": 0,
                 "ServiceFee": 0,
@@ -260,7 +260,7 @@
               "GSTNumber": "",
               "SegmentAdditionalInfo": [
                 {
-                  "FareBasis": "GP2YXSDY",
+                  "FareBasis": "WP2YXSDY",
                   "NVA": "",
                   "NVB": "",
                   "Baggage": "25 KG",
@@ -270,7 +270,7 @@
                   "CabinBaggage": ""
                 },
                 {
-                  "FareBasis": "GP2YXSDY",
+                  "FareBasis": "WP2YXSDY",
                   "NVA": "",
                   "NVB": "",
                   "Baggage": "25 KG",
@@ -288,14 +288,14 @@
                   {
                     "Index": 1,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/DEEPA           9WLZ8T DELDXBAI 0917 237Y000000000000",
+                    "Content": "M1NAIR/DEEPA           9XVJBB DELDXBAI 0929 237Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   },
                   {
                     "Index": 2,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/DEEPA           9WLZ8T DXBDELAI 2210 251Y000000000000",
+                    "Content": "M1NAIR/DEEPA           9XVJBB DXBDELAI 2210 251Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   }
@@ -330,7 +330,7 @@
                   "FlightInfoIndex": "2"
                 }
               ],
-              "PaxId": 3439771,
+              "PaxId": 3439999,
               "Title": "Mrs",
               "FirstName": "DEEPA",
               "LastName": "NAIR",
@@ -348,8 +348,8 @@
                 "DCFARAmount": 0,
                 "ServiceFeeDisplayType": 0,
                 "Currency": "INR",
-                "BaseFare": 23425,
-                "Tax": 17755,
+                "BaseFare": 25190,
+                "Tax": 17844,
                 "TaxBreakup": [
                   {
                     "key": "K3",
@@ -365,11 +365,11 @@
                   },
                   {
                     "key": "OtherTaxes",
-                    "value": 7801
+                    "value": 7890
                   },
                   {
                     "key": "TotalTax",
-                    "value": 17755
+                    "value": 17844
                   }
                 ],
                 "YQTax": 4817,
@@ -396,12 +396,12 @@
                   }
                 ],
                 "Discount": 0,
-                "PublishedFare": 41180,
-                "CommissionEarned": 484.17,
+                "PublishedFare": 43034,
+                "CommissionEarned": 0,
                 "PLBEarned": 0,
                 "IncentiveEarned": 0,
-                "OfferedFare": 40889.5,
-                "TdsOnCommission": 193.67,
+                "OfferedFare": 43034,
+                "TdsOnCommission": 0,
                 "TdsOnPLB": 0,
                 "TdsOnIncentive": 0,
                 "ServiceFee": 0,
@@ -426,7 +426,7 @@
               "GSTNumber": "",
               "SegmentAdditionalInfo": [
                 {
-                  "FareBasis": "GP2YXSDY",
+                  "FareBasis": "WP2YXSDY",
                   "NVA": "",
                   "NVB": "",
                   "Baggage": "25 KG",
@@ -436,7 +436,7 @@
                   "CabinBaggage": ""
                 },
                 {
-                  "FareBasis": "GP2YXSDY",
+                  "FareBasis": "WP2YXSDY",
                   "NVA": "",
                   "NVB": "",
                   "Baggage": "25 KG",
@@ -454,14 +454,14 @@
                   {
                     "Index": 1,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/ADITYA          9WLZ8T DELDXBAI 0917 237Y000000000000",
+                    "Content": "M1NAIR/ADITYA          9XVJBB DELDXBAI 0929 237Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   },
                   {
                     "Index": 2,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/ADITYA          9WLZ8T DXBDELAI 2210 251Y000000000000",
+                    "Content": "M1NAIR/ADITYA          9XVJBB DXBDELAI 2210 251Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   }
@@ -496,7 +496,7 @@
                   "FlightInfoIndex": "2"
                 }
               ],
-              "PaxId": 3439772,
+              "PaxId": 3440000,
               "Title": "Mstr",
               "FirstName": "ADITYA",
               "LastName": "NAIR",
@@ -514,8 +514,8 @@
                 "DCFARAmount": 0,
                 "ServiceFeeDisplayType": 0,
                 "Currency": "INR",
-                "BaseFare": 17345,
-                "Tax": 17451,
+                "BaseFare": 18890,
+                "Tax": 17529,
                 "TaxBreakup": [
                   {
                     "key": "K3",
@@ -531,11 +531,11 @@
                   },
                   {
                     "key": "OtherTaxes",
-                    "value": 7497
+                    "value": 7575
                   },
                   {
                     "key": "TotalTax",
-                    "value": 17451
+                    "value": 17529
                   }
                 ],
                 "YQTax": 4817,
@@ -562,12 +562,12 @@
                   }
                 ],
                 "Discount": 0,
-                "PublishedFare": 34796,
-                "CommissionEarned": 384.46,
+                "PublishedFare": 36419,
+                "CommissionEarned": 0,
                 "PLBEarned": 0,
                 "IncentiveEarned": 0,
-                "OfferedFare": 34565.32,
-                "TdsOnCommission": 153.78,
+                "OfferedFare": 36419,
+                "TdsOnCommission": 0,
                 "TdsOnPLB": 0,
                 "TdsOnIncentive": 0,
                 "ServiceFee": 0,
@@ -592,7 +592,7 @@
               "GSTNumber": "",
               "SegmentAdditionalInfo": [
                 {
-                  "FareBasis": "GP2YXSDY",
+                  "FareBasis": "WP2YXSDY",
                   "NVA": "",
                   "NVB": "",
                   "Baggage": "25 KG",
@@ -602,7 +602,7 @@
                   "CabinBaggage": ""
                 },
                 {
-                  "FareBasis": "GP2YXSDY",
+                  "FareBasis": "WP2YXSDY",
                   "NVA": "",
                   "NVB": "",
                   "Baggage": "25 KG",
@@ -620,14 +620,14 @@
                   {
                     "Index": 1,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/MEERA           9WLZ8T DELDXBAI 0917 237Y000000000000",
+                    "Content": "M1NAIR/MEERA           9XVJBB DELDXBAI 0929 237Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   },
                   {
                     "Index": 2,
                     "Format": "PDF417",
-                    "Content": "M1NAIR/MEERA           9WLZ8T DXBDELAI 2210 251Y000000000000",
+                    "Content": "M1NAIR/MEERA           9XVJBB DXBDELAI 2210 251Y000000000000",
                     "BarCodeInBase64": null,
                     "JourneyWayType": 3
                   }
@@ -662,7 +662,7 @@
                   "FlightInfoIndex": "2"
                 }
               ],
-              "PaxId": 3439773,
+              "PaxId": 3440001,
               "Title": "Miss",
               "FirstName": "MEERA",
               "LastName": "NAIR",
@@ -680,8 +680,8 @@
                 "DCFARAmount": 0,
                 "ServiceFeeDisplayType": 0,
                 "Currency": "INR",
-                "BaseFare": 17345,
-                "Tax": 17451,
+                "BaseFare": 18890,
+                "Tax": 17529,
                 "TaxBreakup": [
                   {
                     "key": "K3",
@@ -697,11 +697,11 @@
                   },
                   {
                     "key": "OtherTaxes",
-                    "value": 7497
+                    "value": 7575
                   },
                   {
                     "key": "TotalTax",
-                    "value": 17451
+                    "value": 17529
                   }
                 ],
                 "YQTax": 4817,
@@ -728,12 +728,12 @@
                   }
                 ],
                 "Discount": 0,
-                "PublishedFare": 34796,
-                "CommissionEarned": 384.46,
+                "PublishedFare": 36419,
+                "CommissionEarned": 0,
                 "PLBEarned": 0,
                 "IncentiveEarned": 0,
-                "OfferedFare": 34565.32,
-                "TdsOnCommission": 153.78,
+                "OfferedFare": 36419,
+                "TdsOnCommission": 0,
                 "TdsOnPLB": 0,
                 "TdsOnIncentive": 0,
                 "ServiceFee": 0,
@@ -758,7 +758,7 @@
               "GSTNumber": "",
               "SegmentAdditionalInfo": [
                 {
-                  "FareBasis": "GP2YXSDY",
+                  "FareBasis": "WP2YXSDY",
                   "NVA": "",
                   "NVB": "",
                   "Baggage": "25 KG",
@@ -768,7 +768,7 @@
                   "CabinBaggage": ""
                 },
                 {
-                  "FareBasis": "GP2YXSDY",
+                  "FareBasis": "WP2YXSDY",
                   "NVA": "",
                   "NVB": "",
                   "Baggage": "25 KG",
@@ -792,11 +792,11 @@
               "Airline": {
                 "AirlineCode": "AI",
                 "AirlineName": "Air India",
-                "FlightNumber": "917",
-                "FareClass": "G",
+                "FlightNumber": "929",
+                "FareClass": "W",
                 "OperatingCarrier": "AI"
               },
-              "AirlinePNR": "9WLKB8",
+              "AirlinePNR": "9XVC94",
               "Origin": {
                 "Airport": {
                   "AirportCode": "DEL",
@@ -807,7 +807,7 @@
                   "CountryCode": "IN",
                   "CountryName": "India"
                 },
-                "DepTime": "2026-08-25T09:50:00"
+                "DepTime": "2026-08-25T06:30:00"
               },
               "Destination": {
                 "Airport": {
@@ -819,10 +819,10 @@
                   "CountryCode": "AE",
                   "CountryName": "United Arab Emirates"
                 },
-                "ArrTime": "2026-08-25T12:10:00"
+                "ArrTime": "2026-08-25T08:40:00"
               },
-              "AccumulatedDuration": 230,
-              "Duration": 230,
+              "AccumulatedDuration": 220,
+              "Duration": 220,
               "GroundTime": 0,
               "Mile": 0,
               "StopOver": false,
@@ -830,7 +830,7 @@
               "StopPoint": "",
               "StopPointArrivalTime": "0001-01-01T00:00:00",
               "StopPointDepartureTime": "0001-01-01T00:00:00",
-              "Craft": "320",
+              "Craft": "788",
               "Remark": "",
               "IsETicketEligible": true,
               "FlightStatus": "Confirmed",
@@ -851,7 +851,7 @@
                 "FareClass": "T",
                 "OperatingCarrier": "AI"
               },
-              "AirlinePNR": "9WLKB8",
+              "AirlinePNR": "9XVC94",
               "Origin": {
                 "Airport": {
                   "AirportCode": "DXB",
@@ -898,7 +898,7 @@
               "Origin": "DEL",
               "Destination": "DXB",
               "Airline": "AI",
-              "FareBasisCode": "GP2YXSDY",
+              "FareBasisCode": "WP2YXSDY",
               "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Not Allowed<br />Change after departure - No Show: Not Allowed<br /><br /><b><u>Child</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Not Allowed<br />Change after departure - No Show: Not Allowed<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
               "FareRestriction": "",
               "FareFamilyCode": "",

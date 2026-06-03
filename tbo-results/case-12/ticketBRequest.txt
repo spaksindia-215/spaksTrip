@@ -1,6 +1,6 @@
 {
-  "TokenId": "bdf876f5-179b-456b-b155-e10fa75f17d4",
+  "TokenId": "d40a42f0-6d96-4b2b-82e6-c26e642832e9",
   "EndUserIp": "1.1.1.1",
-  "BookingId": "2137500",
-  "PNR": "9WLZ8T"
+  "BookingId": "2137724",
+  "PNR": "9XVJBB"
 }

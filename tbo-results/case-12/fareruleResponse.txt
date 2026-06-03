@@ -9,9 +9,9 @@
       "FareRules": [
         {
           "Airline": "AI",
-          "DepartureTime": "2026-08-25T09:50:00",
+          "DepartureTime": "2026-08-25T06:30:00",
           "Destination": "DXB",
-          "FareBasisCode": "GP2YXSDY",
+          "FareBasisCode": "WP2YXSDY",
           "FareInclusions": null,
           "FareRestriction": "",
           "FareRuleDetail": "<b><u>Adult</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Not Allowed<br />Change after departure - No Show: Not Allowed<br /><br /><b><u>Child</b></u><br /><br />Cancel before departure: Allowed with Restriction<br />Cancel before departure - No Show: Not Allowed<br />Cancel after departure: Not Allowed<br />Cancel after departure - No Show: Not Allowed<br />Change before departure: Allowed with Restriction<br />Change before departure - No Show: Allowed with Restriction<br />Change after departure: Not Allowed<br />Change after departure - No Show: Not Allowed<br/> <br/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.</li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.</li></ul>",
@@ -166,7 +166,7 @@
             ]
           },
           "Origin": "DEL",
-          "ReturnDate": "2026-08-25T09:50:00"
+          "ReturnDate": "2026-08-25T06:30:00"
         },
         {
           "Airline": "AI",
@@ -331,7 +331,7 @@
         }
       ],
       "ResponseStatus": 1,
-      "TraceId": "e33f617b-76be-4917-938a-e6757528b09d"
+      "TraceId": "dfcfb743-bf8c-4364-8172-e3255ea69e57"
     }
   }
 }
