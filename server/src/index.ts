@@ -9,6 +9,7 @@ import adminRoutes from "./routes/admin.routes";
 import customerRoutes from "./routes/customer.routes";
 import agentRoutes from "./routes/agent.routes";
 import { errorHandler } from "./middleware/error";
+import { UPLOADS_ROOT, UPLOADS_PUBLIC_PREFIX } from "./middleware/upload";
 
 async function main(): Promise<void> {
   await connectDb();
@@ -28,6 +29,9 @@ async function main(): Promise<void> {
   );
   app.use(express.json({ limit: "1mb" }));
   app.use(cookieParser());
+
+  // Serve locally-stored partner upload images (hotel listing photos, etc.).
+  app.use(UPLOADS_PUBLIC_PREFIX, express.static(UPLOADS_ROOT));
 
   app.get("/health", (_req, res) => {
     res.json({ ok: true });
