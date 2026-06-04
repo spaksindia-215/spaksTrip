@@ -27,7 +27,7 @@ export default function AddYourTaxiPage() {
   useEffect(() => {
     if (status !== "ready") return;
     if (!user) {
-      router.replace(`/auth?redirect=${encodeURIComponent(ROUTE)}`);
+      router.replace(`/auth?role=partner&redirect=${encodeURIComponent(ROUTE)}`);
     }
   }, [router, status, user]);
 
@@ -82,7 +82,7 @@ export default function AddYourTaxiPage() {
                 Browse Taxi Packages
               </Link>
               <Link
-                href="/auth?mode=register"
+                href="/auth?mode=register&role=partner"
                 className="inline-flex items-center justify-center rounded-xl border border-border-soft px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-surface-muted"
               >
                 Register as Partner

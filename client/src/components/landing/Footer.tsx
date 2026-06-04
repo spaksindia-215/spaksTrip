@@ -41,7 +41,7 @@ export default function Footer() {
             title={t("footer.quick_links")}
             links={[
               { label: t("nav.flight"), href: "/flight" },
-              { label: t("footer.partner_login"), href: "/auth" },
+              { label: t("footer.partner_login"), href: "/auth?role=partner" },
               { label: t("footer.contact_us"), href: "/help" },
             ]}
           />

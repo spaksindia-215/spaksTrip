@@ -55,7 +55,7 @@ export default function PartnerShell({ user, children }: Props) {
                 type="button"
                 onClick={async () => {
                   await logout();
-                  router.replace("/auth");
+                  router.replace("/auth?role=partner");
                 }}
                 className="rounded-full border border-white/20 px-3.5 py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-white/10"
               >

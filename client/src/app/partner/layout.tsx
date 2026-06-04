@@ -11,7 +11,7 @@ type MeResponse = {
 };
 
 function loginRedirectUrl(pathname: string): string {
-  return `/auth?redirect=${encodeURIComponent(pathname)}`;
+  return `/auth?role=partner&redirect=${encodeURIComponent(pathname)}`;
 }
 
 async function getPartnerUser(): Promise<MeResponse["user"]> {
