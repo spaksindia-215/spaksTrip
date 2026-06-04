@@ -138,6 +138,43 @@ export type TaxiListingDraft = {
   acceptTerms: boolean;
 };
 
+// Flat view of a persisted (MTI) taxi listing, derived from the API shape for
+// rendering in the My Taxis dashboard + editor. Replaces the old localStorage
+// `TaxiListing` as the dashboard's working type.
+export type TaxiListingView = {
+  id: string;
+  vehicleType: string;
+  brand: string;
+  model: string;
+  registrationNumber: string;
+  seatingCapacity: number;
+  fuelType: string;
+  transmission: string;
+  fullName: string;
+  operatingCity: string;
+  serviceAreas: string[];
+  availableRoutes: string[];
+  minimumFare: number;
+  pricePerKm: number;
+  availableDays: string[];
+  availableTimeSlots: string[];
+  description: string;
+  amenities: string[];
+  images: string[];
+  availabilityEnabled: boolean;
+  updatedAt: string;
+};
+
+// Real File objects retained by the form for upload (the draft only keeps
+// display metadata via serializeFiles).
+export type TaxiListingUploadFiles = {
+  vehiclePhotos: File[];
+  rcBook: File | null;
+  insurance: File | null;
+  pollutionCertificate: File | null;
+  drivingLicense: File | null;
+};
+
 export type TaxiListingDraftKey = keyof TaxiListingDraft;
 
 export type TaxiListingErrors = Partial<Record<TaxiListingDraftKey, string>>;

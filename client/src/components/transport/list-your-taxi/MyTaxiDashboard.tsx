@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore, type ChangeEvent, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
@@ -10,23 +10,20 @@ import EmptyState from "@/components/ui/EmptyState";
 import Input from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
 import {
-  applyTaxiListingEditorDraft,
+  buildTaxiUpdatePatch,
   createTaxiListingEditorDraft,
-  getStoredTaxiListings,
-  setTaxiListingAvailability,
-  subscribeTaxiListings,
-  taxiListingStorageKey,
-  upsertTaxiListing,
+  taxiViewFromApi,
   validateTaxiListingEditorDraft,
 } from "@/lib/taxiListing";
+import { partnerClient } from "@/lib/partnerClient";
 import { cn } from "@/lib/cn";
 import {
   TAXI_AMENITIES,
   TAXI_AVAILABLE_DAYS,
   TAXI_TIME_SLOTS,
   type TaxiAvailableDay,
-  type TaxiListing,
   type TaxiListingEditorDraft,
+  type TaxiListingView,
   type TaxiTimeSlot,
 } from "@/types/taxiListing";
 
@@ -34,13 +31,33 @@ type EditorErrors = Partial<Record<keyof TaxiListingEditorDraft, string>>;
 
 export default function MyTaxiDashboard() {
   const toast = useToast();
-  const listings = useSyncExternalStore(subscribeTaxiListings, getStoredTaxiListings, () => []);
-  const [editing, setEditing] = useState<TaxiListing | null>(null);
+  const [listings, setListings] = useState<TaxiListingView[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<TaxiListingView | null>(null);
   const [editDraft, setEditDraft] = useState<TaxiListingEditorDraft | null>(null);
   const [errors, setErrors] = useState<EditorErrors>({});
   const [saving, setSaving] = useState(false);
 
-  function openEditor(listing: TaxiListing) {
+  const refresh = useCallback(async () => {
+    try {
+      const items = await partnerClient.taxis.list();
+      setListings(items.map(taxiViewFromApi));
+    } catch (error) {
+      toast.push({
+        title: "Could not load your taxis",
+        description: error instanceof Error ? error.message : "Please try again.",
+        tone: "danger",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
+
+  function openEditor(listing: TaxiListingView) {
     setEditing(listing);
     setEditDraft(createTaxiListingEditorDraft(listing));
     setErrors({});
@@ -64,12 +81,22 @@ export default function MyTaxiDashboard() {
     });
   }
 
-  function toggleAvailability(id: string, enabled: boolean) {
-    setTaxiListingAvailability(id, enabled);
-    toast.push({
-      title: enabled ? "Taxi marked available" : "Taxi marked unavailable",
-      tone: "success",
-    });
+  async function toggleAvailability(id: string, enabled: boolean) {
+    try {
+      const updated = await partnerClient.taxis.update(id, { availabilityEnabled: enabled });
+      const view = taxiViewFromApi(updated);
+      setListings((current) => current.map((item) => (item.id === id ? view : item)));
+      toast.push({
+        title: enabled ? "Taxi marked available" : "Taxi marked unavailable",
+        tone: "success",
+      });
+    } catch (error) {
+      toast.push({
+        title: "Could not update availability",
+        description: error instanceof Error ? error.message : "Please try again.",
+        tone: "danger",
+      });
+    }
   }
 
   function toggleDay(day: TaxiAvailableDay) {
@@ -117,15 +144,21 @@ export default function MyTaxiDashboard() {
     setSaving(true);
 
     try {
-      await new Promise((resolve) => window.setTimeout(resolve, 500));
-      const nextListing = applyTaxiListingEditorDraft(editing, editDraft);
-      upsertTaxiListing(nextListing);
+      const updated = await partnerClient.taxis.update(editing.id, buildTaxiUpdatePatch(editDraft));
+      const view = taxiViewFromApi(updated);
+      setListings((current) => current.map((item) => (item.id === editing.id ? view : item)));
       toast.push({
         title: "Taxi listing updated",
         description: `${editing.brand} ${editing.model} is ready with the latest details.`,
         tone: "success",
       });
       closeEditor();
+    } catch (error) {
+      toast.push({
+        title: "Could not update taxi listing",
+        description: error instanceof Error ? error.message : "Please try again.",
+        tone: "danger",
+      });
     } finally {
       setSaving(false);
     }
@@ -142,7 +175,7 @@ export default function MyTaxiDashboard() {
             <h1 className="mt-2 text-3xl font-black text-ink">My Taxis</h1>
             <p className="mt-2 max-w-2xl text-sm text-ink-muted">
               Review your submitted taxi listings, adjust availability, update coverage details,
-              and monitor booking requests without affecting the existing customer taxi flows.
+              and keep coverage details up to date without affecting the existing customer taxi flows.
             </p>
           </div>
 
@@ -162,11 +195,15 @@ export default function MyTaxiDashboard() {
         </div>
       </section>
 
-      {listings.length === 0 ? (
+      {loading ? (
+        <section className="rounded-xl border border-border-soft bg-white p-10 text-center shadow-(--shadow-xs)">
+          <p className="text-sm text-ink-muted">Loading your taxis…</p>
+        </section>
+      ) : listings.length === 0 ? (
         <section className="rounded-xl border border-border-soft bg-white shadow-(--shadow-xs)">
           <EmptyState
             title="No taxis listed yet"
-            subtitle="Your submitted taxi listings will appear here with availability controls and booking requests."
+            subtitle="Your submitted taxi listings will appear here with availability controls."
             cta={
               <Link
                 href="/taxi-package/list-your-taxi"
@@ -231,47 +268,6 @@ export default function MyTaxiDashboard() {
                       ))}
                     </div>
                   </div>
-
-                  <div>
-                    <p className="text-sm font-semibold text-ink">Booking Requests</p>
-                    <div className="mt-3 grid gap-3">
-                      {listing.bookingRequests.map((request) => (
-                        <div
-                          key={request.id}
-                          className="rounded-xl border border-border-soft bg-surface-muted p-4"
-                        >
-                          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                              <p className="text-sm font-semibold text-ink">
-                                {request.riderName}
-                              </p>
-                              <p className="mt-1 text-sm text-ink-muted">
-                                {request.route} • {new Date(request.pickupDate).toLocaleDateString("en-IN")} •{" "}
-                                {request.passengers} passengers
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Badge
-                                tone={
-                                  request.status === "completed"
-                                    ? "success"
-                                    : request.status === "confirmed"
-                                      ? "info"
-                                      : "warn"
-                                }
-                                size="sm"
-                              >
-                                {request.status}
-                              </Badge>
-                              <span className="text-sm font-semibold text-ink">
-                                Rs. {request.quotedFare}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 </div>
 
                 <div className="flex w-full shrink-0 flex-col gap-3 lg:w-56">
@@ -287,8 +283,6 @@ export default function MyTaxiDashboard() {
                   </Button>
                   <div className="rounded-xl border border-border-soft bg-surface-muted p-4 text-sm text-ink-muted">
                     Updated on {new Date(listing.updatedAt).toLocaleDateString("en-IN")}
-                    <br />
-                    Storage key: <span className="font-mono text-[12px]">{taxiListingStorageKey()}</span>
                   </div>
                 </div>
               </div>

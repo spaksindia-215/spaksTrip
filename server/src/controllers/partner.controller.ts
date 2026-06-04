@@ -9,8 +9,13 @@ import {
   validateResourceUpdate,
 } from "../validators/partner.validators";
 import { validateHotelListing } from "../validators/hotelListing.validators";
-import { validateTaxiListing } from "../validators/taxiListing.validators";
-import { hotelImageUrl } from "../middleware/upload";
+import {
+  validateTaxiListing,
+  validateTaxiListingUpdate,
+  parseSlotStrings,
+  type TaxiMedia,
+} from "../validators/taxiListing.validators";
+import { uploadToCloudinary, uploadManyToCloudinary } from "../lib/cloudinary";
 import { HttpError } from "../middleware/error";
 
 function partnerIdFrom(req: Request): string {
@@ -88,19 +93,19 @@ export async function createHotelListing(
     const pricing = parseJsonField(req, "pricing", {});
     const promotions = parseJsonField(req, "promotions", []);
 
-    // Group uploaded files: `hotelImages` → property images; `roomImages-<id>`
-    // → that room's images (keyed by the client-generated room id).
+    // Upload to Cloudinary: `hotelImages` → property images; `roomImages-<id>`
+    // → that room's images (keyed by the client-generated room id). Property
+    // images keep submission order so the first becomes the primary image.
     const files = (req.files as Express.Multer.File[] | undefined) ?? [];
-    const hotelImageUrls: string[] = [];
+    const hotelImageUrls = await uploadManyToCloudinary(
+      files.filter((f) => f.fieldname === "hotelImages"),
+      "spakstrip/hotels",
+    );
     const roomImageUrls: Record<string, string[]> = {};
-    for (const f of files) {
-      const url = hotelImageUrl(f.filename);
-      if (f.fieldname === "hotelImages") {
-        hotelImageUrls.push(url);
-      } else if (f.fieldname.startsWith("roomImages-")) {
-        const roomKey = f.fieldname.slice("roomImages-".length);
-        (roomImageUrls[roomKey] ??= []).push(url);
-      }
+    for (const f of files.filter((f) => f.fieldname.startsWith("roomImages-"))) {
+      const url = await uploadToCloudinary(f, "spakstrip/hotels/rooms");
+      const roomKey = f.fieldname.slice("roomImages-".length);
+      (roomImageUrls[roomKey] ??= []).push(url);
     }
 
     const input = validateHotelListing({
@@ -121,8 +126,10 @@ export async function createHotelListing(
   }
 }
 
-// POST /api/partner/taxis — JSON body is the client list-your-taxi listing
-// (flat shape); the validator adapts it into the MTI TaxiListing model.
+// POST /api/partner/taxis — multipart: `payload` is the flat list-your-taxi
+// listing (JSON string); files are vehiclePhotos[] + doc fields (rcBook,
+// insurance, pollutionCertificate, drivingLicense). Uploaded to Cloudinary and
+// adapted into the MTI TaxiListing model.
 export async function createTaxiListing(
   req: Request,
   res: Response,
@@ -130,9 +137,104 @@ export async function createTaxiListing(
 ): Promise<void> {
   try {
     const partnerId = partnerIdFrom(req);
-    const input = validateTaxiListing(req.body);
+    const payload = parseJsonField(req, "payload", req.body);
+
+    const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    const byField = (name: string) => files.find((f) => f.fieldname === name);
+
+    const vehicleImageUrls = await uploadManyToCloudinary(
+      files.filter((f) => f.fieldname === "vehiclePhotos"),
+      "spakstrip/taxis",
+    );
+    const uploadDoc = async (name: string): Promise<string | undefined> => {
+      const f = byField(name);
+      return f ? uploadToCloudinary(f, "spakstrip/taxis/docs") : undefined;
+    };
+    const media: TaxiMedia = {
+      vehicleImageUrls,
+      docs: {
+        vehicleRC: await uploadDoc("rcBook"),
+        insurance: await uploadDoc("insurance"),
+        pollutionCertificate: await uploadDoc("pollutionCertificate"),
+        drivingLicense: await uploadDoc("drivingLicense"),
+      },
+    };
+
+    const input = validateTaxiListing(payload, media);
     const doc = await TaxiListingModel.create({ ...input, partner: partnerId });
     res.status(201).json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// GET /api/partner/taxis — this partner's taxi listings, newest first.
+export async function listTaxiListings(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const items = await TaxiListingModel.find({ partner: partnerId }).sort({ createdAt: -1 });
+    res.json({ items: items.map((i) => i.toJSON()) });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// PATCH /api/partner/taxis/:id — apply the dashboard editor's flat fields onto
+// the MTI document (single service at index 0) and the availability status.
+export async function updateTaxiListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramId(req);
+    const patch = validateTaxiListingUpdate(req.body);
+
+    const doc = await TaxiListingModel.findOne({ _id: id, partner: partnerId });
+    if (!doc) throw new HttpError(404, "Taxi listing not found");
+
+    const service = doc.services[0];
+    if (patch.operatingCity !== undefined && service) service.coverage.baseCity = patch.operatingCity;
+    if (patch.minimumFare !== undefined && service) service.pricing.baseFare = patch.minimumFare;
+    if (patch.pricePerKm !== undefined && service) service.pricing.pricePerKm = patch.pricePerKm;
+    if (patch.serviceAreas !== undefined && service) service.coverage.servicedCities = patch.serviceAreas;
+    if (patch.availableRoutes !== undefined) doc.routes = patch.availableRoutes;
+    if (patch.description !== undefined) doc.description = patch.description;
+    if (patch.availableDays !== undefined) doc.operatingDays = patch.availableDays;
+    if (patch.availableTimeSlots !== undefined) {
+      const slots = parseSlotStrings(patch.availableTimeSlots);
+      doc.operationalHours.slots = slots;
+      doc.operationalHours.available24x7 = slots.length === 0;
+    }
+    if (patch.amenities !== undefined) doc.vehicle.amenities = patch.amenities;
+    if (patch.availabilityEnabled !== undefined) {
+      doc.status = patch.availabilityEnabled ? "active" : "paused";
+    }
+
+    await doc.save();
+    res.json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// DELETE /api/partner/taxis/:id
+export async function deleteTaxiListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramId(req);
+    const result = await TaxiListingModel.findOneAndDelete({ _id: id, partner: partnerId });
+    if (!result) throw new HttpError(404, "Taxi listing not found");
+    res.status(204).end();
   } catch (e) {
     next(e);
   }

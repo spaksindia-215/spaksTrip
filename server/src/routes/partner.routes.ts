@@ -9,8 +9,11 @@ import {
   listBookings,
   createHotelListing,
   createTaxiListing,
+  listTaxiListings,
+  updateTaxiListing,
+  deleteTaxiListing,
 } from "../controllers/partner.controller";
-import { hotelUpload } from "../middleware/upload";
+import { mediaUpload } from "../middleware/upload";
 import { HttpError } from "../middleware/error";
 
 const router = Router();
@@ -23,10 +26,10 @@ router.post("/resources", createResource);
 router.put("/resources/:id", updateResource);
 router.delete("/resources/:id", deleteResource);
 
-// Multipart hotel listing. Room image field names are dynamic (`roomImages-<id>`)
-// so we accept any field, converting multer/upload errors into a clean 400.
-function hotelImages(req: Request, res: Response, next: NextFunction): void {
-  hotelUpload.any()(req, res, (err: unknown) => {
+// Multipart parsing with dynamic field names (hotel `roomImages-<id>`, taxi
+// `vehiclePhotos`/doc fields), converting multer/upload errors into a clean 400.
+function uploadAny(req: Request, res: Response, next: NextFunction): void {
+  mediaUpload.any()(req, res, (err: unknown) => {
     if (err) {
       next(new HttpError(400, err instanceof Error ? err.message : "Upload failed"));
       return;
@@ -35,9 +38,12 @@ function hotelImages(req: Request, res: Response, next: NextFunction): void {
   });
 }
 
-router.post("/hotels", hotelImages, createHotelListing);
+router.post("/hotels", uploadAny, createHotelListing);
 
-// JSON body (the client list-your-taxi listing); adapted to the MTI model.
-router.post("/taxis", createTaxiListing);
+// Taxi listings (DB-backed; images/docs to Cloudinary).
+router.get("/taxis", listTaxiListings);
+router.post("/taxis", uploadAny, createTaxiListing);
+router.patch("/taxis/:id", updateTaxiListing);
+router.delete("/taxis/:id", deleteTaxiListing);
 
 export default router;

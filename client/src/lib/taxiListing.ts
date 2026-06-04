@@ -1,14 +1,20 @@
+import { TAXI_AVAILABLE_DAYS, TAXI_TIME_SLOTS } from "@/types/taxiListing";
 import type {
-  TaxiBookingRequest,
-  TaxiListing,
+  TaxiAvailableDay,
   TaxiListingDraft,
   TaxiListingEditorDraft,
   TaxiListingErrors,
   TaxiListingFile,
+  TaxiListingUploadFiles,
+  TaxiListingView,
+  TaxiTimeSlot,
 } from "@/types/taxiListing";
+import type { TaxiListingApi, TaxiListingUpdate } from "@/lib/partnerClient";
 
-const TAXI_LISTING_STORAGE_KEY = "spakstrip.list-your-taxi.listings";
-const TAXI_LISTING_EVENT = "spakstrip:list-your-taxi:updated";
+// Partner taxi listings are persisted in the backend DB (MTI TaxiListing model)
+// and images/docs go to Cloudinary — no localStorage. This module owns the
+// draft/validation helpers, the multipart builder for create, and the mappers
+// between the API shape and the dashboard's flat view.
 
 const PHONE_PATTERN = /^[+\d][\d\s-]{9,14}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -49,15 +55,21 @@ export function createEmptyTaxiListingDraft(): TaxiListingDraft {
   };
 }
 
-export function createTaxiListingEditorDraft(listing: TaxiListing): TaxiListingEditorDraft {
+export function createTaxiListingEditorDraft(listing: TaxiListingView): TaxiListingEditorDraft {
   return {
     operatingCity: listing.operatingCity,
     serviceAreas: listing.serviceAreas.join(", "),
     availableRoutes: listing.availableRoutes.join(", "),
     minimumFare: String(listing.minimumFare),
     pricePerKm: String(listing.pricePerKm),
-    availableDays: listing.availableDays,
-    availableTimeSlots: listing.availableTimeSlots,
+    // The editor's checkboxes use the known literal sets; values outside them
+    // simply won't match a checkbox.
+    availableDays: listing.availableDays.filter((d): d is TaxiAvailableDay =>
+      (TAXI_AVAILABLE_DAYS as readonly string[]).includes(d),
+    ),
+    availableTimeSlots: listing.availableTimeSlots.filter((s): s is TaxiTimeSlot =>
+      (TAXI_TIME_SLOTS as readonly string[]).includes(s),
+    ),
     description: listing.description,
     amenities: listing.amenities,
   };
@@ -149,69 +161,84 @@ export function validateTaxiListingDraft(draft: TaxiListingDraft): TaxiListingEr
   return errors;
 }
 
-export function createTaxiListingFromDraft(draft: TaxiListingDraft): TaxiListing {
-  const now = new Date().toISOString();
-  const serviceAreas = toList(draft.serviceAreas);
-  const availableRoutes = toList(draft.availableRoutes);
-  const vehicleType = requireSelection(draft.vehicleType, "Vehicle type");
-  const fuelType = requireSelection(draft.fuelType, "Fuel type");
-  const transmission = requireSelection(draft.transmission, "Transmission");
-  const listing: TaxiListing = {
-    id: createId(),
-    createdAt: now,
-    updatedAt: now,
+// Assemble the multipart request body for POST /api/partner/taxis: a `payload`
+// JSON field (everything the backend validator maps to the MTI model) plus the
+// real file objects the form retained.
+export function buildTaxiListingFormData(
+  draft: TaxiListingDraft,
+  files: TaxiListingUploadFiles,
+): FormData {
+  const payload = {
     fullName: draft.fullName.trim(),
     mobileNumber: draft.mobileNumber.trim(),
     emailAddress: draft.emailAddress.trim(),
     businessName: draft.businessName.trim(),
-    vehicleType,
+    vehicleType: draft.vehicleType,
     brand: draft.brand.trim(),
     model: draft.model.trim(),
     registrationNumber: draft.registrationNumber.trim().toUpperCase(),
     seatingCapacity: Number(draft.seatingCapacity),
-    fuelType,
-    transmission,
+    fuelType: draft.fuelType,
+    transmission: draft.transmission,
     acAvailable: draft.acAvailable,
     luggageCapacity: Number(draft.luggageCapacity),
     yearOfManufacture: Number(draft.yearOfManufacture),
     operatingCity: draft.operatingCity.trim(),
-    serviceAreas,
-    availableRoutes,
+    serviceAreas: toList(draft.serviceAreas),
+    availableRoutes: toList(draft.availableRoutes),
     minimumFare: Number(draft.minimumFare),
     pricePerKm: Number(draft.pricePerKm),
     driverIncluded: draft.driverIncluded,
     selfDriveAvailable: draft.selfDriveAvailable,
-    rcBook: ensureFile(draft.rcBook),
-    insurance: ensureFile(draft.insurance),
-    pollutionCertificate: ensureFile(draft.pollutionCertificate),
-    drivingLicense: ensureFile(draft.drivingLicense),
-    vehiclePhotos: draft.vehiclePhotos,
     availableDays: draft.availableDays,
     availableTimeSlots: draft.availableTimeSlots,
     description: draft.description.trim(),
     amenities: draft.amenities,
-    acceptTerms: true,
     availabilityEnabled: true,
-    bookingRequests: buildMockBookingRequests(
-      draft.fullName.trim(),
-      draft.operatingCity.trim(),
-      serviceAreas,
-      availableRoutes,
-      Number(draft.minimumFare),
-      Number(draft.seatingCapacity),
-    ),
   };
 
-  return listing;
+  const form = new FormData();
+  form.append("payload", JSON.stringify(payload));
+  files.vehiclePhotos.forEach((file) => form.append("vehiclePhotos", file));
+  if (files.rcBook) form.append("rcBook", files.rcBook);
+  if (files.insurance) form.append("insurance", files.insurance);
+  if (files.pollutionCertificate) form.append("pollutionCertificate", files.pollutionCertificate);
+  if (files.drivingLicense) form.append("drivingLicense", files.drivingLicense);
+
+  return form;
 }
 
-export function applyTaxiListingEditorDraft(
-  listing: TaxiListing,
-  draft: TaxiListingEditorDraft,
-): TaxiListing {
+// Map a stored MTI taxi listing (API shape) into the flat dashboard view.
+export function taxiViewFromApi(listing: TaxiListingApi): TaxiListingView {
+  const service = listing.services[0];
   return {
-    ...listing,
-    updatedAt: new Date().toISOString(),
+    id: listing.id,
+    vehicleType: prettifyToken(listing.vehicle.type),
+    brand: listing.vehicle.make,
+    model: listing.vehicle.model,
+    registrationNumber: listing.vehicle.registrationNumber ?? "",
+    seatingCapacity: listing.vehicle.seatingCap,
+    fuelType: listing.vehicle.fuelType ? prettifyToken(listing.vehicle.fuelType) : "",
+    transmission: listing.vehicle.transmission ? prettifyToken(listing.vehicle.transmission) : "",
+    fullName: listing.contact.name ?? "",
+    operatingCity: service?.coverage.baseCity ?? "",
+    serviceAreas: service?.coverage.servicedCities ?? [],
+    availableRoutes: listing.routes,
+    minimumFare: service?.pricing.baseFare ?? 0,
+    pricePerKm: service?.pricing.pricePerKm ?? 0,
+    availableDays: listing.operatingDays,
+    availableTimeSlots: listing.operationalHours.slots.map((s) => `${s.from} - ${s.to}`),
+    description: listing.description ?? "",
+    amenities: listing.vehicle.amenities,
+    images: listing.vehicle.images.map((i) => i.url),
+    availabilityEnabled: listing.status === "active",
+    updatedAt: listing.updatedAt,
+  };
+}
+
+// Build the PATCH body for an editor save.
+export function buildTaxiUpdatePatch(draft: TaxiListingEditorDraft): TaxiListingUpdate {
+  return {
     operatingCity: draft.operatingCity.trim(),
     serviceAreas: toList(draft.serviceAreas),
     availableRoutes: toList(draft.availableRoutes),
@@ -252,92 +279,6 @@ export function validateTaxiListingEditorDraft(draft: TaxiListingEditorDraft) {
   return errors;
 }
 
-export function getStoredTaxiListings(): TaxiListing[] {
-  if (typeof window === "undefined") return [];
-
-  try {
-    const raw = window.localStorage.getItem(TAXI_LISTING_STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) return [];
-    return parsed as TaxiListing[];
-  } catch {
-    return [];
-  }
-}
-
-export function saveStoredTaxiListings(listings: TaxiListing[]) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(TAXI_LISTING_STORAGE_KEY, JSON.stringify(listings));
-  window.dispatchEvent(new Event(TAXI_LISTING_EVENT));
-}
-
-export function upsertTaxiListing(listing: TaxiListing): TaxiListing[] {
-  const current = getStoredTaxiListings();
-  const index = current.findIndex((item) => item.id === listing.id);
-  const next =
-    index === -1
-      ? [listing, ...current]
-      : current.map((item) => (item.id === listing.id ? listing : item));
-
-  saveStoredTaxiListings(next);
-  return next;
-}
-
-export function setTaxiListingAvailability(id: string, availabilityEnabled: boolean): TaxiListing[] {
-  const current = getStoredTaxiListings();
-  const next = current.map((item) =>
-    item.id === id
-      ? {
-          ...item,
-          availabilityEnabled,
-          updatedAt: new Date().toISOString(),
-        }
-      : item,
-  );
-
-  saveStoredTaxiListings(next);
-  return next;
-}
-
-export function taxiListingStorageKey() {
-  return TAXI_LISTING_STORAGE_KEY;
-}
-
-export function subscribeTaxiListings(onStoreChange: () => void) {
-  if (typeof window === "undefined") {
-    return () => undefined;
-  }
-
-  window.addEventListener("storage", onStoreChange);
-  window.addEventListener(TAXI_LISTING_EVENT, onStoreChange);
-
-  return () => {
-    window.removeEventListener("storage", onStoreChange);
-    window.removeEventListener(TAXI_LISTING_EVENT, onStoreChange);
-  };
-}
-
-function ensureFile(file: TaxiListingFile | null): TaxiListingFile {
-  if (!file) {
-    return {
-      name: "",
-      size: 0,
-      type: "",
-    };
-  }
-
-  return file;
-}
-
-function requireSelection<T extends string>(value: T | "", label: string): Exclude<T, ""> {
-  if (!value) {
-    throw new Error(`${label} is required.`);
-  }
-
-  return value as Exclude<T, "">;
-}
-
 function toList(value: string): string[] {
   return Array.from(
     new Set(
@@ -349,52 +290,10 @@ function toList(value: string): string[] {
   );
 }
 
-function buildMockBookingRequests(
-  ownerName: string,
-  city: string,
-  serviceAreas: string[],
-  availableRoutes: string[],
-  minimumFare: number,
-  seatingCapacity: number,
-): TaxiBookingRequest[] {
-  const fallbackArea = serviceAreas[0] ?? `${city} Central`;
-  const fallbackRoute = availableRoutes[0] ?? `${city} Airport Drop`;
-  const dayOne = addDays(2);
-  const dayTwo = addDays(5);
-  const contactName = ownerName.split(" ")[0] || "Partner";
-
-  return [
-    {
-      id: createId(),
-      riderName: "Aarav Mehta",
-      route: `${city} to ${fallbackArea}`,
-      pickupDate: dayOne,
-      passengers: Math.max(1, Math.min(seatingCapacity, 2)),
-      quotedFare: minimumFare,
-      status: "pending",
-    },
-    {
-      id: createId(),
-      riderName: `${contactName} Referral`,
-      route: fallbackRoute,
-      pickupDate: dayTwo,
-      passengers: Math.max(1, Math.min(seatingCapacity, 4)),
-      quotedFare: minimumFare + 450,
-      status: "confirmed",
-    },
-  ];
-}
-
-function addDays(days: number): string {
-  const date = new Date();
-  date.setDate(date.getDate() + days);
-  return date.toISOString();
-}
-
-function createId(): string {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-
-  return `taxi-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+// "tempo_traveller" → "Tempo Traveller"
+function prettifyToken(value: string): string {
+  return value
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }

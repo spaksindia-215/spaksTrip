@@ -22,6 +22,31 @@ export type ValidatedTaxiListing = Omit<
   "partner" | "slug" | "createdAt" | "updatedAt"
 >;
 
+// Cloudinary URLs resolved by the controller before validation.
+export interface TaxiMedia {
+  vehicleImageUrls?: string[];
+  docs?: {
+    vehicleRC?: string;
+    insurance?: string;
+    pollutionCertificate?: string;
+    drivingLicense?: string;
+  };
+}
+
+// Editable subset surfaced by the My Taxis dashboard editor.
+export interface TaxiListingUpdateInput {
+  operatingCity?: string;
+  minimumFare?: number;
+  pricePerKm?: number;
+  serviceAreas?: string[];
+  availableRoutes?: string[];
+  description?: string;
+  availableDays?: string[];
+  availableTimeSlots?: string[];
+  amenities?: string[];
+  availabilityEnabled?: boolean;
+}
+
 function fail(msg: string): never {
   throw new HttpError(400, `taxi: ${msg}`);
 }
@@ -90,7 +115,11 @@ function parseSlot(raw: string): { from: string; to: string } | null {
   return { from: m[0], to: m[1] };
 }
 
-export function validateTaxiListing(body: unknown): ValidatedTaxiListing {
+function buildDocRef(url: string | undefined): { url: string } | undefined {
+  return url ? { url } : undefined;
+}
+
+export function validateTaxiListing(body: unknown, media: TaxiMedia = {}): ValidatedTaxiListing {
   if (!isObject(body)) fail("request body is required");
   const d = body as Record<string, unknown>;
 
@@ -116,7 +145,7 @@ export function validateTaxiListing(body: unknown): ValidatedTaxiListing {
     acAvailable: bool(d.acAvailable, true),
     luggageSpace: luggageBucket(luggageCapacity),
     luggageCapacity,
-    images: [],
+    images: (media.vehicleImageUrls ?? []).map((url, i) => ({ url, isPrimary: i === 0 })),
     amenities: strArray(d.amenities),
   };
 
@@ -156,7 +185,12 @@ export function validateTaxiListing(body: unknown): ValidatedTaxiListing {
     operatingDays: strArray(d.availableDays),
     routes,
     advanceBookingHrs: optNum(d, "advanceBookingHrs") ?? 4,
-    docs: {},
+    docs: {
+      vehicleRC: buildDocRef(media.docs?.vehicleRC),
+      insurance: buildDocRef(media.docs?.insurance),
+      pollutionCertificate: buildDocRef(media.docs?.pollutionCertificate),
+      drivingLicense: buildDocRef(media.docs?.drivingLicense),
+    },
     cancellationPolicy: { freeCancelHrs: 24, chargePercent: 10 },
     contact: {
       name: optStr(d, "fullName"),
@@ -168,4 +202,31 @@ export function validateTaxiListing(body: unknown): ValidatedTaxiListing {
     driverIncluded: bool(d.driverIncluded, true),
     selfDriveAvailable: bool(d.selfDriveAvailable, false),
   };
+}
+
+// Validate the dashboard editor's partial update. Only provided keys are
+// returned; the controller maps them onto the loaded MTI document.
+export function validateTaxiListingUpdate(body: unknown): TaxiListingUpdateInput {
+  if (!isObject(body)) fail("request body is required");
+  const d = body as Record<string, unknown>;
+  const out: TaxiListingUpdateInput = {};
+
+  if (d.operatingCity !== undefined) out.operatingCity = reqStr(d, "operatingCity");
+  if (d.minimumFare !== undefined) out.minimumFare = reqNum(d, "minimumFare");
+  if (d.pricePerKm !== undefined) out.pricePerKm = reqNum(d, "pricePerKm");
+  if (d.serviceAreas !== undefined) out.serviceAreas = strArray(d.serviceAreas);
+  if (d.availableRoutes !== undefined) out.availableRoutes = strArray(d.availableRoutes);
+  if (d.description !== undefined) out.description = optStr(d, "description") ?? "";
+  if (d.availableDays !== undefined) out.availableDays = strArray(d.availableDays);
+  if (d.availableTimeSlots !== undefined) out.availableTimeSlots = strArray(d.availableTimeSlots);
+  if (d.amenities !== undefined) out.amenities = strArray(d.amenities);
+  if (d.availabilityEnabled !== undefined) out.availabilityEnabled = bool(d.availabilityEnabled, true);
+
+  if (Object.keys(out).length === 0) fail("no updatable fields provided");
+  return out;
+}
+
+// "06:00 - 10:00" → { from, to }; exported for the controller's slot mapping.
+export function parseSlotStrings(slots: string[]): { from: string; to: string }[] {
+  return slots.map(parseSlot).filter((s): s is { from: string; to: string } => s !== null);
 }

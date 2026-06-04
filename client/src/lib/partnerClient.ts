@@ -1,6 +1,57 @@
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import type { Booking } from "@/lib/customerClient";
-import type { TaxiListing } from "@/types/taxiListing";
+
+// MTI TaxiListing as returned by the backend (mirrors the server model's
+// toJSON). The dashboard maps this into a flat view via taxiViewFromApi.
+export type TaxiListingApi = {
+  id: string;
+  partner: string;
+  status: "draft" | "active" | "paused" | "suspended";
+  slug: string;
+  vehicle: {
+    make: string;
+    model: string;
+    type: string;
+    fuelType?: string;
+    transmission?: string;
+    registrationNumber?: string;
+    yearOfManufacture?: number;
+    seatingCap: number;
+    acAvailable: boolean;
+    luggageSpace?: string;
+    luggageCapacity?: number;
+    images: { url: string; isPrimary?: boolean }[];
+    amenities: string[];
+  };
+  services: {
+    type: string;
+    isActive: boolean;
+    pricing: { baseFare: number; pricePerKm?: number; taxPercent: number; tollsIncluded: boolean };
+    coverage: { baseCity: string; servicedCities: string[] };
+  }[];
+  operationalHours: { available24x7: boolean; slots: { from: string; to: string }[] };
+  operatingDays: string[];
+  routes: string[];
+  contact: { name?: string; phone?: string; email?: string; businessName?: string };
+  description?: string;
+  driverIncluded: boolean;
+  selfDriveAvailable: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TaxiListingUpdate = {
+  operatingCity?: string;
+  minimumFare?: number;
+  pricePerKm?: number;
+  serviceAreas?: string[];
+  availableRoutes?: string[];
+  description?: string;
+  availableDays?: string[];
+  availableTimeSlots?: string[];
+  amenities?: string[];
+  availabilityEnabled?: boolean;
+};
 
 export type ResourceType =
   | "hotel"
@@ -74,13 +125,44 @@ export const partnerClient = {
     return response.items;
   },
 
-  // Persist a taxi listing to the backend (MTI TaxiListing model). The server
-  // adapts this flat list-your-taxi shape; returns the created record's id.
-  async createTaxi(listing: TaxiListing): Promise<{ id: string }> {
-    const response = await api<{ item: { id: string } }>("/api/partner/taxis", {
-      method: "POST",
-      body: listing as unknown as Record<string, unknown>,
-    });
-    return response.item;
+  // Taxi listings are persisted server-side (MTI TaxiListing model); images and
+  // documents are uploaded through the same multipart request to Cloudinary.
+  taxis: {
+    async list(): Promise<TaxiListingApi[]> {
+      const response = await api<{ items: TaxiListingApi[] }>("/api/partner/taxis");
+      return response.items;
+    },
+
+    // Multipart create. `form` carries a `payload` JSON field plus file fields
+    // (vehiclePhotos, rcBook, insurance, pollutionCertificate, drivingLicense).
+    // Sent through the Next.js proxy so the auth cookie is forwarded; the
+    // browser sets the multipart Content-Type/boundary, so we don't.
+    async create(form: FormData): Promise<TaxiListingApi> {
+      const response = await fetch("/api/partner/taxis", {
+        method: "POST",
+        body: form,
+        credentials: "include",
+      });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message =
+          (payload && typeof payload.error === "string" && payload.error) ||
+          "Failed to create taxi listing";
+        throw new ApiError(response.status, message);
+      }
+      return (payload as { item: TaxiListingApi }).item;
+    },
+
+    async update(id: string, patch: TaxiListingUpdate): Promise<TaxiListingApi> {
+      const response = await api<{ item: TaxiListingApi }>(`/api/partner/taxis/${id}`, {
+        method: "PATCH",
+        body: patch,
+      });
+      return response.item;
+    },
+
+    async remove(id: string): Promise<void> {
+      await api<null>(`/api/partner/taxis/${id}`, { method: "DELETE" });
+    },
   },
 };
