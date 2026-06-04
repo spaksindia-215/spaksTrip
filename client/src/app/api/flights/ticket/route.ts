@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tboIssueTicket, type LccTicketInput, type NonLccTicketInput } from "@/lib/adapters/tbo/flight/ticket";
 import { pollFlightBookingDetail } from "@/lib/adapters/tbo/flight/booking";
-import { TboFareExpiredError } from "@/lib/adapters/tbo/errors";
+import { TboFareExpiredError, TboValidationError } from "@/lib/adapters/tbo/errors";
 
 function err(message: string, status: number) {
   return NextResponse.json({ success: false, error: message }, { status });
@@ -29,6 +29,10 @@ export async function POST(request: NextRequest) {
         contactEmail: body.contactEmail,
         contactPhone: body.contactPhone,
         preferredCurrency: body.preferredCurrency ?? "INR",
+        isMealMandatory: body.isMealMandatory ?? false,
+        isSeatMandatory: body.isSeatMandatory ?? false,
+        isPriceChangedAccepted: body.isPriceChangedAccepted ?? false,
+        validation: body.validation,
       };
 
       const ticketResult = await tboIssueTicket(obInput);
@@ -54,6 +58,8 @@ export async function POST(request: NextRequest) {
           pnr: ticketResult.pnr || detail.pnr,
           ticketNumbers: ticketResult.ticketNumbers,
           bookingStatus: detail.bookingStatus,
+          isPriceChanged: ticketResult.isPriceChanged,
+          isTimeChanged: ticketResult.isTimeChanged,
           ...(returnLeg ? { returnLeg } : {}),
         },
       });
@@ -66,14 +72,22 @@ export async function POST(request: NextRequest) {
       return err("bookingId is required for non-LCC ticket.", 400);
     }
 
-    const obInput: NonLccTicketInput = { isLCC: false, bookingId };
+    const obInput: NonLccTicketInput = {
+      isLCC: false,
+      bookingId,
+      isPriceChangedAccepted: body.isPriceChangedAccepted ?? false,
+    };
     const ticketResult = await tboIssueTicket(obInput);
     const detail = await pollFlightBookingDetail(bookingId);
 
     // Domestic return dual-PNR: ticket the inbound booking.
     let returnLeg: { bookingId: number; pnr: string } | undefined;
     if (body.returnBookingId) {
-      const ibInput: NonLccTicketInput = { isLCC: false, bookingId: Number(body.returnBookingId) };
+      const ibInput: NonLccTicketInput = {
+        isLCC: false,
+        bookingId: Number(body.returnBookingId),
+        isPriceChangedAccepted: body.isPriceChangedAccepted ?? false,
+      };
       const ibResult = await tboIssueTicket(ibInput);
       returnLeg = { bookingId: ibResult.bookingId, pnr: ibResult.pnr };
     }
@@ -85,10 +99,15 @@ export async function POST(request: NextRequest) {
         pnr: ticketResult.pnr || detail.pnr,
         ticketNumbers: ticketResult.ticketNumbers,
         bookingStatus: detail.bookingStatus,
+        isPriceChanged: ticketResult.isPriceChanged,
+        isTimeChanged: ticketResult.isTimeChanged,
         ...(returnLeg ? { returnLeg } : {}),
       },
     });
   } catch (e) {
+    if (e instanceof TboValidationError) {
+      return err(e.message, 422);
+    }
     if (e instanceof TboFareExpiredError) {
       return err("Fare has expired. Please search again.", 410);
     }

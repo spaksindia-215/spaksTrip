@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tboBookFlight } from "@/lib/adapters/tbo/flight/book";
-import { TboFareExpiredError, TboBookingFailedError } from "@/lib/adapters/tbo/errors";
+import { TboFareExpiredError, TboBookingFailedError, TboValidationError } from "@/lib/adapters/tbo/errors";
 import type { TboBookFlightInput } from "@/lib/adapters/tbo/flight/book";
 
 function err(message: string, status: number) {
@@ -40,6 +40,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: obResult });
   } catch (e) {
+    if (e instanceof TboValidationError) {
+      return err(e.message, 422);
+    }
     if (e instanceof TboFareExpiredError) {
       return err("Fare has expired. Please search again.", 410);
     }

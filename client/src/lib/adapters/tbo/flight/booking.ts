@@ -1,8 +1,15 @@
 import "server-only";
-import { withRetry, tboBase, tboApiUrl } from "../auth";
+import { withRetry, tboBase, tboApiUrl, TBO_DEFAULT_TIMEOUT_MS } from "../auth";
 import { assertTboSuccess } from "../errors";
 import { logRequest, logResponse, logError } from "../log";
 import type { TboFlightBookingDetailResponse } from "../types";
+
+// CLAUDE.md timeout-recovery: GetBookingDetails returns this while the supplier is
+// still processing — keep polling rather than rebooking (to avoid financial loss).
+function isBookingUnderProcess(error: { ErrorMessage?: string } | undefined | null): boolean {
+  const m = (error?.ErrorMessage ?? "").toLowerCase();
+  return m.includes("under process") || m.includes("could not be processed");
+}
 
 export type BookingStatus = "CONFIRMED" | "FAILED" | "PENDING";
 
@@ -33,6 +40,7 @@ export async function tboGetFlightBookingDetail(bookingId: number): Promise<Book
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(reqBody),
+        signal: AbortSignal.timeout(TBO_DEFAULT_TIMEOUT_MS),
       });
     } catch (err) {
       logError("Flight GetBookingDetails", err);
@@ -46,6 +54,11 @@ export async function tboGetFlightBookingDetail(bookingId: number): Promise<Book
 
     logResponse("Flight GetBookingDetails", res.status, data);
     if (!res.ok) throw new Error(`TBO GetBookingDetails HTTP ${res.status}`);
+
+    // "Booking under process" is not a failure — report PENDING so the poller retries.
+    if (isBookingUnderProcess(data.Response?.Error)) {
+      return { bookingId, pnr: "", bookingStatus: "PENDING", ticketNumbers: [] };
+    }
     assertTboSuccess(data.Response?.Error);
 
     const itinerary = data.Response?.FlightItinerary;
@@ -68,8 +81,9 @@ export async function tboGetFlightBookingDetail(bookingId: number): Promise<Book
  */
 export async function pollFlightBookingDetail(
   bookingId: number,
-  maxAttempts = 5,
-  delayMs = 2000,
+  // CLAUDE.md: poll every 10–15s until a real status returns (avoid rebooking).
+  maxAttempts = 20,
+  delayMs = 12000,
 ): Promise<BookingDetailResult> {
   let last: BookingDetailResult | null = null;
 

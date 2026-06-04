@@ -164,6 +164,16 @@ export interface TboFlightResult {
   IsPanRequiredAtTicket: boolean;
   IsPassportRequiredAtBook: boolean;
   IsPassportRequiredAtTicket: boolean;
+  // When true, full passport detail (No + Expiry + IssueDate + IssueCountryCode)
+  // must be passed in Book/Ticket; when false only No + Expiry are required.
+  IsPassportFullDetailRequiredAtBook?: boolean;
+  // Special fares (Super 6E / SpiceMax): free meal/seat must be selected from the
+  // SSR response and included in the Ticket request to avoid failure.
+  IsMealMandatory?: boolean;
+  IsSeatMandatory?: boolean;
+  // Set by FareQuote when itinerary info changed (e.g. "Time", "Baggage") —
+  // booking must proceed with the updated info.
+  FlightDetailChangeInfo?: string | null;
   GSTINNo: string | null;
   IsGSTMandatory: boolean;
   IsHoldAllowed: boolean;
@@ -354,6 +364,18 @@ export interface TboPassengerRequest {
   Gender: number;        // 1=Male, 2=Female
   PassportNo: string;
   PassportExpiry: string;
+  // Sent only when IsPassportFullDetailRequiredAtBook=true (international GDS/LCC).
+  PassportIssueDate?: string;
+  PassportIssueCountryCode?: string;
+  // PAN & Passport Validation: Adult uses own PAN; Child/Infant pass guardian PAN via GuardianDetails.
+  PAN?: string;
+  // Required for Child/Infant when PAN/Passport is mandatory and the pax has no own PAN.
+  GuardianDetails?: {
+    Title: string;
+    FirstName: string;
+    LastName: string;
+    PAN?: string;
+  };
   AddressLine1: string;
   City: string;
   CountryCode: string;
@@ -427,6 +449,10 @@ export interface TboTicketResponse {
       BookingId: number;
       PNR: string;
       BookingStatus: number;
+      // Ticket response may signal a late price change — re-call Ticket with
+      // IsPriceChangedAccepted=true once the user accepts the new fare.
+      IsPriceChanged?: boolean;
+      IsTimeChanged?: boolean;
       Passenger: TboPassengerResponse[];
     } | null;
   };

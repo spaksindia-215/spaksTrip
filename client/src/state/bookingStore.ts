@@ -52,13 +52,25 @@ export type Traveler = {
   gender: Gender;
   dob: string | null;       // YYYY-MM-DD
   passport?: string;
+  passportExpiry?: string;        // YYYY-MM-DD
+  passportIssueDate?: string;     // YYYY-MM-DD (full-detail intl)
+  passportIssueCountry?: string;  // ISO-2
   nationality?: string;
+  /** PAN — Adult passes own PAN; Child/Infant use guardian.pan instead. */
+  pan?: string;
+  /** Parent/guardian details for Child/Infant when PAN/Passport mandatory. */
+  guardian?: { title?: string; firstName: string; lastName: string; pan?: string };
 };
 
 export type ContactInfo = {
   email: string;
   phone: string;
   countryCode: string;
+  /** LCC lead-pax address (mandatory on LCC) + AirAsia country fields. */
+  addressLine1?: string;
+  city?: string;
+  countryName?: string;
+  isoCountryCode?: string;
 };
 
 export type GSTInfo = {
@@ -89,6 +101,18 @@ export type FlightBooking = {
   fareBreakdown: TboFareBreakdown[];
   /** TBO TraceId echoed from FareQuote response — must be passed to all subsequent TBO calls. */
   fareQuoteTraceId?: string;
+  /** FareQuote validation flags (PAN/Passport/Special-fare) + airline/route context. */
+  panRequiredAtBook?: boolean;
+  panRequiredAtTicket?: boolean;
+  passportRequiredAtBook?: boolean;
+  passportRequiredAtTicket?: boolean;
+  passportFullDetailRequiredAtBook?: boolean;
+  mealMandatory?: boolean;
+  seatMandatory?: boolean;
+  flightDetailChangeInfo?: string | null;
+  airlineCode?: string;
+  originCode?: string;
+  destinationCode?: string;
   /** Per-traveler SSR selections (baggage / meal / seat) — passed to book/ticket request. */
   ssrSelections: TravelerSSR[];
   gst?: GSTInfo;
@@ -111,7 +135,24 @@ type Actions = {
   setAddOns: (a: Partial<FlightBooking["addOns"]>) => void;
   setGSTMandatory: (mandatory: boolean) => void;
   /** Persist the key outputs of a FareQuote call so they're available for book/ticket. */
-  setFareQuoteData: (data: { isGSTMandatory: boolean; isLCC: boolean; fareBreakdown: TboFareBreakdown[]; traceId: string; updatedOffer?: FlightOffer }) => void;
+  setFareQuoteData: (data: {
+    isGSTMandatory: boolean;
+    isLCC: boolean;
+    fareBreakdown: TboFareBreakdown[];
+    traceId: string;
+    updatedOffer?: FlightOffer;
+    panRequiredAtBook?: boolean;
+    panRequiredAtTicket?: boolean;
+    passportRequiredAtBook?: boolean;
+    passportRequiredAtTicket?: boolean;
+    passportFullDetailRequiredAtBook?: boolean;
+    mealMandatory?: boolean;
+    seatMandatory?: boolean;
+    flightDetailChangeInfo?: string | null;
+    airlineCode?: string;
+    originCode?: string;
+    destinationCode?: string;
+  }) => void;
   setSSRSelections: (selections: TravelerSSR[]) => void;
   setGST: (gst: GSTInfo) => void;
   advanceStatus: (s: FlightBooking["status"]) => void;
@@ -175,19 +216,30 @@ export const useBookingStore = create<State & Actions>()(
         set((s) => (s.current ? { current: { ...s.current, isGSTMandatory: mandatory } } : s)),
       setSSRSelections: (selections) =>
         set((s) => (s.current ? { current: { ...s.current, ssrSelections: selections } } : s)),
-      setFareQuoteData: ({ isGSTMandatory, isLCC, fareBreakdown, traceId, updatedOffer }) =>
+      setFareQuoteData: (data) =>
         set((s) => {
           if (!s.current) return s;
-          const offer = updatedOffer ?? s.current.offer;
+          const offer = data.updatedOffer ?? s.current.offer;
           const { taxes, fees, total } = computeTotals(offer, s.current.fareFamily, s.current.pax);
           return {
             current: {
               ...s.current,
               offer,
-              isGSTMandatory,
-              isLCC,
-              fareBreakdown,
-              fareQuoteTraceId: traceId,
+              isGSTMandatory: data.isGSTMandatory,
+              isLCC: data.isLCC,
+              fareBreakdown: data.fareBreakdown,
+              fareQuoteTraceId: data.traceId,
+              panRequiredAtBook: data.panRequiredAtBook,
+              panRequiredAtTicket: data.panRequiredAtTicket,
+              passportRequiredAtBook: data.passportRequiredAtBook,
+              passportRequiredAtTicket: data.passportRequiredAtTicket,
+              passportFullDetailRequiredAtBook: data.passportFullDetailRequiredAtBook,
+              mealMandatory: data.mealMandatory,
+              seatMandatory: data.seatMandatory,
+              flightDetailChangeInfo: data.flightDetailChangeInfo ?? null,
+              airlineCode: data.airlineCode,
+              originCode: data.originCode,
+              destinationCode: data.destinationCode,
               totalPrice: total,
               taxes,
               fees,

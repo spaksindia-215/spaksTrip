@@ -1,9 +1,10 @@
 import "server-only";
-import { withRetry, tboBase, tboApiUrl } from "../auth";
+import { withRetry, tboBase, tboApiUrl, TBO_BOOK_TIMEOUT_MS } from "../auth";
 import { assertTboSuccess, TboFareExpiredError, TboBookingFailedError } from "../errors";
 import { getTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
 import type { TboFlightBookResponse, TboPassengerRequest, TboFare, TboFareBreakdown } from "../types";
+import { validateBookingPassengers, type BookingValidationContext } from "./validation";
 
 // ─── Input types ──────────────────────────────────────────────────────────────
 
@@ -28,9 +29,15 @@ export interface BookingPassenger {
   countryName?: string;        // defaults "India"
   passport?: string;
   passportExpiry?: string;     // "YYYY-MM-DD"
+  passportIssueDate?: string;  // "YYYY-MM-DD" — when IsPassportFullDetailRequiredAtBook
+  passportIssueCountryCode?: string; // ISO-2 — when IsPassportFullDetailRequiredAtBook
   nationality?: string;        // ISO-2, defaults "IN"
   email?: string;
   phone?: string;
+  /** PAN & Passport Validation: Adult passes own PAN; Child/Infant pass guardian PAN. */
+  pan?: string;
+  /** Required for Child/Infant when PAN/Passport is mandatory (name as on PAN). */
+  guardian?: { title?: string; firstName: string; lastName: string; pan?: string };
   /** Guideline §14: required on lead pax when FareQuote returns IsGSTMandatory=true. */
   gst?: GSTDetails;
   /** LCC: per-segment baggage selections (Guideline §7). */
@@ -43,6 +50,12 @@ export interface BookingPassenger {
   mealSSR?: Array<{
     code: string; description?: string; price: number; currency?: string;
     origin: string; destination: string; airlineCode: string; flightNumber: string;
+  }>;
+  /** LCC: per-segment seat selections (special fare isseatmandatory). */
+  seatSSR?: Array<{
+    code: string; price: number; currency?: string;
+    origin: string; destination: string; airlineCode?: string;
+    flightNumber?: string; wayType?: number;
   }>;
   /** Non-LCC: meal preference code. */
   mealCode?: string;
@@ -67,6 +80,9 @@ export interface TboBookFlightInput {
   contactCountryCode?: string;
   mealCodes?: string[];
   seatCodes?: string[];
+  /** Certification validation context (airline/route/requirement flags). When
+   *  provided, the passenger list is validated before the request is sent. */
+  validation?: Omit<BookingValidationContext, "stage" | "contactPhone">;
 }
 
 export interface TboBookFlightOutput {
@@ -161,8 +177,11 @@ export function mapPassenger(
     PaxType: PAX_TYPE[p.type],
     DateOfBirth: dobToTbo(p.dob),
     Gender: GENDER[p.gender],
+    // Only send passport fields when a passport is actually provided — sending a
+    // placeholder when not required risks booking failure (doc: "if False and
+    // client is providing then it should be the correct one").
     PassportNo: p.passport ?? "",
-    PassportExpiry: p.passportExpiry ? dobToTbo(p.passportExpiry) : "2030-01-01T00:00:00",
+    PassportExpiry: p.passport && p.passportExpiry ? dobToTbo(p.passportExpiry) : "",
     AddressLine1: p.addressLine1,
     City: p.city,
     CountryCode: p.countryCode ?? "IN",
@@ -181,6 +200,22 @@ export function mapPassenger(
     Fare: buildPassengerFare(fareBreakdown, PAX_TYPE[p.type]),
   };
 
+  // Passport full detail (IsPassportFullDetailRequiredAtBook) — only when present.
+  if (p.passport && p.passportIssueDate) passenger.PassportIssueDate = dobToTbo(p.passportIssueDate);
+  if (p.passport && p.passportIssueCountryCode) passenger.PassportIssueCountryCode = p.passportIssueCountryCode;
+
+  // PAN & Passport Validation: Adult passes own PAN; Child/Infant pass GuardianDetails.
+  if (p.type === "ADT") {
+    if (p.pan) passenger.PAN = p.pan;
+  } else if (p.guardian && (p.guardian.firstName || p.guardian.pan)) {
+    passenger.GuardianDetails = {
+      Title: p.guardian.title ?? "Mr",
+      FirstName: p.guardian.firstName,
+      LastName: p.guardian.lastName,
+      ...(p.guardian.pan ? { PAN: p.guardian.pan } : {}),
+    };
+  }
+
   // Guideline §6/§7: LCC ADT/CHD carry SSR arrays; INF must have none at all.
   if (isLCC && p.type !== "INF") {
     passenger.Baggage = (p.baggageSSR ?? []).map((b) => ({
@@ -197,7 +232,12 @@ export function mapPassenger(
       AirlineCode: m.airlineCode, FlightNumber: m.flightNumber,
       WayType: 1, Quantity: 1, Description: 0,
     }));
-    passenger.SeatDynamic = [];
+    passenger.SeatDynamic = (p.seatSSR ?? []).map((s) => ({
+      Code: s.code, Weight: 0, Price: s.price, Currency: s.currency ?? "INR",
+      Origin: s.origin, Destination: s.destination,
+      AirlineCode: s.airlineCode ?? "", FlightNumber: s.flightNumber ?? "",
+      WayType: s.wayType ?? 1, Description: 0,
+    }));
   }
 
   // Non-LCC: meal and seat preference codes (Guideline §8).
@@ -216,6 +256,15 @@ export function mapPassenger(
 export async function tboBookFlight(input: TboBookFlightInput): Promise<TboBookFlightOutput> {
   const traceId = input.traceId ?? getTrace(input.resultIndex);
   if (!traceId) throw new TboFareExpiredError();
+
+  // Certification validation (PAN/passport/LCC/title/name rules) before hitting TBO.
+  if (input.validation) {
+    validateBookingPassengers(input.passengers, {
+      ...input.validation,
+      stage: "book",
+      contactPhone: input.contactPhone,
+    });
+  }
 
   const doBook = async (token: string): Promise<TboBookFlightOutput> => {
     const passengers: TboPassengerRequest[] = input.passengers.map((p, i) => {
@@ -242,6 +291,8 @@ export async function tboBookFlight(input: TboBookFlightInput): Promise<TboBookF
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(reqBody),
+        // Book/Ticket can take up to 300s (CLAUDE.md "Response Timeout").
+        signal: AbortSignal.timeout(TBO_BOOK_TIMEOUT_MS),
       });
     } catch (err) {
       logError("Flight Book", err);

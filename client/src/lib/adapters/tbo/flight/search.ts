@@ -1,5 +1,5 @@
 import "server-only";
-import { withRetry, tboBase, tboApiUrl } from "../auth";
+import { withRetry, tboBase, tboApiUrl, TBO_DEFAULT_TIMEOUT_MS } from "../auth";
 import { assertTboSuccess } from "../errors";
 import { storeTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
@@ -218,6 +218,7 @@ export async function tboSearchFlights(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
+        signal: AbortSignal.timeout(TBO_DEFAULT_TIMEOUT_MS),
       });
     } catch (err) {
       logError("Flight Search", err, { url });

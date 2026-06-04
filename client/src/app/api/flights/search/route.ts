@@ -24,6 +24,32 @@ export async function POST(request: NextRequest) {
       return err("adults must be a number >= 1.", 400);
     }
 
+    // ── Search Method Validation (CLAUDE.md) ──────────────────────────────────
+    // Date must be yyyy-MM-dd and not before today.
+    if (!/^\d{4}-\d{2}-\d{2}/.test(body.date)) {
+      return err("Invalid date format. Use yyyy-MM-dd.", 400);
+    }
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const dep = new Date(`${body.date}T00:00:00`);
+    if (Number.isNaN(dep.getTime())) return err("Invalid departure date.", 400);
+    if (dep < today) return err("Departure date cannot be before today.", 400);
+
+    // Return date (if present) cannot be before departure.
+    const returnDate = (body as { returnDate?: string }).returnDate;
+    if (returnDate) {
+      const ret = new Date(`${returnDate}T00:00:00`);
+      if (Number.isNaN(ret.getTime())) return err("Invalid return date.", 400);
+      if (ret < dep) return err("Return date cannot be before departure date.", 400);
+    }
+
+    // Total passengers cannot exceed 9.
+    const totalPax = (body.adults ?? 0) + (body.children ?? 0) + (body.infants ?? 0);
+    if (totalPax > 9) return err("Total passenger count cannot be more than 9.", 400);
+    // Infants cannot exceed adults.
+    if ((body.infants ?? 0) > (body.adults ?? 0)) {
+      return err("Number of infants cannot exceed number of adults.", 400);
+    }
+
     const result = await tboSearchFlights(body);
     return NextResponse.json({ success: true, data: result });
   } catch (e) {

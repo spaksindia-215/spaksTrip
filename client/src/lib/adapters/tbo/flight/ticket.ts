@@ -1,10 +1,16 @@
 import "server-only";
-import { withRetry, tboBase, tboApiUrl } from "../auth";
+import { withRetry, tboBase, tboApiUrl, TBO_BOOK_TIMEOUT_MS } from "../auth";
 import { assertTboSuccess, TboFareExpiredError } from "../errors";
 import { getTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
+import { getAirport } from "@/lib/mock/airports";
 import type { TboTicketResponse, TboFareBreakdown } from "../types";
 import { type BookingPassenger, mapPassenger } from "./book";
+import { validateBookingPassengers, applyMandatorySSR, type BookingValidationContext } from "./validation";
+import { tboGetSSR } from "./ssr";
+
+// AirAsia + I5 + other carriers that need free baggage explicitly included on intl LCC.
+const I5 = "I5";
 
 // ─── Input types ──────────────────────────────────────────────────────────────
 
@@ -24,6 +30,13 @@ export interface LccTicketInput {
   contactEmail: string;
   contactPhone: string;
   preferredCurrency?: string;  // defaults "INR"
+  /** Special Fare Validation: when true, free meal/seat must be included from SSR. */
+  isMealMandatory?: boolean;
+  isSeatMandatory?: boolean;
+  /** Price change accepted by the user (re-submitting after IsPriceChanged). */
+  isPriceChangedAccepted?: boolean;
+  /** Certification validation context (airline/route/requirement flags). */
+  validation?: Omit<BookingValidationContext, "stage" | "contactPhone">;
 }
 
 /**
@@ -34,6 +47,8 @@ export interface LccTicketInput {
 export interface NonLccTicketInput {
   isLCC: false;
   bookingId: number;
+  /** Price change accepted by the user (re-submitting after Book/Ticket IsPriceChanged). */
+  isPriceChangedAccepted?: boolean;
 }
 
 export type TicketInput = LccTicketInput | NonLccTicketInput;
@@ -43,6 +58,10 @@ export interface TicketResult {
   pnr: string;
   ticketNumbers: string[];
   bookingStatus: number;
+  /** Ticket response signalled a late price change — prompt user, then re-call
+   *  Ticket with isPriceChangedAccepted=true (CLAUDE.md "Price and Cancellation Change"). */
+  isPriceChanged: boolean;
+  isTimeChanged: boolean;
 }
 
 // ─── Shared response parser ───────────────────────────────────────────────────
@@ -58,15 +77,22 @@ function parseTicketResponse(data: TboTicketResponse, fallbackBookingId: number)
     pnr: itinerary?.PNR ?? "",
     ticketNumbers,
     bookingStatus: itinerary?.BookingStatus ?? 0,
+    isPriceChanged: itinerary?.IsPriceChanged ?? false,
+    isTimeChanged: itinerary?.IsTimeChanged ?? false,
   };
 }
 
 // ─── Non-LCC path ─────────────────────────────────────────────────────────────
 
-async function tboNonLccTicket(bookingId: number): Promise<TicketResult> {
+async function tboNonLccTicket(bookingId: number, isPriceChangedAccepted = false): Promise<TicketResult> {
   return withRetry(async (token) => {
     const url = tboApiUrl("BookingEngineService_Air/AirService.svc/rest/Ticket");
-    const reqBody = { ...tboBase(token), BookingId: bookingId };
+    const reqBody = {
+      ...tboBase(token),
+      BookingId: bookingId,
+      // Pass through only when re-submitting after a confirmed price change.
+      ...(isPriceChangedAccepted ? { IsPriceChangedAccepted: true } : {}),
+    };
     logRequest("Flight Ticket (Non-LCC)", url, { ...reqBody, TokenId: "***" });
 
     let res: Response;
@@ -75,6 +101,7 @@ async function tboNonLccTicket(bookingId: number): Promise<TicketResult> {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(reqBody),
+        signal: AbortSignal.timeout(TBO_BOOK_TIMEOUT_MS),
       });
     } catch (err) {
       logError("Flight Ticket (Non-LCC)", err);
@@ -100,8 +127,43 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
   const traceId = input.traceId ?? getTrace(input.resultIndex);
   if (!traceId) throw new TboFareExpiredError();
 
+  // Certification validation (PAN/passport/LCC/title/name rules) before TBO.
+  if (input.validation) {
+    validateBookingPassengers(input.passengers, {
+      ...input.validation,
+      stage: "ticket",
+      contactPhone: input.contactPhone,
+    });
+  }
+
+  // Special Fare (isseat/ismeal mandatory) + international-LCC free baggage:
+  // pull free (Price 0) meal/seat/baggage from SSR and include them. Only fills
+  // selections the user didn't make, so it can't override a valid choice.
+  let passengersIn = input.passengers;
+  const origin = input.validation?.origin;
+  const destination = input.validation?.destination;
+  const origCc = origin ? getAirport(origin)?.countryCode : undefined;
+  const destCc = destination ? getAirport(destination)?.countryCode : undefined;
+  const isIntl = Boolean(origCc && destCc && origCc !== destCc);
+  const airline = input.validation?.airlineCode?.toUpperCase();
+  const includeFreeBaggage = isIntl || airline === I5;
+
+  if (input.isMealMandatory || input.isSeatMandatory || includeFreeBaggage) {
+    try {
+      const ssr = await tboGetSSR(input.resultIndex, traceId);
+      passengersIn = applyMandatorySSR(input.passengers, ssr, {
+        isMealMandatory: input.isMealMandatory,
+        isSeatMandatory: input.isSeatMandatory,
+        includeFreeBaggage,
+      });
+    } catch (err) {
+      // SSR is best-effort here; if it fails, proceed with user selections.
+      logError("Flight Ticket (LCC) SSR auto-include", err);
+    }
+  }
+
   return withRetry(async (token) => {
-    const passengers = input.passengers.map((p, i) => {
+    const passengers = passengersIn.map((p, i) => {
       const mapped = mapPassenger(p, i === 0, input.fareBreakdown, true);
       if (i === 0) {
         mapped.Email = input.contactEmail;
@@ -120,6 +182,7 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
       TraceId: traceId,
       ResultIndex: input.resultIndex,
       Passengers: passengers,
+      ...(input.isPriceChangedAccepted ? { IsPriceChangedAccepted: true } : {}),
     };
     logRequest("Flight Ticket (LCC)", url, { ...reqBody, TokenId: "***" });
 
@@ -129,6 +192,7 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(reqBody),
+        signal: AbortSignal.timeout(TBO_BOOK_TIMEOUT_MS),
       });
     } catch (err) {
       logError("Flight Ticket (LCC)", err);
@@ -151,6 +215,6 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
 // ─── Public dispatch ──────────────────────────────────────────────────────────
 
 export async function tboIssueTicket(input: TicketInput): Promise<TicketResult> {
-  if (!input.isLCC) return tboNonLccTicket(input.bookingId);
+  if (!input.isLCC) return tboNonLccTicket(input.bookingId, input.isPriceChangedAccepted);
   return tboLccTicket(input);
 }

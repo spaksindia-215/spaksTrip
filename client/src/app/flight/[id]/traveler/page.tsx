@@ -82,6 +82,11 @@ function TravelerInner() {
     companyName: "", gstNumber: "", companyAddress: "",
     companyContactNumber: "", companyEmail: "",
   });
+  // LCC lead-pax address + AirAsia country (mandatory on LCC).
+  const [addressLine1, setAddressLine1] = useState(current?.contact.addressLine1 ?? "");
+  const [city, setCity] = useState(current?.contact.city ?? "");
+  const [countryName, setCountryName] = useState(current?.contact.countryName ?? "India");
+  const [isoCountryCode, setIsoCountryCode] = useState(current?.contact.isoCountryCode ?? "IN");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // SSR state
@@ -115,6 +120,13 @@ function TravelerInner() {
   if (!current) return null;
 
   const isLCC = current.isLCC;
+  // FareQuote-driven requirement flags (CLAUDE.md PAN/Passport/Special-fare).
+  const panRequired = Boolean(current.panRequiredAtBook || current.panRequiredAtTicket);
+  const passportRequired = Boolean(
+    current.passportRequiredAtBook || current.passportRequiredAtTicket || current.passportFullDetailRequiredAtBook,
+  );
+  const passportFullDetail = Boolean(current.passportFullDetailRequiredAtBook);
+  const NAME_BAD = /[.,/]/;
 
   // Available baggage options for LCC — first segment (index 0)
   const baggageOptions = isLCC ? (ssrData?.baggage?.[0] ?? []) : [];
@@ -131,13 +143,50 @@ function TravelerInner() {
   const update = (id: string, patch: Partial<FormTraveler>) =>
     setLocalTravelers((list) => list.map((t) => (t.id === id ? { ...t, ...patch } : t)));
 
+  const airlineCode = (current.airlineCode ?? current.offer.segments[0]?.airlineCode ?? "").toUpperCase();
+
   const validate = () => {
     const e: Record<string, string> = {};
-    for (const t of travelers) {
+    travelers.forEach((t, idx) => {
       if (!t.firstName.trim()) e[`${t.id}.firstName`] = "First name required";
       if (!t.lastName.trim()) e[`${t.id}.lastName`] = "Last name required";
+      // No special characters (. , /) in names — Navitaire/SpiceJet rule.
+      if (NAME_BAD.test(t.firstName) || NAME_BAD.test(t.lastName)) {
+        e[`${t.id}.firstName`] = "Name cannot contain . , or /";
+      }
+      // SpiceJet requires the first and last name to be distinct.
+      if (airlineCode === "SG" && t.firstName.trim() && t.firstName.trim().toUpperCase() === t.lastName.trim().toUpperCase()) {
+        e[`${t.id}.lastName`] = "First and last name must be different";
+      }
+      // DOB mandatory for everyone (Child/Infant always; AirAsia adults too).
       if (!t.dob) e[`${t.id}.dob`] = "Date of birth required";
-    }
+
+      // PAN: Adult own PAN; Child/Infant guardian PAN + name.
+      if (panRequired) {
+        if (t.type === "ADT") {
+          if (!t.pan?.trim()) e[`${t.id}.pan`] = "PAN required (passenger's own PAN)";
+        } else {
+          if (!t.guardian?.firstName?.trim()) e[`${t.id}.gFirst`] = "Guardian first name required";
+          if (!t.guardian?.lastName?.trim()) e[`${t.id}.gLast`] = "Guardian last name required";
+          if (!t.guardian?.pan?.trim()) e[`${t.id}.gPan`] = "Guardian PAN required";
+        }
+      }
+
+      // Passport when required by FareQuote flags.
+      if (passportRequired) {
+        if (!t.passport?.trim()) e[`${t.id}.passport`] = "Passport number required";
+        if (!t.passportExpiry) e[`${t.id}.passportExpiry`] = "Passport expiry required";
+        if (passportFullDetail) {
+          if (!t.passportIssueDate) e[`${t.id}.passportIssueDate`] = "Issue date required";
+          if (!t.passportIssueCountry?.trim()) e[`${t.id}.passportIssueCountry`] = "Issuing country required";
+        }
+      }
+
+      // LCC lead passenger: address mandatory (email/phone validated below).
+      if (isLCC && idx === 0 && !addressLine1.trim()) {
+        e["lead.address"] = "Address required for the lead passenger on this airline";
+      }
+    });
     if (!/.+@.+\..+/.test(email)) e.email = "Enter a valid email";
     if (phone.replace(/\D/g, "").length < 10) e.phone = "Enter a valid phone";
     // Guideline §14: when GST is mandatory, all 5 fields are required.
@@ -158,7 +207,10 @@ function TravelerInner() {
       return;
     }
     setTravelers(travelers);
-    setContact({ email, phone, countryCode: "+91" });
+    setContact({
+      email, phone, countryCode: "+91",
+      addressLine1, city, countryName, isoCountryCode,
+    });
     if (current.isGSTMandatory) setGST(gst);
 
     // Build TravelerSSR[] from ssrPicks + ssrData for book/ticket request.
@@ -302,6 +354,84 @@ function TravelerInner() {
                           </div>
                         </div>
                       </div>
+
+                      {/* PAN — Adult own PAN; Child/Infant guardian PAN + name. */}
+                      {panRequired && t.type === "ADT" && (
+                        <div className="mt-3">
+                          <Input
+                            label="PAN (as per PAN card)"
+                            value={t.pan ?? ""}
+                            onChange={(e) => update(t.id, { pan: e.target.value.toUpperCase() })}
+                            error={errors[`${t.id}.pan`]}
+                            placeholder="ABCDE1234F"
+                          />
+                        </div>
+                      )}
+                      {panRequired && t.type !== "ADT" && (
+                        <div className="mt-3">
+                          <p className="text-[12px] text-ink-muted mb-2">
+                            Parent/guardian details (name &amp; PAN as on PAN card)
+                          </p>
+                          <div className="grid sm:grid-cols-3 gap-3">
+                            <Input
+                              label="Guardian first name"
+                              value={t.guardian?.firstName ?? ""}
+                              onChange={(e) => update(t.id, { guardian: { ...t.guardian, firstName: e.target.value, lastName: t.guardian?.lastName ?? "" } })}
+                              error={errors[`${t.id}.gFirst`]}
+                            />
+                            <Input
+                              label="Guardian last name"
+                              value={t.guardian?.lastName ?? ""}
+                              onChange={(e) => update(t.id, { guardian: { ...t.guardian, firstName: t.guardian?.firstName ?? "", lastName: e.target.value } })}
+                              error={errors[`${t.id}.gLast`]}
+                            />
+                            <Input
+                              label="Guardian PAN"
+                              value={t.guardian?.pan ?? ""}
+                              onChange={(e) => update(t.id, { guardian: { ...t.guardian, firstName: t.guardian?.firstName ?? "", lastName: t.guardian?.lastName ?? "", pan: e.target.value.toUpperCase() } })}
+                              error={errors[`${t.id}.gPan`]}
+                              placeholder="ABCDE1234F"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Passport — when required by FareQuote flags. */}
+                      {passportRequired && (
+                        <div className="mt-3 grid sm:grid-cols-2 gap-3">
+                          <Input
+                            label="Passport number"
+                            value={t.passport ?? ""}
+                            onChange={(e) => update(t.id, { passport: e.target.value.toUpperCase() })}
+                            error={errors[`${t.id}.passport`]}
+                          />
+                          <Input
+                            label="Passport expiry"
+                            type="date"
+                            value={t.passportExpiry ?? ""}
+                            onChange={(e) => update(t.id, { passportExpiry: e.target.value })}
+                            error={errors[`${t.id}.passportExpiry`]}
+                          />
+                          {passportFullDetail && (
+                            <>
+                              <Input
+                                label="Passport issue date"
+                                type="date"
+                                value={t.passportIssueDate ?? ""}
+                                onChange={(e) => update(t.id, { passportIssueDate: e.target.value })}
+                                error={errors[`${t.id}.passportIssueDate`]}
+                              />
+                              <Input
+                                label="Issuing country (ISO-2)"
+                                value={t.passportIssueCountry ?? ""}
+                                onChange={(e) => update(t.id, { passportIssueCountry: e.target.value.toUpperCase().slice(0, 2) })}
+                                error={errors[`${t.id}.passportIssueCountry`]}
+                                placeholder="IN"
+                              />
+                            </>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -408,6 +538,35 @@ function TravelerInner() {
                   />
                 </div>
               </section>
+
+              {/* LCC lead-passenger billing address — mandatory on LCC; AirAsia also needs country. */}
+              {isLCC && (
+                <section className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
+                  <h2 className="text-[16px] font-bold text-ink mb-1">Billing address</h2>
+                  <p className="text-[12px] text-ink-muted mb-4">
+                    Required by low-cost carriers for the lead passenger.
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    <Input
+                      label="Address"
+                      value={addressLine1}
+                      onChange={(e) => setAddressLine1(e.target.value)}
+                      error={errors["lead.address"]}
+                      placeholder="House / street, area"
+                    />
+                    <div className="grid sm:grid-cols-3 gap-3">
+                      <Input label="City" value={city} onChange={(e) => setCity(e.target.value)} />
+                      <Input label="Country" value={countryName} onChange={(e) => setCountryName(e.target.value)} />
+                      <Input
+                        label="Country code (ISO-2)"
+                        value={isoCountryCode}
+                        onChange={(e) => setIsoCountryCode(e.target.value.toUpperCase().slice(0, 2))}
+                        placeholder="IN"
+                      />
+                    </div>
+                  </div>
+                </section>
+              )}
 
               <section className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
                 <h2 className="text-[16px] font-bold text-ink mb-3">Add-ons</h2>

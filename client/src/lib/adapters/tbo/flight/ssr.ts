@@ -1,5 +1,5 @@
 import "server-only";
-import { withRetry, tboBase, tboApiUrl } from "../auth";
+import { withRetry, tboBase, tboApiUrl, TBO_DEFAULT_TIMEOUT_MS } from "../auth";
 import { assertTboSuccess, TboFareExpiredError } from "../errors";
 import { getTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
@@ -150,6 +150,7 @@ export async function tboGetSSR(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
+        signal: AbortSignal.timeout(TBO_DEFAULT_TIMEOUT_MS),
       });
     } catch (err) {
       logError("Flight SSR", err);

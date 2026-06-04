@@ -78,7 +78,16 @@ function PaymentInner() {
     }
     setProcessing(true);
     try {
-      const result = await submitBooking(current);
+      // Prompt-then-accept: if TBO reports a price/time change at Book or Ticket,
+      // ask the user to confirm the new fare before re-submitting (CLAUDE.md
+      // "Price and Cancellation Change Validation").
+      const result = await submitBooking(current, ({ stage }) =>
+        window.confirm(
+          stage === "book"
+            ? "The fare changed after booking. Accept the new price and issue the ticket?"
+            : "The fare changed. Accept the updated price and complete ticketing?",
+        ),
+      );
       confirm(result.pnr, result.returnPnr);
       toast.push({ title: "Booking confirmed", description: `PNR: ${result.pnr}`, tone: "success" });
       router.push(`/flight/${encodeURIComponent(current.offer.id)}/confirmation?${sp.toString()}`);

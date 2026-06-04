@@ -8,6 +8,12 @@ import type { TboAuthResponse } from "./types";
 // token." So we expire the cache at end-of-day, with a small safety buffer.
 const TOKEN_RENEW_BUFFER_MS = 5 * 60 * 1000;
 
+// Response Timeout Benchmarking (CLAUDE.md):
+//   Book/Ticket may take up to 300s — set a 300s timeout to avoid financial loss.
+//   All other methods (Search/FareQuote/SSR/GetBookingDetails) → 60s.
+export const TBO_BOOK_TIMEOUT_MS = 300_000;
+export const TBO_DEFAULT_TIMEOUT_MS = 60_000;
+
 function endOfDayMs(): number {
   const d = new Date();
   d.setHours(23, 59, 59, 999);
