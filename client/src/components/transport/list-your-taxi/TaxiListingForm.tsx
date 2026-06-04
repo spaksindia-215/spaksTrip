@@ -14,6 +14,7 @@ import {
   upsertTaxiListing,
   validateTaxiListingDraft,
 } from "@/lib/taxiListing";
+import { partnerClient } from "@/lib/partnerClient";
 import { cn } from "@/lib/cn";
 import {
   TAXI_AMENITIES,
@@ -112,6 +113,15 @@ export default function TaxiListingForm() {
       await new Promise((resolve) => window.setTimeout(resolve, 900));
       const listing = createTaxiListingFromDraft(draft);
       upsertTaxiListing(listing);
+
+      // Best-effort persist to the backend (MTI TaxiListing). Keeps the local
+      // dashboard flow working even if the partner-scoped API call fails.
+      try {
+        await partnerClient.createTaxi(listing);
+      } catch (error) {
+        console.error("Failed to save taxi listing to server", error);
+      }
+
       setSubmittedName(listing.fullName);
       toast.push({
         title: "Taxi listing submitted",

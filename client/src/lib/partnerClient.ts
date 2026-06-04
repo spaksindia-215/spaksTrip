@@ -1,5 +1,6 @@
 import { api } from "@/lib/api";
 import type { Booking } from "@/lib/customerClient";
+import type { TaxiListing } from "@/types/taxiListing";
 
 export type ResourceType =
   | "hotel"
@@ -71,5 +72,15 @@ export const partnerClient = {
   async bookings(): Promise<Booking[]> {
     const response = await api<{ items: Booking[] }>("/api/partner/bookings");
     return response.items;
+  },
+
+  // Persist a taxi listing to the backend (MTI TaxiListing model). The server
+  // adapts this flat list-your-taxi shape; returns the created record's id.
+  async createTaxi(listing: TaxiListing): Promise<{ id: string }> {
+    const response = await api<{ item: { id: string } }>("/api/partner/taxis", {
+      method: "POST",
+      body: listing as unknown as Record<string, unknown>,
+    });
+    return response.item;
   },
 };

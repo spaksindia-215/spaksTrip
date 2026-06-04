@@ -8,6 +8,7 @@ import {
   deleteResource,
   listBookings,
   createHotelListing,
+  createTaxiListing,
 } from "../controllers/partner.controller";
 import { hotelUpload } from "../middleware/upload";
 import { HttpError } from "../middleware/error";
@@ -35,5 +36,8 @@ function hotelImages(req: Request, res: Response, next: NextFunction): void {
 }
 
 router.post("/hotels", hotelImages, createHotelListing);
+
+// JSON body (the client list-your-taxi listing); adapted to the MTI model.
+router.post("/taxis", createTaxiListing);
 
 export default router;

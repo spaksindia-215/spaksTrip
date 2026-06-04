@@ -3,11 +3,13 @@ import mongoose from "mongoose";
 import { PartnerResourceModel, RESOURCE_TYPES, type ResourceType } from "../models/PartnerResource";
 import { BookingModel } from "../models/Booking";
 import { HotelListingModel } from "../models/partner/HotelListing";
+import { TaxiListingModel } from "../models/partner/TaxiListing";
 import {
   validateResourceCreate,
   validateResourceUpdate,
 } from "../validators/partner.validators";
 import { validateHotelListing } from "../validators/hotelListing.validators";
+import { validateTaxiListing } from "../validators/taxiListing.validators";
 import { hotelImageUrl } from "../middleware/upload";
 import { HttpError } from "../middleware/error";
 
@@ -113,6 +115,23 @@ export async function createHotelListing(
     });
 
     const doc = await HotelListingModel.create({ ...input, partner: partnerId });
+    res.status(201).json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// POST /api/partner/taxis — JSON body is the client list-your-taxi listing
+// (flat shape); the validator adapts it into the MTI TaxiListing model.
+export async function createTaxiListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const input = validateTaxiListing(req.body);
+    const doc = await TaxiListingModel.create({ ...input, partner: partnerId });
     res.status(201).json({ item: doc.toJSON() });
   } catch (e) {
     next(e);
