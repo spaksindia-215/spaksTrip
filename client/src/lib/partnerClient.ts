@@ -100,6 +100,44 @@ export type TaxiPackageApi = {
   updatedAt: string;
 };
 
+// Typed TourListing as returned by the backend (mirrors the model's toJSON).
+export type TourListingApi = {
+  id: string;
+  partner: string;
+  status: "draft" | "active" | "paused" | "suspended";
+  title: string;
+  slug: string;
+  category: string;
+  basedIn: string;
+  coversCities: string[];
+  coordinates?: { type: "Point"; coordinates: [number, number] };
+  durationHours?: number;
+  durationDays?: number;
+  durationNights?: number;
+  itinerary: { time?: string; title?: string; description?: string; location?: string }[];
+  pricing: { label: string; price: number; currency: string; minAge?: number; maxAge?: number }[];
+  minGroupSize: number;
+  maxGroupSize?: number;
+  privateAvailable: boolean;
+  privatePrice?: number;
+  inclusions: string[];
+  exclusions: string[];
+  pickupIncluded: boolean;
+  pickupPoints: { name?: string; time?: string }[];
+  operatingDays: string[];
+  startTimes: string[];
+  advanceBookingHrs: number;
+  blackoutDates: string[];
+  images: { url: string; caption?: string; isPrimary?: boolean }[];
+  videoUrl?: string;
+  description?: string;
+  highlights: string[];
+  tags: string[];
+  languages: string[];
+  createdAt: string;
+  updatedAt: string;
+};
+
 // Multipart request through the Next.js proxy (forwards cookies + raw body).
 // The browser sets the multipart Content-Type/boundary, so we don't.
 async function multipart<T>(path: string, method: "POST" | "PATCH", form: FormData): Promise<T> {
@@ -230,6 +268,27 @@ export const partnerClient = {
 
     async remove(id: string): Promise<void> {
       await api<null>(`/api/partner/taxi-packages/${id}`, { method: "DELETE" });
+    },
+  },
+
+  // Tours (typed model; images to Cloudinary). create/update are multipart:
+  // a `payload` JSON field + optional `images`.
+  tours: {
+    async list(): Promise<TourListingApi[]> {
+      const response = await api<{ items: TourListingApi[] }>("/api/partner/tours");
+      return response.items;
+    },
+
+    async create(form: FormData): Promise<TourListingApi> {
+      return multipart<TourListingApi>("/api/partner/tours", "POST", form);
+    },
+
+    async update(id: string, form: FormData): Promise<TourListingApi> {
+      return multipart<TourListingApi>(`/api/partner/tours/${id}`, "PATCH", form);
+    },
+
+    async remove(id: string): Promise<void> {
+      await api<null>(`/api/partner/tours/${id}`, { method: "DELETE" });
     },
   },
 };

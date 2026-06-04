@@ -73,3 +73,20 @@ export const TAXI_SERVICE_TYPES = [
   "outstation",
 ] as const;
 export type TaxiServiceType = (typeof TAXI_SERVICE_TYPES)[number];
+
+// ── Tour ─────────────────────────────────────────────────────────────────────
+export const TOUR_CATEGORIES = [
+  "sightseeing",
+  "adventure",
+  "cultural",
+  "religious",
+  "wildlife",
+  "cruise_day",
+  "honeymoon",
+  "group",
+] as const;
+export type TourCategory = (typeof TOUR_CATEGORIES)[number];
+
+// Short weekday codes used for operating-day selection (tours + future models).
+export const OPERATING_DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
+export type OperatingDay = (typeof OPERATING_DAYS)[number];

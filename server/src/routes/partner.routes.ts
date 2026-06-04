@@ -16,6 +16,10 @@ import {
   listTaxiPackages,
   updateTaxiPackage,
   deleteTaxiPackage,
+  createTourListing,
+  listTourListings,
+  updateTourListing,
+  deleteTourListing,
 } from "../controllers/partner.controller";
 import { mediaUpload } from "../middleware/upload";
 import { HttpError } from "../middleware/error";
@@ -55,5 +59,11 @@ router.get("/taxi-packages", listTaxiPackages);
 router.post("/taxi-packages", uploadAny, createTaxiPackage);
 router.patch("/taxi-packages/:id", uploadAny, updateTaxiPackage);
 router.delete("/taxi-packages/:id", deleteTaxiPackage);
+
+// Tours (typed model; images to Cloudinary).
+router.get("/tours", listTourListings);
+router.post("/tours", uploadAny, createTourListing);
+router.patch("/tours/:id", uploadAny, updateTourListing);
+router.delete("/tours/:id", deleteTourListing);
 
 export default router;

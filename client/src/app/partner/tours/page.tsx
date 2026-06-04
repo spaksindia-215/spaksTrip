@@ -1,5 +1,5 @@
-import ResourceManager from "@/components/partner/ResourceManager";
+import TourManager from "@/components/partner/TourManager";
 
 export default function PartnerToursPage() {
-  return <ResourceManager type="tour" />;
+  return <TourManager />;
 }
