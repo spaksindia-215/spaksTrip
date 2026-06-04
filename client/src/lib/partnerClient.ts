@@ -190,6 +190,52 @@ export type TourPackageApi = {
   updatedAt: string;
 };
 
+// Typed CruiseListing as returned by the backend (mirrors the model's toJSON).
+export type CruiseListingApi = {
+  id: string;
+  partner: string;
+  status: "draft" | "active" | "paused" | "suspended";
+  cruiseName: string;
+  slug: string;
+  cruiseType: string;
+  vessel: {
+    name?: string;
+    operator?: string;
+    totalDecks?: number;
+    builtYear?: number;
+    images: { url: string; caption?: string; isPrimary?: boolean }[];
+  };
+  route: {
+    departurePort: string;
+    arrivalPort?: string;
+    stops: { port?: string; arrivalTime?: string; departureTime?: string }[];
+    durationDays: number;
+    durationNights?: number;
+  };
+  cabins: {
+    type: string;
+    label?: string;
+    maxOccupancy?: number;
+    pricePerPerson: number;
+    currency: string;
+    totalCabins?: number;
+    amenities: string[];
+    images: string[];
+    isRefundable: boolean;
+  }[];
+  shipAmenities: string[];
+  diningOptions: string[];
+  mealsIncluded: { breakfast: boolean; lunch: boolean; dinner: boolean };
+  departures: { date: string; cabinAvailability: { cabinType: string; seatsLeft?: number }[]; status: string }[];
+  cancellationPolicy: { freeCancelDays?: number; chargePercent?: number };
+  boardingAge: { minAge?: number; maxAge?: number };
+  description?: string;
+  highlights: string[];
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+};
+
 // Multipart request through the Next.js proxy (forwards cookies + raw body).
 // The browser sets the multipart Content-Type/boundary, so we don't.
 async function multipart<T>(path: string, method: "POST" | "PATCH", form: FormData): Promise<T> {
@@ -369,6 +415,27 @@ export const partnerClient = {
 
     async remove(id: string): Promise<void> {
       await api<null>(`/api/partner/tour-packages/${id}`, { method: "DELETE" });
+    },
+  },
+
+  // Cruises (typed model; vessel images to Cloudinary). create/update are
+  // multipart: a `payload` JSON field + optional `vesselImages`.
+  cruises: {
+    async list(): Promise<CruiseListingApi[]> {
+      const response = await api<{ items: CruiseListingApi[] }>("/api/partner/cruises");
+      return response.items;
+    },
+
+    async create(form: FormData): Promise<CruiseListingApi> {
+      return multipart<CruiseListingApi>("/api/partner/cruises", "POST", form);
+    },
+
+    async update(id: string, form: FormData): Promise<CruiseListingApi> {
+      return multipart<CruiseListingApi>(`/api/partner/cruises/${id}`, "PATCH", form);
+    },
+
+    async remove(id: string): Promise<void> {
+      await api<null>(`/api/partner/cruises/${id}`, { method: "DELETE" });
     },
   },
 };

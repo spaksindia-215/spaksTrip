@@ -25,6 +25,10 @@ import {
   listTourPackages,
   updateTourPackage,
   deleteTourPackage,
+  createCruiseListing,
+  listCruiseListings,
+  updateCruiseListing,
+  deleteCruiseListing,
 } from "../controllers/partner.controller";
 import { mediaUpload } from "../middleware/upload";
 import { HttpError } from "../middleware/error";
@@ -77,5 +81,11 @@ router.get("/tour-packages", listTourPackages);
 router.post("/tour-packages", uploadAny, createTourPackage);
 router.patch("/tour-packages/:id", uploadAny, updateTourPackage);
 router.delete("/tour-packages/:id", deleteTourPackage);
+
+// Cruises (typed model; vessel images to Cloudinary).
+router.get("/cruises", listCruiseListings);
+router.post("/cruises", uploadAny, createCruiseListing);
+router.patch("/cruises/:id", uploadAny, updateCruiseListing);
+router.delete("/cruises/:id", deleteCruiseListing);
 
 export default router;

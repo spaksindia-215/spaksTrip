@@ -7,6 +7,7 @@ import { TaxiListingModel } from "../models/partner/TaxiListing";
 import { TaxiPackageModel } from "../models/partner/TaxiPackage";
 import { TourListingModel } from "../models/partner/TourListing";
 import { TourPackageModel } from "../models/partner/TourPackage";
+import { CruiseListingModel } from "../models/partner/CruiseListing";
 import {
   validateResourceCreate,
   validateResourceUpdate,
@@ -21,6 +22,7 @@ import {
 import { validateTaxiPackage } from "../validators/taxiPackage.validators";
 import { validateTourListing } from "../validators/tourListing.validators";
 import { validateTourPackage } from "../validators/tourPackage.validators";
+import { validateCruiseListing } from "../validators/cruiseListing.validators";
 import { uploadToCloudinary, uploadManyToCloudinary } from "../lib/cloudinary";
 import { HttpError } from "../middleware/error";
 
@@ -625,6 +627,99 @@ export async function deleteTourPackage(
     const id = paramId(req);
     const result = await TourPackageModel.findOneAndDelete({ _id: id, partner: partnerId });
     if (!result) throw new HttpError(404, "Tour package not found");
+    res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
+}
+
+// ── Cruises ──────────────────────────────────────────────────────────────────
+
+// POST /api/partner/cruises — multipart: `payload` JSON + `vesselImages`.
+export async function createCruiseListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const payload = parseJsonField(req, "payload", req.body);
+    const fields = validateCruiseListing(payload);
+
+    const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    const vesselImageUrls = await uploadManyToCloudinary(
+      files.filter((f) => f.fieldname === "vesselImages"),
+      "spakstrip/cruises",
+    );
+    fields.vessel.images = vesselImageUrls.map((url, i) => ({ url, isPrimary: i === 0 }));
+
+    const doc = await CruiseListingModel.create({ ...fields, partner: partnerId });
+    res.status(201).json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// GET /api/partner/cruises
+export async function listCruiseListings(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const items = await CruiseListingModel.find({ partner: partnerId }).sort({ createdAt: -1 });
+    res.json({ items: items.map((i) => i.toJSON()) });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// PATCH /api/partner/cruises/:id — multipart; the edit form resends the full
+// payload. New `vesselImages` replace existing ones only when files are provided.
+export async function updateCruiseListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramId(req);
+    const payload = parseJsonField(req, "payload", req.body);
+    const fields = validateCruiseListing(payload);
+
+    const doc = await CruiseListingModel.findOne({ _id: id, partner: partnerId });
+    if (!doc) throw new HttpError(404, "Cruise not found");
+
+    const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    const vesselImageUrls = await uploadManyToCloudinary(
+      files.filter((f) => f.fieldname === "vesselImages"),
+      "spakstrip/cruises",
+    );
+    // Keep existing vessel images unless new ones were uploaded.
+    fields.vessel.images = vesselImageUrls.length > 0
+      ? vesselImageUrls.map((url, i) => ({ url, isPrimary: i === 0 }))
+      : doc.vessel.images;
+
+    doc.set(fields);
+    await doc.save();
+    res.json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// DELETE /api/partner/cruises/:id
+export async function deleteCruiseListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramId(req);
+    const result = await CruiseListingModel.findOneAndDelete({ _id: id, partner: partnerId });
+    if (!result) throw new HttpError(404, "Cruise not found");
     res.status(204).end();
   } catch (e) {
     next(e);

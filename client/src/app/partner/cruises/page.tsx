@@ -1,5 +1,5 @@
-import ResourceManager from "@/components/partner/ResourceManager";
+import CruiseManager from "@/components/partner/CruiseManager";
 
 export default function PartnerCruisesPage() {
-  return <ResourceManager type="cruise" />;
+  return <CruiseManager />;
 }

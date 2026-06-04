@@ -107,3 +107,13 @@ export type DepartureStatus = (typeof DEPARTURE_STATUS)[number];
 
 export const DIFFICULTY_LEVELS = ["easy", "moderate", "challenging"] as const;
 export type DifficultyLevel = (typeof DIFFICULTY_LEVELS)[number];
+
+// ── Cruise ───────────────────────────────────────────────────────────────────
+export const CRUISE_TYPES = ["river", "sea", "backwater", "luxury", "budget"] as const;
+export type CruiseType = (typeof CRUISE_TYPES)[number];
+
+export const CABIN_TYPES = ["interior", "ocean_view", "balcony", "suite"] as const;
+export type CabinType = (typeof CABIN_TYPES)[number];
+
+export const CRUISE_DEPARTURE_STATUS = ["open", "filling_fast", "closed"] as const;
+export type CruiseDepartureStatus = (typeof CRUISE_DEPARTURE_STATUS)[number];
