@@ -6,6 +6,7 @@ import { HotelListingModel } from "../models/partner/HotelListing";
 import { TaxiListingModel } from "../models/partner/TaxiListing";
 import { TaxiPackageModel } from "../models/partner/TaxiPackage";
 import { TourListingModel } from "../models/partner/TourListing";
+import { TourPackageModel } from "../models/partner/TourPackage";
 import {
   validateResourceCreate,
   validateResourceUpdate,
@@ -19,6 +20,7 @@ import {
 } from "../validators/taxiListing.validators";
 import { validateTaxiPackage } from "../validators/taxiPackage.validators";
 import { validateTourListing } from "../validators/tourListing.validators";
+import { validateTourPackage } from "../validators/tourPackage.validators";
 import { uploadToCloudinary, uploadManyToCloudinary } from "../lib/cloudinary";
 import { HttpError } from "../middleware/error";
 
@@ -125,6 +127,21 @@ export async function createHotelListing(
 
     const doc = await HotelListingModel.create({ ...input, partner: partnerId });
     res.status(201).json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// GET /api/partner/hotels — this partner's hotel listings, newest first.
+export async function listHotelListings(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const items = await HotelListingModel.find({ partner: partnerId }).sort({ createdAt: -1 });
+    res.json({ items: items.map((i) => i.toJSON()) });
   } catch (e) {
     next(e);
   }
@@ -469,6 +486,145 @@ export async function deleteTourListing(
     const id = paramId(req);
     const result = await TourListingModel.findOneAndDelete({ _id: id, partner: partnerId });
     if (!result) throw new HttpError(404, "Tour not found");
+    res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
+}
+
+// ── Tour Packages ────────────────────────────────────────────────────────────
+
+// Verify a set of ids all belong to the partner in the given collection.
+async function ownedIds(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Mdl: { find: (...args: any[]) => any },
+  partnerId: string,
+  ids: string[],
+  label: string,
+): Promise<mongoose.Types.ObjectId[]> {
+  if (ids.length === 0) return [];
+  if (ids.some((id) => !mongoose.isValidObjectId(id))) throw new HttpError(400, `Invalid ${label} id`);
+  const docs = await Mdl.find({ _id: { $in: ids }, partner: partnerId }).select("_id");
+  if (docs.length !== new Set(ids).size) {
+    throw new HttpError(400, `${label} must all be your own listings`);
+  }
+  return docs.map((d: { _id: mongoose.Types.ObjectId }) => d._id);
+}
+
+// Resolve the cross-model `includes` refs, validating partner ownership.
+async function resolveTourPackageIncludes(
+  partnerId: string,
+  includeIds: { taxi?: string; hotels: string[]; tours: string[] },
+): Promise<{ taxi?: mongoose.Types.ObjectId; hotels: mongoose.Types.ObjectId[]; tours: mongoose.Types.ObjectId[] }> {
+  let taxi: mongoose.Types.ObjectId | undefined;
+  if (includeIds.taxi) {
+    if (!mongoose.isValidObjectId(includeIds.taxi)) throw new HttpError(400, "Invalid taxi id");
+    const t = await TaxiListingModel.findOne({ _id: includeIds.taxi, partner: partnerId }).select("_id");
+    if (!t) throw new HttpError(400, "includes.taxi must be one of your taxi listings");
+    taxi = t._id;
+  }
+  const hotels = await ownedIds(HotelListingModel, partnerId, includeIds.hotels, "includes.hotels");
+  const tours = await ownedIds(TourListingModel, partnerId, includeIds.tours, "includes.tours");
+  return { taxi, hotels, tours };
+}
+
+async function uploadTourPackageMedia(
+  files: Express.Multer.File[],
+): Promise<{ thumbnail?: string; imageUrls: string[] }> {
+  const thumbFile = files.find((f) => f.fieldname === "thumbnail");
+  const thumbnail = thumbFile ? await uploadToCloudinary(thumbFile, "spakstrip/tour-packages") : undefined;
+  const imageUrls = await uploadManyToCloudinary(
+    files.filter((f) => f.fieldname === "images"),
+    "spakstrip/tour-packages",
+  );
+  return { thumbnail, imageUrls };
+}
+
+// POST /api/partner/tour-packages — multipart: `payload` JSON + thumbnail + images.
+export async function createTourPackage(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const payload = parseJsonField(req, "payload", req.body);
+    const { fields, includeIds } = validateTourPackage(payload);
+
+    const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    const { thumbnail, imageUrls } = await uploadTourPackageMedia(files);
+    const includes = await resolveTourPackageIncludes(partnerId, includeIds);
+
+    const doc = await TourPackageModel.create({
+      ...fields,
+      partner: partnerId,
+      includes,
+      thumbnail,
+      images: imageUrls.map((url, i) => ({ url, isPrimary: i === 0 })),
+    });
+    res.status(201).json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// GET /api/partner/tour-packages
+export async function listTourPackages(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const items = await TourPackageModel.find({ partner: partnerId }).sort({ createdAt: -1 });
+    res.json({ items: items.map((i) => i.toJSON()) });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// PATCH /api/partner/tour-packages/:id — multipart; the edit form resends the
+// full payload. New thumbnail/images replace existing ones only when provided.
+export async function updateTourPackage(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramId(req);
+    const payload = parseJsonField(req, "payload", req.body);
+    const { fields, includeIds } = validateTourPackage(payload);
+
+    const doc = await TourPackageModel.findOne({ _id: id, partner: partnerId });
+    if (!doc) throw new HttpError(404, "Tour package not found");
+
+    doc.set(fields);
+    doc.includes = await resolveTourPackageIncludes(partnerId, includeIds);
+
+    const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    const { thumbnail, imageUrls } = await uploadTourPackageMedia(files);
+    if (thumbnail) doc.thumbnail = thumbnail;
+    if (imageUrls.length > 0) doc.images = imageUrls.map((url, i) => ({ url, isPrimary: i === 0 }));
+
+    await doc.save();
+    res.json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// DELETE /api/partner/tour-packages/:id
+export async function deleteTourPackage(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramId(req);
+    const result = await TourPackageModel.findOneAndDelete({ _id: id, partner: partnerId });
+    if (!result) throw new HttpError(404, "Tour package not found");
     res.status(204).end();
   } catch (e) {
     next(e);

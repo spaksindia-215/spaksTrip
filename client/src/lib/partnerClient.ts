@@ -138,6 +138,58 @@ export type TourListingApi = {
   updatedAt: string;
 };
 
+// Minimal hotel listing shape (used for the tour-package includes picker).
+export type HotelListingApi = {
+  id: string;
+  name: string;
+  type: string;
+  status: string;
+  address?: { city?: string };
+};
+
+// Typed TourPackage as returned by the backend (mirrors the model's toJSON).
+export type TourPackageApi = {
+  id: string;
+  partner: string;
+  status: "draft" | "active" | "paused" | "suspended";
+  title: string;
+  slug: string;
+  packageType: string;
+  thumbnail?: string;
+  route: { origin?: string; destinations: string[]; durationDays: number; durationNights: number };
+  includes: { taxi?: string; hotels: string[]; tours: string[] };
+  customInclusions: string[];
+  exclusions: string[];
+  itinerary: {
+    day: number;
+    title?: string;
+    description?: string;
+    meals: { breakfast: boolean; lunch: boolean; dinner: boolean };
+    accommodation?: string;
+    activities: string[];
+  }[];
+  pricing: {
+    basePrice: number;
+    currency: string;
+    perPerson: boolean;
+    maxPersons?: number;
+    childPrice?: number;
+    infantPrice: number;
+    extraPersonCharge?: number;
+    singleSupplement?: number;
+    discounts: { label: string; percent: number; validUntil?: string }[];
+  };
+  departures: { date: string; seatsTotal?: number; seatsBooked: number; status: string }[];
+  images: { url: string; caption?: string; isPrimary?: boolean }[];
+  videoUrl?: string;
+  description?: string;
+  highlights: string[];
+  tags: string[];
+  difficultyLevel?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 // Multipart request through the Next.js proxy (forwards cookies + raw body).
 // The browser sets the multipart Content-Type/boundary, so we don't.
 async function multipart<T>(path: string, method: "POST" | "PATCH", form: FormData): Promise<T> {
@@ -289,6 +341,34 @@ export const partnerClient = {
 
     async remove(id: string): Promise<void> {
       await api<null>(`/api/partner/tours/${id}`, { method: "DELETE" });
+    },
+  },
+
+  // Hotels — list only (used by the tour-package includes picker).
+  hotels: {
+    async list(): Promise<HotelListingApi[]> {
+      const response = await api<{ items: HotelListingApi[] }>("/api/partner/hotels");
+      return response.items;
+    },
+  },
+
+  // Tour packages (typed model; cross-model refs; thumbnail/images to Cloudinary).
+  tourPackages: {
+    async list(): Promise<TourPackageApi[]> {
+      const response = await api<{ items: TourPackageApi[] }>("/api/partner/tour-packages");
+      return response.items;
+    },
+
+    async create(form: FormData): Promise<TourPackageApi> {
+      return multipart<TourPackageApi>("/api/partner/tour-packages", "POST", form);
+    },
+
+    async update(id: string, form: FormData): Promise<TourPackageApi> {
+      return multipart<TourPackageApi>(`/api/partner/tour-packages/${id}`, "PATCH", form);
+    },
+
+    async remove(id: string): Promise<void> {
+      await api<null>(`/api/partner/tour-packages/${id}`, { method: "DELETE" });
     },
   },
 };

@@ -90,3 +90,20 @@ export type TourCategory = (typeof TOUR_CATEGORIES)[number];
 // Short weekday codes used for operating-day selection (tours + future models).
 export const OPERATING_DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 export type OperatingDay = (typeof OPERATING_DAYS)[number];
+
+// ── Tour Package ─────────────────────────────────────────────────────────────
+export const PACKAGE_TYPES = [
+  "fit",
+  "group",
+  "honeymoon",
+  "family",
+  "corporate",
+  "pilgrimage",
+] as const;
+export type PackageType = (typeof PACKAGE_TYPES)[number];
+
+export const DEPARTURE_STATUS = ["open", "filling_fast", "closed", "cancelled"] as const;
+export type DepartureStatus = (typeof DEPARTURE_STATUS)[number];
+
+export const DIFFICULTY_LEVELS = ["easy", "moderate", "challenging"] as const;
+export type DifficultyLevel = (typeof DIFFICULTY_LEVELS)[number];

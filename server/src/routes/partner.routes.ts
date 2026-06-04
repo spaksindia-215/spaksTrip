@@ -8,6 +8,7 @@ import {
   deleteResource,
   listBookings,
   createHotelListing,
+  listHotelListings,
   createTaxiListing,
   listTaxiListings,
   updateTaxiListing,
@@ -20,6 +21,10 @@ import {
   listTourListings,
   updateTourListing,
   deleteTourListing,
+  createTourPackage,
+  listTourPackages,
+  updateTourPackage,
+  deleteTourPackage,
 } from "../controllers/partner.controller";
 import { mediaUpload } from "../middleware/upload";
 import { HttpError } from "../middleware/error";
@@ -46,6 +51,7 @@ function uploadAny(req: Request, res: Response, next: NextFunction): void {
   });
 }
 
+router.get("/hotels", listHotelListings);
 router.post("/hotels", uploadAny, createHotelListing);
 
 // Taxi listings (DB-backed; images/docs to Cloudinary).
@@ -65,5 +71,11 @@ router.get("/tours", listTourListings);
 router.post("/tours", uploadAny, createTourListing);
 router.patch("/tours/:id", uploadAny, updateTourListing);
 router.delete("/tours/:id", deleteTourListing);
+
+// Tour packages (typed model; cross-model refs; thumbnail/images to Cloudinary).
+router.get("/tour-packages", listTourPackages);
+router.post("/tour-packages", uploadAny, createTourPackage);
+router.patch("/tour-packages/:id", uploadAny, updateTourPackage);
+router.delete("/tour-packages/:id", deleteTourPackage);
 
 export default router;
