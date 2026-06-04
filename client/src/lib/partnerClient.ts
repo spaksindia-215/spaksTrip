@@ -53,6 +53,66 @@ export type TaxiListingUpdate = {
   availabilityEnabled?: boolean;
 };
 
+// Typed TaxiPackage as returned by the backend (mirrors the model's toJSON).
+export type TaxiPackageApi = {
+  id: string;
+  partner: string;
+  status: "draft" | "active" | "paused" | "suspended";
+  title: string;
+  slug: string;
+  thumbnail?: string;
+  route: {
+    origin: string;
+    destinations: string[];
+    totalKm?: number;
+    durationDays: number;
+    durationNights: number;
+  };
+  vehicle?: string;
+  vehicleSnapshot?: { make?: string; model?: string; type?: string; seatingCap?: number; images: string[] };
+  itinerary: {
+    day: number;
+    title?: string;
+    description?: string;
+    activities: string[];
+    distance?: number;
+    overnight?: string;
+  }[];
+  pricing: {
+    basePrice: number;
+    currency: string;
+    maxPersons?: number;
+    extraPersonCharge?: number;
+    tollsIncluded: boolean;
+    driverAllowance: boolean;
+    fuelIncluded: boolean;
+  };
+  inclusions: string[];
+  exclusions: string[];
+  startDates: string[];
+  blackoutDates: string[];
+  advanceBookingDays: number;
+  images: { url: string; caption?: string; isPrimary?: boolean }[];
+  description?: string;
+  highlights: string[];
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+// Multipart request through the Next.js proxy (forwards cookies + raw body).
+// The browser sets the multipart Content-Type/boundary, so we don't.
+async function multipart<T>(path: string, method: "POST" | "PATCH", form: FormData): Promise<T> {
+  const response = await fetch(path, { method, body: form, credentials: "include" });
+  const payload = await response.json().catch(() => null);
+  if (!response.ok) {
+    const message =
+      (payload && typeof payload.error === "string" && payload.error) || "Request failed";
+    throw new ApiError(response.status, message);
+  }
+  return (payload as { item: T }).item;
+}
+
 export type ResourceType =
   | "hotel"
   | "cruise"
@@ -135,22 +195,8 @@ export const partnerClient = {
 
     // Multipart create. `form` carries a `payload` JSON field plus file fields
     // (vehiclePhotos, rcBook, insurance, pollutionCertificate, drivingLicense).
-    // Sent through the Next.js proxy so the auth cookie is forwarded; the
-    // browser sets the multipart Content-Type/boundary, so we don't.
     async create(form: FormData): Promise<TaxiListingApi> {
-      const response = await fetch("/api/partner/taxis", {
-        method: "POST",
-        body: form,
-        credentials: "include",
-      });
-      const payload = await response.json().catch(() => null);
-      if (!response.ok) {
-        const message =
-          (payload && typeof payload.error === "string" && payload.error) ||
-          "Failed to create taxi listing";
-        throw new ApiError(response.status, message);
-      }
-      return (payload as { item: TaxiListingApi }).item;
+      return multipart<TaxiListingApi>("/api/partner/taxis", "POST", form);
     },
 
     async update(id: string, patch: TaxiListingUpdate): Promise<TaxiListingApi> {
@@ -163,6 +209,27 @@ export const partnerClient = {
 
     async remove(id: string): Promise<void> {
       await api<null>(`/api/partner/taxis/${id}`, { method: "DELETE" });
+    },
+  },
+
+  // Taxi packages (typed model; thumbnail/images to Cloudinary). create/update
+  // are multipart: a `payload` JSON field + optional `thumbnail` and `images`.
+  taxiPackages: {
+    async list(): Promise<TaxiPackageApi[]> {
+      const response = await api<{ items: TaxiPackageApi[] }>("/api/partner/taxi-packages");
+      return response.items;
+    },
+
+    async create(form: FormData): Promise<TaxiPackageApi> {
+      return multipart<TaxiPackageApi>("/api/partner/taxi-packages", "POST", form);
+    },
+
+    async update(id: string, form: FormData): Promise<TaxiPackageApi> {
+      return multipart<TaxiPackageApi>(`/api/partner/taxi-packages/${id}`, "PATCH", form);
+    },
+
+    async remove(id: string): Promise<void> {
+      await api<null>(`/api/partner/taxi-packages/${id}`, { method: "DELETE" });
     },
   },
 };

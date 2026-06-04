@@ -4,6 +4,7 @@ import { PartnerResourceModel, RESOURCE_TYPES, type ResourceType } from "../mode
 import { BookingModel } from "../models/Booking";
 import { HotelListingModel } from "../models/partner/HotelListing";
 import { TaxiListingModel } from "../models/partner/TaxiListing";
+import { TaxiPackageModel } from "../models/partner/TaxiPackage";
 import {
   validateResourceCreate,
   validateResourceUpdate,
@@ -15,6 +16,7 @@ import {
   parseSlotStrings,
   type TaxiMedia,
 } from "../validators/taxiListing.validators";
+import { validateTaxiPackage } from "../validators/taxiPackage.validators";
 import { uploadToCloudinary, uploadManyToCloudinary } from "../lib/cloudinary";
 import { HttpError } from "../middleware/error";
 
@@ -234,6 +236,143 @@ export async function deleteTaxiListing(
     const id = paramId(req);
     const result = await TaxiListingModel.findOneAndDelete({ _id: id, partner: partnerId });
     if (!result) throw new HttpError(404, "Taxi listing not found");
+    res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
+}
+
+// ── Taxi Packages ────────────────────────────────────────────────────────────
+
+// Resolve an optional vehicle ref to one of this partner's TaxiListings and
+// build the denormalized snapshot. Returns {} when no vehicle is linked.
+async function resolveTaxiPackageVehicle(
+  partnerId: string,
+  vehicleId: string | undefined,
+): Promise<{ vehicle?: mongoose.Types.ObjectId; vehicleSnapshot?: Record<string, unknown> }> {
+  if (!vehicleId) return {};
+  if (!mongoose.isValidObjectId(vehicleId)) throw new HttpError(400, "Invalid vehicle id");
+  const taxi = await TaxiListingModel.findOne({ _id: vehicleId, partner: partnerId });
+  if (!taxi) throw new HttpError(400, "vehicle must be one of your taxi listings");
+  return {
+    vehicle: taxi._id,
+    vehicleSnapshot: {
+      make: taxi.vehicle.make,
+      model: taxi.vehicle.model,
+      type: taxi.vehicle.type,
+      seatingCap: taxi.vehicle.seatingCap,
+      images: taxi.vehicle.images.map((i) => i.url),
+    },
+  };
+}
+
+// Upload taxi-package media: a single `thumbnail` + many `images`.
+async function uploadTaxiPackageMedia(
+  files: Express.Multer.File[],
+): Promise<{ thumbnail?: string; imageUrls: string[] }> {
+  const thumbFile = files.find((f) => f.fieldname === "thumbnail");
+  const thumbnail = thumbFile
+    ? await uploadToCloudinary(thumbFile, "spakstrip/taxi-packages")
+    : undefined;
+  const imageUrls = await uploadManyToCloudinary(
+    files.filter((f) => f.fieldname === "images"),
+    "spakstrip/taxi-packages",
+  );
+  return { thumbnail, imageUrls };
+}
+
+// POST /api/partner/taxi-packages — multipart: `payload` JSON + thumbnail + images.
+export async function createTaxiPackage(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const payload = parseJsonField(req, "payload", req.body);
+    const { fields, vehicleId } = validateTaxiPackage(payload);
+
+    const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    const { thumbnail, imageUrls } = await uploadTaxiPackageMedia(files);
+    const { vehicle, vehicleSnapshot } = await resolveTaxiPackageVehicle(partnerId, vehicleId);
+
+    const doc = await TaxiPackageModel.create({
+      ...fields,
+      partner: partnerId,
+      thumbnail,
+      images: imageUrls.map((url, i) => ({ url, isPrimary: i === 0 })),
+      vehicle,
+      vehicleSnapshot,
+    });
+    res.status(201).json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// GET /api/partner/taxi-packages
+export async function listTaxiPackages(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const items = await TaxiPackageModel.find({ partner: partnerId }).sort({ createdAt: -1 });
+    res.json({ items: items.map((i) => i.toJSON()) });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// PATCH /api/partner/taxi-packages/:id — multipart; the edit form resends the
+// full structured payload. New thumbnail/images replace existing ones only when
+// files are provided (otherwise the current media is kept).
+export async function updateTaxiPackage(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramId(req);
+    const payload = parseJsonField(req, "payload", req.body);
+    const { fields, vehicleId } = validateTaxiPackage(payload);
+
+    const doc = await TaxiPackageModel.findOne({ _id: id, partner: partnerId });
+    if (!doc) throw new HttpError(404, "Taxi package not found");
+
+    doc.set(fields);
+
+    const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+    const { thumbnail, imageUrls } = await uploadTaxiPackageMedia(files);
+    if (thumbnail) doc.thumbnail = thumbnail;
+    if (imageUrls.length > 0) doc.images = imageUrls.map((url, i) => ({ url, isPrimary: i === 0 }));
+
+    if (vehicleId !== undefined) {
+      const { vehicle, vehicleSnapshot } = await resolveTaxiPackageVehicle(partnerId, vehicleId);
+      doc.vehicle = vehicle;
+      doc.vehicleSnapshot = vehicleSnapshot as typeof doc.vehicleSnapshot;
+    }
+
+    await doc.save();
+    res.json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// DELETE /api/partner/taxi-packages/:id
+export async function deleteTaxiPackage(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramId(req);
+    const result = await TaxiPackageModel.findOneAndDelete({ _id: id, partner: partnerId });
+    if (!result) throw new HttpError(404, "Taxi package not found");
     res.status(204).end();
   } catch (e) {
     next(e);
