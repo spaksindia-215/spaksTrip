@@ -3,14 +3,22 @@
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthForm from "@/components/auth/AuthForm";
+import type { UserRole } from "@/lib/authClient";
 import { useAuthStore } from "@/state/authStore";
 import { dashboardPathForRole } from "@/lib/roleRoutes";
+
+const VALID_ROLES: readonly UserRole[] = ["customer", "agent", "b2b_agent", "partner"];
+
+function parseRole(value: string | null): UserRole {
+  return value && VALID_ROLES.includes(value as UserRole) ? (value as UserRole) : "customer";
+}
 
 export default function AuthContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
   const initialMode = searchParams.get("mode") === "register" ? "register" : "signin";
+  const initialRole = parseRole(searchParams.get("role"));
   const user = useAuthStore((state) => state.user);
   const status = useAuthStore((state) => state.status);
   const hydrate = useAuthStore((state) => state.hydrate);
@@ -83,9 +91,10 @@ export default function AuthContent() {
       </div>
 
       {/* Centered card */}
-      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10">
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-6 sm:py-8">
         <AuthForm
           initialMode={initialMode}
+          initialRole={initialRole}
           redirectTo={redirect}
           onSuccess={(authenticatedUser) => {
             router.replace(redirect ?? dashboardPathForRole(authenticatedUser.role));

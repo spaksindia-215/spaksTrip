@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { ApiError } from "@/lib/api";
 import { authClient, type ApiAuthUser, type UserRole, type UserStatus } from "@/lib/authClient";
 import { useAuthStore } from "@/state/authStore";
@@ -145,7 +145,7 @@ function Field({ def, value, onChange }: { def: FieldDef; value: string; onChang
   const inputType = isPw ? (show ? "text" : "password") : def.type;
 
   return (
-    <label className="flex flex-col gap-[6px]">
+    <label className="flex flex-col gap-1">
       <span className="pl-0.5 text-[12px] font-semibold" style={{ color: "#3f5170" }}>
         {def.label}
       </span>
@@ -170,7 +170,7 @@ function Field({ def, value, onChange }: { def: FieldDef; value: string; onChang
         )}
         {isSelect ? (
           <select
-            className="flex-1 cursor-pointer appearance-none bg-transparent py-3 pl-2 pr-8 text-[14px] outline-none"
+            className="flex-1 cursor-pointer appearance-none bg-transparent py-2.5 pl-2 pr-8 text-[14px] outline-none"
             style={{ color: "#0c2042" }}
             value={value || def.options![0]}
             onFocus={() => setFocused(true)}
@@ -181,7 +181,7 @@ function Field({ def, value, onChange }: { def: FieldDef; value: string; onChang
           </select>
         ) : (
           <input
-            className="flex-1 bg-transparent py-3 pl-2 pr-3 text-[14px] outline-none placeholder:text-[#8294ad]"
+            className="flex-1 bg-transparent py-2.5 pl-2 pr-3 text-[14px] outline-none placeholder:text-[#8294ad]"
             style={{ color: "#0c2042" }}
             type={inputType}
             placeholder={def.ph}
@@ -219,14 +219,14 @@ function FieldGroup({ group, values, setValue }: { group: Group; values: Record<
   return (
     <div className="mb-1">
       {group.title && (
-        <div className="my-3 flex items-center gap-3">
+        <div className="my-2.5 flex items-center gap-3">
           <span className="whitespace-nowrap text-[11px] font-bold uppercase tracking-[.09em]" style={{ color: "#94a3bb" }}>
             {group.title}
           </span>
           <span className="h-px flex-1" style={{ background: "rgba(12,32,66,.09)" }} />
         </div>
       )}
-      <div className="grid grid-cols-3 gap-x-4 gap-y-3 [@media(max-width:820px)]:grid-cols-2 [@media(max-width:560px)]:grid-cols-1">
+      <div className="grid grid-cols-3 gap-x-4 gap-y-2.5 [@media(max-width:820px)]:grid-cols-2 [@media(max-width:560px)]:grid-cols-1">
         {group.fields.map((f) => (
           <Field key={f.key} def={f} value={values[f.key] ?? ""} onChange={(v) => setValue(f.key, v)} />
         ))}
@@ -242,7 +242,7 @@ function ModeTabs({ mode, onChange }: { mode: "signin" | "register"; onChange: (
     <div
       role="tablist"
       aria-label="Mode"
-      className="relative mb-4 grid grid-cols-2 gap-1 rounded-full p-1"
+      className="relative mb-3 grid grid-cols-2 gap-1 rounded-full p-1"
       style={{ background: "rgba(12,32,66,.05)" }}
     >
       <span
@@ -260,7 +260,7 @@ function ModeTabs({ mode, onChange }: { mode: "signin" | "register"; onChange: (
           role="tab"
           aria-selected={mode === m}
           onClick={() => onChange(m)}
-          className="relative z-10 rounded-full py-2.5 text-[14px] font-semibold transition-colors duration-200"
+          className="relative z-10 rounded-full py-2 text-[13.5px] font-semibold transition-colors duration-200"
           style={{ color: mode === m ? "#0c2042" : "#8294ad" }}
         >
           {i === 0 ? "Sign in" : "Create account"}
@@ -273,7 +273,7 @@ function ModeTabs({ mode, onChange }: { mode: "signin" | "register"; onChange: (
 // ── Role pills ────────────────────────────────────────────────────────────────
 function RolePills({ role, onChange }: { role: UserRole; onChange: (r: UserRole) => void }) {
   return (
-    <div role="tablist" aria-label="Account type" className="mb-5 grid grid-cols-4 gap-2 [@media(max-width:560px)]:grid-cols-2">
+    <div role="tablist" aria-label="Account type" className="mb-4 grid grid-cols-4 gap-2 [@media(max-width:560px)]:grid-cols-2">
       {ROLES.map((r) => {
         const active = role === r.id;
         return (
@@ -283,7 +283,7 @@ function RolePills({ role, onChange }: { role: UserRole; onChange: (r: UserRole)
             role="tab"
             aria-selected={active}
             onClick={() => onChange(r.id)}
-            className="flex flex-col items-center gap-[6px] rounded-[15px] border px-1.5 py-3 text-[12.5px] font-semibold transition-all duration-150 hover:-translate-y-px"
+            className="flex flex-col items-center gap-1 rounded-[14px] border px-1.5 py-2 text-[12px] font-semibold transition-all duration-150 hover:-translate-y-px"
             style={{
               background: active ? "color-mix(in srgb, #F2611C 9%, white)" : "#f4f6fa",
               borderColor: active ? "#F2611C" : "rgba(12,32,66,.10)",
@@ -378,20 +378,53 @@ type Mode = "signin" | "register";
 
 type Props = {
   initialMode?: Mode;
+  initialRole?: UserRole;
   redirectTo?: string | null;
   onSuccess?: (user: ApiAuthUser) => void | Promise<void>;
 };
 
-export default function AuthForm({ initialMode = "signin", onSuccess }: Props) {
+export default function AuthForm({ initialMode = "signin", initialRole = "customer", onSuccess }: Props) {
   const loginToStore = useAuthStore((state) => state.login);
 
   const [mode, setMode] = useState<Mode>(initialMode);
-  const [role, setRole] = useState<UserRole>("customer");
+  const [role, setRole] = useState<UserRole>(initialRole);
   const [values, dispatch] = useReducer(formReducer, {});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [resultStatus, setResultStatus] = useState<UserStatus>("active");
+
+  // Floating scroll hint — shown when the card has more content below the fold.
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [showScrollHint, setShowScrollHint] = useState(false);
+
+  const updateScrollHint = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const remaining = el.scrollHeight - el.clientHeight - el.scrollTop;
+    setShowScrollHint(remaining > 24);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    updateScrollHint();
+    el.addEventListener("scroll", updateScrollHint, { passive: true });
+    window.addEventListener("resize", updateScrollHint);
+    return () => {
+      el.removeEventListener("scroll", updateScrollHint);
+      window.removeEventListener("resize", updateScrollHint);
+    };
+  }, [updateScrollHint]);
+
+  // Content height changes when switching mode/role or toggling the result panel.
+  useEffect(() => {
+    updateScrollHint();
+  }, [mode, role, done, error, updateScrollHint]);
+
+  const scrollDown = () => {
+    scrollRef.current?.scrollBy({ top: scrollRef.current.clientHeight * 0.7, behavior: "smooth" });
+  };
 
   const setValue = (k: string, v: string) => dispatch({ key: k, value: v });
   const reset = () => { dispatch({ reset: true }); setError(null); };
@@ -450,10 +483,11 @@ export default function AuthForm({ initialMode = "signin", onSuccess }: Props) {
   };
 
   return (
+    <div className="relative z-10 w-full" style={{ maxWidth: 880 }}>
     <div
-      className="relative z-10 w-full overflow-hidden rounded-[26px] border bg-white px-10 py-8 max-[560px]:px-6"
+      ref={scrollRef}
+      className="max-h-[calc(100dvh-3rem)] w-full overflow-y-auto rounded-[22px] border bg-white px-5 py-5 sm:rounded-[26px] sm:px-8 sm:py-6"
       style={{
-        maxWidth: 900,
         borderColor: "rgba(12,32,66,.08)",
         boxShadow: "0 30px 80px -30px rgba(7,22,51,.45), 0 2px 8px rgba(7,22,51,.06)",
       }}
@@ -468,7 +502,7 @@ export default function AuthForm({ initialMode = "signin", onSuccess }: Props) {
       ) : (
         <>
           {/* Card header */}
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div
                 className="flex h-9 w-9 items-center justify-center rounded-xl text-[15px] font-bold text-white"
@@ -494,14 +528,14 @@ export default function AuthForm({ initialMode = "signin", onSuccess }: Props) {
           </div>
 
           {/* Intro */}
-          <div className="mb-4">
+          <div className="mb-3">
             <h1
-              className="mb-1.5 text-[27px] font-bold leading-tight tracking-tight"
+              className="mb-1 text-[21px] font-bold leading-tight tracking-tight sm:text-[24px]"
               style={{ fontFamily: "'Poppins',system-ui,sans-serif", color: "#0c2042" }}
             >
               {mode === "signin" ? "Sign in to SpaksTrip" : "Create your account"}
             </h1>
-            <p className="max-w-[42ch] text-[13.5px] leading-relaxed" style={{ color: "#3f5170" }}>
+            <p className="hidden max-w-[42ch] text-[13px] leading-relaxed sm:block" style={{ color: "#3f5170" }}>
               {mode === "signin"
                 ? "Pick up where you left off and manage every booking in one place."
                 : "Join thousands of travellers and trade partners booking smarter."}
@@ -518,7 +552,7 @@ export default function AuthForm({ initialMode = "signin", onSuccess }: Props) {
             className={mode === "signin" ? "mx-auto max-w-[560px]" : ""}
           >
             {mode === "signin" ? (
-              <div className="grid grid-cols-2 gap-x-4 gap-y-3 max-[560px]:grid-cols-1">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 max-[560px]:grid-cols-1">
                 {flow.groups[0].fields.map((f) => (
                   <Field key={f.key} def={f} value={values[f.key] ?? ""} onChange={(v) => setValue(f.key, v)} />
                 ))}
@@ -530,7 +564,7 @@ export default function AuthForm({ initialMode = "signin", onSuccess }: Props) {
             )}
 
             {mode === "signin" && (
-              <div className="mt-4 flex items-center justify-between">
+              <div className="mt-3 flex items-center justify-between">
                 <label className="flex cursor-pointer select-none items-center gap-2 text-[13px]" style={{ color: "#3f5170" }}>
                   <input type="checkbox" defaultChecked style={{ accentColor: "#F2611C", width: 15, height: 15 }} />
                   Keep me signed in
@@ -544,7 +578,7 @@ export default function AuthForm({ initialMode = "signin", onSuccess }: Props) {
             <button
               type="submit"
               disabled={loading}
-              className="mt-5 flex w-full items-center justify-center gap-2 rounded-[14px] py-[15px] text-[15px] font-bold text-white transition-all duration-150 hover:-translate-y-0.5 active:scale-[.99] disabled:pointer-events-none"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] py-3 text-[15px] font-bold text-white transition-all duration-150 hover:-translate-y-0.5 active:scale-[.99] disabled:pointer-events-none"
               style={{
                 background: "linear-gradient(180deg, #f96f34 0%, #F2611C 100%)",
                 boxShadow: "0 12px 26px -10px rgba(242,97,28,.8), 0 1px 0 rgba(255,255,255,.3) inset",
@@ -564,7 +598,7 @@ export default function AuthForm({ initialMode = "signin", onSuccess }: Props) {
               )}
             </button>
 
-            <p className="mt-4 text-center text-[13.5px]" style={{ color: "#3f5170" }}>
+            <p className="mt-3 text-center text-[13px]" style={{ color: "#3f5170" }}>
               {mode === "signin" ? (
                 <>
                   New to SpaksTrip?{" "}
@@ -584,7 +618,7 @@ export default function AuthForm({ initialMode = "signin", onSuccess }: Props) {
           </form>
 
           {/* Trust badges */}
-          <div className="mt-5 flex flex-wrap justify-center gap-4 border-t pt-4" style={{ borderColor: "rgba(12,32,66,.09)" }}>
+          <div className="mt-4 hidden flex-wrap justify-center gap-4 border-t pt-3 sm:flex" style={{ borderColor: "rgba(12,32,66,.09)" }}>
             {TRUST.map((t) => (
               <span key={t.text} className="flex items-center gap-1.5 text-[11.5px] font-semibold" style={{ color: "#8294ad" }}>
                 <span style={{ color: "rgba(242,97,28,.75)" }}>
@@ -596,6 +630,22 @@ export default function AuthForm({ initialMode = "signin", onSuccess }: Props) {
           </div>
         </>
       )}
+    </div>
+
+    {showScrollHint && (
+      <button
+        type="button"
+        onClick={scrollDown}
+        aria-label="Scroll down for more"
+        className="absolute bottom-4 left-1/2 z-20 flex h-10 w-10 -translate-x-1/2 animate-bounce items-center justify-center rounded-full text-white transition-opacity"
+        style={{
+          background: "linear-gradient(180deg, #f96f34 0%, #F2611C 100%)",
+          boxShadow: "0 8px 20px -6px rgba(242,97,28,.85), 0 1px 0 rgba(255,255,255,.3) inset",
+        }}
+      >
+        <Ic d={I.chevDown} size={20} stroke={2.4} />
+      </button>
+    )}
     </div>
   );
 }

@@ -8,12 +8,12 @@ import Checkbox from "@/components/ui/Checkbox";
 import Input from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
 import {
+  buildTaxiListingFormData,
   createEmptyTaxiListingDraft,
-  createTaxiListingFromDraft,
   serializeFiles,
-  upsertTaxiListing,
   validateTaxiListingDraft,
 } from "@/lib/taxiListing";
+import { partnerClient } from "@/lib/partnerClient";
 import { cn } from "@/lib/cn";
 import {
   TAXI_AMENITIES,
@@ -26,6 +26,7 @@ import {
   type TaxiListingDraft,
   type TaxiListingDraftKey,
   type TaxiListingErrors,
+  type TaxiListingUploadFiles,
   type TaxiTimeSlot,
 } from "@/types/taxiListing";
 
@@ -38,7 +39,7 @@ type SelectionFieldProps = {
 
 const PAGE_HIGHLIGHTS = [
   "Get discovered by travelers booking outstation, airport, and sightseeing rides.",
-  "Manage your listed taxis with flexible availability and booking request visibility.",
+  "Manage your listed taxis with flexible availability and coverage controls.",
   "Keep submissions fully separate from the current customer taxi booking experience.",
 ];
 
@@ -46,9 +47,24 @@ export default function TaxiListingForm() {
   const router = useRouter();
   const toast = useToast();
   const [draft, setDraft] = useState<TaxiListingDraft>(() => createEmptyTaxiListingDraft());
+  // Real File objects (the draft only keeps display metadata) for Cloudinary upload.
+  const [files, setFiles] = useState<TaxiListingUploadFiles>(() => ({
+    vehiclePhotos: [],
+    rcBook: null,
+    insurance: null,
+    pollutionCertificate: null,
+    drivingLicense: null,
+  }));
   const [errors, setErrors] = useState<TaxiListingErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [submittedName, setSubmittedName] = useState("");
+
+  function setFile<Key extends keyof TaxiListingUploadFiles>(
+    key: Key,
+    value: TaxiListingUploadFiles[Key],
+  ) {
+    setFiles((current) => ({ ...current, [key]: value }));
+  }
 
   useEffect(() => {
     if (!submittedName) return;
@@ -109,14 +125,20 @@ export default function TaxiListingForm() {
     setSubmitting(true);
 
     try {
-      await new Promise((resolve) => window.setTimeout(resolve, 900));
-      const listing = createTaxiListingFromDraft(draft);
-      upsertTaxiListing(listing);
-      setSubmittedName(listing.fullName);
+      const form = buildTaxiListingFormData(draft, files);
+      await partnerClient.taxis.create(form);
+
+      setSubmittedName(draft.fullName.trim());
       toast.push({
         title: "Taxi listing submitted",
         description: "Redirecting you to your taxi dashboard.",
         tone: "success",
+      });
+    } catch (error) {
+      toast.push({
+        title: "Could not submit taxi listing",
+        description: error instanceof Error ? error.message : "Please try again.",
+        tone: "danger",
       });
     } finally {
       setSubmitting(false);
@@ -134,7 +156,7 @@ export default function TaxiListingForm() {
         <h2 className="mt-5 text-2xl font-black text-ink">Listing submitted successfully</h2>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-ink-muted">
           Thanks, {submittedName}. Your taxi details have been saved and you&apos;ll be taken to
-          `/partner/my-taxis` to review availability and booking requests.
+          `/partner/my-taxis` to review availability and coverage.
         </p>
         <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
@@ -398,7 +420,10 @@ export default function TaxiListingForm() {
               accept=".pdf,.jpg,.jpeg,.png"
               fileName={draft.rcBook?.name}
               error={errors.rcBook}
-              onChange={(event) => setField("rcBook", serializeFiles(event.target.files)[0] ?? null)}
+              onChange={(event) => {
+                setField("rcBook", serializeFiles(event.target.files)[0] ?? null);
+                setFile("rcBook", event.target.files?.[0] ?? null);
+              }}
             />
             <FileField
               id="taxi-insurance"
@@ -406,9 +431,10 @@ export default function TaxiListingForm() {
               accept=".pdf,.jpg,.jpeg,.png"
               fileName={draft.insurance?.name}
               error={errors.insurance}
-              onChange={(event) =>
-                setField("insurance", serializeFiles(event.target.files)[0] ?? null)
-              }
+              onChange={(event) => {
+                setField("insurance", serializeFiles(event.target.files)[0] ?? null);
+                setFile("insurance", event.target.files?.[0] ?? null);
+              }}
             />
             <FileField
               id="taxi-pollution"
@@ -416,9 +442,10 @@ export default function TaxiListingForm() {
               accept=".pdf,.jpg,.jpeg,.png"
               fileName={draft.pollutionCertificate?.name}
               error={errors.pollutionCertificate}
-              onChange={(event) =>
-                setField("pollutionCertificate", serializeFiles(event.target.files)[0] ?? null)
-              }
+              onChange={(event) => {
+                setField("pollutionCertificate", serializeFiles(event.target.files)[0] ?? null);
+                setFile("pollutionCertificate", event.target.files?.[0] ?? null);
+              }}
             />
             <FileField
               id="taxi-driving-license"
@@ -426,9 +453,10 @@ export default function TaxiListingForm() {
               accept=".pdf,.jpg,.jpeg,.png"
               fileName={draft.drivingLicense?.name}
               error={errors.drivingLicense}
-              onChange={(event) =>
-                setField("drivingLicense", serializeFiles(event.target.files)[0] ?? null)
-              }
+              onChange={(event) => {
+                setField("drivingLicense", serializeFiles(event.target.files)[0] ?? null);
+                setFile("drivingLicense", event.target.files?.[0] ?? null);
+              }}
             />
           </div>
           <div className="mt-4">
@@ -443,7 +471,10 @@ export default function TaxiListingForm() {
                   : undefined
               }
               error={errors.vehiclePhotos}
-              onChange={(event) => setField("vehiclePhotos", serializeFiles(event.target.files))}
+              onChange={(event) => {
+                setField("vehiclePhotos", serializeFiles(event.target.files));
+                setFile("vehiclePhotos", event.target.files ? Array.from(event.target.files) : []);
+              }}
             />
           </div>
         </section>

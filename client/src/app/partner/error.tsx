@@ -65,7 +65,7 @@ export default function PartnerError({
           Try again
         </button>
         <Link
-          href="/auth?redirect=/partner/dashboard"
+          href="/auth?role=partner&redirect=/partner/dashboard"
           className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-6 py-3 text-sm font-semibold transition-colors hover:bg-[var(--surface-sunken)]"
           style={{ borderColor: "var(--border)", color: "var(--ink-soft)" }}
         >
