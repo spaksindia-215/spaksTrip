@@ -294,7 +294,7 @@ function PaymentInner() {
 
     const lead = booking.guests[0];
     const rzp = new window.Razorpay({
-      key: process.env.RAZORPAY_KEY_ID!,
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
       order_id: orderId,
       amount: totalPaise,
       currency: "INR",
