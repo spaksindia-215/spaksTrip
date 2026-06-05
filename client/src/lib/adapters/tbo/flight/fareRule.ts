@@ -1,5 +1,5 @@
 import "server-only";
-import { withRetry, tboBase, tboApiUrl } from "../auth";
+import { withRetry, tboBase, tboApiUrl, TBO_DEFAULT_TIMEOUT_MS, AIR_BOOK_SVC } from "../auth";
 import { assertTboSuccess, TboFareExpiredError } from "../errors";
 import { getTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
@@ -22,7 +22,7 @@ export async function tboGetFareRule(
   if (!traceId) throw new TboFareExpiredError();
 
   return withRetry(async (token) => {
-    const url = tboApiUrl("BookingEngineService_Air/AirService.svc/rest/FareRule");
+    const url = tboApiUrl(`${AIR_BOOK_SVC}/FareRule`);
     const body = { ...tboBase(token), ResultIndex: resultIndex, TraceId: traceId };
     logRequest("Flight FareRule", url, { ...body, TokenId: "***" });
 
@@ -32,6 +32,7 @@ export async function tboGetFareRule(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
+        signal: AbortSignal.timeout(TBO_DEFAULT_TIMEOUT_MS),
       });
     } catch (err) {
       logError("Flight FareRule", err);

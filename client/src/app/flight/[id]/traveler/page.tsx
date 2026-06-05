@@ -13,7 +13,7 @@ import Checkbox from "@/components/ui/Checkbox";
 import Radio from "@/components/ui/Radio";
 import { useBookingStore } from "@/state/bookingStore";
 import { useToast } from "@/components/ui/Toast";
-import type { Traveler, TravelerType, GSTInfo, TravelerSSR } from "@/state/bookingStore";
+import type { Traveler, TravelerType, Gender, GSTInfo, TravelerSSR } from "@/state/bookingStore";
 import { fetchSSR } from "@/services/flights";
 import type { SSRResult } from "@/services/flights";
 
@@ -22,14 +22,19 @@ type FormTraveler = Omit<Traveler, "id"> & { id: string };
 // SSR pick state — one entry per traveler id
 type SSRPick = { baggageCode: string; mealCode: string };
 
-const TITLES_ADULT = ["Mr", "Ms", "Mrs"] as const;
-const TITLES_CHILD = ["Mstr", "Miss"] as const;
+// Title options per pax type / gender. SpiceJet (Navitaire 4X) accepts a narrower
+// set (Child: Mr/Ms; Infant: Mstr/Mr/Ms) than GDS/Amadeus — see CLAUDE.md.
+function titlesFor(type: TravelerType, gender: Gender, isSG: boolean): Traveler["title"][] {
+  if (type === "ADT") return gender === "F" ? ["Ms", "Mrs"] : ["Mr"];
+  if (type === "CHD") return isSG ? ["Mr", "Ms"] : ["Mstr", "Miss"];
+  return isSG ? ["Mstr", "Mr", "Ms"] : ["Mstr", "Miss"]; // INF
+}
 
-function emptyFor(type: TravelerType, idx: number): FormTraveler {
+function emptyFor(type: TravelerType, idx: number, isSG: boolean): FormTraveler {
   return {
     id: `${type}-${idx}`,
     type,
-    title: type === "ADT" ? "Mr" : "Mstr",
+    title: titlesFor(type, "M", isSG)[0],
     firstName: "",
     lastName: "",
     gender: "M",
@@ -67,10 +72,11 @@ function TravelerInner() {
 
   const initial = useMemo(() => {
     if (!current) return [];
+    const sg = (current.airlineCode ?? current.offer.segments[0]?.airlineCode ?? "").toUpperCase() === "SG";
     const list: FormTraveler[] = [];
-    for (let i = 0; i < current.pax.adults; i++) list.push(emptyFor("ADT", i));
-    for (let i = 0; i < current.pax.children; i++) list.push(emptyFor("CHD", i));
-    for (let i = 0; i < current.pax.infants; i++) list.push(emptyFor("INF", i));
+    for (let i = 0; i < current.pax.adults; i++) list.push(emptyFor("ADT", i, sg));
+    for (let i = 0; i < current.pax.children; i++) list.push(emptyFor("CHD", i, sg));
+    for (let i = 0; i < current.pax.infants; i++) list.push(emptyFor("INF", i, sg));
     return list;
   }, [current]);
 
@@ -127,8 +133,15 @@ function TravelerInner() {
   );
   const passportFullDetail = Boolean(current.passportFullDetailRequiredAtBook);
   const NAME_BAD = /[.,/]/;
+  // Strict email: no whitespace, single @, a dot-separated domain with a 2+ char TLD.
+  // The previous loose check (/.+@.+\..+/) accepted spaces/malformed addresses that
+  // passed this page but were rejected by TBO later at Book/Ticket.
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-  // Available baggage options for LCC — first segment (index 0)
+  // Available baggage options for LCC — first segment (index 0).
+  // KNOWN GAP (intl multi-leg): paid baggage is only collected for segment 0.
+  // Free baggage for all segments is added server-side (ticket.ts applyMandatorySSR);
+  // per-segment *paid* baggage UI is a future enhancement for international multi-leg.
   const baggageOptions = isLCC ? (ssrData?.baggage?.[0] ?? []) : [];
   // Available meal options — first segment for LCC, full list for Non-LCC
   const mealDynamicOptions = isLCC ? (ssrData?.mealDynamic?.[0] ?? []) : [];
@@ -144,6 +157,14 @@ function TravelerInner() {
     setLocalTravelers((list) => list.map((t) => (t.id === id ? { ...t, ...patch } : t)));
 
   const airlineCode = (current.airlineCode ?? current.offer.segments[0]?.airlineCode ?? "").toUpperCase();
+  const isSG = airlineCode === "SG";
+
+  // Keep the current title if still valid for the pax type/gender, else fall back
+  // to the first valid option (prevents sending a Navitaire-invalid SpiceJet title).
+  const normTitle = (type: TravelerType, gender: Gender, currentTitle: Traveler["title"]): Traveler["title"] => {
+    const opts = titlesFor(type, gender, isSG);
+    return opts.includes(currentTitle) ? currentTitle : opts[0];
+  };
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -187,7 +208,27 @@ function TravelerInner() {
         e["lead.address"] = "Address required for the lead passenger on this airline";
       }
     });
-    if (!/.+@.+\..+/.test(email)) e.email = "Enter a valid email";
+
+    // No two passengers may share an identical full name — TBO rejects duplicates
+    // on a single booking. Flag every passenger in a duplicate group so the user
+    // can fix them here rather than at payment.
+    const byName = new Map<string, string[]>();
+    travelers.forEach((t) => {
+      const first = t.firstName.trim().toUpperCase();
+      const last = t.lastName.trim().toUpperCase();
+      if (!first || !last) return; // missing names already flagged as required
+      const key = `${first} ${last}`;
+      byName.set(key, [...(byName.get(key) ?? []), t.id]);
+    });
+    for (const ids of byName.values()) {
+      if (ids.length > 1) {
+        for (const id of ids) {
+          if (!e[`${id}.firstName`]) e[`${id}.firstName`] = "Each passenger must have a distinct name";
+        }
+      }
+    }
+
+    if (!EMAIL_RE.test(email.trim())) e.email = "Enter a valid email";
     if (phone.replace(/\D/g, "").length < 10) e.phone = "Enter a valid phone";
     // Guideline §14: when GST is mandatory, all 5 fields are required.
     if (current.isGSTMandatory) {
@@ -195,7 +236,7 @@ function TravelerInner() {
       if (!gst.gstNumber.trim()) e["gst.gstNumber"] = "GST number required";
       if (!gst.companyAddress.trim()) e["gst.companyAddress"] = "Company address required";
       if (!gst.companyContactNumber.trim()) e["gst.companyContactNumber"] = "Contact number required";
-      if (!/.+@.+\..+/.test(gst.companyEmail)) e["gst.companyEmail"] = "Enter a valid company email";
+      if (!EMAIL_RE.test(gst.companyEmail.trim())) e["gst.companyEmail"] = "Enter a valid company email";
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -206,9 +247,14 @@ function TravelerInner() {
       toast.push({ title: "Please fix the highlighted fields", tone: "warn" });
       return;
     }
-    setTravelers(travelers);
+    // Safety net: ensure every title is valid for its pax type/gender/airline.
+    const normalizedTravelers = travelers.map((t) => ({
+      ...t,
+      title: normTitle(t.type, t.gender, t.title),
+    }));
+    setTravelers(normalizedTravelers);
     setContact({
-      email, phone, countryCode: "+91",
+      email: email.trim(), phone: phone.trim(), countryCode: "+91",
       addressLine1, city, countryName, isoCountryCode,
     });
     if (current.isGSTMandatory) setGST(gst);
@@ -305,11 +351,11 @@ function TravelerInner() {
                         <div className="flex flex-col gap-1">
                           <label className="text-[13px] font-medium text-ink-soft">Title</label>
                           <select
-                            value={t.title}
+                            value={normTitle(t.type, t.gender, t.title)}
                             onChange={(e) => update(t.id, { title: e.target.value as Traveler["title"] })}
                             className="h-11 rounded-md border border-border bg-white px-3 text-[14px] font-medium text-ink outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                           >
-                            {(t.type === "ADT" ? TITLES_ADULT : TITLES_CHILD).map((tt) => (
+                            {titlesFor(t.type, t.gender, isSG).map((tt) => (
                               <option key={tt} value={tt}>{tt}</option>
                             ))}
                           </select>
@@ -342,14 +388,14 @@ function TravelerInner() {
                               name={`gender-${t.id}`}
                               label="Male"
                               checked={t.gender === "M"}
-                              onChange={() => update(t.id, { gender: "M" })}
+                              onChange={() => update(t.id, { gender: "M", title: normTitle(t.type, "M", t.title) })}
                             />
                             <Radio
                               id={`${t.id}-f`}
                               name={`gender-${t.id}`}
                               label="Female"
                               checked={t.gender === "F"}
-                              onChange={() => update(t.id, { gender: "F" })}
+                              onChange={() => update(t.id, { gender: "F", title: normTitle(t.type, "F", t.title) })}
                             />
                           </div>
                         </div>

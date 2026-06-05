@@ -5,9 +5,9 @@ import Checkbox from "@/components/ui/Checkbox";
 import Chip from "@/components/ui/Chip";
 import RangeSlider from "@/components/ui/Slider";
 import type { FlightOffer } from "@/lib/mock/flights";
-import type { FlightFilters } from "@/services/flights";
+import type { FlightFilters, TimeWindow } from "@/services/flights";
 import { airlineName } from "@/lib/mock/flights";
-import { formatINRShort } from "@/lib/format";
+import { formatINRShort, formatDuration } from "@/lib/format";
 
 type Props = {
   offers: FlightOffer[];
@@ -16,7 +16,7 @@ type Props = {
   priceRange: [number, number];
 };
 
-const WINDOWS: Array<{ v: NonNullable<FlightFilters["departureWindows"]>[number]; label: string; time: string }> = [
+const WINDOWS: Array<{ v: TimeWindow; label: string; time: string }> = [
   { v: "early",     label: "Early",     time: "Before 6 AM" },
   { v: "morning",   label: "Morning",   time: "6 AM – 12 PM" },
   { v: "afternoon", label: "Afternoon", time: "12 PM – 6 PM" },
@@ -36,6 +36,12 @@ export default function FlightFiltersPanel({ offers, filters, onChange, priceRan
       .sort((a, b) => a.minPrice - b.minPrice);
   }, [offers]);
 
+  const durationRange = useMemo<[number, number]>(() => {
+    if (offers.length === 0) return [0, 0];
+    const durations = offers.map((o) => o.totalDurationMin);
+    return [Math.min(...durations), Math.max(...durations)];
+  }, [offers]);
+
   const toggleStop = (s: 0 | 1 | 2) => {
     const cur = new Set(filters.stops ?? []);
     if (cur.has(s)) cur.delete(s);
@@ -50,11 +56,14 @@ export default function FlightFiltersPanel({ offers, filters, onChange, priceRan
     onChange({ ...filters, airlines: Array.from(cur) });
   };
 
-  const toggleWindow = (w: NonNullable<FlightFilters["departureWindows"]>[number]) => {
-    const cur = new Set(filters.departureWindows ?? []);
+  const toggleWindow = (
+    key: "departureWindows" | "arrivalWindows",
+    w: TimeWindow,
+  ) => {
+    const cur = new Set(filters[key] ?? []);
     if (cur.has(w)) cur.delete(w);
     else cur.add(w);
-    onChange({ ...filters, departureWindows: Array.from(cur) });
+    onChange({ ...filters, [key]: Array.from(cur) });
   };
 
   return (
@@ -99,28 +108,31 @@ export default function FlightFiltersPanel({ offers, filters, onChange, priceRan
       </Section>
 
       <Section title="Departure time">
-        <div className="grid grid-cols-2 gap-2">
-          {WINDOWS.map((w) => {
-            const active = (filters.departureWindows ?? []).includes(w.v);
-            return (
-              <button
-                key={w.v}
-                type="button"
-                onClick={() => toggleWindow(w.v)}
-                className={
-                  "rounded-md border text-left px-3 py-2 transition-colors " +
-                  (active
-                    ? "border-brand-600 bg-brand-50 text-brand-700"
-                    : "border-border bg-white text-ink-soft hover:bg-surface-muted")
-                }
-              >
-                <div className="text-[12px] font-semibold">{w.label}</div>
-                <div className="text-[10px] text-ink-muted">{w.time}</div>
-              </button>
-            );
-          })}
-        </div>
+        <WindowGrid
+          selected={filters.departureWindows ?? []}
+          onToggle={(w) => toggleWindow("departureWindows", w)}
+        />
       </Section>
+
+      <Section title="Arrival time">
+        <WindowGrid
+          selected={filters.arrivalWindows ?? []}
+          onToggle={(w) => toggleWindow("arrivalWindows", w)}
+        />
+      </Section>
+
+      {durationRange[1] > durationRange[0] && (
+        <Section title="Trip duration">
+          <RangeSlider
+            min={durationRange[0]}
+            max={durationRange[1]}
+            step={15}
+            value={[durationRange[0], filters.maxDurationMin ?? durationRange[1]]}
+            onChange={([, v]) => onChange({ ...filters, maxDurationMin: v })}
+            formatLabel={(n) => formatDuration(n)}
+          />
+        </Section>
+      )}
 
       <Section title="Airlines">
         <div className="flex flex-col gap-2 max-h-[260px] overflow-y-auto scrollbar-thin">
@@ -147,6 +159,38 @@ export default function FlightFiltersPanel({ offers, filters, onChange, priceRan
         />
       </Section>
     </aside>
+  );
+}
+
+function WindowGrid({
+  selected,
+  onToggle,
+}: {
+  selected: TimeWindow[];
+  onToggle: (w: TimeWindow) => void;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {WINDOWS.map((w) => {
+        const active = selected.includes(w.v);
+        return (
+          <button
+            key={w.v}
+            type="button"
+            onClick={() => onToggle(w.v)}
+            className={
+              "rounded-md border text-left px-3 py-2 transition-colors " +
+              (active
+                ? "border-brand-600 bg-brand-50 text-brand-700"
+                : "border-border bg-white text-ink-soft hover:bg-surface-muted")
+            }
+          >
+            <div className="text-[12px] font-semibold">{w.label}</div>
+            <div className="text-[10px] text-ink-muted">{w.time}</div>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 

@@ -1,5 +1,5 @@
 import "server-only";
-import { withRetry, tboBase, tboApiUrl, TBO_BOOK_TIMEOUT_MS } from "../auth";
+import { withRetry, tboBase, tboApiUrl, TBO_BOOK_TIMEOUT_MS, AIR_BOOK_SVC } from "../auth";
 import { assertTboSuccess, TboFareExpiredError } from "../errors";
 import { getTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
@@ -47,6 +47,9 @@ export interface LccTicketInput {
 export interface NonLccTicketInput {
   isLCC: false;
   bookingId: number;
+  /** PNR from the preceding Book response — sent alongside BookingId to tie the
+   *  Ticket to its booking, matching sample case-01 (ticketNonLccRequest.txt). */
+  pnr?: string;
   /** Price change accepted by the user (re-submitting after Book/Ticket IsPriceChanged). */
   isPriceChangedAccepted?: boolean;
 }
@@ -67,14 +70,16 @@ export interface TicketResult {
 // ─── Shared response parser ───────────────────────────────────────────────────
 
 function parseTicketResponse(data: TboTicketResponse, fallbackBookingId: number): TicketResult {
-  const itinerary = data.Response?.FlightItinerary;
+  // TBO nests the result under Response.Response; fall back to the outer level.
+  const nested = data.Response?.Response;
+  const itinerary = nested?.FlightItinerary ?? data.Response?.FlightItinerary;
   const ticketNumbers = (itinerary?.Passenger ?? [])
     .map((p) => p.Ticket?.TicketNumber)
     .filter((t): t is string => Boolean(t));
 
   return {
-    bookingId: itinerary?.BookingId ?? fallbackBookingId,
-    pnr: itinerary?.PNR ?? "",
+    bookingId: itinerary?.BookingId ?? nested?.BookingId ?? fallbackBookingId,
+    pnr: itinerary?.PNR ?? nested?.PNR ?? "",
     ticketNumbers,
     bookingStatus: itinerary?.BookingStatus ?? 0,
     isPriceChanged: itinerary?.IsPriceChanged ?? false,
@@ -84,12 +89,18 @@ function parseTicketResponse(data: TboTicketResponse, fallbackBookingId: number)
 
 // ─── Non-LCC path ─────────────────────────────────────────────────────────────
 
-async function tboNonLccTicket(bookingId: number, isPriceChangedAccepted = false): Promise<TicketResult> {
+async function tboNonLccTicket(
+  bookingId: number,
+  isPriceChangedAccepted = false,
+  pnr?: string,
+): Promise<TicketResult> {
   return withRetry(async (token) => {
-    const url = tboApiUrl("BookingEngineService_Air/AirService.svc/rest/Ticket");
+    const url = tboApiUrl(`${AIR_BOOK_SVC}/Ticket`);
     const reqBody = {
       ...tboBase(token),
       BookingId: bookingId,
+      // PNR from Book ties the Ticket to its booking (sample case-01).
+      ...(pnr ? { PNR: pnr } : {}),
       // Pass through only when re-submitting after a confirmed price change.
       ...(isPriceChangedAccepted ? { IsPriceChangedAccepted: true } : {}),
     };
@@ -147,14 +158,17 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
   const isIntl = Boolean(origCc && destCc && origCc !== destCc);
   const airline = input.validation?.airlineCode?.toUpperCase();
   const includeFreeBaggage = isIntl || airline === I5;
+  // I5 domestic must also carry the free (Price 0) meal node from SSR (CLAUDE.md).
+  const includeFreeMeal = airline === I5 && !isIntl;
 
-  if (input.isMealMandatory || input.isSeatMandatory || includeFreeBaggage) {
+  if (input.isMealMandatory || input.isSeatMandatory || includeFreeBaggage || includeFreeMeal) {
     try {
       const ssr = await tboGetSSR(input.resultIndex, traceId);
       passengersIn = applyMandatorySSR(input.passengers, ssr, {
         isMealMandatory: input.isMealMandatory,
         isSeatMandatory: input.isSeatMandatory,
         includeFreeBaggage,
+        includeFreeMeal,
       });
     } catch (err) {
       // SSR is best-effort here; if it fails, proceed with user selections.
@@ -172,7 +186,7 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
       return mapped;
     });
 
-    const url = tboApiUrl("BookingEngineService_Air/AirService.svc/rest/Ticket");
+    const url = tboApiUrl(`${AIR_BOOK_SVC}/Ticket`);
     // PreferredCurrency and IsBaseCurrencyRequired are required for LCC Ticket
     // per the certified sample (OB Ticket.txt / IB Ticket.txt).
     const reqBody = {
@@ -215,6 +229,6 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
 // ─── Public dispatch ──────────────────────────────────────────────────────────
 
 export async function tboIssueTicket(input: TicketInput): Promise<TicketResult> {
-  if (!input.isLCC) return tboNonLccTicket(input.bookingId, input.isPriceChangedAccepted);
+  if (!input.isLCC) return tboNonLccTicket(input.bookingId, input.isPriceChangedAccepted, input.pnr);
   return tboLccTicket(input);
 }

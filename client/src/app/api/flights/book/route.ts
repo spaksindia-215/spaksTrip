@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tboBookFlight } from "@/lib/adapters/tbo/flight/book";
-import { TboFareExpiredError, TboBookingFailedError, TboValidationError } from "@/lib/adapters/tbo/errors";
+import { TboFareExpiredError, TboBookingFailedError, TboValidationError, isDuplicateBookingError } from "@/lib/adapters/tbo/errors";
+
+const DUPLICATE_MSG =
+  "This flight was already booked with these details recently. Please wait 24 hours or change the journey/passenger details.";
 import type { TboBookFlightInput } from "@/lib/adapters/tbo/flight/book";
 
 function err(message: string, status: number) {
@@ -33,7 +36,12 @@ export async function POST(request: NextRequest) {
         success: true,
         data: {
           ...obResult,
-          returnLeg: { bookingId: ibResult.bookingId, pnr: ibResult.pnr },
+          returnLeg: {
+            bookingId: ibResult.bookingId,
+            pnr: ibResult.pnr,
+            // Surface inbound price change so the client can prompt per leg.
+            isPriceChanged: ibResult.isPriceChanged,
+          },
         },
       });
     }
@@ -46,10 +54,13 @@ export async function POST(request: NextRequest) {
     if (e instanceof TboFareExpiredError) {
       return err("Fare has expired. Please search again.", 410);
     }
+    const rawMessage = e instanceof Error ? e.message : "Booking failed";
+    if (isDuplicateBookingError(rawMessage)) {
+      return err(DUPLICATE_MSG, 409);
+    }
     if (e instanceof TboBookingFailedError) {
       return err(e.message, 422);
     }
-    const message = e instanceof Error ? e.message : "Booking failed";
-    return err(message, 500);
+    return err(rawMessage, 500);
   }
 }

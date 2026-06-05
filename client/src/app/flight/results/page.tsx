@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
@@ -10,10 +10,14 @@ import FlightFiltersPanel from "@/components/flight/FlightFilters";
 import FlightSortBar from "@/components/flight/FlightSortBar";
 import FlightResultCard from "@/components/flight/FlightResultCard";
 import FlightResultsSkeleton from "@/components/flight/FlightResultsSkeleton";
+import ActiveFilterChips from "@/components/flight/ActiveFilterChips";
 import Button from "@/components/ui/Button";
 import Drawer from "@/components/ui/Drawer";
+import Pagination from "@/components/ui/Pagination";
 import { useFlightSearch } from "@/hooks/useFlightSearch";
-import { applyFilters, sortOffers, type FlightFilters, type SortBy } from "@/services/flights";
+import { applyFilters, sortOffers, countActiveFilters, type FlightFilters, type SortBy } from "@/services/flights";
+
+const PER_PAGE = 10;
 import type { CabinClass } from "@/lib/mock/flights";
 import type { FareCategory } from "@/state/flightSearchStore";
 
@@ -67,10 +71,35 @@ function FlightResultsInner() {
   const [filters, setFilters] = useState<FlightFilters>({});
   const [sort, setSort] = useState<SortBy>("price");
   const [mobileFilters, setMobileFilters] = useState(false);
+  const [page, setPage] = useState(1);
+  const resultsTopRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => {
     return sortOffers(applyFilters(offers, filters), sort);
   }, [offers, filters, sort]);
+
+  // Pagination. The page is clamped during render so a shrinking result set
+  // (new search / added filter) never leaves us on an out-of-range page —
+  // avoids a setState-in-effect.
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+  const safePage = Math.min(page, totalPages);
+  const pageStart = (safePage - 1) * PER_PAGE;
+  const paged = filtered.slice(pageStart, pageStart + PER_PAGE);
+  const activeFilterCount = countActiveFilters(filters);
+
+  // Changing filters or sort resets to the first page (done in handlers, not an effect).
+  const changeFilters = (f: FlightFilters) => {
+    setFilters(f);
+    setPage(1);
+  };
+  const changeSort = (s: SortBy) => {
+    setSort(s);
+    setPage(1);
+  };
+  const goToPage = (p: number) => {
+    setPage(p);
+    resultsTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const handleDateChange = (date: string) => {
     const next = new URLSearchParams(sp.toString());
@@ -108,12 +137,13 @@ function FlightResultsInner() {
               <FlightFiltersPanel
                 offers={offers}
                 filters={filters}
-                onChange={setFilters}
+                onChange={changeFilters}
                 priceRange={priceRange}
               />
             </aside>
 
             <section>
+              <div ref={resultsTopRef} className="scroll-mt-40" />
               <div className="flex items-center gap-3 mb-4">
                 <Button
                   variant="outline"
@@ -134,33 +164,54 @@ function FlightResultsInner() {
                     </svg>
                   }
                 >
-                  Filters
+                  Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
                 </Button>
                 <div className="flex-1">
                   <FlightSortBar
                     value={sort}
-                    onChange={setSort}
+                    onChange={changeSort}
                     offers={offers}
                     total={filtered.length}
                   />
                 </div>
               </div>
 
+              {status !== "loading" && (
+                <ActiveFilterChips filters={filters} onChange={changeFilters} />
+              )}
+
               {status === "loading" ? (
                 <FlightResultsSkeleton />
               ) : filtered.length === 0 ? (
-                <EmptyResults onClearFilters={() => setFilters({})} />
+                <EmptyResults onClearFilters={() => changeFilters({})} />
               ) : (
-                <div className="flex flex-col gap-3">
-                  {filtered.map((o) => (
-                    <FlightResultCard
-                      key={o.id}
-                      offer={o}
-                      searchParams={searchParamsString}
-                      fareCategory={fareCategory}
-                    />
-                  ))}
-                </div>
+                <>
+                  <div className="flex items-center justify-between mb-3 text-[12px] text-ink-muted">
+                    <span>
+                      Showing <span className="font-semibold text-ink">{pageStart + 1}–{pageStart + paged.length}</span> of{" "}
+                      <span className="font-semibold text-ink">{filtered.length}</span> flights
+                    </span>
+                    {totalPages > 1 && (
+                      <span>Page {safePage} of {totalPages}</span>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    {paged.map((o) => (
+                      <FlightResultCard
+                        key={o.id}
+                        offer={o}
+                        searchParams={searchParamsString}
+                        fareCategory={fareCategory}
+                      />
+                    ))}
+                  </div>
+                  <Pagination
+                    page={safePage}
+                    totalPages={totalPages}
+                    onChange={goToPage}
+                    className="mt-6"
+                  />
+                </>
               )}
             </section>
           </div>
@@ -184,7 +235,7 @@ function FlightResultsInner() {
           <FlightFiltersPanel
             offers={offers}
             filters={filters}
-            onChange={setFilters}
+            onChange={changeFilters}
             priceRange={priceRange}
           />
         </div>

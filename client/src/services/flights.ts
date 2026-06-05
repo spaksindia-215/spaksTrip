@@ -14,13 +14,31 @@ import type { FlightBooking } from "@/state/bookingStore";
 
 export type SortBy = "price" | "duration" | "departure" | "arrival";
 
+export type TimeWindow = "early" | "morning" | "afternoon" | "evening" | "night";
+
 export type FlightFilters = {
   stops?: (0 | 1 | 2)[];
   airlines?: string[];
-  departureWindows?: Array<"early" | "morning" | "afternoon" | "evening" | "night">;
+  departureWindows?: TimeWindow[];
+  arrivalWindows?: TimeWindow[];
   maxPrice?: number;
+  /** Max total trip duration in minutes. */
+  maxDurationMin?: number;
   refundableOnly?: boolean;
 };
+
+/** Number of distinct active filter groups — used for the "Filters (n)" badge. */
+export function countActiveFilters(f: FlightFilters): number {
+  let n = 0;
+  if (f.stops?.length) n += 1;
+  if (f.airlines?.length) n += 1;
+  if (f.departureWindows?.length) n += 1;
+  if (f.arrivalWindows?.length) n += 1;
+  if (typeof f.maxPrice === "number") n += 1;
+  if (typeof f.maxDurationMin === "number") n += 1;
+  if (f.refundableOnly) n += 1;
+  return n;
+}
 
 function inWindow(iso: string, w: "early" | "morning" | "afternoon" | "evening" | "night") {
   const h = new Date(iso).getUTCHours();
@@ -36,9 +54,15 @@ export function applyFilters(offers: FlightOffer[], f: FlightFilters): FlightOff
     if (f.stops?.length && !f.stops.includes(Math.min(o.stops, 2) as 0 | 1 | 2)) return false;
     if (f.airlines?.length && !f.airlines.includes(o.segments[0].airlineCode)) return false;
     if (f.maxPrice && o.basePrice > f.maxPrice) return false;
+    if (typeof f.maxDurationMin === "number" && o.totalDurationMin > f.maxDurationMin) return false;
     if (f.refundableOnly && !o.refundable) return false;
     if (f.departureWindows?.length) {
       const ok = f.departureWindows.some((w) => inWindow(o.segments[0].depart, w));
+      if (!ok) return false;
+    }
+    if (f.arrivalWindows?.length) {
+      const arrive = o.segments[o.segments.length - 1].arrive;
+      const ok = f.arrivalWindows.some((w) => inWindow(arrive, w));
       if (!ok) return false;
     }
     return true;
@@ -201,6 +225,12 @@ function buildPassengers(booking: FlightBooking): unknown[] {
     if (booking.isGSTMandatory && booking.gst) pax.gst = booking.gst;
 
     if (booking.isLCC && t.type !== "INF") {
+      // KNOWN GAP (intl multi-leg): the traveller form only collects a *paid* baggage
+      // pick for the first segment, so only one segment's selection is sent here.
+      // Free (Price 0) baggage for every segment is still added server-side in
+      // ticket.ts → applyMandatorySSR (covers the compliance requirement). Revisit
+      // to let users buy extra baggage per segment when we can test a real
+      // international multi-leg booking. See validation.ts applyMandatorySSR.
       pax.baggageSSR = ssr?.baggage
         ? [{ code: ssr.baggage.code, weight: ssr.baggage.weight, price: ssr.baggage.price,
              origin: ssr.baggage.origin, destination: ssr.baggage.destination,
@@ -222,11 +252,37 @@ function buildPassengers(booking: FlightBooking): unknown[] {
 }
 
 /** Called when TBO reports a price/time change at Book or Ticket. Return true to
- *  accept the new fare and continue, false to abort. (Prompt-then-accept flow.) */
+ *  accept the new fare and continue, false to abort. (Prompt-then-accept flow.)
+ *  `leg` distinguishes the outbound vs inbound PNR on a domestic-return booking so
+ *  the customer is prompted for every leg whose price changed. */
 export type PriceChangeHandler = (info: {
   stage: "book" | "ticket";
+  leg?: "outbound" | "inbound";
   newFare?: number;
 }) => Promise<boolean> | boolean;
+
+/** Which legs reported a price change (per-PNR for domestic return). */
+function changedLegs(d: {
+  isPriceChanged?: boolean;
+  returnLeg?: { isPriceChanged?: boolean };
+}): Array<"outbound" | "inbound"> {
+  const legs: Array<"outbound" | "inbound"> = [];
+  if (d.isPriceChanged) legs.push("outbound");
+  if (d.returnLeg?.isPriceChanged) legs.push("inbound");
+  return legs;
+}
+
+/** Prompts the user once per changed leg; throws if any leg is declined. */
+async function confirmPriceChange(
+  legs: Array<"outbound" | "inbound">,
+  stage: "book" | "ticket",
+  onPriceChange?: PriceChangeHandler,
+): Promise<void> {
+  for (const leg of legs) {
+    const ok = await (onPriceChange?.({ stage, leg }) ?? false);
+    if (!ok) throw new Error(`Price changed for the ${leg} flight and was not accepted. Booking was not completed.`);
+  }
+}
 
 function buildValidationContext(booking: FlightBooking) {
   const lastSeg = booking.offer.segments[booking.offer.segments.length - 1];
@@ -269,10 +325,10 @@ export async function submitBooking(
     };
     let data = await postTicket(lccBody);
 
-    // Ticket response price change → prompt, then re-call with accepted flag.
-    if (data.isPriceChanged) {
-      const accept = await (onPriceChange?.({ stage: "ticket" }) ?? false);
-      if (!accept) throw new Error("Price changed. Booking was not completed.");
+    // Ticket response price change → prompt per changed leg, then re-call with accepted flag.
+    const lccChanged = changedLegs(data);
+    if (lccChanged.length) {
+      await confirmPriceChange(lccChanged, "ticket", onPriceChange);
       data = await postTicket({ ...lccBody, isPriceChangedAccepted: true });
     }
     return toResult(data);
@@ -287,28 +343,33 @@ export async function submitBooking(
   const bookJson = await bookRes.json().catch(() => null);
   if (!bookRes.ok || !bookJson?.success) throw new Error(bookJson?.error ?? "Booking failed");
 
-  const { bookingId, isPriceChanged: bookPriceChanged, returnLeg: bookReturnLeg } = bookJson.data as {
-    bookingId: number; isPriceChanged?: boolean; returnLeg?: { bookingId: number; pnr: string };
+  const { bookingId, pnr: bookPnr, isPriceChanged: bookPriceChanged, returnLeg: bookReturnLeg } = bookJson.data as {
+    bookingId: number;
+    pnr?: string;
+    isPriceChanged?: boolean;
+    returnLeg?: { bookingId: number; pnr: string; isPriceChanged?: boolean };
   };
 
-  // Book response price change → accept before ticketing (doc: ispricechangedaccepted=true on Ticket).
-  let acceptPriceChange = false;
-  if (bookPriceChanged) {
-    acceptPriceChange = await (onPriceChange?.({ stage: "book" }) ?? false);
-    if (!acceptPriceChange) throw new Error("Price changed after booking. Ticket was not issued.");
-  }
+  // Book response price change → prompt for every changed leg before ticketing
+  // (doc: pass ispricechangedaccepted=true on Ticket). Per-PNR for domestic return.
+  const bookChanged = changedLegs({ isPriceChanged: bookPriceChanged, returnLeg: bookReturnLeg });
+  await confirmPriceChange(bookChanged, "book", onPriceChange);
+  const acceptPriceChange = bookChanged.length > 0;
 
   const ticketBody: Record<string, unknown> = {
     isLCC: false, bookingId, isPriceChangedAccepted: acceptPriceChange,
+    // PNR from Book → Ticket (sample case-01 sends BookingId + PNR).
+    ...(bookPnr ? { pnr: bookPnr } : {}),
   };
   if (bookReturnLeg?.bookingId) ticketBody.returnBookingId = bookReturnLeg.bookingId;
+  if (bookReturnLeg?.pnr) ticketBody.returnPnr = bookReturnLeg.pnr;
 
   let ticketData = await postTicket(ticketBody);
 
-  // Ticket response price change → prompt, then re-call with accepted flag.
-  if (ticketData.isPriceChanged) {
-    const accept = await (onPriceChange?.({ stage: "ticket" }) ?? false);
-    if (!accept) throw new Error("Price changed. Ticket was not issued.");
+  // Ticket response price change → prompt per changed leg, then re-call with accepted flag.
+  const ticketChanged = changedLegs(ticketData);
+  if (ticketChanged.length) {
+    await confirmPriceChange(ticketChanged, "ticket", onPriceChange);
     ticketData = await postTicket({ ...ticketBody, isPriceChangedAccepted: true });
   }
 
@@ -327,7 +388,7 @@ type TicketData = {
   ticketNumbers?: string[];
   bookingStatus?: number;
   isPriceChanged?: boolean;
-  returnLeg?: { bookingId: number; pnr: string };
+  returnLeg?: { bookingId: number; pnr: string; isPriceChanged?: boolean };
 };
 
 async function postTicket(body: Record<string, unknown>): Promise<TicketData> {

@@ -1,5 +1,5 @@
 import "server-only";
-import { withRetry, tboBase, tboApiUrl, TBO_DEFAULT_TIMEOUT_MS } from "../auth";
+import { withRetry, tboBase, tboApiUrl, TBO_DEFAULT_TIMEOUT_MS, AIR_SEARCH_SVC } from "../auth";
 import { assertTboSuccess } from "../errors";
 import { storeTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
@@ -208,8 +208,8 @@ export async function tboSearchFlights(
       Sources: null,
     };
 
-    // Per TBO docs: /BookingEngineService_Air/AirService.svc/rest/Search
-    const url = tboApiUrl("BookingEngineService_Air/AirService.svc/rest/Search");
+    // Per TBO docs: Search uses the Search service (BookingEngineService_Air).
+    const url = tboApiUrl(`${AIR_SEARCH_SVC}/Search`);
     logRequest("Flight Search", url, { ...body, TokenId: "***" });
 
     let res: Response;

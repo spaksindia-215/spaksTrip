@@ -61,6 +61,20 @@ export class TboValidationError extends TboError {
 }
 
 /**
+ * Duplicate Booking Validation (CLAUDE.md): TBO blocks an identical booking within
+ * 24h (Non-LCC) with "Booking is already done for the same criteria for PNR ...".
+ * We can't reliably pre-check client-side, so we surface a clear message instead.
+ */
+export function isDuplicateBookingError(message: string | undefined | null): boolean {
+  const m = (message ?? "").toLowerCase();
+  return (
+    (m.includes("already") && (m.includes("book") || m.includes("done"))) ||
+    m.includes("duplicate booking") ||
+    m.includes("same criteria")
+  );
+}
+
+/**
  * Inspects the TBO error envelope and throws the appropriate typed error.
  * Returns void when the response indicates success (ErrorCode === 0).
  */

@@ -146,15 +146,17 @@ export function validateBookingPassengers(
       errs.push(`${who}: this airline does not allow spaces in the last name.`);
     }
 
-    // Title must be valid for the pax type / gender (Navitaire 4X).
-    if (p.title) {
+    // Title must be valid for the pax type / gender — this matrix is specific to
+    // Navitaire 4X (SpiceJet) per CLAUDE.md, so only enforce it for SG. Other
+    // sources (GDS/Amadeus) accept the broader Mr/Mrs/Ms/Mstr/Miss set.
+    if (code === SPICEJET && p.title) {
       const t = p.title.trim().toUpperCase();
       const bucket =
         p.type === "INF" ? "INFANT" :
         p.type === "CHD" ? "CHILD" :
         p.gender === "F" ? "FEMALE" : "MALE";
       if (!VALID_TITLES[bucket].has(t)) {
-        errs.push(`${who}: title "${p.title}" is not valid for this passenger type.`);
+        errs.push(`${who}: title "${p.title}" is not valid for this passenger type on SpiceJet.`);
       }
     }
 
@@ -211,6 +213,17 @@ export function validateBookingPassengers(
     }
   });
 
+  // No two passengers may share an identical full name — TBO rejects duplicate
+  // names on a single booking.
+  const nameCounts = new Map<string, number>();
+  for (const p of passengers) {
+    const key = `${(p.firstName ?? "").trim().toUpperCase()} ${(p.lastName ?? "").trim().toUpperCase()}`.trim();
+    if (key) nameCounts.set(key, (nameCounts.get(key) ?? 0) + 1);
+  }
+  if ([...nameCounts.values()].some((n) => n > 1)) {
+    errs.push("Each passenger must have a distinct name — two passengers cannot have exactly the same name.");
+  }
+
   // INF must travel with an ADT.
   const adults = passengers.filter((p) => p.type === "ADT").length;
   const infants = passengers.filter((p) => p.type === "INF").length;
@@ -234,6 +247,8 @@ export interface MandatorySSRContext {
   isSeatMandatory?: boolean;
   /** Include free (Price 0) baggage from SSR — required for international LCC & I5 domestic. */
   includeFreeBaggage?: boolean;
+  /** Include free (Price 0) meal from SSR — required for I5 domestic (CLAUDE.md). */
+  includeFreeMeal?: boolean;
 }
 
 function isFree(price: number): boolean {
@@ -251,7 +266,7 @@ export function applyMandatorySSR(
   ssr: SSRResult,
   ctx: MandatorySSRContext,
 ): BookingPassenger[] {
-  const wantMeal = Boolean(ctx.isMealMandatory);
+  const wantMeal = Boolean(ctx.isMealMandatory) || Boolean(ctx.includeFreeMeal);
   const wantSeat = Boolean(ctx.isSeatMandatory);
   const wantBag = Boolean(ctx.includeFreeBaggage);
   if (!wantMeal && !wantSeat && !wantBag) return passengers;
