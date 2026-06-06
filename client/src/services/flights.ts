@@ -14,13 +14,31 @@ import type { FlightBooking } from "@/state/bookingStore";
 
 export type SortBy = "price" | "duration" | "departure" | "arrival";
 
+export type TimeWindow = "early" | "morning" | "afternoon" | "evening" | "night";
+
 export type FlightFilters = {
   stops?: (0 | 1 | 2)[];
   airlines?: string[];
-  departureWindows?: Array<"early" | "morning" | "afternoon" | "evening" | "night">;
+  departureWindows?: TimeWindow[];
+  arrivalWindows?: TimeWindow[];
   maxPrice?: number;
+  /** Max total trip duration in minutes. */
+  maxDurationMin?: number;
   refundableOnly?: boolean;
 };
+
+/** Number of distinct active filter groups — used for the "Filters (n)" badge. */
+export function countActiveFilters(f: FlightFilters): number {
+  let n = 0;
+  if (f.stops?.length) n += 1;
+  if (f.airlines?.length) n += 1;
+  if (f.departureWindows?.length) n += 1;
+  if (f.arrivalWindows?.length) n += 1;
+  if (typeof f.maxPrice === "number") n += 1;
+  if (typeof f.maxDurationMin === "number") n += 1;
+  if (f.refundableOnly) n += 1;
+  return n;
+}
 
 function inWindow(iso: string, w: "early" | "morning" | "afternoon" | "evening" | "night") {
   const h = new Date(iso).getUTCHours();
@@ -36,9 +54,15 @@ export function applyFilters(offers: FlightOffer[], f: FlightFilters): FlightOff
     if (f.stops?.length && !f.stops.includes(Math.min(o.stops, 2) as 0 | 1 | 2)) return false;
     if (f.airlines?.length && !f.airlines.includes(o.segments[0].airlineCode)) return false;
     if (f.maxPrice && o.basePrice > f.maxPrice) return false;
+    if (typeof f.maxDurationMin === "number" && o.totalDurationMin > f.maxDurationMin) return false;
     if (f.refundableOnly && !o.refundable) return false;
     if (f.departureWindows?.length) {
       const ok = f.departureWindows.some((w) => inWindow(o.segments[0].depart, w));
+      if (!ok) return false;
+    }
+    if (f.arrivalWindows?.length) {
+      const arrive = o.segments[o.segments.length - 1].arrive;
+      const ok = f.arrivalWindows.some((w) => inWindow(arrive, w));
       if (!ok) return false;
     }
     return true;
@@ -102,9 +126,22 @@ export type FareQuoteResult = {
   /** Guideline §14: when true, GST details must be collected from the lead passenger. */
   isGSTMandatory: boolean;
   isPriceChanged: boolean;
+  isTimeChanged: boolean;
   totalFare: number;
   /** Per-pax-type fare data — must be passed in the Book/Ticket fare nodes. */
   fareBreakdown: TboFareBreakdown[];
+  // PAN & Passport / Special-fare flags + airline/route context.
+  isPanRequiredAtBook: boolean;
+  isPanRequiredAtTicket: boolean;
+  isPassportRequiredAtBook: boolean;
+  isPassportRequiredAtTicket: boolean;
+  isPassportFullDetailRequiredAtBook: boolean;
+  isMealMandatory: boolean;
+  isSeatMandatory: boolean;
+  flightDetailChangeInfo: string | null;
+  airlineCode: string;
+  origin: string;
+  destination: string;
   updatedOffer?: FlightOffer;
 };
 
@@ -154,8 +191,9 @@ export type BookingResult = {
 // Builds the passengers payload for Book/Ticket from the persisted booking state.
 // Does not import from server-only book.ts — shapes the same JSON the route expects.
 function buildPassengers(booking: FlightBooking): unknown[] {
-  return booking.travelers.map((t) => {
+  return booking.travelers.map((t, idx) => {
     const ssr = booking.ssrSelections.find((s) => s.travelerId === t.id);
+    const isLead = idx === 0;
     const pax: Record<string, unknown> = {
       type: t.type,
       title: t.title,
@@ -163,14 +201,36 @@ function buildPassengers(booking: FlightBooking): unknown[] {
       lastName: t.lastName,
       gender: t.gender,
       dob: t.dob ?? "2000-01-01",
-      addressLine1: "N/A",
-      city: "N/A",
+      // LCC lead pax needs a real address; others fall back to a placeholder.
+      addressLine1: isLead ? (booking.contact.addressLine1 || "N/A") : "N/A",
+      city: isLead ? (booking.contact.city || "N/A") : "N/A",
+      countryCode: isLead ? (booking.contact.isoCountryCode || "IN") : "IN",
+      countryName: isLead ? (booking.contact.countryName || "India") : "India",
       nationality: t.nationality ?? "IN",
     };
+    if (isLead) {
+      pax.email = booking.contact.email;
+      pax.phone = booking.contact.phone;
+    }
     if (t.passport) pax.passport = t.passport;
+    if (t.passportExpiry) pax.passportExpiry = t.passportExpiry;
+    if (t.passportIssueDate) pax.passportIssueDate = t.passportIssueDate;
+    if (t.passportIssueCountry) pax.passportIssueCountryCode = t.passportIssueCountry;
+    // PAN: Adult passes own PAN; Child/Infant pass guardian PAN + name.
+    if (t.type === "ADT") {
+      if (t.pan) pax.pan = t.pan;
+    } else if (t.guardian && (t.guardian.firstName || t.guardian.pan)) {
+      pax.guardian = t.guardian;
+    }
     if (booking.isGSTMandatory && booking.gst) pax.gst = booking.gst;
 
     if (booking.isLCC && t.type !== "INF") {
+      // KNOWN GAP (intl multi-leg): the traveller form only collects a *paid* baggage
+      // pick for the first segment, so only one segment's selection is sent here.
+      // Free (Price 0) baggage for every segment is still added server-side in
+      // ticket.ts → applyMandatorySSR (covers the compliance requirement). Revisit
+      // to let users buy extra baggage per segment when we can test a real
+      // international multi-leg booking. See validation.ts applyMandatorySSR.
       pax.baggageSSR = ssr?.baggage
         ? [{ code: ssr.baggage.code, weight: ssr.baggage.weight, price: ssr.baggage.price,
              origin: ssr.baggage.origin, destination: ssr.baggage.destination,
@@ -191,8 +251,60 @@ function buildPassengers(booking: FlightBooking): unknown[] {
   });
 }
 
-export async function submitBooking(booking: FlightBooking): Promise<BookingResult> {
+/** Called when TBO reports a price/time change at Book or Ticket. Return true to
+ *  accept the new fare and continue, false to abort. (Prompt-then-accept flow.)
+ *  `leg` distinguishes the outbound vs inbound PNR on a domestic-return booking so
+ *  the customer is prompted for every leg whose price changed. */
+export type PriceChangeHandler = (info: {
+  stage: "book" | "ticket";
+  leg?: "outbound" | "inbound";
+  newFare?: number;
+}) => Promise<boolean> | boolean;
+
+/** Which legs reported a price change (per-PNR for domestic return). */
+function changedLegs(d: {
+  isPriceChanged?: boolean;
+  returnLeg?: { isPriceChanged?: boolean };
+}): Array<"outbound" | "inbound"> {
+  const legs: Array<"outbound" | "inbound"> = [];
+  if (d.isPriceChanged) legs.push("outbound");
+  if (d.returnLeg?.isPriceChanged) legs.push("inbound");
+  return legs;
+}
+
+/** Prompts the user once per changed leg; throws if any leg is declined. */
+async function confirmPriceChange(
+  legs: Array<"outbound" | "inbound">,
+  stage: "book" | "ticket",
+  onPriceChange?: PriceChangeHandler,
+): Promise<void> {
+  for (const leg of legs) {
+    const ok = await (onPriceChange?.({ stage, leg }) ?? false);
+    if (!ok) throw new Error(`Price changed for the ${leg} flight and was not accepted. Booking was not completed.`);
+  }
+}
+
+function buildValidationContext(booking: FlightBooking) {
+  const lastSeg = booking.offer.segments[booking.offer.segments.length - 1];
+  return {
+    isLCC: booking.isLCC,
+    airlineCode: booking.airlineCode ?? booking.offer.segments[0]?.airlineCode ?? "",
+    origin: booking.originCode ?? booking.offer.segments[0]?.from ?? "",
+    destination: booking.destinationCode ?? lastSeg?.to ?? "",
+    isPanRequiredAtBook: booking.panRequiredAtBook ?? false,
+    isPanRequiredAtTicket: booking.panRequiredAtTicket ?? false,
+    isPassportRequiredAtBook: booking.passportRequiredAtBook ?? false,
+    isPassportRequiredAtTicket: booking.passportRequiredAtTicket ?? false,
+    isPassportFullDetailRequiredAtBook: booking.passportFullDetailRequiredAtBook ?? false,
+  };
+}
+
+export async function submitBooking(
+  booking: FlightBooking,
+  onPriceChange?: PriceChangeHandler,
+): Promise<BookingResult> {
   const passengers = buildPassengers(booking);
+  const validation = buildValidationContext(booking);
   const base = {
     resultIndex: booking.offer.id,
     traceId: booking.fareQuoteTraceId,
@@ -200,26 +312,29 @@ export async function submitBooking(booking: FlightBooking): Promise<BookingResu
     passengers,
     contactEmail: booking.contact.email,
     contactPhone: booking.contact.phone,
+    validation,
   };
 
+  // ── LCC: Ticket directly ────────────────────────────────────────────────────
   if (booking.isLCC) {
-    const res = await fetch("/api/flights/ticket", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isLCC: true, ...base }),
-    });
-    const json = await res.json().catch(() => null);
-    if (!res.ok || !json?.success) throw new Error(json?.error ?? "Ticket issuance failed");
-    return {
-      pnr: json.data.pnr,
-      bookingId: json.data.bookingId,
-      returnPnr: json.data.returnLeg?.pnr,
-      returnBookingId: json.data.returnLeg?.bookingId,
-      ticketNumbers: json.data.ticketNumbers,
+    const lccBody = {
+      isLCC: true,
+      ...base,
+      isMealMandatory: booking.mealMandatory ?? false,
+      isSeatMandatory: booking.seatMandatory ?? false,
     };
+    let data = await postTicket(lccBody);
+
+    // Ticket response price change → prompt per changed leg, then re-call with accepted flag.
+    const lccChanged = changedLegs(data);
+    if (lccChanged.length) {
+      await confirmPriceChange(lccChanged, "ticket", onPriceChange);
+      data = await postTicket({ ...lccBody, isPriceChangedAccepted: true });
+    }
+    return toResult(data);
   }
 
-  // Non-LCC: Book → get BookingId → Ticket
+  // ── Non-LCC: Book → (prompt on price change) → Ticket ───────────────────────
   const bookRes = await fetch("/api/flights/book", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -228,26 +343,72 @@ export async function submitBooking(booking: FlightBooking): Promise<BookingResu
   const bookJson = await bookRes.json().catch(() => null);
   if (!bookRes.ok || !bookJson?.success) throw new Error(bookJson?.error ?? "Booking failed");
 
-  const { bookingId, returnLeg: bookReturnLeg } = bookJson.data as {
-    bookingId: number; returnLeg?: { bookingId: number; pnr: string };
+  const { bookingId, pnr: bookPnr, isPriceChanged: bookPriceChanged, returnLeg: bookReturnLeg } = bookJson.data as {
+    bookingId: number;
+    pnr?: string;
+    isPriceChanged?: boolean;
+    returnLeg?: { bookingId: number; pnr: string; isPriceChanged?: boolean };
   };
-  const ticketBody: Record<string, unknown> = { isLCC: false, bookingId };
-  if (bookReturnLeg?.bookingId) ticketBody.returnBookingId = bookReturnLeg.bookingId;
 
-  const ticketRes = await fetch("/api/flights/ticket", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(ticketBody),
-  });
-  const ticketJson = await ticketRes.json().catch(() => null);
-  if (!ticketRes.ok || !ticketJson?.success) throw new Error(ticketJson?.error ?? "Ticket issuance failed");
+  // Book response price change → prompt for every changed leg before ticketing
+  // (doc: pass ispricechangedaccepted=true on Ticket). Per-PNR for domestic return.
+  const bookChanged = changedLegs({ isPriceChanged: bookPriceChanged, returnLeg: bookReturnLeg });
+  await confirmPriceChange(bookChanged, "book", onPriceChange);
+  const acceptPriceChange = bookChanged.length > 0;
+
+  const ticketBody: Record<string, unknown> = {
+    isLCC: false, bookingId, isPriceChangedAccepted: acceptPriceChange,
+    // PNR from Book → Ticket (sample case-01 sends BookingId + PNR).
+    ...(bookPnr ? { pnr: bookPnr } : {}),
+  };
+  if (bookReturnLeg?.bookingId) ticketBody.returnBookingId = bookReturnLeg.bookingId;
+  if (bookReturnLeg?.pnr) ticketBody.returnPnr = bookReturnLeg.pnr;
+
+  let ticketData = await postTicket(ticketBody);
+
+  // Ticket response price change → prompt per changed leg, then re-call with accepted flag.
+  const ticketChanged = changedLegs(ticketData);
+  if (ticketChanged.length) {
+    await confirmPriceChange(ticketChanged, "ticket", onPriceChange);
+    ticketData = await postTicket({ ...ticketBody, isPriceChangedAccepted: true });
+  }
 
   return {
-    pnr: ticketJson.data.pnr,
+    pnr: ticketData.pnr,
     bookingId,
-    returnPnr: ticketJson.data.returnLeg?.pnr ?? bookReturnLeg?.pnr,
+    returnPnr: ticketData.returnLeg?.pnr ?? bookReturnLeg?.pnr,
     returnBookingId: bookReturnLeg?.bookingId,
-    ticketNumbers: ticketJson.data.ticketNumbers,
+    ticketNumbers: ticketData.ticketNumbers,
+  };
+}
+
+type TicketData = {
+  pnr: string;
+  bookingId: number;
+  ticketNumbers?: string[];
+  bookingStatus?: number;
+  isPriceChanged?: boolean;
+  returnLeg?: { bookingId: number; pnr: string; isPriceChanged?: boolean };
+};
+
+async function postTicket(body: Record<string, unknown>): Promise<TicketData> {
+  const res = await fetch("/api/flights/ticket", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const json = await res.json().catch(() => null);
+  if (!res.ok || !json?.success) throw new Error(json?.error ?? "Ticket issuance failed");
+  return json.data as TicketData;
+}
+
+function toResult(data: TicketData): BookingResult {
+  return {
+    pnr: data.pnr,
+    bookingId: data.bookingId,
+    returnPnr: data.returnLeg?.pnr,
+    returnBookingId: data.returnLeg?.bookingId,
+    ticketNumbers: data.ticketNumbers,
   };
 }
 

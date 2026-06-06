@@ -50,6 +50,30 @@ export class TboNoResultsError extends TboError {
   }
 }
 
+// A certification/business validation failed before the request was sent to TBO
+// (e.g. missing PAN/guardian, passport required, invalid name). Surfaced to the
+// user as a 422 so they can correct the input.
+export class TboValidationError extends TboError {
+  constructor(detail: string) {
+    super(10006, detail);
+    this.name = "TboValidationError";
+  }
+}
+
+/**
+ * Duplicate Booking Validation (CLAUDE.md): TBO blocks an identical booking within
+ * 24h (Non-LCC) with "Booking is already done for the same criteria for PNR ...".
+ * We can't reliably pre-check client-side, so we surface a clear message instead.
+ */
+export function isDuplicateBookingError(message: string | undefined | null): boolean {
+  const m = (message ?? "").toLowerCase();
+  return (
+    (m.includes("already") && (m.includes("book") || m.includes("done"))) ||
+    m.includes("duplicate booking") ||
+    m.includes("same criteria")
+  );
+}
+
 /**
  * Inspects the TBO error envelope and throws the appropriate typed error.
  * Returns void when the response indicates success (ErrorCode === 0).
@@ -59,19 +83,29 @@ export function assertTboSuccess(error: TboErrorShape | undefined | null): void 
 
   const { ErrorCode, ErrorMessage } = error;
   const msg = ErrorMessage ?? "";
+  const lower = msg.toLowerCase();
 
+  // Token ID Validation (CLAUDE.md): "Always check ErrorCode: 6 for Invalid Token
+  // rather than checking the error message." A fresh token must be regenerated —
+  // withRetry() clears the cache and re-authenticates on TboInvalidSessionError.
   if (
-    msg.toLowerCase().includes("invalid session") ||
-    msg.toLowerCase().includes("session expired") ||
+    ErrorCode === 6 ||
+    lower.includes("invalid session") ||
+    lower.includes("session expired") ||
+    lower.includes("invalid token") ||
     ErrorCode === 10001
   ) {
     throw new TboInvalidSessionError();
   }
 
+  // Trace ID Validation: TraceId expires after booking or after 15 minutes,
+  // surfacing as "Your session (TraceId) is expired." — caller must re-run Search.
   if (
-    msg.toLowerCase().includes("fare expired") ||
-    msg.toLowerCase().includes("traceid expired") ||
-    msg.toLowerCase().includes("trace id") ||
+    lower.includes("fare expired") ||
+    lower.includes("traceid expired") ||
+    lower.includes("trace id") ||
+    lower.includes("traceid") ||
+    (lower.includes("session") && lower.includes("expired")) ||
     ErrorCode === 10002
   ) {
     throw new TboFareExpiredError();

@@ -8,6 +8,27 @@ import type { TboAuthResponse } from "./types";
 // token." So we expire the cache at end-of-day, with a small safety buffer.
 const TOKEN_RENEW_BUFFER_MS = 5 * 60 * 1000;
 
+// Response Timeout Benchmarking (CLAUDE.md):
+//   Book/Ticket may take up to 300s — set a 300s timeout to avoid financial loss.
+//   All other methods (Search/FareQuote/SSR/GetBookingDetails) → 60s.
+export const TBO_BOOK_TIMEOUT_MS = 300_000;
+export const TBO_DEFAULT_TIMEOUT_MS = 60_000;
+
+// Search & Book URL Validation (CLAUDE.md): TBO's docs name two services — a Search
+// service (BookingEngineService_Air) and a Booking service (BookingEngineService_AirBook).
+// We keep the routing centralised in these two constants so the split is one line to flip.
+//
+// Confirmed against this account/host (api.tektravels.com): the "_AirBook" path is
+// NOT provisioned — FareQuote/Book there return "Invalid Resource Requested". Search
+// and every booking-flow method work on "_Air", which is what the certified samples
+// and the passing test cases use. So both constants point at BookingEngineService_Air.
+//
+// If TBO provisions a dedicated _AirBook host/path for production, change AIR_BOOK_SVC
+// to "BookingEngineService_AirBook/AirService.svc/rest" (and/or its host) and re-test
+// against the live endpoint before shipping.
+export const AIR_SEARCH_SVC = "BookingEngineService_Air/AirService.svc/rest";
+export const AIR_BOOK_SVC = "BookingEngineService_Air/AirService.svc/rest";
+
 function endOfDayMs(): number {
   const d = new Date();
   d.setHours(23, 59, 59, 999);

@@ -6,7 +6,7 @@ function err(message: string, status: number) {
 }
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
@@ -14,7 +14,9 @@ export async function GET(
     const bookingId = Number(id);
     if (!bookingId || isNaN(bookingId)) return err("bookingId must be a number.", 400);
 
-    const result = await tboGetFlightBookingDetail(bookingId);
+    // Optional ?pnr= ties the lookup to its PNR (matches the certified sample).
+    const pnr = req.nextUrl.searchParams.get("pnr") || undefined;
+    const result = await tboGetFlightBookingDetail(bookingId, pnr);
     return NextResponse.json({ success: true, data: result });
   } catch (e) {
     const message = e instanceof Error ? e.message : "GetBookingDetail failed";

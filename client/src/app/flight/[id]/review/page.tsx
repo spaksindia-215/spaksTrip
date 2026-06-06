@@ -70,12 +70,36 @@ function ReviewInner() {
         fareBreakdown: quote.fareBreakdown,
         traceId: quote.traceId,
         updatedOffer: quote.updatedOffer,
+        panRequiredAtBook: quote.isPanRequiredAtBook,
+        panRequiredAtTicket: quote.isPanRequiredAtTicket,
+        passportRequiredAtBook: quote.isPassportRequiredAtBook,
+        passportRequiredAtTicket: quote.isPassportRequiredAtTicket,
+        passportFullDetailRequiredAtBook: quote.isPassportFullDetailRequiredAtBook,
+        mealMandatory: quote.isMealMandatory,
+        seatMandatory: quote.isSeatMandatory,
+        flightDetailChangeInfo: quote.flightDetailChangeInfo,
+        airlineCode: quote.airlineCode,
+        originCode: quote.origin,
+        destinationCode: quote.destination,
       });
 
-      if (quote.isPriceChanged) {
+      // Flight Information Change (§): surface baggage/time changes for acknowledgement.
+      if (quote.flightDetailChangeInfo) {
         toast.push({
-          title: "Fare updated",
-          description: `The price changed to ₹${(quote.totalFare ?? quote.updatedOffer?.basePrice ?? 0).toLocaleString("en-IN")}. Please review before continuing.`,
+          title: "Flight details changed",
+          description: `Updated ${quote.flightDetailChangeInfo}. Please review before continuing.`,
+          tone: "warn",
+        });
+        setQuoting(false);
+        return;
+      }
+
+      if (quote.isPriceChanged || quote.isTimeChanged) {
+        toast.push({
+          title: quote.isTimeChanged && !quote.isPriceChanged ? "Schedule updated" : "Fare updated",
+          description: quote.isPriceChanged
+            ? `The price changed to ₹${(quote.totalFare ?? quote.updatedOffer?.basePrice ?? 0).toLocaleString("en-IN")}. Please review before continuing.`
+            : "The flight time changed. Please review before continuing.",
           tone: "warn",
         });
         setQuoting(false);

@@ -13,7 +13,7 @@ import Checkbox from "@/components/ui/Checkbox";
 import Radio from "@/components/ui/Radio";
 import { useBookingStore } from "@/state/bookingStore";
 import { useToast } from "@/components/ui/Toast";
-import type { Traveler, TravelerType, GSTInfo, TravelerSSR } from "@/state/bookingStore";
+import type { Traveler, TravelerType, Gender, GSTInfo, TravelerSSR } from "@/state/bookingStore";
 import { fetchSSR } from "@/services/flights";
 import type { SSRResult } from "@/services/flights";
 
@@ -22,14 +22,19 @@ type FormTraveler = Omit<Traveler, "id"> & { id: string };
 // SSR pick state — one entry per traveler id
 type SSRPick = { baggageCode: string; mealCode: string };
 
-const TITLES_ADULT = ["Mr", "Ms", "Mrs"] as const;
-const TITLES_CHILD = ["Mstr", "Miss"] as const;
+// Title options per pax type / gender. SpiceJet (Navitaire 4X) accepts a narrower
+// set (Child: Mr/Ms; Infant: Mstr/Mr/Ms) than GDS/Amadeus — see CLAUDE.md.
+function titlesFor(type: TravelerType, gender: Gender, isSG: boolean): Traveler["title"][] {
+  if (type === "ADT") return gender === "F" ? ["Ms", "Mrs"] : ["Mr"];
+  if (type === "CHD") return isSG ? ["Mr", "Ms"] : ["Mstr", "Miss"];
+  return isSG ? ["Mstr", "Mr", "Ms"] : ["Mstr", "Miss"]; // INF
+}
 
-function emptyFor(type: TravelerType, idx: number): FormTraveler {
+function emptyFor(type: TravelerType, idx: number, isSG: boolean): FormTraveler {
   return {
     id: `${type}-${idx}`,
     type,
-    title: type === "ADT" ? "Mr" : "Mstr",
+    title: titlesFor(type, "M", isSG)[0],
     firstName: "",
     lastName: "",
     gender: "M",
@@ -67,10 +72,11 @@ function TravelerInner() {
 
   const initial = useMemo(() => {
     if (!current) return [];
+    const sg = (current.airlineCode ?? current.offer.segments[0]?.airlineCode ?? "").toUpperCase() === "SG";
     const list: FormTraveler[] = [];
-    for (let i = 0; i < current.pax.adults; i++) list.push(emptyFor("ADT", i));
-    for (let i = 0; i < current.pax.children; i++) list.push(emptyFor("CHD", i));
-    for (let i = 0; i < current.pax.infants; i++) list.push(emptyFor("INF", i));
+    for (let i = 0; i < current.pax.adults; i++) list.push(emptyFor("ADT", i, sg));
+    for (let i = 0; i < current.pax.children; i++) list.push(emptyFor("CHD", i, sg));
+    for (let i = 0; i < current.pax.infants; i++) list.push(emptyFor("INF", i, sg));
     return list;
   }, [current]);
 
@@ -82,6 +88,11 @@ function TravelerInner() {
     companyName: "", gstNumber: "", companyAddress: "",
     companyContactNumber: "", companyEmail: "",
   });
+  // LCC lead-pax address + AirAsia country (mandatory on LCC).
+  const [addressLine1, setAddressLine1] = useState(current?.contact.addressLine1 ?? "");
+  const [city, setCity] = useState(current?.contact.city ?? "");
+  const [countryName, setCountryName] = useState(current?.contact.countryName ?? "India");
+  const [isoCountryCode, setIsoCountryCode] = useState(current?.contact.isoCountryCode ?? "IN");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // SSR state
@@ -115,8 +126,22 @@ function TravelerInner() {
   if (!current) return null;
 
   const isLCC = current.isLCC;
+  // FareQuote-driven requirement flags (CLAUDE.md PAN/Passport/Special-fare).
+  const panRequired = Boolean(current.panRequiredAtBook || current.panRequiredAtTicket);
+  const passportRequired = Boolean(
+    current.passportRequiredAtBook || current.passportRequiredAtTicket || current.passportFullDetailRequiredAtBook,
+  );
+  const passportFullDetail = Boolean(current.passportFullDetailRequiredAtBook);
+  const NAME_BAD = /[.,/]/;
+  // Strict email: no whitespace, single @, a dot-separated domain with a 2+ char TLD.
+  // The previous loose check (/.+@.+\..+/) accepted spaces/malformed addresses that
+  // passed this page but were rejected by TBO later at Book/Ticket.
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-  // Available baggage options for LCC — first segment (index 0)
+  // Available baggage options for LCC — first segment (index 0).
+  // KNOWN GAP (intl multi-leg): paid baggage is only collected for segment 0.
+  // Free baggage for all segments is added server-side (ticket.ts applyMandatorySSR);
+  // per-segment *paid* baggage UI is a future enhancement for international multi-leg.
   const baggageOptions = isLCC ? (ssrData?.baggage?.[0] ?? []) : [];
   // Available meal options — first segment for LCC, full list for Non-LCC
   const mealDynamicOptions = isLCC ? (ssrData?.mealDynamic?.[0] ?? []) : [];
@@ -131,14 +156,79 @@ function TravelerInner() {
   const update = (id: string, patch: Partial<FormTraveler>) =>
     setLocalTravelers((list) => list.map((t) => (t.id === id ? { ...t, ...patch } : t)));
 
+  const airlineCode = (current.airlineCode ?? current.offer.segments[0]?.airlineCode ?? "").toUpperCase();
+  const isSG = airlineCode === "SG";
+
+  // Keep the current title if still valid for the pax type/gender, else fall back
+  // to the first valid option (prevents sending a Navitaire-invalid SpiceJet title).
+  const normTitle = (type: TravelerType, gender: Gender, currentTitle: Traveler["title"]): Traveler["title"] => {
+    const opts = titlesFor(type, gender, isSG);
+    return opts.includes(currentTitle) ? currentTitle : opts[0];
+  };
+
   const validate = () => {
     const e: Record<string, string> = {};
-    for (const t of travelers) {
+    travelers.forEach((t, idx) => {
       if (!t.firstName.trim()) e[`${t.id}.firstName`] = "First name required";
       if (!t.lastName.trim()) e[`${t.id}.lastName`] = "Last name required";
+      // No special characters (. , /) in names — Navitaire/SpiceJet rule.
+      if (NAME_BAD.test(t.firstName) || NAME_BAD.test(t.lastName)) {
+        e[`${t.id}.firstName`] = "Name cannot contain . , or /";
+      }
+      // SpiceJet requires the first and last name to be distinct.
+      if (airlineCode === "SG" && t.firstName.trim() && t.firstName.trim().toUpperCase() === t.lastName.trim().toUpperCase()) {
+        e[`${t.id}.lastName`] = "First and last name must be different";
+      }
+      // DOB mandatory for everyone (Child/Infant always; AirAsia adults too).
       if (!t.dob) e[`${t.id}.dob`] = "Date of birth required";
+
+      // PAN: Adult own PAN; Child/Infant guardian PAN + name.
+      if (panRequired) {
+        if (t.type === "ADT") {
+          if (!t.pan?.trim()) e[`${t.id}.pan`] = "PAN required (passenger's own PAN)";
+        } else {
+          if (!t.guardian?.firstName?.trim()) e[`${t.id}.gFirst`] = "Guardian first name required";
+          if (!t.guardian?.lastName?.trim()) e[`${t.id}.gLast`] = "Guardian last name required";
+          if (!t.guardian?.pan?.trim()) e[`${t.id}.gPan`] = "Guardian PAN required";
+        }
+      }
+
+      // Passport when required by FareQuote flags.
+      if (passportRequired) {
+        if (!t.passport?.trim()) e[`${t.id}.passport`] = "Passport number required";
+        if (!t.passportExpiry) e[`${t.id}.passportExpiry`] = "Passport expiry required";
+        if (passportFullDetail) {
+          if (!t.passportIssueDate) e[`${t.id}.passportIssueDate`] = "Issue date required";
+          if (!t.passportIssueCountry?.trim()) e[`${t.id}.passportIssueCountry`] = "Issuing country required";
+        }
+      }
+
+      // LCC lead passenger: address mandatory (email/phone validated below).
+      if (isLCC && idx === 0 && !addressLine1.trim()) {
+        e["lead.address"] = "Address required for the lead passenger on this airline";
+      }
+    });
+
+    // No two passengers may share an identical full name — TBO rejects duplicates
+    // on a single booking. Flag every passenger in a duplicate group so the user
+    // can fix them here rather than at payment.
+    const byName = new Map<string, string[]>();
+    travelers.forEach((t) => {
+      const first = t.firstName.trim().toUpperCase();
+      const last = t.lastName.trim().toUpperCase();
+      if (!first || !last) return; // missing names already flagged as required
+      const key = `${first} ${last}`;
+      byName.set(key, [...(byName.get(key) ?? []), t.id]);
+    });
+    for (const ids of byName.values()) {
+      if (ids.length > 1) {
+        for (const id of ids) {
+          if (!e[`${id}.firstName`]) e[`${id}.firstName`] = "Each passenger must have a distinct name";
+        }
+      }
     }
-    if (!/.+@.+\..+/.test(email)) e.email = "Enter a valid email";
+
+    if (!EMAIL_RE.test(email.trim())) e.email = "Enter a valid email";
     if (phone.replace(/\D/g, "").length < 10) e.phone = "Enter a valid phone";
     // Guideline §14: when GST is mandatory, all 5 fields are required.
     if (current.isGSTMandatory) {
@@ -146,7 +236,7 @@ function TravelerInner() {
       if (!gst.gstNumber.trim()) e["gst.gstNumber"] = "GST number required";
       if (!gst.companyAddress.trim()) e["gst.companyAddress"] = "Company address required";
       if (!gst.companyContactNumber.trim()) e["gst.companyContactNumber"] = "Contact number required";
-      if (!/.+@.+\..+/.test(gst.companyEmail)) e["gst.companyEmail"] = "Enter a valid company email";
+      if (!EMAIL_RE.test(gst.companyEmail.trim())) e["gst.companyEmail"] = "Enter a valid company email";
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -157,8 +247,16 @@ function TravelerInner() {
       toast.push({ title: "Please fix the highlighted fields", tone: "warn" });
       return;
     }
-    setTravelers(travelers);
-    setContact({ email, phone, countryCode: "+91" });
+    // Safety net: ensure every title is valid for its pax type/gender/airline.
+    const normalizedTravelers = travelers.map((t) => ({
+      ...t,
+      title: normTitle(t.type, t.gender, t.title),
+    }));
+    setTravelers(normalizedTravelers);
+    setContact({
+      email: email.trim(), phone: phone.trim(), countryCode: "+91",
+      addressLine1, city, countryName, isoCountryCode,
+    });
     if (current.isGSTMandatory) setGST(gst);
 
     // Build TravelerSSR[] from ssrPicks + ssrData for book/ticket request.
@@ -253,11 +351,11 @@ function TravelerInner() {
                         <div className="flex flex-col gap-1">
                           <label className="text-[13px] font-medium text-ink-soft">Title</label>
                           <select
-                            value={t.title}
+                            value={normTitle(t.type, t.gender, t.title)}
                             onChange={(e) => update(t.id, { title: e.target.value as Traveler["title"] })}
                             className="h-11 rounded-md border border-border bg-white px-3 text-[14px] font-medium text-ink outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                           >
-                            {(t.type === "ADT" ? TITLES_ADULT : TITLES_CHILD).map((tt) => (
+                            {titlesFor(t.type, t.gender, isSG).map((tt) => (
                               <option key={tt} value={tt}>{tt}</option>
                             ))}
                           </select>
@@ -290,18 +388,96 @@ function TravelerInner() {
                               name={`gender-${t.id}`}
                               label="Male"
                               checked={t.gender === "M"}
-                              onChange={() => update(t.id, { gender: "M" })}
+                              onChange={() => update(t.id, { gender: "M", title: normTitle(t.type, "M", t.title) })}
                             />
                             <Radio
                               id={`${t.id}-f`}
                               name={`gender-${t.id}`}
                               label="Female"
                               checked={t.gender === "F"}
-                              onChange={() => update(t.id, { gender: "F" })}
+                              onChange={() => update(t.id, { gender: "F", title: normTitle(t.type, "F", t.title) })}
                             />
                           </div>
                         </div>
                       </div>
+
+                      {/* PAN — Adult own PAN; Child/Infant guardian PAN + name. */}
+                      {panRequired && t.type === "ADT" && (
+                        <div className="mt-3">
+                          <Input
+                            label="PAN (as per PAN card)"
+                            value={t.pan ?? ""}
+                            onChange={(e) => update(t.id, { pan: e.target.value.toUpperCase() })}
+                            error={errors[`${t.id}.pan`]}
+                            placeholder="ABCDE1234F"
+                          />
+                        </div>
+                      )}
+                      {panRequired && t.type !== "ADT" && (
+                        <div className="mt-3">
+                          <p className="text-[12px] text-ink-muted mb-2">
+                            Parent/guardian details (name &amp; PAN as on PAN card)
+                          </p>
+                          <div className="grid sm:grid-cols-3 gap-3">
+                            <Input
+                              label="Guardian first name"
+                              value={t.guardian?.firstName ?? ""}
+                              onChange={(e) => update(t.id, { guardian: { ...t.guardian, firstName: e.target.value, lastName: t.guardian?.lastName ?? "" } })}
+                              error={errors[`${t.id}.gFirst`]}
+                            />
+                            <Input
+                              label="Guardian last name"
+                              value={t.guardian?.lastName ?? ""}
+                              onChange={(e) => update(t.id, { guardian: { ...t.guardian, firstName: t.guardian?.firstName ?? "", lastName: e.target.value } })}
+                              error={errors[`${t.id}.gLast`]}
+                            />
+                            <Input
+                              label="Guardian PAN"
+                              value={t.guardian?.pan ?? ""}
+                              onChange={(e) => update(t.id, { guardian: { ...t.guardian, firstName: t.guardian?.firstName ?? "", lastName: t.guardian?.lastName ?? "", pan: e.target.value.toUpperCase() } })}
+                              error={errors[`${t.id}.gPan`]}
+                              placeholder="ABCDE1234F"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Passport — when required by FareQuote flags. */}
+                      {passportRequired && (
+                        <div className="mt-3 grid sm:grid-cols-2 gap-3">
+                          <Input
+                            label="Passport number"
+                            value={t.passport ?? ""}
+                            onChange={(e) => update(t.id, { passport: e.target.value.toUpperCase() })}
+                            error={errors[`${t.id}.passport`]}
+                          />
+                          <Input
+                            label="Passport expiry"
+                            type="date"
+                            value={t.passportExpiry ?? ""}
+                            onChange={(e) => update(t.id, { passportExpiry: e.target.value })}
+                            error={errors[`${t.id}.passportExpiry`]}
+                          />
+                          {passportFullDetail && (
+                            <>
+                              <Input
+                                label="Passport issue date"
+                                type="date"
+                                value={t.passportIssueDate ?? ""}
+                                onChange={(e) => update(t.id, { passportIssueDate: e.target.value })}
+                                error={errors[`${t.id}.passportIssueDate`]}
+                              />
+                              <Input
+                                label="Issuing country (ISO-2)"
+                                value={t.passportIssueCountry ?? ""}
+                                onChange={(e) => update(t.id, { passportIssueCountry: e.target.value.toUpperCase().slice(0, 2) })}
+                                error={errors[`${t.id}.passportIssueCountry`]}
+                                placeholder="IN"
+                              />
+                            </>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -408,6 +584,35 @@ function TravelerInner() {
                   />
                 </div>
               </section>
+
+              {/* LCC lead-passenger billing address — mandatory on LCC; AirAsia also needs country. */}
+              {isLCC && (
+                <section className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
+                  <h2 className="text-[16px] font-bold text-ink mb-1">Billing address</h2>
+                  <p className="text-[12px] text-ink-muted mb-4">
+                    Required by low-cost carriers for the lead passenger.
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    <Input
+                      label="Address"
+                      value={addressLine1}
+                      onChange={(e) => setAddressLine1(e.target.value)}
+                      error={errors["lead.address"]}
+                      placeholder="House / street, area"
+                    />
+                    <div className="grid sm:grid-cols-3 gap-3">
+                      <Input label="City" value={city} onChange={(e) => setCity(e.target.value)} />
+                      <Input label="Country" value={countryName} onChange={(e) => setCountryName(e.target.value)} />
+                      <Input
+                        label="Country code (ISO-2)"
+                        value={isoCountryCode}
+                        onChange={(e) => setIsoCountryCode(e.target.value.toUpperCase().slice(0, 2))}
+                        placeholder="IN"
+                      />
+                    </div>
+                  </div>
+                </section>
+              )}
 
               <section className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
                 <h2 className="text-[16px] font-bold text-ink mb-3">Add-ons</h2>

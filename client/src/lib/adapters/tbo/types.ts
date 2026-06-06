@@ -164,6 +164,16 @@ export interface TboFlightResult {
   IsPanRequiredAtTicket: boolean;
   IsPassportRequiredAtBook: boolean;
   IsPassportRequiredAtTicket: boolean;
+  // When true, full passport detail (No + Expiry + IssueDate + IssueCountryCode)
+  // must be passed in Book/Ticket; when false only No + Expiry are required.
+  IsPassportFullDetailRequiredAtBook?: boolean;
+  // Special fares (Super 6E / SpiceMax): free meal/seat must be selected from the
+  // SSR response and included in the Ticket request to avoid failure.
+  IsMealMandatory?: boolean;
+  IsSeatMandatory?: boolean;
+  // Set by FareQuote when itinerary info changed (e.g. "Time", "Baggage") —
+  // booking must proceed with the updated info.
+  FlightDetailChangeInfo?: string | null;
   GSTINNo: string | null;
   IsGSTMandatory: boolean;
   IsHoldAllowed: boolean;
@@ -352,8 +362,23 @@ export interface TboPassengerRequest {
   PaxType: number;       // 1=ADT, 2=CHD, 3=INF
   DateOfBirth: string;   // "YYYY-MM-DDT00:00:00"
   Gender: number;        // 1=Male, 2=Female
-  PassportNo: string;
-  PassportExpiry: string;
+  // On Book (Non-LCC) these are sent as empty strings when absent (matches sample
+  // case-01). On LCC Ticket they are omitted entirely when no passport is provided
+  // (matches sampleVerificationLogs) — hence optional.
+  PassportNo?: string;
+  PassportExpiry?: string;
+  // Sent only when IsPassportFullDetailRequiredAtBook=true (international GDS/LCC).
+  PassportIssueDate?: string;
+  PassportIssueCountryCode?: string;
+  // PAN & Passport Validation: Adult uses own PAN; Child/Infant pass guardian PAN via GuardianDetails.
+  PAN?: string;
+  // Required for Child/Infant when PAN/Passport is mandatory and the pax has no own PAN.
+  GuardianDetails?: {
+    Title: string;
+    FirstName: string;
+    LastName: string;
+    PAN?: string;
+  };
   AddressLine1: string;
   City: string;
   CountryCode: string;
@@ -362,11 +387,14 @@ export interface TboPassengerRequest {
   ContactNo: string;
   Email: string;
   IsLeadPax: boolean;
-  GSTCompanyAddress: string;
-  GSTCompanyContactNumber: string;
-  GSTCompanyName: string;
-  GSTNumber: string;
-  GSTCompanyEmail: string;
+  // On Book (Non-LCC) these are sent as empty strings (matches sample case-01). On
+  // LCC Ticket they are omitted unless GST details are supplied on the lead pax
+  // (matches sampleVerificationLogs) — hence optional.
+  GSTCompanyAddress?: string;
+  GSTCompanyContactNumber?: string;
+  GSTCompanyName?: string;
+  GSTNumber?: string;
+  GSTCompanyEmail?: string;
   Fare: TboFare;
   // LCC SSR: ADT/CHD must send [] minimum; INF must omit entirely (§6/§7).
   Baggage?: TboLccBaggageItem[];
@@ -401,7 +429,10 @@ export interface TboFlightItinerary {
   PNR: string;
   IsPriceChanged: boolean;
   IsTimeChanged: boolean;
-  BookingStatus: number;
+  // GetBookingDetails reports the itinerary-level booking status under "Status"
+  // (5 = ticketed/confirmed). The Book/Ticket responses use "BookingStatus".
+  Status?: number;
+  BookingStatus?: number;
   Passenger: TboPassengerResponse[];
   Segments: TboSegmentGroup[][];
   Fare: TboFare;
@@ -412,23 +443,45 @@ export interface TboFlightBookResponse {
     ResponseStatus: number;
     Error: TboError;
     TraceId: string;
-    FlightItinerary: TboFlightItinerary | null;
+    // TBO Book/Ticket nest the booking result one level deeper, under an inner
+    // "Response" (Response.Response.FlightItinerary). FlightItinerary may also be
+    // present at this outer level on some sources, so both are optional.
+    FlightItinerary?: TboFlightItinerary | null;
+    Response?: {
+      BookingId?: number;
+      PNR?: string;
+      FlightItinerary?: TboFlightItinerary | null;
+    };
   };
 }
 
 // ─── Ticket ───────────────────────────────────────────────────────────────────
+
+interface TboTicketItinerary {
+  BookingId: number;
+  PNR: string;
+  BookingStatus: number;
+  // Ticket response may signal a late price change — re-call Ticket with
+  // IsPriceChangedAccepted=true once the user accepts the new fare.
+  IsPriceChanged?: boolean;
+  IsTimeChanged?: boolean;
+  Passenger: TboPassengerResponse[];
+}
 
 export interface TboTicketResponse {
   Response: {
     ResponseStatus: number;
     Error: TboError;
     TraceId: string;
-    FlightItinerary: {
-      BookingId: number;
-      PNR: string;
-      BookingStatus: number;
-      Passenger: TboPassengerResponse[];
-    } | null;
+    // TBO nests the ticket result under an inner "Response"
+    // (Response.Response.FlightItinerary). Some sources also surface it at this
+    // outer level, so both are optional and the parser checks the nested one first.
+    FlightItinerary?: TboTicketItinerary | null;
+    Response?: {
+      BookingId?: number;
+      PNR?: string;
+      FlightItinerary?: TboTicketItinerary | null;
+    };
   };
 }
 

@@ -1,5 +1,5 @@
 import "server-only";
-import { withRetry, tboBase, tboApiUrl } from "../auth";
+import { withRetry, tboBase, tboApiUrl, TBO_DEFAULT_TIMEOUT_MS, AIR_BOOK_SVC } from "../auth";
 import { assertTboSuccess, TboFareExpiredError } from "../errors";
 import { getTrace, storeTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
@@ -133,6 +133,21 @@ export interface FareQuoteResult {
   /** Per-pax-type aggregates from TBO FareBreakdown.
    *  Must be passed to book/ticket so each passenger receives the correct Fare node. */
   fareBreakdown: TboFareBreakdown[];
+  // PAN & Passport Validation flags — drive required passenger inputs/enforcement.
+  isPanRequiredAtBook: boolean;
+  isPanRequiredAtTicket: boolean;
+  isPassportRequiredAtBook: boolean;
+  isPassportRequiredAtTicket: boolean;
+  isPassportFullDetailRequiredAtBook: boolean;
+  // Special Fare Validation — free meal/seat must be included in Ticket.
+  isMealMandatory: boolean;
+  isSeatMandatory: boolean;
+  // Flight Information Change — e.g. "Time" / "Baggage"; must be acknowledged.
+  flightDetailChangeInfo: string | null;
+  // Airline + route — used to build the booking validation context client-side.
+  airlineCode: string;
+  origin: string;
+  destination: string;
   updatedOffer?: FlightOffer;
 }
 
@@ -146,7 +161,7 @@ export async function tboFareQuote(
   if (!traceId) throw new TboFareExpiredError();
 
   return withRetry(async (token) => {
-    const url = tboApiUrl("BookingEngineService_Air/AirService.svc/rest/FareQuote");
+    const url = tboApiUrl(`${AIR_BOOK_SVC}/FareQuote`);
     const body = { ...tboBase(token), ResultIndex: resultIndex, TraceId: traceId };
     logRequest("Flight FareQuote", url, { ...body, TokenId: "***" });
 
@@ -156,6 +171,7 @@ export async function tboFareQuote(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
+        signal: AbortSignal.timeout(TBO_DEFAULT_TIMEOUT_MS),
       });
     } catch (err) {
       logError("Flight FareQuote", err);
@@ -181,6 +197,17 @@ export async function tboFareQuote(
     // Refresh the in-process cache (helps local dev / single-instance deploys).
     storeTrace(result.ResultIndex, refreshedTraceId);
 
+    const firstSeg = result.Segments?.[0]?.[0];
+    const lastLeg = result.Segments?.[0] ?? [];
+    const lastSeg = lastLeg[lastLeg.length - 1];
+
+    // Special-fare flags: TBO casing for these is not consistently documented
+    // (the validation doc writes them lowercase), so read either casing.
+    const raw = result as unknown as Record<string, unknown>;
+    const flag = (...keys: string[]) => keys.some((k) => raw[k] === true);
+    const isMealMandatory = flag("IsMealMandatory", "ismealmandatory");
+    const isSeatMandatory = flag("IsSeatMandatory", "isseatmandatory");
+
     return {
       resultIndex: result.ResultIndex,
       traceId: refreshedTraceId,
@@ -190,6 +217,17 @@ export async function tboFareQuote(
       isLCC: result.IsLCC,
       isGSTMandatory: result.IsGSTMandatory ?? false,
       fareBreakdown: result.FareBreakdown ?? [],
+      isPanRequiredAtBook: result.IsPanRequiredAtBook ?? false,
+      isPanRequiredAtTicket: result.IsPanRequiredAtTicket ?? false,
+      isPassportRequiredAtBook: result.IsPassportRequiredAtBook ?? false,
+      isPassportRequiredAtTicket: result.IsPassportRequiredAtTicket ?? false,
+      isPassportFullDetailRequiredAtBook: result.IsPassportFullDetailRequiredAtBook ?? false,
+      isMealMandatory,
+      isSeatMandatory,
+      flightDetailChangeInfo: result.FlightDetailChangeInfo ?? null,
+      airlineCode: firstSeg?.Airline?.AirlineCode ?? result.AirlineCode ?? "",
+      origin: firstSeg?.Origin?.Airport?.AirportCode ?? "",
+      destination: lastSeg?.Destination?.Airport?.AirportCode ?? "",
       updatedOffer: resultToOffer(result),
     };
   });
