@@ -16,8 +16,8 @@ export default function HotelSearchForm() {
   const router = useRouter();
   const toast = useToast();
   const {
-    destination, checkIn, checkOut, rooms, adults, children, nationality,
-    setDestination, setCheckIn, setCheckOut, setRooms, setAdults, setChildren, setNationality, pushRecent,
+    destination, checkIn, checkOut, rooms, adults, children, childrenAges, nationality,
+    setDestination, setCheckIn, setCheckOut, setRooms, setAdults, setChildren, setChildrenAges, setNationality, pushRecent,
   } = useHotelSearchStore();
 
   const [submitting, setSubmitting] = useState(false);
@@ -54,6 +54,9 @@ export default function HotelSearchForm() {
       children: String(children),
       nationality,
     });
+    if (childrenAges.length > 0) {
+      params.set("childrenAges", childrenAges.join(","));
+    }
 
     if (destination.kind === "country") {
       params.set("country", destination.code);
@@ -126,9 +129,11 @@ export default function HotelSearchForm() {
           rooms={rooms}
           adults={adults}
           children={children}
+          childrenAges={childrenAges}
           onRoomsChange={setRooms}
           onAdultsChange={setAdults}
           onChildrenChange={setChildren}
+          onChildrenAgesChange={setChildrenAges}
         />
         <div className="flex items-end">
           <Button onClick={onSearch} loading={submitting} size="xl" variant="accent" fullWidth>

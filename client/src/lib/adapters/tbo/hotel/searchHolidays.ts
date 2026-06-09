@@ -219,22 +219,29 @@ export async function tboSearchHotelsHolidays(
   const metaByCode = new Map<string, TboHotelCodeListItem>();
   for (const item of codeList) metaByCode.set(item.HotelCode, item);
 
-  // Step 2: PaxRooms split.
+  // Step 2: PaxRooms split — distribute guests across rooms tracking the running remainder
+  // so no room receives a rounded-up value that inflates the total sent to TBO.
   const rooms = Math.max(1, input.rooms);
-  const adultsPerRoom = Math.max(1, Math.ceil(input.adults / rooms));
-  const childrenPerRoom = Math.max(0, Math.ceil(input.children / rooms));
-
-  // Distribute children ages across rooms (TBO requires actual ages 0-17 for pricing)
   const childrenAges = input.childrenAges ?? [];
+
+  let adultsRemaining = Math.max(1, input.adults);
+  let childrenRemaining = Math.max(0, input.children);
+  let agesOffset = 0;
+
   const paxRooms = Array.from({ length: rooms }, (_, roomIdx) => {
-    const startIdx = roomIdx * childrenPerRoom;
-    const endIdx = Math.min(startIdx + childrenPerRoom, childrenAges.length);
-    const roomChildrenAges = childrenAges.slice(startIdx, endIdx);
+    const roomsLeft = rooms - roomIdx;
+    const roomAdults = Math.ceil(adultsRemaining / roomsLeft);
+    const roomChildren = Math.ceil(childrenRemaining / roomsLeft);
+    adultsRemaining -= roomAdults;
+    childrenRemaining -= roomChildren;
+
+    const roomChildrenAges = childrenAges.slice(agesOffset, agesOffset + roomChildren);
+    agesOffset += roomChildren;
 
     return {
-      Adults: adultsPerRoom,
-      Children: childrenPerRoom,
-      ChildrenAges: roomChildrenAges, // Actual ages for each child (0-17)
+      Adults: roomAdults,
+      Children: roomChildren,
+      ChildrenAges: roomChildrenAges,
     };
   });
 

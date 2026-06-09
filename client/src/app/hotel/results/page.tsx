@@ -40,6 +40,11 @@ function HotelResultsInner() {
   const rooms = Number(sp.get("rooms") ?? 1);
   const adults = Number(sp.get("adults") ?? 2);
   const children = Number(sp.get("children") ?? 0);
+  const childrenAges = useMemo(() => {
+    const raw = sp.get("childrenAges");
+    if (!raw) return [];
+    return raw.split(",").map(Number).filter((n) => !isNaN(n) && n >= 0);
+  }, [sp]);
   const nationality = sp.get("nationality") ?? "IN";
 
   const nights = useMemo(() => {
@@ -55,7 +60,7 @@ function HotelResultsInner() {
 
   const { status, hotels, priceRange } = useHotelSearch(
     cityCode && checkIn && checkOut
-      ? { cityCode, checkIn, checkOut, rooms, adults, children, guestNationality: nationality }
+      ? { cityCode, checkIn, checkOut, rooms, adults, children, childrenAges, guestNationality: nationality }
       : null,
   );
 
