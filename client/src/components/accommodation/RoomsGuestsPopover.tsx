@@ -8,9 +8,11 @@ type Props = {
   rooms: number;
   adults: number;
   children: number;
+  childrenAges: number[];
   onRoomsChange: (n: number) => void;
   onAdultsChange: (n: number) => void;
   onChildrenChange: (n: number) => void;
+  onChildrenAgesChange: (ages: number[]) => void;
 };
 
 function Counter({
@@ -64,31 +66,38 @@ function Counter({
   );
 }
 
-export default function RoomsGuestsPopover({ rooms, adults, children, onRoomsChange, onAdultsChange, onChildrenChange }: Props) {
+export default function RoomsGuestsPopover({ rooms, adults, children, childrenAges, onRoomsChange, onAdultsChange, onChildrenChange, onChildrenAgesChange }: Props) {
   const summary = `${rooms} Room${rooms > 1 ? "s" : ""} · ${adults + children} Guest${adults + children !== 1 ? "s" : ""}`;
 
-  // Calculate dynamic max values based on TBO limits
   const maxAdultsTotal = rooms * OCCUPANCY_LIMITS.MAX_ADULTS_PER_ROOM;
   const maxChildrenTotal = rooms * OCCUPANCY_LIMITS.MAX_CHILDREN_PER_ROOM;
 
-  // Validate current occupancy
   const occupancyValidation = useMemo(
     () => validateOccupancy(rooms, adults, children),
     [rooms, adults, children],
   );
 
+  // Child ages are required by TBO for accurate pricing; -1 means unset
+  const agesIncomplete = children > 0 && childrenAges.slice(0, children).some((a) => a === -1);
+
   const handleAdultsChange = (value: number) => {
-    // Ensure we don't exceed max adults per room
-    if (value <= maxAdultsTotal) {
-      onAdultsChange(value);
-    }
+    if (value <= maxAdultsTotal) onAdultsChange(value);
   };
 
   const handleChildrenChange = (value: number) => {
-    // Ensure we don't exceed max children per room
     if (value <= maxChildrenTotal) {
       onChildrenChange(value);
+      // Sync ages array length: pad with -1 (unset) or truncate
+      const current = childrenAges.slice(0, value);
+      while (current.length < value) current.push(-1);
+      onChildrenAgesChange(current);
     }
+  };
+
+  const handleChildAgeChange = (idx: number, age: number) => {
+    const next = [...childrenAges];
+    next[idx] = age;
+    onChildrenAgesChange(next);
   };
 
   return (
@@ -142,6 +151,32 @@ export default function RoomsGuestsPopover({ rooms, adults, children, onRoomsCha
               />
             </div>
 
+            {/* Child age selectors — TBO requires age of each child for pricing */}
+            {children > 0 && (
+              <div className="mt-3 space-y-2">
+                <p className="text-[11px] font-semibold text-ink-muted uppercase tracking-wide">Child ages (required)</p>
+                {Array.from({ length: children }, (_, i) => (
+                  <div key={i} className="flex items-center justify-between gap-2">
+                    <label htmlFor={`child-age-${i}`} className="text-[13px] text-ink">Child {i + 1}</label>
+                    <select
+                      id={`child-age-${i}`}
+                      value={childrenAges[i] === -1 || childrenAges[i] === undefined ? "" : childrenAges[i]}
+                      onChange={(e) => handleChildAgeChange(i, e.target.value === "" ? -1 : Number(e.target.value))}
+                      className="rounded-lg border border-border px-2 py-1 text-[13px] text-ink bg-white focus:outline-none focus:border-brand-500"
+                    >
+                      <option value="">Select age</option>
+                      {Array.from({ length: 18 }, (_, age) => (
+                        <option key={age} value={age}>{age === 0 ? "Under 1" : `${age} yr${age !== 1 ? "s" : ""}`}</option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+                {agesIncomplete && (
+                  <p className="text-[11px] text-amber-700">Please select an age for each child.</p>
+                )}
+              </div>
+            )}
+
             {/* Validation Message */}
             {!occupancyValidation.valid && (
               <div className="mt-3 p-2 rounded-lg bg-danger-50 border border-danger-200">
@@ -159,7 +194,7 @@ export default function RoomsGuestsPopover({ rooms, adults, children, onRoomsCha
             <button
               type="button"
               onClick={close}
-              disabled={!occupancyValidation.valid}
+              disabled={!occupancyValidation.valid || agesIncomplete}
               className="mt-3 w-full rounded-lg bg-brand-600 py-2 text-[13px] font-semibold text-white hover:bg-brand-700 transition-colors disabled:bg-ink-muted disabled:cursor-not-allowed"
             >
               Done
