@@ -251,39 +251,6 @@ function buildPassengers(booking: FlightBooking): unknown[] {
   });
 }
 
-/** Called when TBO reports a price/time change at Book or Ticket. Return true to
- *  accept the new fare and continue, false to abort. (Prompt-then-accept flow.)
- *  `leg` distinguishes the outbound vs inbound PNR on a domestic-return booking so
- *  the customer is prompted for every leg whose price changed. */
-export type PriceChangeHandler = (info: {
-  stage: "book" | "ticket";
-  leg?: "outbound" | "inbound";
-  newFare?: number;
-}) => Promise<boolean> | boolean;
-
-/** Which legs reported a price change (per-PNR for domestic return). */
-function changedLegs(d: {
-  isPriceChanged?: boolean;
-  returnLeg?: { isPriceChanged?: boolean };
-}): Array<"outbound" | "inbound"> {
-  const legs: Array<"outbound" | "inbound"> = [];
-  if (d.isPriceChanged) legs.push("outbound");
-  if (d.returnLeg?.isPriceChanged) legs.push("inbound");
-  return legs;
-}
-
-/** Prompts the user once per changed leg; throws if any leg is declined. */
-async function confirmPriceChange(
-  legs: Array<"outbound" | "inbound">,
-  stage: "book" | "ticket",
-  onPriceChange?: PriceChangeHandler,
-): Promise<void> {
-  for (const leg of legs) {
-    const ok = await (onPriceChange?.({ stage, leg }) ?? false);
-    if (!ok) throw new Error(`Price changed for the ${leg} flight and was not accepted. Booking was not completed.`);
-  }
-}
-
 function buildValidationContext(booking: FlightBooking) {
   const lastSeg = booking.offer.segments[booking.offer.segments.length - 1];
   return {
@@ -299,116 +266,35 @@ function buildValidationContext(booking: FlightBooking) {
   };
 }
 
-export async function submitBooking(
-  booking: FlightBooking,
-  onPriceChange?: PriceChangeHandler,
-): Promise<BookingResult> {
-  const passengers = buildPassengers(booking);
-  const validation = buildValidationContext(booking);
-  const base = {
+/**
+ * Assembles the full booking payload that the server needs to issue the ticket
+ * AFTER a verified Razorpay payment. Booking happens server-side inside
+ * /api/flights/razorpay/verify-payment (issue.ts) so a verified payment is always
+ * atomically paired with a Book/Ticket attempt + auto-refund on failure.
+ *
+ * The price the customer pays is the FareQuote price they accepted at the review
+ * step; any later TBO fare change is rejected server-side and refunded.
+ */
+export function buildBookingPayload(booking: FlightBooking) {
+  return {
+    isLCC: booking.isLCC,
     resultIndex: booking.offer.id,
     traceId: booking.fareQuoteTraceId,
     fareBreakdown: booking.fareBreakdown,
-    passengers,
+    passengers: buildPassengers(booking),
     contactEmail: booking.contact.email,
     contactPhone: booking.contact.phone,
-    validation,
-  };
-
-  // ── LCC: Ticket directly ────────────────────────────────────────────────────
-  if (booking.isLCC) {
-    const lccBody = {
-      isLCC: true,
-      ...base,
-      isMealMandatory: booking.mealMandatory ?? false,
-      isSeatMandatory: booking.seatMandatory ?? false,
-    };
-    let data = await postTicket(lccBody);
-
-    // Ticket response price change → prompt per changed leg, then re-call with accepted flag.
-    const lccChanged = changedLegs(data);
-    if (lccChanged.length) {
-      await confirmPriceChange(lccChanged, "ticket", onPriceChange);
-      data = await postTicket({ ...lccBody, isPriceChangedAccepted: true });
-    }
-    return toResult(data);
-  }
-
-  // ── Non-LCC: Book → (prompt on price change) → Ticket ───────────────────────
-  const bookRes = await fetch("/api/flights/book", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(base),
-  });
-  const bookJson = await bookRes.json().catch(() => null);
-  if (!bookRes.ok || !bookJson?.success) throw new Error(bookJson?.error ?? "Booking failed");
-
-  const { bookingId, pnr: bookPnr, isPriceChanged: bookPriceChanged, returnLeg: bookReturnLeg } = bookJson.data as {
-    bookingId: number;
-    pnr?: string;
-    isPriceChanged?: boolean;
-    returnLeg?: { bookingId: number; pnr: string; isPriceChanged?: boolean };
-  };
-
-  // Book response price change → prompt for every changed leg before ticketing
-  // (doc: pass ispricechangedaccepted=true on Ticket). Per-PNR for domestic return.
-  const bookChanged = changedLegs({ isPriceChanged: bookPriceChanged, returnLeg: bookReturnLeg });
-  await confirmPriceChange(bookChanged, "book", onPriceChange);
-  const acceptPriceChange = bookChanged.length > 0;
-
-  const ticketBody: Record<string, unknown> = {
-    isLCC: false, bookingId, isPriceChangedAccepted: acceptPriceChange,
-    // PNR from Book → Ticket (sample case-01 sends BookingId + PNR).
-    ...(bookPnr ? { pnr: bookPnr } : {}),
-  };
-  if (bookReturnLeg?.bookingId) ticketBody.returnBookingId = bookReturnLeg.bookingId;
-  if (bookReturnLeg?.pnr) ticketBody.returnPnr = bookReturnLeg.pnr;
-
-  let ticketData = await postTicket(ticketBody);
-
-  // Ticket response price change → prompt per changed leg, then re-call with accepted flag.
-  const ticketChanged = changedLegs(ticketData);
-  if (ticketChanged.length) {
-    await confirmPriceChange(ticketChanged, "ticket", onPriceChange);
-    ticketData = await postTicket({ ...ticketBody, isPriceChangedAccepted: true });
-  }
-
-  return {
-    pnr: ticketData.pnr,
-    bookingId,
-    returnPnr: ticketData.returnLeg?.pnr ?? bookReturnLeg?.pnr,
-    returnBookingId: bookReturnLeg?.bookingId,
-    ticketNumbers: ticketData.ticketNumbers,
-  };
-}
-
-type TicketData = {
-  pnr: string;
-  bookingId: number;
-  ticketNumbers?: string[];
-  bookingStatus?: number;
-  isPriceChanged?: boolean;
-  returnLeg?: { bookingId: number; pnr: string; isPriceChanged?: boolean };
-};
-
-async function postTicket(body: Record<string, unknown>): Promise<TicketData> {
-  const res = await fetch("/api/flights/ticket", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const json = await res.json().catch(() => null);
-  if (!res.ok || !json?.success) throw new Error(json?.error ?? "Ticket issuance failed");
-  return json.data as TicketData;
-}
-
-function toResult(data: TicketData): BookingResult {
-  return {
-    pnr: data.pnr,
-    bookingId: data.bookingId,
-    returnPnr: data.returnLeg?.pnr,
-    returnBookingId: data.returnLeg?.bookingId,
-    ticketNumbers: data.ticketNumbers,
+    validation: buildValidationContext(booking),
+    isMealMandatory: booking.mealMandatory ?? false,
+    isSeatMandatory: booking.seatMandatory ?? false,
+    // Domestic return dual-PNR — present only when the offer carries an inbound leg.
+    ...(booking.offer.returnResultIndex
+      ? {
+          returnResultIndex: booking.offer.returnResultIndex,
+          returnTraceId: booking.fareQuoteTraceId,
+          returnFareBreakdown: booking.fareBreakdown,
+        }
+      : {}),
   };
 }
 

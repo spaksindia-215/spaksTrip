@@ -65,13 +65,29 @@ function HoldCountdown({ expiresAt }: { expiresAt: string }) {
   );
 }
 
-function Indicator({ label, value }: { label: string; value: string }) {
+function Indicator({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
-    <div className="rounded-xl border border-border-soft bg-white p-4">
+    <div className={`rounded-xl border p-4 ${accent ? "border-brand-200 bg-brand-50" : "border-border-soft bg-white"}`}>
       <p className="text-[12px] text-ink-muted">{label}</p>
-      <p className="mt-1 text-[18px] font-bold text-ink">{value}</p>
+      <p className={`mt-1 text-[18px] font-bold ${accent ? "text-brand-700" : "text-ink"}`}>{value}</p>
     </div>
   );
+}
+
+function earningsThisMonth(bookings: Booking[]): number {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth();
+  return bookings
+    .filter((b) => {
+      const d = new Date(b.createdAt);
+      return d.getFullYear() === y && d.getMonth() === m;
+    })
+    .reduce((sum, b) => sum + (b.agentMarkup ?? 0), 0);
+}
+
+function earningsAllTime(bookings: Booking[]): number {
+  return bookings.reduce((sum, b) => sum + (b.agentMarkup ?? 0), 0);
 }
 
 export default function AgentDashboardPage() {
@@ -181,14 +197,38 @@ export default function AgentDashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       {profile ? (
-        <div className="grid gap-3 sm:grid-cols-4">
-          <Indicator label="Credit Limit" value={profile.creditLimit != null ? inr(profile.creditLimit) : "Not set"} />
-          <Indicator label="Credit Used" value={inr(profile.creditUsed)} />
-          <Indicator
-            label="Available"
-            value={profile.creditAvailable != null ? inr(profile.creditAvailable) : "—"}
-          />
-          <Indicator label="Wallet" value={inr(profile.walletBalance)} />
+        <div className="flex flex-col gap-3">
+          <div className="grid gap-3 sm:grid-cols-4">
+            <Indicator label="Credit Limit" value={profile.creditLimit != null ? inr(profile.creditLimit) : "Not set"} />
+            <Indicator label="Credit Used" value={inr(profile.creditUsed)} />
+            <Indicator
+              label="Available"
+              value={profile.creditAvailable != null ? inr(profile.creditAvailable) : "—"}
+            />
+            <Indicator label="Wallet" value={inr(profile.walletBalance)} />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <Indicator
+              label="Markup earned this month"
+              value={inr(earningsThisMonth(bookings))}
+              accent
+            />
+            <Indicator
+              label="Markup earned all-time"
+              value={inr(earningsAllTime(bookings))}
+              accent
+            />
+            <Indicator
+              label="Bookings this month"
+              value={String(
+                bookings.filter((b) => {
+                  const now = new Date();
+                  const d = new Date(b.createdAt);
+                  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+                }).length,
+              )}
+            />
+          </div>
         </div>
       ) : null}
 
@@ -223,6 +263,11 @@ export default function AgentDashboardPage() {
                 <p className="text-[13px] text-ink-muted">
                   {booking.pnr ? `PNR ${booking.pnr} · ` : ""}
                   {booking.currency} {booking.amount.toLocaleString("en-IN")}
+                  {booking.agentMarkup != null && booking.agentMarkup > 0 ? (
+                    <span className="ml-2 font-medium text-brand-600">
+                      +{inr(booking.agentMarkup)} markup
+                    </span>
+                  ) : null}
                 </p>
               </div>
               <div className="flex gap-2">

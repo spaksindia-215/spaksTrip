@@ -1,4 +1,4 @@
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import type { UserRole, UserStatus } from "@/lib/authClient";
 import type { Booking, BookingStatus, ProductType } from "@/lib/customerClient";
 
@@ -27,6 +27,34 @@ export type CreateBookingInput = {
   holdMinutes?: number;
   details?: Record<string, unknown>;
 };
+
+export interface AgentBranding {
+  companyName?: string;
+  tagline?: string;
+  logo?: string;
+  primaryColor: string;
+  contactEmail?: string;
+  contactPhone?: string;
+}
+
+export interface AgentBrandingResponse {
+  slug: string | null;
+  branding: AgentBranding | null;
+}
+
+export type MarkupType = "percent" | "flat";
+
+export interface MarkupRule {
+  type: MarkupType;
+  value: number;
+  cap?: number;
+}
+
+export interface AgentMarkupConfig {
+  flights: MarkupRule;
+  hotels: MarkupRule;
+  taxi: MarkupRule;
+}
 
 export const agentClient = {
   async bookings(status?: BookingStatus): Promise<Booking[]> {
@@ -67,5 +95,43 @@ export const agentClient = {
   async profile(): Promise<AgentProfile> {
     const res = await api<{ profile: AgentProfile }>("/api/agent/profile");
     return res.profile;
+  },
+
+  async getMarkup(): Promise<AgentMarkupConfig | null> {
+    const res = await api<{ markup: AgentMarkupConfig | null }>("/api/agent/markup");
+    return res.markup;
+  },
+
+  async updateMarkup(
+    product: "flights" | "hotels" | "taxi",
+    rule: MarkupRule,
+  ): Promise<AgentMarkupConfig | null> {
+    const res = await api<{ markup: AgentMarkupConfig | null }>("/api/agent/markup", {
+      method: "PATCH",
+      body: { [product]: rule },
+    });
+    return res.markup;
+  },
+
+  async getBranding(): Promise<AgentBrandingResponse> {
+    return api<AgentBrandingResponse>("/api/agent/branding");
+  },
+
+  async updateBranding(formData: FormData): Promise<AgentBranding | null> {
+    // Raw fetch — api() overrides Content-Type to application/json, breaking multipart.
+    const response = await fetch("/api/agent/branding", {
+      method: "PATCH",
+      body: formData,
+      credentials: "include",
+    });
+    if (!response.ok) {
+      const payload = await response.json().catch(() => ({})) as Record<string, unknown>;
+      const msg = (typeof payload.error === "string" ? payload.error : null)
+               ?? (typeof payload.message === "string" ? payload.message : null)
+               ?? "Update failed";
+      throw new ApiError(response.status, msg);
+    }
+    const data = await response.json() as { branding: AgentBranding | null };
+    return data.branding;
   },
 };
