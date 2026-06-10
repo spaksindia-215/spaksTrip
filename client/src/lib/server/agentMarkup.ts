@@ -23,6 +23,7 @@ type AgentConfigResponse = {
 };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:4000";
+const DEFAULT_MARKUP_RULE: MarkupRule = { type: "percent", value: 0 };
 
 function applyMarkup(netFare: number, rule: MarkupRule): number {
   const raw =
@@ -72,24 +73,34 @@ async function fetchJson<T>(path: string): Promise<T> {
 }
 
 async function getPlatformMarkup(product: PricingProduct): Promise<MarkupRule> {
-  const payload = await fetchJson<PlatformConfigResponse>("/api/internal/platform-config");
-  const rule = payload.markup[product];
-
-  if (!rule) {
-    throw new Error(`Platform markup is missing for ${product}`);
+  try {
+    const payload = await fetchJson<PlatformConfigResponse>("/api/internal/platform-config");
+    return payload.markup[product] ?? DEFAULT_MARKUP_RULE;
+  } catch (error) {
+    console.warn(
+      `[pricing] falling back to default platform markup for ${product}:`,
+      error instanceof Error ? error.message : String(error),
+    );
+    return DEFAULT_MARKUP_RULE;
   }
-
-  return rule;
 }
 
 async function getAgentMarkup(product: PricingProduct, request: Request): Promise<MarkupRule | null> {
   const slug = request.headers.get("x-agent-slug")?.trim();
   if (!slug) return null;
 
-  const payload = await fetchJson<AgentConfigResponse>(
-    `/api/internal/agent-config?slug=${encodeURIComponent(slug)}`,
-  );
-  return payload.markup?.[product] ?? null;
+  try {
+    const payload = await fetchJson<AgentConfigResponse>(
+      `/api/internal/agent-config?slug=${encodeURIComponent(slug)}`,
+    );
+    return payload.markup?.[product] ?? null;
+  } catch (error) {
+    console.warn(
+      `[pricing] unable to load agent markup for ${slug}, using platform-only pricing:`,
+      error instanceof Error ? error.message : String(error),
+    );
+    return null;
+  }
 }
 
 export async function buildFarePricer(
