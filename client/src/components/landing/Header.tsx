@@ -469,6 +469,9 @@ export default function Header() {
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>(
     currency === "USD" ? "USD" : "INR",
   );
+  // Navbar visibility settings controlled by the superadmin panel.
+  // Missing keys default to visible (true). Empty object while loading = all visible.
+  const [navVisibility, setNavVisibility] = useState<Record<string, boolean>>({});
 
   const languageOptionLabels = useMemo(
     () => LANGUAGE_OPTIONS.map((opt) => ({ value: opt.name, label: t(opt.key) })),
@@ -498,6 +501,19 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleOutside);
   }, [openDropdown]);
 
+  useEffect(() => {
+    fetch("/api/admin/navbar-settings", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data: { visibility?: Record<string, boolean> }) => {
+        if (data.visibility && typeof data.visibility === "object") {
+          setNavVisibility(data.visibility);
+        }
+      })
+      .catch(() => {
+        // On failure keep defaults (all visible)
+      });
+  }, []);
+
   // Role-aware portal links so the dashboard is always reachable from the header.
   const dashboardHref = user ? dashboardPathForRole(user.role) : "/";
   const profileHref =
@@ -509,7 +525,11 @@ export default function Header() {
           ? "/partner/dashboard"
           : "/my-trips";
   const isPartner = user?.role === "partner";
-  const visibleNavItems = NAV_ITEMS.filter((item) => !item.partnerOnly || isPartner);
+  // partnerOnly items are always gated by role; for public items, respect admin visibility setting.
+  const visibleNavItems = NAV_ITEMS.filter((item) => {
+    if (item.partnerOnly) return isPartner;
+    return navVisibility[item.labelKey] ?? true;
+  });
 
   return (
     <motion.header

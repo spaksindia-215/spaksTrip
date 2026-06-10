@@ -1,9 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import { BookingModel, BOOKING_STATUSES, type BookingStatus } from "../models/Booking";
-import { UserModel, type Role } from "../models/User";
+import { UserModel, type Role, MARKUP_TYPES, type MarkupRule } from "../models/User";
 import { validateBookingCreate } from "../validators/agent.validators";
 import { HttpError } from "../middleware/error";
+import { invalidateAgentCache } from "../lib/agentCache";
+import { uploadToCloudinary, type UploadedFile } from "../lib/cloudinary";
+
+// Strip fields the agent must never see (platform-tier pricing internals).
+// Called on every booking returned by agent-facing endpoints.
+function toAgentBooking(doc: { toJSON(): Record<string, unknown> }): Record<string, unknown> {
+  const obj = doc.toJSON();
+  delete obj.tboFare;
+  delete obj.platformMarkup;
+  return obj;
+}
 
 function ownerIdFrom(req: Request): string {
   if (!req.user) throw new HttpError(401, "Unauthorized");
@@ -54,7 +65,7 @@ export async function listBookings(req: Request, res: Response, next: NextFuncti
     }
 
     const items = await BookingModel.find(filter).sort({ createdAt: -1 });
-    res.json({ items: items.map((i) => i.toJSON()) });
+    res.json({ items: items.map(toAgentBooking) });
   } catch (e) {
     next(e);
   }
@@ -81,6 +92,8 @@ export async function createBooking(req: Request, res: Response, next: NextFunct
       }
     }
 
+    const isAgentRole = ownerRole === "agent" || ownerRole === "b2b_agent";
+
     const booking = await BookingModel.create({
       ownerId,
       ownerRole,
@@ -92,9 +105,18 @@ export async function createBooking(req: Request, res: Response, next: NextFunct
       holdExpiresAt:
         input.status === "held" ? new Date(Date.now() + input.holdMinutes * 60_000) : undefined,
       details: input.details,
+      // Attribution — stamped for agent portal bookings.
+      // tboFare/platformMarkup are unavailable in the manual booking flow;
+      // agentMarkup=0 because agents apply their customer markup offline.
+      ...(isAgentRole ? {
+        agentId:      new mongoose.Types.ObjectId(ownerId),
+        netFare:      input.amount,
+        agentMarkup:  0,
+        customerPaid: input.amount,
+      } : {}),
     });
 
-    res.status(201).json({ booking: booking.toJSON() });
+    res.status(201).json({ booking: toAgentBooking(booking) });
   } catch (e) {
     next(e);
   }
@@ -111,7 +133,7 @@ export async function confirmHold(req: Request, res: Response, next: NextFunctio
       { new: true },
     );
     if (!booking) throw new HttpError(404, "Active hold not found (it may have expired)");
-    res.json({ booking: booking.toJSON() });
+    res.json({ booking: toAgentBooking(booking) });
   } catch (e) {
     next(e);
   }
@@ -128,7 +150,7 @@ export async function cancelBooking(req: Request, res: Response, next: NextFunct
       { new: true },
     );
     if (!booking) throw new HttpError(404, "Booking not found or not cancellable");
-    res.json({ booking: booking.toJSON() });
+    res.json({ booking: toAgentBooking(booking) });
   } catch (e) {
     next(e);
   }
@@ -141,7 +163,152 @@ export async function lookupPnr(req: Request, res: Response, next: NextFunction)
     if (!pnr) throw new HttpError(400, "PNR is required");
     const booking = await BookingModel.findOne({ ownerId, pnr });
     if (!booking) throw new HttpError(404, "No booking found for that PNR");
-    res.json({ booking: booking.toJSON() });
+    res.json({ booking: toAgentBooking(booking) });
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function getMarkup(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const ownerId = ownerIdFrom(req);
+    const user = await UserModel.findById(ownerId).select("markup");
+    if (!user) throw new HttpError(404, "User not found");
+    res.json({ markup: user.markup ?? null });
+  } catch (e) {
+    next(e);
+  }
+}
+
+function isMarkupRuleBody(v: unknown): v is { type: string; value: number; cap?: number } {
+  if (typeof v !== "object" || v === null) return false;
+  const o = v as Record<string, unknown>;
+  return (
+    typeof o.type === "string" &&
+    (MARKUP_TYPES as readonly string[]).includes(o.type) &&
+    typeof o.value === "number" &&
+    o.value >= 0 &&
+    (o.cap === undefined || (typeof o.cap === "number" && o.cap >= 0))
+  );
+}
+
+export async function updateMarkup(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const ownerId = ownerIdFrom(req);
+    const body = req.body as Record<string, unknown>;
+
+    const updates: Partial<Record<"flights" | "hotels" | "taxi", MarkupRule>> = {};
+
+    for (const key of ["flights", "hotels", "taxi"] as const) {
+      if (body[key] !== undefined) {
+        if (!isMarkupRuleBody(body[key])) {
+          throw new HttpError(400, `Invalid markup rule for ${key}`);
+        }
+        const rule = body[key] as { type: string; value: number; cap?: number };
+        const markupType = rule.type as MarkupRule["type"];
+
+        if (markupType === "percent" && rule.value > 30) {
+          throw new HttpError(400, `Percent markup for ${key} cannot exceed 30%`);
+        }
+        if (markupType === "flat" && rule.value > 5000) {
+          throw new HttpError(400, `Flat markup for ${key} cannot exceed ₹5000`);
+        }
+
+        updates[key] = {
+          type: markupType,
+          value: rule.value,
+          ...(rule.cap != null ? { cap: rule.cap } : {}),
+        };
+      }
+    }
+
+    if (Object.keys(updates).length === 0) {
+      throw new HttpError(400, "Provide at least one of: flights, hotels, taxi");
+    }
+
+    const setFields = Object.fromEntries(
+      Object.entries(updates).map(([k, v]) => [`markup.${k}`, v]),
+    );
+
+    const user = await UserModel.findByIdAndUpdate(
+      ownerId,
+      { $set: setFields },
+      { new: true, runValidators: true },
+    ).select("markup slug");
+
+    if (!user) throw new HttpError(404, "User not found");
+
+    // Invalidate agent config cache so the next subdomain request re-fetches markup.
+    if (user.slug) invalidateAgentCache(user.slug);
+
+    res.json({ markup: user.markup ?? null });
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function getBranding(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const ownerId = ownerIdFrom(req);
+    const user = await UserModel.findById(ownerId).select("slug branding");
+    if (!user) throw new HttpError(404, "User not found");
+    res.json({ slug: user.slug ?? null, branding: user.branding ?? null });
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function updateBranding(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const ownerId = ownerIdFrom(req);
+    const body = req.body as Record<string, string>;
+
+    const setOps: Record<string, unknown> = {};
+    const unsetOps: Record<string, ""> = {};
+
+    const textField = (key: string, maxLen: number, dotPath: string) => {
+      if (body[key] === undefined) return;
+      const val = body[key].trim();
+      if (val.length > maxLen) throw new HttpError(400, `${key} max ${maxLen} characters`);
+      if (val) setOps[dotPath] = val;
+      else unsetOps[dotPath] = "";
+    };
+
+    textField("companyName",  100, "branding.companyName");
+    textField("tagline",      120, "branding.tagline");
+    textField("contactEmail",  80, "branding.contactEmail");
+    textField("contactPhone",  30, "branding.contactPhone");
+
+    if (body.primaryColor !== undefined) {
+      if (!/^#[0-9A-Fa-f]{6}$/.test(body.primaryColor)) {
+        throw new HttpError(400, "primaryColor must be a 6-digit hex e.g. #185FA5");
+      }
+      setOps["branding.primaryColor"] = body.primaryColor;
+    }
+
+    if (req.file) {
+      const logoUrl = await uploadToCloudinary(req.file as unknown as UploadedFile, "agent-logos");
+      setOps["branding.logo"] = logoUrl;
+    }
+
+    if (Object.keys(setOps).length === 0 && Object.keys(unsetOps).length === 0) {
+      throw new HttpError(400, "Provide at least one branding field to update");
+    }
+
+    const update: Record<string, unknown> = {};
+    if (Object.keys(setOps).length > 0) update.$set = setOps;
+    if (Object.keys(unsetOps).length > 0) update.$unset = unsetOps;
+
+    const user = await UserModel.findByIdAndUpdate(ownerId, update, {
+      new: true,
+      runValidators: true,
+    }).select("slug branding");
+
+    if (!user) throw new HttpError(404, "User not found");
+
+    if (user.slug) invalidateAgentCache(user.slug);
+
+    res.json({ branding: user.branding ?? null });
   } catch (e) {
     next(e);
   }

@@ -16,6 +16,8 @@ type Props = {
 const BASE_NAV = [
   { href: "/agent/dashboard", label: "Bookings" },
   { href: "/agent/pnr", label: "PNR Tracker" },
+  { href: "/agent/markup", label: "Markup" },
+  { href: "/agent/branding", label: "Branding" },
   { href: "/agent/profile", label: "Profile" },
 ];
 

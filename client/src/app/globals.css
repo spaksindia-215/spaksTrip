@@ -79,6 +79,10 @@
   /* Background/foreground aliases kept for back-compat with existing pages */
   --background: var(--surface);
   --foreground: var(--ink);
+
+  /* Agent subdomain theming — overridden on <html> via inline style by root layout.
+     Defaults to the platform brand so apex pages are unaffected. */
+  --agent-primary: var(--brand-500);
 }
 
 @theme inline {
@@ -119,6 +123,8 @@
   --color-danger-700:  var(--danger-700);
   --color-info-50:     var(--info-50);
   --color-info-500:    var(--info-500);
+
+  --color-agent-primary: var(--agent-primary);
 
   --color-surface:        var(--surface);
   --color-surface-muted:  var(--surface-muted);
