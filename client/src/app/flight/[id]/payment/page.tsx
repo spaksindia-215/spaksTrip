@@ -190,6 +190,11 @@ function PaymentInner() {
   // ── Pay handler ───────────────────────────────────────────────────────────────
   async function onPay() {
     const booking = current!;
+    if (!booking.fareBreakdown?.length || !booking.travelers?.length) {
+      toast.push({ title: "Booking session incomplete", description: "Please go back to the review step and try again.", tone: "warn" });
+      router.push(`/flight/${encodeURIComponent(booking.offer.id)}/review?${sp.toString()}`);
+      return;
+    }
     if (!window.Razorpay) {
       toast.push({ title: "Payment gateway not loaded. Please refresh the page.", tone: "warn" });
       return;
