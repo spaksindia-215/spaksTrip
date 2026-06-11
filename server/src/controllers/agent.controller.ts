@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import { BookingModel, BOOKING_STATUSES, type BookingStatus } from "../models/Booking";
@@ -250,12 +251,33 @@ export async function updateMarkup(req: Request, res: Response, next: NextFuncti
 export async function getBranding(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const ownerId = ownerIdFrom(req);
-    const user = await UserModel.findById(ownerId).select("slug branding");
+    const user = await UserModel.findById(ownerId).select("slug branding name role");
     if (!user) throw new HttpError(404, "User not found");
-    res.json({ slug: user.slug ?? null, branding: user.branding ?? null });
+
+    let slug = user.slug ?? null;
+
+    // Lazy slug generation — covers agents created via findOneAndUpdate (seed/admin)
+    // where the pre-save hook never fired.
+    if (!slug && (user.role === "agent" || user.role === "b2b_agent")) {
+      const base = slugifyForController(user.name);
+      const hex  = crypto.randomBytes(3).toString("hex");
+      slug = `${base}-${hex}`;
+      await UserModel.updateOne({ _id: user._id, slug: { $exists: false } }, { $set: { slug } });
+    }
+
+    res.json({ slug, branding: user.branding ?? null });
   } catch (e) {
     next(e);
   }
+}
+
+function slugifyForController(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 30);
 }
 
 export async function updateBranding(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -336,6 +358,7 @@ export async function getProfile(req: Request, res: Response, next: NextFunction
           gst: user.gst ?? null,
           pan: user.pan ?? null,
         },
+        slug: user.slug ?? null,
         creditLimit: limit,
         creditUsed: used,
         creditAvailable: limit != null ? Math.max(0, limit - used) : null,

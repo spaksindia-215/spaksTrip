@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
@@ -8,12 +8,15 @@ import { ApiError } from "@/lib/api";
 import { agentClient, type AgentBranding } from "@/lib/agentClient";
 
 const DEFAULT_COLOR = "#185FA5";
+const APEX_DOMAIN = process.env.NEXT_PUBLIC_APEX_DOMAIN ?? "spakstrip.com";
 
 export default function AgentBrandingPage() {
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const retryRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [slug, setSlug]                     = useState<string | null>(null);
+  const [copied, setCopied]                 = useState(false);
   const [companyName, setCompanyName]       = useState("");
   const [tagline, setTagline]               = useState("");
   const [primaryColor, setPrimaryColor]     = useState(DEFAULT_COLOR);
@@ -26,31 +29,38 @@ export default function AgentBrandingPage() {
   const [saving, setSaving]                 = useState(false);
   const [error, setError]                   = useState<string | null>(null);
 
-  useEffect(() => {
-    let active = true;
-    async function load() {
-      try {
-        const data = await agentClient.getBranding();
-        if (!active) return;
-        setSlug(data.slug);
-        const b: AgentBranding = data.branding ?? { primaryColor: DEFAULT_COLOR };
-        setCompanyName(b.companyName ?? "");
-        setTagline(b.tagline ?? "");
-        const c = b.primaryColor ?? DEFAULT_COLOR;
-        setPrimaryColor(c);
-        setColorHex(c);
-        setContactEmail(b.contactEmail ?? "");
-        setContactPhone(b.contactPhone ?? "");
-        setLogoPreview(b.logo ?? null);
-      } catch (err) {
-        if (active) setError(err instanceof ApiError ? err.message : "Unable to load branding settings.");
-      } finally {
-        if (active) setLoading(false);
+  const load = useCallback(async (active: { value: boolean }) => {
+    try {
+      const data = await agentClient.getBranding();
+      if (!active.value) return;
+      setSlug(data.slug);
+      if (!data.slug) {
+        retryRef.current = setTimeout(() => void load(active), 3000);
       }
+      const b: AgentBranding = data.branding ?? { primaryColor: DEFAULT_COLOR };
+      setCompanyName(b.companyName ?? "");
+      setTagline(b.tagline ?? "");
+      const c = b.primaryColor ?? DEFAULT_COLOR;
+      setPrimaryColor(c);
+      setColorHex(c);
+      setContactEmail(b.contactEmail ?? "");
+      setContactPhone(b.contactPhone ?? "");
+      setLogoPreview(b.logo ?? null);
+    } catch (err) {
+      if (active.value) setError(err instanceof ApiError ? err.message : "Unable to load branding settings.");
+    } finally {
+      if (active.value) setLoading(false);
     }
-    void load();
-    return () => { active = false; };
   }, []);
+
+  useEffect(() => {
+    const active = { value: true };
+    void load(active);
+    return () => {
+      active.value = false;
+      if (retryRef.current) clearTimeout(retryRef.current);
+    };
+  }, [load]);
 
   const handleColorPickerChange = (v: string) => {
     setPrimaryColor(v);
@@ -68,6 +78,17 @@ export default function AgentBrandingPage() {
     setLogoFile(file);
     const url = URL.createObjectURL(file);
     setLogoPreview(url);
+  };
+
+  const copySubdomain = () => {
+    if (!slug) return;
+    const url = `https://${slug}.${APEX_DOMAIN}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {
+      toast.push({ title: "Could not copy — please copy manually", tone: "warn" });
+    });
   };
 
   const save = async () => {
@@ -123,17 +144,33 @@ export default function AgentBrandingPage() {
       </div>
 
       {/* Subdomain display */}
-      {slug && (
-        <div className="rounded-xl border border-border-soft bg-white p-5">
-          <p className="text-[12px] font-medium text-ink-soft mb-1">Your subdomain (read-only)</p>
-          <p className="text-[14px] font-mono font-semibold text-brand-700">
-            {slug}.spakstrip.com
-          </p>
-          <p className="mt-1 text-[12px] text-ink-muted">
-            Share this URL with your customers to let them book through your branded portal.
-          </p>
-        </div>
-      )}
+      <div className="rounded-xl border border-border-soft bg-white p-5">
+        <p className="text-[12px] font-medium text-ink-soft mb-2">Your subdomain</p>
+        {slug ? (
+          <>
+            <div className="flex items-center gap-3">
+              <p className="flex-1 text-[14px] font-mono font-semibold text-brand-700 break-all">
+                {slug}.{APEX_DOMAIN}
+              </p>
+              <button
+                type="button"
+                onClick={copySubdomain}
+                className="shrink-0 rounded-lg border border-border-soft bg-surface-muted px-3 py-1.5 text-[12px] font-semibold text-ink hover:bg-border-soft transition-colors"
+              >
+                {copied ? "Copied!" : "Copy link"}
+              </button>
+            </div>
+            <p className="mt-2 text-[12px] text-ink-muted">
+              Share this URL with your customers. This is your branded booking portal.
+            </p>
+          </>
+        ) : (
+          <div className="flex items-center gap-2 text-[13px] text-ink-muted">
+            <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-border border-t-brand-500" />
+            Generating your subdomain…
+          </div>
+        )}
+      </div>
 
       {/* Identity */}
       <div className="rounded-xl border border-border-soft bg-white p-5 flex flex-col gap-4">
