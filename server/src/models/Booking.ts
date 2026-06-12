@@ -21,6 +21,13 @@ export interface IBooking {
   holdExpiresAt?: Date;
   cancelRequestedAt?: Date;
   details: AnyBookingDetails;
+  // Agent attribution — only present when an agent/b2b_agent creates the booking.
+  agentId?: Types.ObjectId;
+  tboFare?: number;        // TBO raw fare — stored for settlement audit, never sent to browser
+  platformMarkup?: number; // platform cut (₹) — stored for settlement audit
+  netFare?: number;        // agentNetRate: tboFare + platformMarkup
+  agentMarkup?: number;    // agent's cut (₹)
+  customerPaid?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,11 +46,18 @@ const bookingSchema = new Schema<IBooking>(
     holdExpiresAt: { type: Date },
     cancelRequestedAt: { type: Date },
     details: { type: Schema.Types.Mixed, default: {} },
+    agentId:        { type: Schema.Types.ObjectId, ref: "User" },
+    tboFare:        { type: Number, min: 0 },
+    platformMarkup: { type: Number, min: 0 },
+    netFare:        { type: Number, min: 0 },
+    agentMarkup:    { type: Number, min: 0 },
+    customerPaid:   { type: Number, min: 0 },
   },
   { timestamps: true },
 );
 
 bookingSchema.index({ ownerId: 1, status: 1 });
+bookingSchema.index({ agentId: 1, createdAt: -1 });
 
 bookingSchema.set("toJSON", {
   transform: (_doc, ret) => {

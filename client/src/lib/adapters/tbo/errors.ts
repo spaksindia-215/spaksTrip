@@ -60,9 +60,33 @@ export class TboValidationError extends TboError {
   }
 }
 
+// TBO reported a fare change at Book/Ticket AFTER the customer paid the FareQuote
+// price. We do not silently accept a price the customer never saw — the payment is
+// refunded and the user is asked to re-book at the new price.
+export class TboPriceChangedError extends TboError {
+  constructor(detail?: string) {
+    super(10007, detail ?? "Fare changed before the ticket could be issued");
+    this.name = "TboPriceChangedError";
+  }
+}
+
+// Domestic-return dual-PNR: the OUTBOUND ticket was issued but the INBOUND leg then
+// failed. We must NOT blanket-refund (the outbound ticket is real) — the caller flags
+// the booking for manual reconciliation and records the issued outbound PNR.
+export class TboPartialBookingError extends TboError {
+  constructor(
+    public readonly issued: { pnr: string; bookingId: number; ticketNumbers: string[] },
+    public readonly reason: string,
+  ) {
+    super(10008, `Outbound ticket issued (PNR ${issued.pnr || issued.bookingId}) but the inbound leg failed: ${reason}`);
+    this.name = "TboPartialBookingError";
+  }
+}
+
 /**
- * Duplicate Booking Validation (CLAUDE.md): TBO blocks an identical booking within
- * 24h (Non-LCC) with "Booking is already done for the same criteria for PNR ...".
+ * Duplicate Booking Validation: per TBO support (Jun 2026), an identical booking is
+ * blocked for 5 days for the same passenger criteria + sector — "Booking is already
+ * done for the same criteria for PNR ...". (CLAUDE.md's 24h figure is superseded.)
  * We can't reliably pre-check client-side, so we surface a clear message instead.
  */
 export function isDuplicateBookingError(message: string | undefined | null): boolean {

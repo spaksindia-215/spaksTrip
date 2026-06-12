@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { tboSearchFlights } from "@/lib/adapters/tbo/flight/search";
 import { TboNoResultsError, TboError } from "@/lib/adapters/tbo/errors";
 import type { TboFlightSearchInput } from "@/lib/adapters/tbo/flight/search";
+import { buildFarePricer } from "@/lib/server/agentMarkup";
 
 function err(message: string, status: number) {
   return NextResponse.json({ success: false, error: message }, { status });
@@ -51,6 +52,16 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await tboSearchFlights(body);
+
+    // Fetch markup config once, then apply synchronously per offer.
+    const priceFlight = await buildFarePricer("flights", request);
+    for (const offer of result.offers) {
+      offer.basePrice = priceFlight(offer.basePrice);
+    }
+    const prices = result.offers.map((o) => o.basePrice).filter((p) => p > 0);
+    result.minPrice = prices.length ? Math.min(...prices) : 0;
+    result.maxPrice = prices.length ? Math.max(...prices) : 0;
+
     return NextResponse.json({ success: true, data: result });
   } catch (e) {
     const stack = e instanceof Error ? e.stack : String(e);

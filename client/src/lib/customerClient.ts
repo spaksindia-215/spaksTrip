@@ -16,6 +16,9 @@ export type Booking = {
   holdExpiresAt?: string;
   cancelRequestedAt?: string;
   details: Record<string, unknown>;
+  agentMarkup?: number;
+  netFare?: number;
+  customerPaid?: number;
   createdAt: string;
   updatedAt: string;
 };

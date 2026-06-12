@@ -1,6 +1,8 @@
 import { api } from "@/lib/api";
 import type { UserRole, UserStatus } from "@/lib/authClient";
 
+export type MarkupRule = { type: "percent" | "flat"; value: number; cap?: number };
+
 // Full user record as returned by the admin endpoints (KYC visible to admin).
 export type AdminUser = {
   id: string;
@@ -14,7 +16,24 @@ export type AdminUser = {
   pan?: string;
   creditLimit: number | null;
   walletBalance: number;
+  markup?: { flights: MarkupRule; hotels: MarkupRule; taxi: MarkupRule };
   createdAt: string;
+};
+
+// Map of navbar labelKey → visible. Missing keys default to visible (true).
+export type NavbarVisibility = Record<string, boolean>;
+
+export type PlatformMarkupRule = { type: "percent" | "flat"; value: number; cap?: number };
+export type PlatformMarkupConfig = {
+  flights: PlatformMarkupRule;
+  hotels:  PlatformMarkupRule;
+  taxi:    PlatformMarkupRule;
+};
+export type PlatformMarkupResponse = {
+  markup:    PlatformMarkupConfig;
+  version:   number;
+  updatedAt: string;
+  updatedBy: string;
 };
 
 type ListResponse = { items: AdminUser[] };
@@ -75,5 +94,35 @@ export const adminClient = {
       skipRefresh: true,
     });
     return res.user;
+  },
+
+  async getNavbarSettings(): Promise<NavbarVisibility> {
+    const res = await api<{ visibility: NavbarVisibility }>("/api/admin/navbar-settings", {
+      skipRefresh: true,
+    });
+    return res.visibility;
+  },
+
+  async updateNavbarSettings(visibility: NavbarVisibility): Promise<NavbarVisibility> {
+    const res = await api<{ visibility: NavbarVisibility }>("/api/admin/navbar-settings", {
+      method: "PUT",
+      body: { visibility },
+      skipRefresh: true,
+    });
+    return res.visibility;
+  },
+
+  async getPlatformMarkup(): Promise<PlatformMarkupResponse> {
+    return api<PlatformMarkupResponse>("/api/admin/platform-markup", { skipRefresh: true });
+  },
+
+  async updatePlatformMarkup(
+    markup: Partial<PlatformMarkupConfig>,
+  ): Promise<PlatformMarkupResponse> {
+    return api<PlatformMarkupResponse>("/api/admin/platform-markup", {
+      method: "PUT",
+      body: markup,
+      skipRefresh: true,
+    });
   },
 };

@@ -8,6 +8,9 @@ import type {
 } from "@/lib/adapters/tbo/hotel/book";
 import { TboBookingFailedError, TboError } from "@/lib/adapters/tbo/errors";
 import { logRequest, logResponse, logError } from "@/lib/adapters/tbo/log";
+import { buildTwoTierPricing, type TwoTierPricing } from "@/lib/server/agentMarkup";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:4000";
 
 export const runtime = "nodejs";
 
@@ -22,23 +25,26 @@ type PaymentStatus =
   | "refunded"; // Legacy alias — kept for forward compat
 
 interface HotelPaymentRecord {
-  razorpayOrderId: string;
-  razorpayPaymentId: string;
-  amountPaise: number;
-  currency: string;
-  clientReferenceId: string;
-  bookingCode: string;
-  netAmount: number;
-  status: PaymentStatus;
-  tboBookingId?: number | null;
-  tboBookingRefNo?: string | null;
+  razorpayOrderId:    string;
+  razorpayPaymentId:  string;
+  amountPaise:        number;
+  currency:           string;
+  clientReferenceId:  string;
+  bookingCode:        string;
+  netAmount:          number;
+  status:             PaymentStatus;
+  tboBookingId?:      number | null;
+  tboBookingRefNo?:   string | null;
   tboConfirmationNo?: string | null;
-  tboInvoiceNumber?: string | null;
-  tboError?: string;
-  refundId?: string;
-  refundInitiated: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  tboInvoiceNumber?:  string | null;
+  tboError?:          string;
+  refundId?:          string;
+  refundInitiated:    boolean;
+  // Agent attribution — present on subdomain customer bookings only
+  agentId?:           string;
+  pricing?:           TwoTierPricing;
+  createdAt:          Date;
+  updatedAt:          Date;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -173,8 +179,7 @@ export async function POST(request: NextRequest) {
     }> | undefined = body?.guests;
     const guestNationality: string = body?.guestNationality ?? "IN";
     // Agent attribution (subdomain customer bookings only)
-    const agentId: string | undefined = body?.agentId;
-    const twoTierPricing: unknown = body?.twoTierPricing;
+  
     // Total adults and rooms from the booking — needed to reconstruct per-room
     // passenger count. Must match the remainder-distribution in searchHolidays.ts exactly.
     const totalAdults: number = Math.max(1, Number(body?.adults ?? 1));
@@ -198,6 +203,14 @@ export async function POST(request: NextRequest) {
       return err("guests must be a non-empty array.", 400);
     if (!clientReferenceId) return err("clientReferenceId is required.", 400);
 
+    // ── Agent attribution (subdomain bookings only) ─────────────────────────
+    // netAmount is what TBO charges (= tboFare). Compute the full pricing
+    // breakdown so all 5 fields can be stamped on the booking record.
+
+    const agentId   = request.headers.get("x-agent-id") ?? undefined;
+    const twoTierPricing: TwoTierPricing | null = agentId
+      ? await buildTwoTierPricing(Number(netAmount), "hotels", request)
+      : null;
     console.log(`[BOOK DEBUG] guests[0] identity:`, {
       hasPan: !!guests[0]?.pan,
       pan: guests[0]?.pan ? guests[0].pan.slice(0, 5) + "XXXXX" : null,
@@ -304,12 +317,15 @@ export async function POST(request: NextRequest) {
       razorpayOrderId,
       razorpayPaymentId,
       amountPaise,
-      currency: "INR",
+      currency:         "INR",
       clientReferenceId,
       bookingCode,
-      netAmount: Number(netAmount),
-      status: "payment_verified",
-      refundInitiated: false,
+      netAmount:        Number(netAmount),
+      status:           "payment_verified",
+      refundInitiated:  false,
+      // Attribution fields — only populated on subdomain customer bookings
+      ...(agentId       ? { agentId }          : {}),
+      ...(twoTierPricing ? { pricing: twoTierPricing } : {}),
       createdAt: now,
       updatedAt: now,
     };
@@ -445,15 +461,32 @@ export async function POST(request: NextRequest) {
       { razorpayOrderId, razorpayPaymentId },
       {
         $set: {
-          status: "tbo_confirmed",
-          tboBookingId: tboResult.bookingId,
-          tboBookingRefNo: tboResult.bookingRefNo,
+          status:            "tbo_confirmed",
+          tboBookingId:      tboResult.bookingId,
+          tboBookingRefNo:   tboResult.bookingRefNo,
           tboConfirmationNo: tboResult.confirmationNo,
-          tboInvoiceNumber: tboResult.invoiceNumber,
-          updatedAt: new Date(),
+          tboInvoiceNumber:  tboResult.invoiceNumber,
+          updatedAt:         new Date(),
         },
       },
     );
+
+    // Create a BookingModel entry for settlement reporting (non-fatal: fire-and-forget).
+    if (agentId && twoTierPricing) {
+      fetch(new URL("/api/internal/record-booking", API_BASE), {
+        method:  "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          agentId,
+          productType:  "hotel",
+          pnr:          tboResult.bookingRefNo ?? undefined,
+          ...twoTierPricing,
+        }),
+        cache: "no-store",
+      }).catch((e: unknown) => {
+        console.error("[record-booking] fire-and-forget failed:", e instanceof Error ? e.message : String(e));
+      });
+    }
 
     return NextResponse.json({ success: true, data: tboResult });
 
