@@ -255,6 +255,16 @@ function PaymentInner() {
       });
       return;
     }
+    const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    if (!key) {
+      console.error("Razorpay key missing. NEXT_PUBLIC_RAZORPAY_KEY_ID:", key);
+      toast.push({
+        title: "Payment is not configured. Set NEXT_PUBLIC_RAZORPAY_KEY_ID.",
+        tone: "warn",
+      });
+      return;
+    }
+    console.log("Razorpay key loaded successfully:", key?.slice(0, 10) + "***");
 
     // Step 1: create Razorpay order server-side
     setPhase("creating_order");
@@ -295,8 +305,8 @@ function PaymentInner() {
     setPhase("awaiting_payment");
 
     const lead = booking.guests[0];
-    const rzp = new window.Razorpay({
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+    const checkoutOptions: RazorpayOptions = {
+      key,
       order_id: orderId,
       amount: totalPaise,
       currency: "INR",
@@ -333,8 +343,15 @@ function PaymentInner() {
           });
         },
       },
+    };
+
+    console.log("Razorpay checkout options:", {
+      key: key?.slice(0, 10) + "***",
+      order_id: checkoutOptions.order_id,
+      amount: checkoutOptions.amount,
     });
 
+    const rzp = new window.Razorpay(checkoutOptions);
     rzp.open();
   }
 
