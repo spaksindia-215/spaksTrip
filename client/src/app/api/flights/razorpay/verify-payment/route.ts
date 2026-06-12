@@ -6,6 +6,7 @@ import { TboPriceChangedError, TboPartialBookingError, TboError } from "@/lib/ad
 import { logError } from "@/lib/adapters/tbo/log";
 import { buildTwoTierPricing, type TwoTierPricing } from "@/lib/server/agentMarkup";
 import type { TboFareBreakdown } from "@/lib/adapters/tbo/types";
+import { sendFlightConfirmation } from "@/lib/mailer";
 
 export const runtime = "nodejs";
 
@@ -255,6 +256,26 @@ export async function POST(request: NextRequest) {
         },
       },
     );
+
+    // Confirmation email (fire-and-forget — never blocks the booking response).
+    {
+      const passengers = booking.passengers as Array<{ firstName: string; lastName: string; title?: string }>;
+      const passengerNames = passengers.map((p) => `${p.title ?? ""} ${p.firstName} ${p.lastName}`.trim());
+      const origin = (booking as { validation?: { origin?: string } }).validation?.origin ?? "";
+      const destination = (booking as { validation?: { destination?: string } }).validation?.destination ?? "";
+      const totalAmount = Math.round(capturedPaise / 100);
+      sendFlightConfirmation({
+        to: booking.contactEmail,
+        pnr: result.pnr,
+        bookingReference: clientReferenceId,
+        origin,
+        destination,
+        passengerNames,
+        totalAmount,
+      }).catch((e: unknown) =>
+        console.error("[mailer] flight confirmation email failed:", e instanceof Error ? e.message : String(e)),
+      );
+    }
 
     // Settlement attribution (fire-and-forget — never blocks the user).
     if (agentId && pricing) {
