@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
-import EmptyState from "@/components/ui/EmptyState";
 import Input from "@/components/ui/Input";
 import Modal from "@/components/ui/Modal";
 import Tabs from "@/components/ui/Tabs";
 import { useToast } from "@/components/ui/Toast";
+import StatCard from "@/components/dashboard/StatCard";
+import StatusBadge from "@/components/dashboard/StatusBadge";
+import DataTable, { type Column } from "@/components/dashboard/DataTable";
 import { ApiError } from "@/lib/api";
+import { useAuthStore } from "@/state/authStore";
 import {
   agentClient,
   type AgentProfile,
@@ -30,13 +32,6 @@ const PRODUCT_LABELS: Record<ProductType, string> = {
   package: "Package",
 };
 
-const STATUS_TONE: Record<BookingStatus, "success" | "warn" | "danger" | "neutral"> = {
-  active: "success",
-  held: "warn",
-  cancelled: "danger",
-  completed: "neutral",
-};
-
 const TABS: Array<{ value: BookingStatus | "all"; label: string }> = [
   { value: "all", label: "All" },
   { value: "active", label: "Active" },
@@ -49,6 +44,16 @@ function inr(value: number): string {
   return `₹${value.toLocaleString("en-IN")}`;
 }
 
+function shortDate(value: string): string {
+  return new Date(value).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+}
+
+function greeting(hour: number): string {
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+}
+
 // Live mm:ss countdown to a hold's expiry.
 function HoldCountdown({ expiresAt }: { expiresAt: string }) {
   const [now, setNow] = useState(() => Date.now());
@@ -57,22 +62,13 @@ function HoldCountdown({ expiresAt }: { expiresAt: string }) {
     return () => clearInterval(id);
   }, []);
   const remaining = new Date(expiresAt).getTime() - now;
-  if (remaining <= 0) return <span className="text-[12px] font-semibold text-danger-600">Expired</span>;
+  if (remaining <= 0) return <span className="text-xs font-semibold text-danger-600">Expired</span>;
   const mins = Math.floor(remaining / 60000);
   const secs = Math.floor((remaining % 60000) / 1000);
   return (
-    <span className="text-[12px] font-semibold text-warn-600">
+    <span className="text-xs font-medium text-warn-600">
       Expires in {mins}:{secs.toString().padStart(2, "0")}
     </span>
-  );
-}
-
-function Indicator({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
-  return (
-    <div className={`rounded-xl border p-4 ${accent ? "border-brand-200 bg-brand-50" : "border-border-soft bg-white"}`}>
-      <p className="text-[12px] text-ink-muted">{label}</p>
-      <p className={`mt-1 text-[18px] font-bold ${accent ? "text-brand-700" : "text-ink"}`}>{value}</p>
-    </div>
   );
 }
 
@@ -92,8 +88,19 @@ function earningsAllTime(bookings: Booking[]): number {
   return bookings.reduce((sum, b) => sum + (b.agentMarkup ?? 0), 0);
 }
 
+function bookingsThisMonth(bookings: Booking[]): number {
+  const now = new Date();
+  return bookings.filter((b) => {
+    const d = new Date(b.createdAt);
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  }).length;
+}
+
 export default function AgentDashboardPage() {
   const toast = useToast();
+  const displayName = useAuthStore((state) => state.user?.displayName ?? "");
+  const firstName = displayName.trim().split(/\s+/)[0] || "there";
+
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [profile, setProfile] = useState<AgentProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -139,12 +146,15 @@ export default function AgentDashboardPage() {
 
   const copySubdomain = (slug: string) => {
     const url = `https://${slug}.${APEX_DOMAIN}`;
-    navigator.clipboard.writeText(url).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    }).catch(() => {
-      toast.push({ title: "Could not copy — please copy manually", tone: "warn" });
-    });
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      })
+      .catch(() => {
+        toast.push({ title: "Could not copy — please copy manually", tone: "warn" });
+      });
   };
 
   const act = async (id: string, fn: () => Promise<Booking>) => {
@@ -194,166 +204,199 @@ export default function AgentDashboardPage() {
   };
 
   if (loading) {
-    return <p className="py-12 text-center text-sm text-ink-muted">Loading bookings…</p>;
+    return (
+      <div className="flex flex-col gap-6">
+        <div className="h-9 w-64 animate-pulse rounded-md bg-surface-sunken" />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-28 animate-pulse rounded-md bg-surface-sunken" />
+          ))}
+        </div>
+        <div className="h-64 animate-pulse rounded-md bg-surface-sunken" />
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div className="rounded-xl border border-danger-200 bg-danger-50 p-4 text-[13px] text-danger-600">
+      <div className="rounded-md border border-danger-200 bg-danger-50 p-4 text-[13px] text-danger-600">
         {error}
       </div>
     );
   }
 
   const visible = tab === "all" ? bookings : bookings.filter((b) => b.status === tab);
+  const today = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long" });
+
+  const columns: Column<Booking>[] = [
+    {
+      key: "pnr",
+      header: "PNR",
+      cell: (b) => <span className="font-mono text-[13px] text-ink">{b.pnr ?? "—"}</span>,
+    },
+    {
+      key: "product",
+      header: "Product",
+      cell: (b) => PRODUCT_LABELS[b.productType],
+    },
+    {
+      key: "created",
+      header: "Created",
+      hideOnMobile: true,
+      cell: (b) => <span className="text-ink-muted">{shortDate(b.createdAt)}</span>,
+    },
+    {
+      key: "amount",
+      header: "Amount",
+      align: "right",
+      cell: (b) => (
+        <span className="font-mono text-[13px]">
+          {inr(b.amount)}
+          {b.agentMarkup != null && b.agentMarkup > 0 ? (
+            <span className="ml-2 text-brand-600">+{inr(b.agentMarkup)}</span>
+          ) : null}
+        </span>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      cell: (b) => (
+        <div className="flex flex-col items-start gap-1">
+          <StatusBadge status={b.status} />
+          {b.status === "held" && b.holdExpiresAt ? <HoldCountdown expiresAt={b.holdExpiresAt} /> : null}
+        </div>
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      align: "right",
+      cell: (b) => (
+        <div className="flex justify-end gap-2">
+          {b.status === "held" ? (
+            <Button
+              variant="primary"
+              size="sm"
+              loading={busyId === b.id}
+              onClick={() => act(b.id, () => agentClient.confirm(b.id))}
+            >
+              Confirm
+            </Button>
+          ) : null}
+          {b.status === "active" || b.status === "held" ? (
+            <Button
+              variant="outline"
+              size="sm"
+              loading={busyId === b.id}
+              onClick={() => act(b.id, () => agentClient.cancel(b.id))}
+            >
+              {b.status === "held" ? "Release" : "Cancel"}
+            </Button>
+          ) : null}
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-6">
-      {profile ? (
-        <div className="flex flex-col gap-3">
-          <div className="grid gap-3 sm:grid-cols-4">
-            <Indicator label="Credit Limit" value={profile.creditLimit != null ? inr(profile.creditLimit) : "Not set"} />
-            <Indicator label="Credit Used" value={inr(profile.creditUsed)} />
-            <Indicator
-              label="Available"
-              value={profile.creditAvailable != null ? inr(profile.creditAvailable) : "—"}
-            />
-            <Indicator label="Wallet" value={inr(profile.walletBalance)} />
-          </div>
-          <div className="grid gap-3 sm:grid-cols-3">
-            <Indicator
-              label="Markup earned this month"
-              value={inr(earningsThisMonth(bookings))}
-              accent
-            />
-            <Indicator
-              label="Markup earned all-time"
-              value={inr(earningsAllTime(bookings))}
-              accent
-            />
-            <Indicator
-              label="Bookings this month"
-              value={String(
-                bookings.filter((b) => {
-                  const now = new Date();
-                  const d = new Date(b.createdAt);
-                  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
-                }).length,
-              )}
-            />
-          </div>
+      {/* Greeting */}
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <h1 className="text-xxl font-semibold text-ink">
+            {greeting(new Date().getHours())}, {firstName}
+          </h1>
+          <p className="mt-1 text-sm text-ink-muted">Agent{profile?.name ? ` · ${profile.name}` : ""}</p>
+        </div>
+        <p className="text-sm text-ink-muted">{today}</p>
+      </div>
 
-          {/* Subdomain card */}
-          <div className="rounded-xl border border-border-soft bg-white p-4">
-            <p className="text-[12px] text-ink-muted">Your booking portal</p>
-            {profile.slug ? (
-              <>
-                <p className="mt-1 text-[15px] font-bold text-ink font-mono break-all">
-                  {profile.slug}
-                  <span className="font-normal text-ink-muted">.{APEX_DOMAIN}</span>
-                </p>
-                <div className="mt-3 flex gap-2">
-                  <a
-                    href={`https://${profile.slug}.${APEX_DOMAIN}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-lg border border-border-soft bg-surface-muted px-3 py-1.5 text-[12px] font-semibold text-ink hover:bg-border-soft transition-colors"
-                  >
-                    Open
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => copySubdomain(profile.slug!)}
-                    className="rounded-lg border border-border-soft bg-surface-muted px-3 py-1.5 text-[12px] font-semibold text-ink hover:bg-border-soft transition-colors"
-                  >
-                    {copied ? "Copied!" : "Copy link"}
-                  </button>
-                </div>
-              </>
-            ) : (
-              <p className="mt-1 text-[13px] text-ink-muted">Subdomain pending…</p>
-            )}
-          </div>
+      {/* Credit stats */}
+      {profile ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard
+            label="Credit limit"
+            value={profile.creditLimit != null ? inr(profile.creditLimit) : "—"}
+          />
+          <StatCard label="Used" value={inr(profile.creditUsed)} />
+          <StatCard
+            label="Available"
+            value={profile.creditAvailable != null ? inr(profile.creditAvailable) : "—"}
+          />
+          <StatCard label="Wallet" value={inr(profile.walletBalance)} />
         </div>
       ) : null}
 
-      <div className="flex items-center justify-between gap-3">
-        <Tabs value={tab} onChange={(v) => setTab(v)} items={TABS} variant="segmented" />
-        <Button type="button" variant="primary" size="sm" onClick={() => setCreateOpen(true)}>
-          New Hold / Booking
-        </Button>
+      {/* Earnings — inline secondary metrics */}
+      <div className="rounded-md border border-border-soft bg-surface p-5 shadow-card">
+        <p className="text-xs font-medium uppercase tracking-wide text-ink-muted">Earnings</p>
+        <p className="mt-2 text-sm text-ink">
+          <span className="font-mono font-semibold">{inr(earningsThisMonth(bookings))}</span> this month
+          {" · "}
+          <span className="font-mono font-semibold">{inr(earningsAllTime(bookings))}</span> all-time
+          {" · "}
+          <span className="font-mono font-semibold">{bookingsThisMonth(bookings)}</span> bookings this month
+        </p>
       </div>
 
-      {visible.length === 0 ? (
-        <EmptyState title="No bookings here" subtitle="Create a hold or booking to get started." />
-      ) : (
-        <div className="flex flex-col gap-3">
-          {visible.map((booking) => (
-            <article
-              key={booking.id}
-              className="flex flex-col gap-3 rounded-xl border border-border-soft bg-white p-4 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-[15px] font-semibold text-ink">
-                    {PRODUCT_LABELS[booking.productType]}
-                  </span>
-                  <Badge tone={STATUS_TONE[booking.status]} size="sm">
-                    {booking.status}
-                  </Badge>
-                  {booking.status === "held" && booking.holdExpiresAt ? (
-                    <HoldCountdown expiresAt={booking.holdExpiresAt} />
-                  ) : null}
-                </div>
-                <p className="text-[13px] text-ink-muted">
-                  {booking.pnr ? `PNR ${booking.pnr} · ` : ""}
-                  {booking.currency} {booking.amount.toLocaleString("en-IN")}
-                  {booking.agentMarkup != null && booking.agentMarkup > 0 ? (
-                    <span className="ml-2 font-medium text-brand-600">
-                      +{inr(booking.agentMarkup)} markup
-                    </span>
-                  ) : null}
-                </p>
-              </div>
+      {/* Booking portal */}
+      {profile ? (
+        <div className="rounded-md border border-border-soft bg-surface p-5 shadow-card">
+          <p className="text-xs font-medium uppercase tracking-wide text-ink-muted">Your booking portal</p>
+          {profile.slug ? (
+            <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+              <p className="font-mono text-base font-medium text-ink break-all">
+                {profile.slug}
+                <span className="text-ink-muted">.{APEX_DOMAIN}</span>
+              </p>
               <div className="flex gap-2">
-                {booking.status === "held" ? (
-                  <Button
-                    type="button"
-                    variant="primary"
-                    size="sm"
-                    loading={busyId === booking.id}
-                    onClick={() => act(booking.id, () => agentClient.confirm(booking.id))}
-                  >
-                    Confirm
+                <a href={`https://${profile.slug}.${APEX_DOMAIN}`} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm">
+                    Open
                   </Button>
-                ) : null}
-                {booking.status === "active" || booking.status === "held" ? (
-                  <Button
-                    type="button"
-                    variant="danger"
-                    size="sm"
-                    loading={busyId === booking.id}
-                    onClick={() => act(booking.id, () => agentClient.cancel(booking.id))}
-                  >
-                    {booking.status === "held" ? "Release" : "Cancel"}
-                  </Button>
-                ) : null}
+                </a>
+                <Button variant="outline" size="sm" onClick={() => copySubdomain(profile.slug!)}>
+                  {copied ? "Copied" : "Copy link"}
+                </Button>
               </div>
-            </article>
-          ))}
+            </div>
+          ) : (
+            <p className="mt-2 text-[13px] text-ink-muted">Subdomain pending…</p>
+          )}
         </div>
-      )}
+      ) : null}
+
+      {/* Bookings */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between gap-3">
+          <Tabs value={tab} onChange={(v) => setTab(v)} items={TABS} variant="segmented" />
+          <Button variant="primary" size="sm" onClick={() => setCreateOpen(true)}>
+            New hold or booking
+          </Button>
+        </div>
+
+        <DataTable
+          columns={columns}
+          rows={visible}
+          rowKey={(b) => b.id}
+          empty={{
+            title: "No bookings yet",
+            subtitle: "Create a hold or booking to get started.",
+          }}
+        />
+      </div>
 
       <Modal
         open={createOpen}
         onClose={() => setCreateOpen(false)}
-        title="New Hold / Booking"
+        title="New hold or booking"
         footer={
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" size="sm" onClick={() => setCreateOpen(false)}>
+            <Button variant="outline" size="sm" onClick={() => setCreateOpen(false)}>
               Cancel
             </Button>
-            <Button type="button" variant="primary" size="sm" loading={creating} onClick={submitCreate}>
+            <Button variant="primary" size="sm" loading={creating} onClick={submitCreate}>
               Create
             </Button>
           </div>
@@ -402,7 +445,7 @@ export default function AgentDashboardPage() {
             onChange={(v) => setForm((f) => ({ ...f, mode: v }))}
             items={[
               { value: "held", label: "Hold" },
-              { value: "active", label: "Confirmed Booking" },
+              { value: "active", label: "Confirmed booking" },
             ]}
             variant="segmented"
           />

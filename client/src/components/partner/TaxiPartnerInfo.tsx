@@ -256,10 +256,10 @@ export default function TaxiPartnerInfo({ data, onDataChange }: Props) {
           multiple
           accept="image/*"
           onChange={handleFileChange}
-          className="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-brand-100 file:text-brand-700 hover:file:bg-brand-200"
+          className="block w-full text-sm text-ink-muted file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-brand-100 file:text-brand-700 hover:file:bg-brand-200"
         />
         {data.vehicleImages && data.vehicleImages.length > 0 && (
-          <p className="mt-2 text-sm text-green-600">
+          <p className="mt-2 text-sm text-success-600">
             {data.vehicleImages.length} image(s) selected
           </p>
         )}

@@ -88,13 +88,13 @@ export default function TaxiPartnerDocuments({ data, onDataChange }: Props) {
 
       <div className="space-y-6">
         {documentFields.map((field) => (
-          <div key={field.key} className="border border-slate-200 rounded-lg p-4">
+          <div key={field.key} className="border border-border-soft rounded-lg p-4">
             <div className="flex items-start justify-between mb-3">
               <label className="block text-sm font-medium text-brand-950">
-                {field.label} {field.required && <span className="text-red-500">*</span>}
+                {field.label} {field.required && <span className="text-danger-500">*</span>}
               </label>
               {data[field.key] && (
-                <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
+                <span className="text-xs font-medium text-success-600 bg-success-50 px-2 py-1 rounded">
                   ✓ Uploaded
                 </span>
               )}
@@ -104,26 +104,26 @@ export default function TaxiPartnerDocuments({ data, onDataChange }: Props) {
               type="file"
               accept=".pdf,image/*"
               onChange={(e) => handleFileChange(field.key, e.target.files?.[0])}
-              className="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-brand-100 file:text-brand-700 hover:file:bg-brand-200"
+              className="block w-full text-sm text-ink-muted file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-brand-100 file:text-brand-700 hover:file:bg-brand-200"
             />
             {data[field.key] && (
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-ink-muted">
                 Selected: {getFileName(data[field.key] as File)}
               </p>
             )}
             {errors[field.key] && (
-              <p className="mt-2 text-sm text-red-600">{errors[field.key]}</p>
+              <p className="mt-2 text-sm text-danger-600">{errors[field.key]}</p>
             )}
           </div>
         ))}
 
-        <div className="border border-slate-200 rounded-lg p-4">
+        <div className="border border-border-soft rounded-lg p-4">
           <div className="flex items-start justify-between mb-3">
             <label className="block text-sm font-medium text-brand-950">
               Additional Vehicle Photos *
             </label>
             {data.vehiclePhotos && data.vehiclePhotos.length > 0 && (
-              <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
+              <span className="text-xs font-medium text-success-600 bg-success-50 px-2 py-1 rounded">
                 ✓ {data.vehiclePhotos.length} photos
               </span>
             )}
@@ -136,10 +136,10 @@ export default function TaxiPartnerDocuments({ data, onDataChange }: Props) {
             multiple
             accept="image/*"
             onChange={handleVehiclePhotosChange}
-            className="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-brand-100 file:text-brand-700 hover:file:bg-brand-200"
+            className="block w-full text-sm text-ink-muted file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-brand-100 file:text-brand-700 hover:file:bg-brand-200"
           />
           {data.vehiclePhotos && data.vehiclePhotos.length > 0 && (
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-ink-muted">
               {data.vehiclePhotos.length} photo(s) selected
             </p>
           )}

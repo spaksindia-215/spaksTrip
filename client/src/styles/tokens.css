@@ -1,0 +1,46 @@
+/* ============================================================
+   SpaksTrip dashboard tokens — layered on top of globals.css
+   ------------------------------------------------------------
+   These EXTEND the existing token system (brand/accent/success/
+   warn/danger/ink/surface/border scales live in globals.css).
+   Only what the dashboard surfaces need that wasn't already
+   present is declared here. Do not redefine existing :root vars.
+   ============================================================ */
+
+/* Tailwind v4 emits utilities from @theme keys:
+   --text-xxl        -> text-xxl
+   --shadow-card     -> shadow-card
+   --shadow-card-hover -> shadow-card-hover */
+@theme {
+  /* The one large display size — used ONLY for stat numbers
+     (font-mono) and page-title greetings (font-semibold). */
+  --text-xxl: 1.75rem;
+  --text-xxl--line-height: 2.125rem;
+
+  /* Stripe-subtle elevation for dashboard cards. */
+  --shadow-card: 0 1px 3px rgba(14, 30, 58, 0.05);
+  --shadow-card-hover: 0 2px 8px rgba(14, 30, 58, 0.09);
+}
+
+/* ------------------------------------------------------------
+   Dashboard type scale (reference — use these Tailwind classes):
+     page title / greeting : text-xxl  font-semibold
+     section heading       : text-xl   font-semibold
+     card title            : text-base font-medium
+     body                  : text-sm
+     secondary / timestamp : text-[13px]
+     badge / overline      : text-xs   font-medium
+
+   Stat numbers (₹50,000, 23 bookings): font-mono text-xxl.
+   This is the ONLY place large bold numbers appear.
+
+   Colour usage:
+     primary / link / active : brand-600  (soft: brand-50)
+     status success          : success-600 (soft: success-50)
+     status warning / held   : warn-600   (soft: warn-50)
+     status danger           : danger-600 (soft: danger-50)
+     text                    : ink / ink-soft / ink-muted / ink-subtle
+     surfaces                : surface / surface-muted
+     borders                 : border-soft / border
+   Accent colours are for STATUS only, never decorative.
+   ------------------------------------------------------------ */

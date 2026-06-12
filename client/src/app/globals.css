@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
 
 /* ============================================================
    SpaksTrip design tokens — TBO-inspired
@@ -34,6 +35,7 @@
 
   /* Success / warn / danger / info */
   --success-50:  #ecfdf5;
+  --success-200: #a7f3d0;
   --success-500: #10b981;
   --success-600: #059669;
   --success-700: #047857;
@@ -41,6 +43,7 @@
   --warn-500:    #f59e0b;
   --warn-600:    #d97706;
   --danger-50:   #fef2f2;
+  --danger-200:  #fecaca;
   --danger-500:  #ef4444;
   --danger-600:  #dc2626;
   --danger-700:  #b91c1c;
@@ -111,6 +114,7 @@
   --color-accent-700: var(--accent-700);
 
   --color-success-50:  var(--success-50);
+  --color-success-200: var(--success-200);
   --color-success-500: var(--success-500);
   --color-success-600: var(--success-600);
   --color-success-700: var(--success-700);
@@ -118,6 +122,7 @@
   --color-warn-500:    var(--warn-500);
   --color-warn-600:    var(--warn-600);
   --color-danger-50:   var(--danger-50);
+  --color-danger-200:  var(--danger-200);
   --color-danger-500:  var(--danger-500);
   --color-danger-600:  var(--danger-600);
   --color-danger-700:  var(--danger-700);

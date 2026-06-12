@@ -108,12 +108,12 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.hotelName || ""}
             onChange={(e) => handleChange("hotelName", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.hotelName ? "border-red-500" : "border-gray-300"
+              errors.hotelName ? "border-danger-500" : "border-border"
             }`}
             placeholder="Enter your hotel name"
           />
           {errors.hotelName && (
-            <p className="mt-1 text-sm text-red-500">{errors.hotelName}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.hotelName}</p>
           )}
         </div>
 
@@ -126,12 +126,12 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             onChange={(e) => handleChange("description", e.target.value)}
             rows={4}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.description ? "border-red-500" : "border-gray-300"
+              errors.description ? "border-danger-500" : "border-border"
             }`}
             placeholder="Describe your hotel..."
           />
           {errors.description && (
-            <p className="mt-1 text-sm text-red-500">{errors.description}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.description}</p>
           )}
         </div>
 
@@ -143,7 +143,7 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.hotelType || ""}
             onChange={(e) => handleChange("hotelType", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.hotelType ? "border-red-500" : "border-gray-300"
+              errors.hotelType ? "border-danger-500" : "border-border"
             }`}
           >
             <option value="">Select hotel type</option>
@@ -154,7 +154,7 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             ))}
           </select>
           {errors.hotelType && (
-            <p className="mt-1 text-sm text-red-500">{errors.hotelType}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.hotelType}</p>
           )}
         </div>
 
@@ -166,7 +166,7 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.starRating || ""}
             onChange={(e) => handleChange("starRating", parseFloat(e.target.value))}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.starRating ? "border-red-500" : "border-gray-300"
+              errors.starRating ? "border-danger-500" : "border-border"
             }`}
           >
             <option value="">Select rating</option>
@@ -177,7 +177,7 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             ))}
           </select>
           {errors.starRating && (
-            <p className="mt-1 text-sm text-red-500">{errors.starRating}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.starRating}</p>
           )}
         </div>
 
@@ -190,12 +190,12 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.address || ""}
             onChange={(e) => handleChange("address", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.address ? "border-red-500" : "border-gray-300"
+              errors.address ? "border-danger-500" : "border-border"
             }`}
             placeholder="Street address"
           />
           {errors.address && (
-            <p className="mt-1 text-sm text-red-500">{errors.address}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.address}</p>
           )}
         </div>
 
@@ -208,12 +208,12 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.city || ""}
             onChange={(e) => handleChange("city", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.city ? "border-red-500" : "border-gray-300"
+              errors.city ? "border-danger-500" : "border-border"
             }`}
             placeholder="City"
           />
           {errors.city && (
-            <p className="mt-1 text-sm text-red-500">{errors.city}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.city}</p>
           )}
         </div>
 
@@ -226,12 +226,12 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.state || ""}
             onChange={(e) => handleChange("state", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.state ? "border-red-500" : "border-gray-300"
+              errors.state ? "border-danger-500" : "border-border"
             }`}
             placeholder="State"
           />
           {errors.state && (
-            <p className="mt-1 text-sm text-red-500">{errors.state}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.state}</p>
           )}
         </div>
 
@@ -244,12 +244,12 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.country || ""}
             onChange={(e) => handleChange("country", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.country ? "border-red-500" : "border-gray-300"
+              errors.country ? "border-danger-500" : "border-border"
             }`}
             placeholder="Country"
           />
           {errors.country && (
-            <p className="mt-1 text-sm text-red-500">{errors.country}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.country}</p>
           )}
         </div>
 
@@ -262,12 +262,12 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.postalCode || ""}
             onChange={(e) => handleChange("postalCode", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.postalCode ? "border-red-500" : "border-gray-300"
+              errors.postalCode ? "border-danger-500" : "border-border"
             }`}
             placeholder="Postal code"
           />
           {errors.postalCode && (
-            <p className="mt-1 text-sm text-red-500">{errors.postalCode}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.postalCode}</p>
           )}
         </div>
 
@@ -281,12 +281,12 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.latitude || ""}
             onChange={(e) => handleChange("latitude", parseFloat(e.target.value))}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.latitude ? "border-red-500" : "border-gray-300"
+              errors.latitude ? "border-danger-500" : "border-border"
             }`}
             placeholder="Latitude"
           />
           {errors.latitude && (
-            <p className="mt-1 text-sm text-red-500">{errors.latitude}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.latitude}</p>
           )}
         </div>
 
@@ -300,12 +300,12 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.longitude || ""}
             onChange={(e) => handleChange("longitude", parseFloat(e.target.value))}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.longitude ? "border-red-500" : "border-gray-300"
+              errors.longitude ? "border-danger-500" : "border-border"
             }`}
             placeholder="Longitude"
           />
           {errors.longitude && (
-            <p className="mt-1 text-sm text-red-500">{errors.longitude}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.longitude}</p>
           )}
         </div>
 
@@ -318,12 +318,12 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.contactNumber || ""}
             onChange={(e) => handleChange("contactNumber", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.contactNumber ? "border-red-500" : "border-gray-300"
+              errors.contactNumber ? "border-danger-500" : "border-border"
             }`}
             placeholder="+91 XXXXX XXXXX"
           />
           {errors.contactNumber && (
-            <p className="mt-1 text-sm text-red-500">{errors.contactNumber}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.contactNumber}</p>
           )}
         </div>
 
@@ -336,12 +336,12 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.email || ""}
             onChange={(e) => handleChange("email", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.email ? "border-red-500" : "border-gray-300"
+              errors.email ? "border-danger-500" : "border-border"
             }`}
             placeholder="hotel@example.com"
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.email}</p>
           )}
         </div>
 
@@ -354,11 +354,11 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.checkInTime || ""}
             onChange={(e) => handleChange("checkInTime", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.checkInTime ? "border-red-500" : "border-gray-300"
+              errors.checkInTime ? "border-danger-500" : "border-border"
             }`}
           />
           {errors.checkInTime && (
-            <p className="mt-1 text-sm text-red-500">{errors.checkInTime}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.checkInTime}</p>
           )}
         </div>
 
@@ -371,11 +371,11 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.checkOutTime || ""}
             onChange={(e) => handleChange("checkOutTime", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.checkOutTime ? "border-red-500" : "border-gray-300"
+              errors.checkOutTime ? "border-danger-500" : "border-border"
             }`}
           />
           {errors.checkOutTime && (
-            <p className="mt-1 text-sm text-red-500">{errors.checkOutTime}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.checkOutTime}</p>
           )}
         </div>
       </div>
@@ -388,10 +388,10 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             multiple
             accept="image/*"
             onChange={handleImageChange}
-            className="block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+            className="block w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
           />
           {data.hotelImages && data.hotelImages.length > 0 && (
-            <p className="mt-2 text-sm text-green-600">
+            <p className="mt-2 text-sm text-success-600">
               ✓ {data.hotelImages.length} image(s) selected
             </p>
           )}
@@ -426,7 +426,7 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.policies?.cancellation || ""}
             onChange={(e) => handlePolicyChange("cancellation", e.target.value)}
             rows={3}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
             placeholder="Enter cancellation policy details"
           />
         </div>
@@ -439,7 +439,7 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.policies?.child || ""}
             onChange={(e) => handlePolicyChange("child", e.target.value)}
             rows={3}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
             placeholder="Enter child policy details"
           />
         </div>
@@ -452,7 +452,7 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.policies?.pet || ""}
             onChange={(e) => handlePolicyChange("pet", e.target.value)}
             rows={3}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
             placeholder="Enter pet policy details"
           />
         </div>
@@ -465,7 +465,7 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             value={data.policies?.smoking || ""}
             onChange={(e) => handlePolicyChange("smoking", e.target.value)}
             rows={3}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
             placeholder="Enter smoking policy details"
           />
         </div>

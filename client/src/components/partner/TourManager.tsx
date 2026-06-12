@@ -355,7 +355,7 @@ export default function TourManager() {
           <div className="flex flex-wrap gap-3">
             <StatCard label="Tours" value={String(tours.length)} />
             <StatCard label="Active" value={String(tours.filter((t) => t.status === "active").length)} />
-            <Button type="button" onClick={openCreate}>Create tour</Button>
+            <Button type="button" variant="accent" onClick={openCreate}>Create tour</Button>
           </div>
         </div>
       </section>
@@ -369,7 +369,7 @@ export default function TourManager() {
           <EmptyState
             title="No tours yet"
             subtitle="Create your first guided tour with an itinerary and pricing tiers."
-            cta={<Button type="button" onClick={openCreate}>Create tour</Button>}
+            cta={<Button type="button" variant="accent" onClick={openCreate}>Create tour</Button>}
           />
         </section>
       ) : (

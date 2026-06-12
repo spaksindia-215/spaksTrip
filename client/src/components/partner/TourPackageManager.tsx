@@ -328,7 +328,7 @@ export default function TourPackageManager() {
           <div className="flex flex-wrap gap-3">
             <StatCard label="Packages" value={String(packages.length)} />
             <StatCard label="Active" value={String(packages.filter((p) => p.status === "active").length)} />
-            <Button type="button" onClick={openCreate}>Create package</Button>
+            <Button type="button" variant="accent" onClick={openCreate}>Create package</Button>
           </div>
         </div>
       </section>
@@ -342,7 +342,7 @@ export default function TourPackageManager() {
           <EmptyState
             title="No tour packages yet"
             subtitle="Bundle a multi-day holiday with itinerary, departures, and your own listings."
-            cta={<Button type="button" onClick={openCreate}>Create package</Button>}
+            cta={<Button type="button" variant="accent" onClick={openCreate}>Create package</Button>}
           />
         </section>
       ) : (

@@ -27,9 +27,9 @@ function normalizeAriaText(input: string) {
   return input.replace(/[​-‍﻿]/g, "");
 }
 
+
 const NAV_ITEMS: NavItem[] = [
   { labelKey: "nav.flight", href: "/flight" },
-  { labelKey: "Premium Hotel", href: "/hotel" },
   { labelKey: "Hotel", href: "/hotel" },
   { labelKey: "nav.taxi_package", href: "/taxi-package" },
   {
@@ -446,6 +446,14 @@ function NavIcon({ labelKey, className }: { labelKey: string; className?: string
           <circle cx="8" cy="8" r="1.3" />
         </svg>
       );
+    case "More":
+      return (
+        <svg {...common}>
+          <circle cx="5" cy="12" r="1.4" />
+          <circle cx="12" cy="12" r="1.4" />
+          <circle cx="19" cy="12" r="1.4" />
+        </svg>
+      );
     default:
       return null;
   }
@@ -580,13 +588,6 @@ export default function Header() {
 
             {user ? (
               <div className="relative flex items-center gap-2">
-                <Link
-                  href={dashboardHref}
-                  className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold text-white/85 transition-colors hover:text-white"
-                >
-                  {user.role === "customer" ? t("header.my_trips") : "Dashboard"}
-                </Link>
-                <span className="text-white/40">·</span>
                 <motion.button
                   type="button"
                   whileHover={{ scale: 1.03 }}
@@ -690,8 +691,8 @@ export default function Header() {
 
       <div className="border-b border-slate-100 bg-white">
         <div className="mx-auto st-header-main-nav-inner max-w-7xl px-4 py-3 sm:px-6">
-          <nav className="hidden lg:block flex-1 -ml-4 justify-center">
-            <ul className="flex items-end gap-4 text-ink">
+          <nav className="hidden lg:block flex-1">
+            <ul className="flex flex-wrap items-center justify-center gap-1 text-ink">
               {visibleNavItems.map((item) => (
                 <motion.li
                   key={item.labelKey}
@@ -731,18 +732,18 @@ export default function Header() {
                         setHoveredDesktopMenu(item.labelKey);
                       }
                     }}
-                    className="relative inline-flex flex-col items-center gap-0 rounded-2xl p-0 text-center transition-colors duration-200 hover:bg-blue-50/70 group-hover/nav:text-brand-700"
+                    className="relative inline-flex w-[72px] flex-col items-center justify-center gap-1 rounded-2xl border border-transparent px-1.5 py-2 text-center transition-all duration-200 hover:border-blue-100 hover:bg-blue-50/80 group-hover/nav:text-brand-700"
                   >
-                    <span className="grid h-5 w-5 place-items-center rounded-xl text-brand-600 transition-transform duration-200 group-hover/nav:scale-110">
-                      <NavIcon labelKey={item.labelKey} className="h-[15px] w-[15px]" />
+                    <span className="grid h-6 w-6 place-items-center rounded-xl bg-blue-50 text-brand-600 transition-all duration-200 group-hover/nav:scale-110 group-hover/nav:bg-blue-100">
+                      <NavIcon labelKey={item.labelKey} className="h-[14px] w-[14px]" />
                     </span>
-                    <span className="inline-flex items-center gap-0 text-[10px] font-semibold leading-tight tracking-tight text-ink/85 transition-colors group-hover/nav:text-brand-700">
+                    <span className="inline-flex items-center gap-0 text-[9.5px] font-semibold leading-tight tracking-tight text-ink/80 transition-colors group-hover/nav:text-brand-700">
                       {renderTopLevelNavLabel(t(item.labelKey))}
                       {item.menu ? (
                         <svg
                           viewBox="0 0 24 24"
-                          width={10}
-                          height={10}
+                          width={9}
+                          height={9}
                           fill="none"
                           stroke="currentColor"
                           strokeWidth={2.4}
@@ -755,12 +756,6 @@ export default function Header() {
                         </svg>
                       ) : null}
                     </span>
-                    <motion.span
-                      aria-hidden
-                      className="pointer-events-none absolute inset-x-1.5 -bottom-[1px] h-[2px] origin-center rounded-full bg-gradient-to-r from-brand-500 to-brand-700"
-                      variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
-                      transition={{ duration: 0.28, ease: [0.35, 1, 0.36, 1] }}
-                    />
                   </Link>
                   {item.menu ? <MegaMenu parentKey={item.labelKey} items={item.menu} t={t} /> : null}
                 </motion.li>

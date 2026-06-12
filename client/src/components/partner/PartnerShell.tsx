@@ -1,87 +1,29 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import BackToTop from "@/components/landing/BackToTop";
-import Footer from "@/components/landing/Footer";
-import Header from "@/components/landing/Header";
-import Chip from "@/components/ui/Chip";
-import { useAuthStore, type AuthUser } from "@/state/authStore";
+import PageShell from "@/components/dashboard/PageShell";
+import type { NavItem } from "@/components/dashboard/types";
+import { type AuthUser } from "@/state/authStore";
 
 type Props = {
   user: AuthUser;
   children: React.ReactNode;
 };
 
-const NAV_ITEMS = [
-  { href: "/partner/dashboard", label: "Dashboard" },
-  { href: "/partner/hotels", label: "Hotels" },
-  { href: "/partner/cruises", label: "Cruises" },
-  { href: "/partner/taxis", label: "Taxis" },
-  { href: "/partner/taxi-packages", label: "Taxi Packages" },
-  { href: "/partner/tours", label: "Tours" },
-  { href: "/partner/tour-packages", label: "Tour Packages" },
-  { href: "/partner/bookings", label: "Bookings" },
-  { href: "/partner/api", label: "API" },
+const NAV_ITEMS: NavItem[] = [
+  { href: "/partner/dashboard", label: "Dashboard", icon: "dashboard" },
+  { href: "/partner/hotels", label: "Hotels", icon: "hotel" },
+  { href: "/partner/taxis", label: "Taxis", icon: "taxi" },
+  { href: "/partner/taxi-packages", label: "Taxi Packages", icon: "taxi" },
+  { href: "/partner/tours", label: "Tours", icon: "tour" },
+  { href: "/partner/tour-packages", label: "Tour Packages", icon: "package" },
+  { href: "/partner/cruises", label: "Cruises", icon: "cruise" },
+  { href: "/partner/bookings", label: "Bookings", icon: "bookings" },
 ];
 
 export default function PartnerShell({ user, children }: Props) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const logout = useAuthStore((state) => state.logout);
-
   return (
-    <div className="min-h-screen bg-surface-muted text-ink">
-      <Header />
-
-      <div className="bg-brand-900 text-white">
-        <div className="mx-auto max-w-7xl px-4 py-4 md:px-6">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/65">
-                Partner Workspace
-              </p>
-              <h1 className="mt-1 text-2xl font-black">SpaksTrip Partner</h1>
-              <p className="mt-1 text-[13px] text-white/72">
-                Manage inventory with the same booking-first interface your customers already know.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-[12px] font-semibold text-white/90">
-                {user.displayName}
-              </div>
-              <button
-                type="button"
-                onClick={async () => {
-                  await logout();
-                  router.replace("/auth?role=partner");
-                }}
-                className="rounded-full border border-white/20 px-3.5 py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                Sign Out
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <main className="flex-1">
-        <div className="mx-auto max-w-7xl px-4 py-6 md:px-6">
-          <div className="mb-5 flex flex-wrap gap-2">
-            {NAV_ITEMS.map((item) => (
-              <Link key={item.href} href={item.href}>
-                <Chip active={pathname === item.href}>{item.label}</Chip>
-              </Link>
-            ))}
-          </div>
-
-          {children}
-        </div>
-      </main>
-
-      <Footer />
-      <BackToTop />
-    </div>
+    <PageShell user={user} role="partner" nav={NAV_ITEMS}>
+      {children}
+    </PageShell>
   );
 }

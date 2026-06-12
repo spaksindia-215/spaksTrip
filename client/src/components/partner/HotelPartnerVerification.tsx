@@ -80,12 +80,12 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             value={data.businessName || ""}
             onChange={(e) => handleChange("businessName", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.businessName ? "border-red-500" : "border-gray-300"
+              errors.businessName ? "border-danger-500" : "border-border"
             }`}
             placeholder="Enter your business name"
           />
           {errors.businessName && (
-            <p className="mt-1 text-sm text-red-500">{errors.businessName}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.businessName}</p>
           )}
         </div>
 
@@ -98,12 +98,12 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             value={data.ownerName || ""}
             onChange={(e) => handleChange("ownerName", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.ownerName ? "border-red-500" : "border-gray-300"
+              errors.ownerName ? "border-danger-500" : "border-border"
             }`}
             placeholder="Enter owner's full name"
           />
           {errors.ownerName && (
-            <p className="mt-1 text-sm text-red-500">{errors.ownerName}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.ownerName}</p>
           )}
         </div>
 
@@ -116,12 +116,12 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             value={data.businessEmail || ""}
             onChange={(e) => handleChange("businessEmail", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.businessEmail ? "border-red-500" : "border-gray-300"
+              errors.businessEmail ? "border-danger-500" : "border-border"
             }`}
             placeholder="business@example.com"
           />
           {errors.businessEmail && (
-            <p className="mt-1 text-sm text-red-500">{errors.businessEmail}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.businessEmail}</p>
           )}
         </div>
 
@@ -134,12 +134,12 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             value={data.businessMobile || ""}
             onChange={(e) => handleChange("businessMobile", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.businessMobile ? "border-red-500" : "border-gray-300"
+              errors.businessMobile ? "border-danger-500" : "border-border"
             }`}
             placeholder="+91 XXXXX XXXXX"
           />
           {errors.businessMobile && (
-            <p className="mt-1 text-sm text-red-500">{errors.businessMobile}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.businessMobile}</p>
           )}
         </div>
 
@@ -152,13 +152,13 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             value={data.panNumber || ""}
             onChange={(e) => handleChange("panNumber", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.panNumber ? "border-red-500" : "border-gray-300"
+              errors.panNumber ? "border-danger-500" : "border-border"
             }`}
             placeholder="XXXXX0000X"
             maxLength={10}
           />
           {errors.panNumber && (
-            <p className="mt-1 text-sm text-red-500">{errors.panNumber}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.panNumber}</p>
           )}
         </div>
 
@@ -170,7 +170,7 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             type="text"
             value={data.gstNumber || ""}
             onChange={(e) => handleChange("gstNumber", e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
             placeholder="XXXXX0000X0000"
             maxLength={15}
           />
@@ -185,12 +185,12 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             value={data.businessAddress || ""}
             onChange={(e) => handleChange("businessAddress", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.businessAddress ? "border-red-500" : "border-gray-300"
+              errors.businessAddress ? "border-danger-500" : "border-border"
             }`}
             placeholder="Street address"
           />
           {errors.businessAddress && (
-            <p className="mt-1 text-sm text-red-500">{errors.businessAddress}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.businessAddress}</p>
           )}
         </div>
 
@@ -203,12 +203,12 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             value={data.city || ""}
             onChange={(e) => handleChange("city", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.city ? "border-red-500" : "border-gray-300"
+              errors.city ? "border-danger-500" : "border-border"
             }`}
             placeholder="City"
           />
           {errors.city && (
-            <p className="mt-1 text-sm text-red-500">{errors.city}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.city}</p>
           )}
         </div>
 
@@ -221,12 +221,12 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             value={data.state || ""}
             onChange={(e) => handleChange("state", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.state ? "border-red-500" : "border-gray-300"
+              errors.state ? "border-danger-500" : "border-border"
             }`}
             placeholder="State"
           />
           {errors.state && (
-            <p className="mt-1 text-sm text-red-500">{errors.state}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.state}</p>
           )}
         </div>
 
@@ -239,12 +239,12 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             value={data.country || ""}
             onChange={(e) => handleChange("country", e.target.value)}
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.country ? "border-red-500" : "border-gray-300"
+              errors.country ? "border-danger-500" : "border-border"
             }`}
             placeholder="Country"
           />
           {errors.country && (
-            <p className="mt-1 text-sm text-red-500">{errors.country}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.country}</p>
           )}
         </div>
 
@@ -256,7 +256,7 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             type="url"
             value={data.website || ""}
             onChange={(e) => handleChange("website", e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
             placeholder="https://example.com"
           />
         </div>
@@ -274,14 +274,14 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             accept=".pdf,.jpg,.jpeg,.png"
             onChange={(e) => handleFileChange("governmentIdProof", e.target.files?.[0])}
             className={`block w-full px-4 py-2 border rounded-lg focus:outline-none ${
-              errors.governmentIdProof ? "border-red-500" : "border-gray-300"
+              errors.governmentIdProof ? "border-danger-500" : "border-border"
             }`}
           />
           {errors.governmentIdProof && (
-            <p className="mt-1 text-sm text-red-500">{errors.governmentIdProof}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.governmentIdProof}</p>
           )}
           {data.governmentIdProof && (
-            <p className="mt-1 text-sm text-green-600">✓ {data.governmentIdProof.name}</p>
+            <p className="mt-1 text-sm text-success-600">✓ {data.governmentIdProof.name}</p>
           )}
         </div>
 
@@ -294,14 +294,14 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             accept=".pdf,.jpg,.jpeg,.png"
             onChange={(e) => handleFileChange("businessRegistration", e.target.files?.[0])}
             className={`block w-full px-4 py-2 border rounded-lg focus:outline-none ${
-              errors.businessRegistration ? "border-red-500" : "border-gray-300"
+              errors.businessRegistration ? "border-danger-500" : "border-border"
             }`}
           />
           {errors.businessRegistration && (
-            <p className="mt-1 text-sm text-red-500">{errors.businessRegistration}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.businessRegistration}</p>
           )}
           {data.businessRegistration && (
-            <p className="mt-1 text-sm text-green-600">✓ {data.businessRegistration.name}</p>
+            <p className="mt-1 text-sm text-success-600">✓ {data.businessRegistration.name}</p>
           )}
         </div>
 
@@ -313,10 +313,10 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             type="file"
             accept=".pdf,.jpg,.jpeg,.png"
             onChange={(e) => handleFileChange("gstCertificate", e.target.files?.[0])}
-            className="block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+            className="block w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
           />
           {data.gstCertificate && (
-            <p className="mt-1 text-sm text-green-600">✓ {data.gstCertificate.name}</p>
+            <p className="mt-1 text-sm text-success-600">✓ {data.gstCertificate.name}</p>
           )}
         </div>
 
@@ -329,14 +329,14 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
             accept=".pdf,.jpg,.jpeg,.png"
             onChange={(e) => handleFileChange("hotelOwnershipProof", e.target.files?.[0])}
             className={`block w-full px-4 py-2 border rounded-lg focus:outline-none ${
-              errors.hotelOwnershipProof ? "border-red-500" : "border-gray-300"
+              errors.hotelOwnershipProof ? "border-danger-500" : "border-border"
             }`}
           />
           {errors.hotelOwnershipProof && (
-            <p className="mt-1 text-sm text-red-500">{errors.hotelOwnershipProof}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.hotelOwnershipProof}</p>
           )}
           {data.hotelOwnershipProof && (
-            <p className="mt-1 text-sm text-green-600">✓ {data.hotelOwnershipProof.name}</p>
+            <p className="mt-1 text-sm text-success-600">✓ {data.hotelOwnershipProof.name}</p>
           )}
         </div>
       </div>
@@ -354,7 +354,7 @@ export default function HotelPartnerVerification({ data, onDataChange }: Props) 
           </span>
         </label>
         {errors.declaration && (
-          <p className="mt-1 text-sm text-red-500">{errors.declaration}</p>
+          <p className="mt-1 text-sm text-danger-500">{errors.declaration}</p>
         )}
       </div>
 

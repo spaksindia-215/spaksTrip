@@ -286,7 +286,7 @@ export default function CruiseManager() {
           <div className="flex flex-wrap gap-3">
             <StatCard label="Cruises" value={String(cruises.length)} />
             <StatCard label="Active" value={String(cruises.filter((c) => c.status === "active").length)} />
-            <Button type="button" onClick={openCreate}>Create cruise</Button>
+            <Button type="button" variant="accent" onClick={openCreate}>Create cruise</Button>
           </div>
         </div>
       </section>
@@ -300,7 +300,7 @@ export default function CruiseManager() {
           <EmptyState
             title="No cruises yet"
             subtitle="Create your first cruise with vessel details, cabins, and departures."
-            cta={<Button type="button" onClick={openCreate}>Create cruise</Button>}
+            cta={<Button type="button" variant="accent" onClick={openCreate}>Create cruise</Button>}
           />
         </section>
       ) : (

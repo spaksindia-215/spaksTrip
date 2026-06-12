@@ -129,12 +129,12 @@ export default function TaxiPartnerServiceArea({ data, onDataChange }: Props) {
         </p>
 
         <div className="space-y-4">
-          <label className="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+          <label className="flex items-center p-3 border border-border-soft rounded-lg cursor-pointer hover:bg-surface-muted">
             <input
               type="checkbox"
               checked={data.airportTransfer || false}
               onChange={(e) => handleChange("airportTransfer", e.target.checked)}
-              className="h-4 w-4 text-brand-600 rounded border-slate-300"
+              className="h-4 w-4 text-brand-600 rounded border-border"
             />
             <div className="ml-3">
               <span className="font-medium text-brand-950">Airport Transfer</span>
@@ -144,12 +144,12 @@ export default function TaxiPartnerServiceArea({ data, onDataChange }: Props) {
             </div>
           </label>
 
-          <label className="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+          <label className="flex items-center p-3 border border-border-soft rounded-lg cursor-pointer hover:bg-surface-muted">
             <input
               type="checkbox"
               checked={data.localRental || false}
               onChange={(e) => handleChange("localRental", e.target.checked)}
-              className="h-4 w-4 text-brand-600 rounded border-slate-300"
+              className="h-4 w-4 text-brand-600 rounded border-border"
             />
             <div className="ml-3">
               <span className="font-medium text-brand-950">Local Rental</span>
@@ -159,12 +159,12 @@ export default function TaxiPartnerServiceArea({ data, onDataChange }: Props) {
             </div>
           </label>
 
-          <label className="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+          <label className="flex items-center p-3 border border-border-soft rounded-lg cursor-pointer hover:bg-surface-muted">
             <input
               type="checkbox"
               checked={data.outstationAvailable || false}
               onChange={(e) => handleChange("outstationAvailable", e.target.checked)}
-              className="h-4 w-4 text-brand-600 rounded border-slate-300"
+              className="h-4 w-4 text-brand-600 rounded border-border"
             />
             <div className="ml-3">
               <span className="font-medium text-brand-950">Outstation</span>
@@ -174,12 +174,12 @@ export default function TaxiPartnerServiceArea({ data, onDataChange }: Props) {
             </div>
           </label>
 
-          <label className="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+          <label className="flex items-center p-3 border border-border-soft rounded-lg cursor-pointer hover:bg-surface-muted">
             <input
               type="checkbox"
               checked={data.oneWayAvailable || false}
               onChange={(e) => handleChange("oneWayAvailable", e.target.checked)}
-              className="h-4 w-4 text-brand-600 rounded border-slate-300"
+              className="h-4 w-4 text-brand-600 rounded border-border"
             />
             <div className="ml-3">
               <span className="font-medium text-brand-950">One-Way Trips</span>
@@ -189,12 +189,12 @@ export default function TaxiPartnerServiceArea({ data, onDataChange }: Props) {
             </div>
           </label>
 
-          <label className="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+          <label className="flex items-center p-3 border border-border-soft rounded-lg cursor-pointer hover:bg-surface-muted">
             <input
               type="checkbox"
               checked={data.roundTripAvailable || false}
               onChange={(e) => handleChange("roundTripAvailable", e.target.checked)}
-              className="h-4 w-4 text-brand-600 rounded border-slate-300"
+              className="h-4 w-4 text-brand-600 rounded border-border"
             />
             <div className="ml-3">
               <span className="font-medium text-brand-950">Round Trips</span>
@@ -206,8 +206,8 @@ export default function TaxiPartnerServiceArea({ data, onDataChange }: Props) {
         </div>
       </div>
 
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-        <p className="text-sm text-green-900">
+      <div className="bg-success-50 border border-success-200 rounded-lg p-4">
+        <p className="text-sm text-success-700">
           <strong>Tip:</strong> Select all the service types you can provide. This helps customers find your taxi for their specific needs.
         </p>
       </div>

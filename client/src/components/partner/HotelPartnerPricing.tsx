@@ -51,12 +51,12 @@ export default function HotelPartnerPricing({ data, onDataChange }: Props) {
               handleChange("basePricePerNight", parseFloat(e.target.value) || 0)
             }
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.basePricePerNight ? "border-red-500" : "border-gray-300"
+              errors.basePricePerNight ? "border-danger-500" : "border-border"
             }`}
             placeholder="0.00"
           />
           {errors.basePricePerNight && (
-            <p className="mt-1 text-sm text-red-500">{errors.basePricePerNight}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.basePricePerNight}</p>
           )}
         </div>
 
@@ -74,12 +74,12 @@ export default function HotelPartnerPricing({ data, onDataChange }: Props) {
               handleChange("taxPercentage", parseFloat(e.target.value) || 0)
             }
             className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.taxPercentage ? "border-red-500" : "border-gray-300"
+              errors.taxPercentage ? "border-danger-500" : "border-border"
             }`}
             placeholder="0.00"
           />
           {errors.taxPercentage && (
-            <p className="mt-1 text-sm text-red-500">{errors.taxPercentage}</p>
+            <p className="mt-1 text-sm text-danger-500">{errors.taxPercentage}</p>
           )}
         </div>
 
@@ -95,7 +95,7 @@ export default function HotelPartnerPricing({ data, onDataChange }: Props) {
             onChange={(e) =>
               handleChange("extraAdultCharge", parseFloat(e.target.value) || 0)
             }
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
             placeholder="0.00"
           />
         </div>
@@ -112,7 +112,7 @@ export default function HotelPartnerPricing({ data, onDataChange }: Props) {
             onChange={(e) =>
               handleChange("extraChildCharge", parseFloat(e.target.value) || 0)
             }
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
             placeholder="0.00"
           />
         </div>
@@ -124,7 +124,7 @@ export default function HotelPartnerPricing({ data, onDataChange }: Props) {
           <select
             value={data.currency || "INR"}
             onChange={(e) => handleChange("currency", e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+            className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 disabled:bg-surface-sunken disabled:cursor-not-allowed"
             disabled
           >
             <option value="INR">INR (₹)</option>
@@ -137,7 +137,7 @@ export default function HotelPartnerPricing({ data, onDataChange }: Props) {
 
       <div className="pt-6 border-t">
         <h3 className="text-lg font-semibold text-brand-950 mb-4">Price Summary</h3>
-        <div className="grid gap-4 md:grid-cols-3 bg-gray-50 p-4 rounded-lg">
+        <div className="grid gap-4 md:grid-cols-3 bg-surface-muted p-4 rounded-lg">
           <div>
             <p className="text-sm text-ink-muted">Base Price</p>
             <p className="text-2xl font-bold text-brand-950">
@@ -152,7 +152,7 @@ export default function HotelPartnerPricing({ data, onDataChange }: Props) {
           </div>
           <div>
             <p className="text-sm text-ink-muted">Total Per Night</p>
-            <p className="text-2xl font-bold text-green-600">
+            <p className="text-2xl font-bold text-success-600">
               ₹{totalWithTax.toFixed(2)}
             </p>
           </div>

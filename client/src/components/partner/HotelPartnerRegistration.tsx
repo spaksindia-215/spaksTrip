@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Button from "@/components/ui/Button";
 import HotelPartnerInfo from "./HotelPartnerInfo";
 import HotelPartnerRooms from "./HotelPartnerRooms";
 import HotelPartnerRates from "./HotelPartnerRates";
@@ -162,9 +163,11 @@ export default function HotelPartnerRegistration() {
               <div key={step} className="flex flex-col items-center flex-1">
                 <div
                   className={`flex h-10 w-10 items-center justify-center rounded-full font-semibold ${
-                    index <= stepIndex
-                      ? "bg-brand-600 text-white"
-                      : "bg-gray-200 text-gray-600"
+                    index < stepIndex
+                      ? "bg-brand-50 text-brand-700"
+                      : index === stepIndex
+                        ? "bg-brand-600 text-white"
+                        : "bg-surface-sunken text-ink-muted"
                   }`}
                 >
                   {index + 1}
@@ -181,7 +184,7 @@ export default function HotelPartnerRegistration() {
                 {index < steps.length - 1 && (
                   <div
                     className={`h-1 w-full mt-4 ${
-                      index < stepIndex ? "bg-brand-600" : "bg-gray-200"
+                      index < stepIndex ? "bg-brand-600" : "bg-border"
                     }`}
                   />
                 )}
@@ -190,7 +193,7 @@ export default function HotelPartnerRegistration() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="rounded-md border border-border-soft bg-white p-8 shadow-card">
           {currentStep === "info" && (
             <HotelPartnerInfo
               data={hotelData as HotelData}
@@ -242,27 +245,17 @@ export default function HotelPartnerRegistration() {
         </div>
 
         <div className="mt-8 flex justify-between">
-          <button
-            onClick={handlePrevious}
-            disabled={stepIndex === 0}
-            className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+          <Button variant="outline" onClick={handlePrevious} disabled={stepIndex === 0}>
             Previous
-          </button>
+          </Button>
           {currentStep !== "review" ? (
-            <button
-              onClick={handleNext}
-              className="px-6 py-2 rounded-lg bg-brand-600 text-white font-medium hover:bg-brand-700"
-            >
+            <Button variant="primary" onClick={handleNext}>
               Next
-            </button>
+            </Button>
           ) : (
-            <button
-              onClick={handleSubmit}
-              className="px-6 py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700"
-            >
-              Submit
-            </button>
+            <Button variant="accent" onClick={handleSubmit}>
+              Submit listing
+            </Button>
           )}
         </div>
       </div>
