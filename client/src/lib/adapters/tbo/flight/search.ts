@@ -302,6 +302,7 @@ export async function tboSearchFlights(
               basePrice: obOffer.basePrice + ibOffer.basePrice,
               returnResultIndex: ib.ResultIndex,
               returnSegments: ibOffer.segments,
+              traceId,
             });
           } catch (err) {
             logError("Flight Search mapResult (return pair)", err, {
@@ -315,7 +316,7 @@ export async function tboSearchFlights(
       for (const result of obResults) {
         if (!result?.ResultIndex) continue;
         try {
-          offers.push(mapResult(result));
+          offers.push({ ...mapResult(result), traceId });
         } catch (err) {
           logError("Flight Search mapResult", err, { resultIndex: result.ResultIndex });
         }

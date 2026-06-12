@@ -42,6 +42,11 @@ function ReviewInner() {
   const { current, advanceStatus, setFareQuoteData } = useBookingStore();
   const toast = useToast();
   const [quoting, setQuoting] = useState(false);
+  // After a price/time/detail change is surfaced, the user has seen the
+  // updated details in PriceBreakdown. Track acknowledgement so the next
+  // "Continue" click proceeds instead of looping — TBO keeps returning
+  // isPriceChanged:true on every FareQuote until the booking is made.
+  const [changeAcknowledged, setChangeAcknowledged] = useState(false);
 
   useEffect(() => {
     if (!current) {
@@ -60,7 +65,7 @@ function ReviewInner() {
       // For LCC domestic return, OB+IB are priced in one call (Guideline §6).
       const quote = await fetchFareQuote(
         current.offer.id,
-        undefined,
+        current.fareQuoteTraceId,
         current.offer.returnResultIndex,
       );
 
@@ -83,30 +88,39 @@ function ReviewInner() {
         destinationCode: quote.destination,
       });
 
-      // Flight Information Change (§): surface baggage/time changes for acknowledgement.
-      if (quote.flightDetailChangeInfo) {
+      // Flight Information Change (§): surface baggage/time changes once.
+      // On the second click (changeAcknowledged) fall through and proceed —
+      // the updated info is already in the store from setFareQuoteData above.
+      if (quote.flightDetailChangeInfo && !changeAcknowledged) {
         toast.push({
           title: "Flight details changed",
-          description: `Updated ${quote.flightDetailChangeInfo}. Please review before continuing.`,
+          description: `Updated ${quote.flightDetailChangeInfo}. Review the summary below, then click Continue again to proceed.`,
           tone: "warn",
         });
+        setChangeAcknowledged(true);
         setQuoting(false);
         return;
       }
 
-      if (quote.isPriceChanged || quote.isTimeChanged) {
+      // TBO keeps returning isPriceChanged:true on every FareQuote until
+      // booking. Show the updated price once; on the second click proceed.
+      if ((quote.isPriceChanged || quote.isTimeChanged) && !changeAcknowledged) {
         toast.push({
           title: quote.isTimeChanged && !quote.isPriceChanged ? "Schedule updated" : "Fare updated",
           description: quote.isPriceChanged
-            ? `The price changed to ₹${(quote.totalFare ?? quote.updatedOffer?.basePrice ?? 0).toLocaleString("en-IN")}. Please review before continuing.`
-            : "The flight time changed. Please review before continuing.",
+            ? `The price changed to ₹${(quote.totalFare ?? quote.updatedOffer?.basePrice ?? 0).toLocaleString("en-IN")}. Review the summary below, then click Continue again to proceed.`
+            : "The flight time changed. Review the summary below, then click Continue again to proceed.",
           tone: "warn",
         });
+        setChangeAcknowledged(true);
         setQuoting(false);
         return;
       }
-    } catch {
-      // Non-fatal: if FareQuote fails the book/ticket call will surface the error.
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Could not refresh fare. Please try again.";
+      toast.push({ title: "Fare check failed", description: msg, tone: "warn" });
+      setQuoting(false);
+      return;
     }
     setQuoting(false);
     advanceStatus("TRAVELER");
@@ -138,7 +152,7 @@ function ReviewInner() {
             <aside className="flex flex-col gap-4">
               <PriceBreakdown booking={current} />
               <Button variant="accent" size="lg" onClick={onContinue} loading={quoting} fullWidth>
-                {quoting ? "Checking fare…" : "Continue to travellers"}
+                {quoting ? "Checking fare…" : changeAcknowledged ? "Accept & continue to travellers" : "Continue to travellers"}
               </Button>
               <div className="rounded-xl bg-success-50 text-success-700 text-[12px] font-medium px-4 py-3 flex items-start gap-2">
                 <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden className="mt-0.5 shrink-0">

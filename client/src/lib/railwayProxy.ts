@@ -7,6 +7,14 @@ export async function proxyToRailway(req: NextRequest, upstreamPath: string): Pr
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.toString();
 
+  // Forward agent-context headers injected by middleware for subdomain requests.
+  // Express booking handlers read these to stamp agentId and pricing tiers.
+  const agentHeaders: Record<string, string> = {};
+  for (const h of ["x-agent-id", "x-agent-slug", "x-agent-name", "x-agent-color"] as const) {
+    const v = req.headers.get(h);
+    if (v) agentHeaders[h] = v;
+  }
+
   const upstreamInit: RequestInit = {
     method: req.method,
     cache: "no-store",
@@ -15,6 +23,7 @@ export async function proxyToRailway(req: NextRequest, upstreamPath: string): Pr
         ? { "content-type": req.headers.get("content-type")! }
         : {}),
       ...(cookieHeader ? { cookie: cookieHeader } : {}),
+      ...agentHeaders,
     },
   };
 

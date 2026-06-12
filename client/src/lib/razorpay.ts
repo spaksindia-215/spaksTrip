@@ -25,6 +25,23 @@ export async function createOrder(params: {
   });
 }
 
+// Fetches the authoritative captured amount (in paise) for a payment, straight from
+// Razorpay — the source of truth for refunds. NEVER trust a client-sent amount.
+// Also returns order_id/status so callers can cross-check against the order.
+export async function fetchPayment(paymentId: string): Promise<{
+  amountPaise: number;
+  orderId: string | null;
+  status: string;
+}> {
+  const rzp = getInstance();
+  const p = await rzp.payments.fetch(paymentId);
+  return {
+    amountPaise: Number(p.amount),
+    orderId: (p.order_id as string | null) ?? null,
+    status: String(p.status),
+  };
+}
+
 // Constant-time HMAC-SHA256 comparison — prevents timing attacks.
 export function verifySignature(
   orderId: string,

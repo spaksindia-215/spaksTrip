@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
-import { UserModel, ROLES, type Role } from "../models/User";
+import { UserModel, ROLES, MARKUP_TYPES, type Role, type MarkupType, type MarkupRule } from "../models/User";
+import { NavbarSettingsModel } from "../models/NavbarSettings";
+import { PlatformConfigModel } from "../models/PlatformConfig";
+import { invalidatePlatformConfigCache } from "../lib/platformConfig";
 import { HttpError } from "../middleware/error";
 import { sendMail } from "../lib/mailer";
 import {
@@ -174,6 +177,116 @@ export async function listUsers(req: Request, res: Response, next: NextFunction)
     }
     const items = await UserModel.find(filter).sort({ createdAt: -1 });
     res.json({ items: items.map((i) => i.toJSON()) });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// Public — no admin session required. Returns the current navbar visibility map.
+// Missing keys are treated as visible (true) by convention on the client.
+export async function getNavbarSettings(_req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const doc = await NavbarSettingsModel.findOne();
+    res.json({ visibility: doc?.visibility ?? {} });
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function getPlatformMarkup(_req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    // Bypass cache — admin always sees current DB state.
+    const config = await PlatformConfigModel.findOne().lean();
+    if (!config) throw new HttpError(404, "Platform config not seeded");
+    res.json({
+      markup:    config.markup,
+      version:   config.version,
+      updatedAt: config.updatedAt,
+      updatedBy: config.updatedBy,
+    });
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function updatePlatformMarkup(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const body = isObject(req.body) ? req.body : {};
+    const products = ["flights", "hotels", "taxi"] as const;
+    const setFields: Record<string, MarkupRule> = {};
+
+    for (const key of products) {
+      const raw = body[key];
+      if (raw === undefined) continue;
+      if (!isObject(raw)) throw new HttpError(400, `${key} must be an object`);
+
+      const type = raw.type as string;
+      if (!(MARKUP_TYPES as readonly string[]).includes(type)) {
+        throw new HttpError(400, `${key}.type must be "percent" or "flat"`);
+      }
+      const value = Number(raw.value);
+      if (!Number.isFinite(value) || value < 0) {
+        throw new HttpError(400, `${key}.value must be a non-negative number`);
+      }
+      if (type === "percent" && value > 30) {
+        throw new HttpError(400, `${key} percent markup cannot exceed 30%`);
+      }
+      if (type === "flat" && value > 5000) {
+        throw new HttpError(400, `${key} flat markup cannot exceed ₹5000`);
+      }
+      const cap = raw.cap !== undefined && raw.cap !== null ? Number(raw.cap) : undefined;
+      if (cap !== undefined && (!Number.isFinite(cap) || cap < 0)) {
+        throw new HttpError(400, `${key}.cap must be a non-negative number`);
+      }
+
+      setFields[`markup.${key}`] = { type: type as MarkupType, value, ...(cap != null ? { cap } : {}) };
+    }
+
+    if (Object.keys(setFields).length === 0) {
+      throw new HttpError(400, "Provide at least one of: flights, hotels, taxi");
+    }
+
+    const config = await PlatformConfigModel.findOneAndUpdate(
+      {},
+      { $set: setFields, $inc: { version: 1 } },
+      { new: true, runValidators: true },
+    ).lean();
+
+    if (!config) throw new HttpError(404, "Platform config not seeded");
+
+    invalidatePlatformConfigCache();
+
+    res.json({
+      markup:    config.markup,
+      version:   config.version,
+      updatedAt: config.updatedAt,
+      updatedBy: config.updatedBy,
+    });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// Admin-only — replaces the full visibility map.
+export async function updateNavbarSettings(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const raw = isObject(req.body) ? req.body.visibility : undefined;
+    if (!isObject(raw)) throw new HttpError(400, "visibility must be an object");
+
+    // Ensure all values are booleans
+    const visibility: Record<string, boolean> = {};
+    for (const [key, val] of Object.entries(raw)) {
+      if (typeof val !== "boolean") throw new HttpError(400, `visibility["${key}"] must be boolean`);
+      visibility[key] = val;
+    }
+
+    const doc = await NavbarSettingsModel.findOneAndUpdate(
+      {},
+      { $set: { visibility } },
+      { upsert: true, new: true },
+    );
+
+    res.json({ visibility: doc.visibility });
   } catch (e) {
     next(e);
   }

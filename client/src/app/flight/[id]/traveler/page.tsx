@@ -22,19 +22,19 @@ type FormTraveler = Omit<Traveler, "id"> & { id: string };
 // SSR pick state — one entry per traveler id
 type SSRPick = { baggageCode: string; mealCode: string };
 
-// Title options per pax type / gender. SpiceJet (Navitaire 4X) accepts a narrower
-// set (Child: Mr/Ms; Infant: Mstr/Mr/Ms) than GDS/Amadeus — see CLAUDE.md.
-function titlesFor(type: TravelerType, gender: Gender, isSG: boolean): Traveler["title"][] {
+// Title options per pax type / gender. TBO requires these for ALL airlines:
+// Male: MR | Female: MRS/MS | Child: MR/MS | Infant: MSTR (only).
+function titlesFor(type: TravelerType, gender: Gender): Traveler["title"][] {
   if (type === "ADT") return gender === "F" ? ["Ms", "Mrs"] : ["Mr"];
-  if (type === "CHD") return isSG ? ["Mr", "Ms"] : ["Mstr", "Miss"];
-  return isSG ? ["Mstr", "Mr", "Ms"] : ["Mstr", "Miss"]; // INF
+  if (type === "CHD") return ["Mr", "Ms"];
+  return ["Mstr"]; // INF — MSTR only
 }
 
-function emptyFor(type: TravelerType, idx: number, isSG: boolean): FormTraveler {
+function emptyFor(type: TravelerType, idx: number): FormTraveler {
   return {
     id: `${type}-${idx}`,
     type,
-    title: titlesFor(type, "M", isSG)[0],
+    title: titlesFor(type, "M")[0],
     firstName: "",
     lastName: "",
     gender: "M",
@@ -72,11 +72,10 @@ function TravelerInner() {
 
   const initial = useMemo(() => {
     if (!current) return [];
-    const sg = (current.airlineCode ?? current.offer.segments[0]?.airlineCode ?? "").toUpperCase() === "SG";
     const list: FormTraveler[] = [];
-    for (let i = 0; i < current.pax.adults; i++) list.push(emptyFor("ADT", i, sg));
-    for (let i = 0; i < current.pax.children; i++) list.push(emptyFor("CHD", i, sg));
-    for (let i = 0; i < current.pax.infants; i++) list.push(emptyFor("INF", i, sg));
+    for (let i = 0; i < current.pax.adults; i++) list.push(emptyFor("ADT", i));
+    for (let i = 0; i < current.pax.children; i++) list.push(emptyFor("CHD", i));
+    for (let i = 0; i < current.pax.infants; i++) list.push(emptyFor("INF", i));
     return list;
   }, [current]);
 
@@ -157,12 +156,11 @@ function TravelerInner() {
     setLocalTravelers((list) => list.map((t) => (t.id === id ? { ...t, ...patch } : t)));
 
   const airlineCode = (current.airlineCode ?? current.offer.segments[0]?.airlineCode ?? "").toUpperCase();
-  const isSG = airlineCode === "SG";
 
   // Keep the current title if still valid for the pax type/gender, else fall back
-  // to the first valid option (prevents sending a Navitaire-invalid SpiceJet title).
+  // to the first valid option (prevents sending a title TBO rejects, e.g. infant ≠ MSTR).
   const normTitle = (type: TravelerType, gender: Gender, currentTitle: Traveler["title"]): Traveler["title"] => {
-    const opts = titlesFor(type, gender, isSG);
+    const opts = titlesFor(type, gender);
     return opts.includes(currentTitle) ? currentTitle : opts[0];
   };
 
@@ -355,7 +353,7 @@ function TravelerInner() {
                             onChange={(e) => update(t.id, { title: e.target.value as Traveler["title"] })}
                             className="h-11 rounded-md border border-border bg-white px-3 text-[14px] font-medium text-ink outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                           >
-                            {titlesFor(t.type, t.gender, isSG).map((tt) => (
+                            {titlesFor(t.type, t.gender).map((tt) => (
                               <option key={tt} value={tt}>{tt}</option>
                             ))}
                           </select>
