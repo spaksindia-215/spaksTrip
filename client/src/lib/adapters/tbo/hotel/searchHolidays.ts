@@ -343,6 +343,20 @@ export async function tboSearchHotelsHolidays(
     .map((h) => buildHotel(h, metaByCode.get(h.HotelCode), cityName, countryName, input.filters?.noOfRooms))
     .filter((h) => h.rooms.length > 0);
 
+  // Refundable status audit — log every room returned from search
+  for (const hotel of hotels) {
+    for (const room of hotel.rooms) {
+      const lastCancellationDate = room.cancelPolicies?.[0]?.fromDate ?? null;
+      console.log("[REFUNDABLE_AUDIT][Search]", {
+        HotelCode: hotel.id,
+        HotelName: hotel.name,
+        BookingCode: room.id,
+        IsRefundable: room.refundable,
+        LastCancellationDate: lastCancellationDate,
+      });
+    }
+  }
+
   if (hotels.length === 0) return emptyHotelSearchResult();
 
   const prices = hotels.map((h) => h.lowestPrice).filter((p) => p > 0);

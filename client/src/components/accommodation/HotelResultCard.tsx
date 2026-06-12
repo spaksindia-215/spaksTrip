@@ -43,11 +43,13 @@ type Props = {
   rooms: number;
   adults: number;
   children: number;
+  childrenAges: number[];
   nights: number;
 };
 
-export default function HotelResultCard({ hotel, checkIn, checkOut, rooms, adults, children, nights }: Props) {
-  const href = `/hotel/${hotel.id}?checkIn=${checkIn}&checkOut=${checkOut}&rooms=${rooms}&adults=${adults}&children=${children}`;
+export default function HotelResultCard({ hotel, checkIn, checkOut, rooms, adults, children, childrenAges, nights }: Props) {
+  const ageParam = childrenAges.length > 0 ? `&childrenAges=${childrenAges.join(",")}` : "";
+  const href = `/hotel/${hotel.id}?checkIn=${checkIn}&checkOut=${checkOut}&rooms=${rooms}&adults=${adults}&children=${children}${ageParam}`;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const hasMultipleImages = hotel.images.length > 1;
 

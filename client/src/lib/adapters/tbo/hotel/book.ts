@@ -129,27 +129,32 @@ function mapBookingStatus(raw: string | undefined, code: number | undefined): Ho
 
 export async function tboBookHotel(input: HotelBookInput): Promise<HotelBookOutput> {
   const hotelPassengersByRoom = input.roomsDetails.map((room) => ({
-    HotelPassenger: room.passengers.map((p) => ({
-      Title: p.title,
-      FirstName: p.firstName,
-      MiddleName: p.middleName ?? "",
-      LastName: p.lastName,
-      Email: p.email ?? null,
-      Phoneno: p.phoneNo ?? null,
-      PaxType: p.paxType,
-      LeadPassenger: p.leadPassenger,
-      Age: p.age ?? 0,
-      PassportNo: p.passportNo ?? null,
-      PassportIssueDate: p.passportIssueDate ?? null,
-      PassportExpDate: p.passportExpDate ?? null,
-      PAN: p.pan ?? null,
-      PaxId: 0,
-      GSTCompanyName: p.gstCompanyName ?? null,
-      GSTNumber: p.gstNumber ?? null,
-      GSTCompanyEmail: p.gstCompanyEmail ?? null,
-      GSTCompanyAddress: p.gstCompanyAddress ?? null,
-      GSTCompanyContactNumber: p.gstCompanyContactNumber ?? null,
-    })),
+    HotelPassenger: room.passengers.map((p) => {
+      const pax: Record<string, unknown> = {
+        Title: p.title,
+        FirstName: p.firstName,
+        MiddleName: p.middleName ?? "",
+        LastName: p.lastName,
+        Email: p.email ?? null,
+        Phoneno: p.phoneNo ?? null,
+        PaxType: p.paxType,
+        LeadPassenger: p.leadPassenger,
+        Age: p.age ?? 0,
+        PaxId: 0,
+        GSTCompanyName: p.gstCompanyName ?? null,
+        GSTNumber: p.gstNumber ?? null,
+        GSTCompanyEmail: p.gstCompanyEmail ?? null,
+        GSTCompanyAddress: p.gstCompanyAddress ?? null,
+        GSTCompanyContactNumber: p.gstCompanyContactNumber ?? null,
+      };
+      // Only include identity fields when they have actual values — sending null/empty
+      // causes TBO to treat them as present-but-invalid and return "PAN is mandatory".
+      if (p.pan) pax.PAN = p.pan;
+      if (p.passportNo) pax.PassportNo = p.passportNo;
+      if (p.passportIssueDate) pax.PassportIssueDate = p.passportIssueDate;
+      if (p.passportExpDate) pax.PassportExpDate = p.passportExpDate;
+      return pax;
+    }),
   }));
 
   const reqBody: Record<string, unknown> = {
@@ -186,6 +191,36 @@ export async function tboBookHotel(input: HotelBookInput): Promise<HotelBookOutp
     reqBody.IsCorporate = true;
     reqBody.CorporatePAN = input.corporatePan;
   }
+
+  // Refundable status audit — IsRefundable/LastCancellationDate are not returned
+  // by the Book API; they are set in PreBook and must be preserved by the client.
+  // Log the BookingCode here so it can be cross-referenced with PreBook audit logs.
+  console.log("[REFUNDABLE_AUDIT][Book]", {
+    BookingCode: input.bookingCode,
+    NetAmount: input.netAmount,
+    note: "IsRefundable comes from PreBook — cross-reference [REFUNDABLE_AUDIT][PreBook] for this BookingCode",
+  });
+
+  // Temporary debug: log lead passenger identity fields to diagnose PAN issues
+  const leadPax = hotelPassengersByRoom[0]?.HotelPassenger[0];
+  if (leadPax) {
+    const pan = leadPax.PAN as string | undefined;
+    console.log("[Hotel Book DEBUG] lead passenger:", {
+      FirstName: leadPax.FirstName,
+      PAN: pan ? pan.slice(0, 5) + "XXXXX" : null,
+      PassportNo: leadPax.PassportNo ? "****" : null,
+      LeadPassenger: leadPax.LeadPassenger,
+    });
+  }
+
+  console.log(
+    "[TBO FINAL REQUEST]",
+    JSON.stringify(reqBody, null, 2),
+  );
+  console.log(
+    "[TBO FINAL PASSENGERS]",
+    JSON.stringify(reqBody.HotelRoomsDetails, null, 2),
+  );
 
   logRequest("Hotel Book", TBO_BOOK_URL, {
     ...reqBody,
@@ -245,6 +280,7 @@ export async function tboBookHotel(input: HotelBookInput): Promise<HotelBookOutp
     HotelBookingStatus: data.BookResult?.HotelBookingStatus,
     BookingId: data.BookResult?.BookingId,
     IsPriceChanged: data.BookResult?.IsPriceChanged,
+    Error: data.BookResult?.Error ?? null,
   });
 
   if (!res.ok) throw new Error(`TBO Book HTTP ${res.status}`);

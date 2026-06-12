@@ -19,28 +19,23 @@ export function getIdentityRequirement(
   const isIndian = guestNationality === "IN";
   const isDomestic = hotelCountry?.toUpperCase() === "INDIA" || hotelCountry?.toUpperCase() === "IN";
 
-  if (isDomestic) {
-    // Domestic hotel
-    if (isIndian) {
-      return {
-        panRequired: false,
-        passportRequired: false,
-        reason: "Domestic hotel, Indian guest",
-      };
-    }
-    return {
-      panRequired: false,
-      passportRequired: true,
-      reason: "Domestic hotel, foreign guest — passport required",
-    };
-  }
-
-  // International hotel
+  // TBO requires PAN for all Indian nationals on every hotel booking (domestic
+  // and international) per Indian Income Tax regulations. preBookPanMandatory
+  // from the PreBook response is an additional signal but not the primary one.
   if (isIndian) {
     return {
       panRequired: true,
       passportRequired: false,
-      reason: "International hotel, Indian guest — PAN required per TBO India",
+      reason: "PAN is mandatory for all Indian nationals per TBO requirements",
+    };
+  }
+
+  if (isDomestic) {
+    // Domestic hotel, foreign guest
+    return {
+      panRequired: false,
+      passportRequired: true,
+      reason: "Domestic hotel, foreign guest — passport required",
     };
   }
 

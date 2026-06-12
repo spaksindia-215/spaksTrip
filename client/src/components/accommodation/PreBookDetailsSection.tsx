@@ -83,7 +83,7 @@ export default function PreBookDetailsSection({ preBook, priceChanged }: Props) 
                   <p className="text-[11px] text-orange-800">{supplement.type}</p>
                 </div>
                 <p className="text-[12px] font-bold text-orange-900 whitespace-nowrap">
-                  {supplement.currency} {supplement.price.toLocaleString()}
+                  {supplement.currency} {supplement.price != null ? supplement.price.toLocaleString() : "—"}
                 </p>
               </div>
             ))}

@@ -306,10 +306,23 @@ export async function tboPreBookHotel(
     throw new Error("TBO PreBook returned no HotelResult");
   }
 
+  const mappedRooms = (hotelResult.Rooms ?? []).map(mapRoom);
+
+  // Refundable status audit — log every room returned from prebook
+  for (const room of mappedRooms) {
+    const lastCancellationDate = room.cancelPolicies?.[0]?.fromDate ?? null;
+    console.log("[REFUNDABLE_AUDIT][PreBook]", {
+      HotelCode: hotelResult.HotelCode,
+      BookingCode: room.bookingCode,
+      IsRefundable: room.isRefundable,
+      LastCancellationDate: lastCancellationDate,
+    });
+  }
+
   return {
     hotelCode: hotelResult.HotelCode,
     currency: hotelResult.Currency ?? "INR",
-    rooms: (hotelResult.Rooms ?? []).map(mapRoom),
+    rooms: mappedRooms,
     rateConditions: hotelResult.RateConditions ?? [],
     validationInfo: mapValidationInfo(data.ValidationInfo),
   };

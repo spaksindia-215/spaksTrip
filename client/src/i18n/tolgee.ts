@@ -31,17 +31,23 @@ export function languageCodeToName(code: string): LanguageName {
 }
 
 export function createTolgee(initialLanguageCode: LanguageCode = "en") {
-  return Tolgee()
-    .use(DevTools())
-    .use(FormatSimple())
-    .init({
-      language: initialLanguageCode,
-      defaultLanguage: "en",
-      fallbackLanguage: "en",
-      availableLanguages: Object.values(LANGUAGE_CODES),
-      staticData: {
-        en,
-        hi,
-      },
-    });
+  const builder = Tolgee().use(FormatSimple());
+
+  // DevTools inject invisible Unicode markers (U+200B–U+200D etc.) for in-context
+  // editing. They only run in the browser, so loading them on the server too causes
+  // server/client text mismatches that trigger React hydration errors.
+  if (typeof window !== "undefined") {
+    builder.use(DevTools());
+  }
+
+  return builder.init({
+    language: initialLanguageCode,
+    defaultLanguage: "en",
+    fallbackLanguage: "en",
+    availableLanguages: Object.values(LANGUAGE_CODES),
+    staticData: {
+      en,
+      hi,
+    },
+  });
 }

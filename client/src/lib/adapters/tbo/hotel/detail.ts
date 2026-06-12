@@ -149,13 +149,22 @@ export async function tboGetHotelDetail(
   children: number,
   rooms: number,
   distributionType: DistributionType = "b2c",
+  childrenAges: number[] = [],
 ): Promise<Hotel | null> {
   const roomCount = Math.max(1, rooms);
-  const paxRooms = Array.from({ length: roomCount }, () => ({
-    Adults: Math.max(1, Math.ceil(adults / roomCount)),
-    Children: Math.max(0, Math.ceil(children / roomCount)),
-    ChildrenAges: [] as number[],
-  }));
+  let adultsRemaining = Math.max(1, adults);
+  let childrenRemaining = Math.max(0, children);
+  let agesOffset = 0;
+  const paxRooms = Array.from({ length: roomCount }, (_, roomIdx) => {
+    const roomsLeft = roomCount - roomIdx;
+    const roomAdults = Math.ceil(adultsRemaining / roomsLeft);
+    const roomChildren = Math.ceil(childrenRemaining / roomsLeft);
+    adultsRemaining -= roomAdults;
+    childrenRemaining -= roomChildren;
+    const roomChildrenAges = childrenAges.slice(agesOffset, agesOffset + roomChildren);
+    agesOffset += roomChildren;
+    return { Adults: roomAdults, Children: roomChildren, ChildrenAges: roomChildrenAges };
+  });
 
   const url = `${TBO_HOLIDAYS_URL}/Search`;
   const reqBody = {
@@ -168,6 +177,7 @@ export async function tboGetHotelDetail(
     ResponseTime: 23,
   };
 
+  console.log("DETAIL OCCUPANCY", { rooms: roomCount, adults, children, paxRooms });
   logRequest("Hotel Detail (Search)", url, reqBody);
 
   const fetchSearch = fetch(url, {
@@ -218,6 +228,18 @@ export async function tboGetHotelDetail(
   if (!hotelResult || hotelResult.Rooms.length === 0) return null;
 
   const roomList = hotelResult.Rooms.map(mapRoom);
+
+  // Refundable status audit — log every room returned from detail
+  for (const room of roomList) {
+    const lastCancellationDate = room.cancelPolicies?.[0]?.fromDate ?? null;
+    console.log("[REFUNDABLE_AUDIT][Detail]", {
+      HotelCode: hotelCode,
+      BookingCode: room.id,
+      IsRefundable: room.refundable,
+      LastCancellationDate: lastCancellationDate,
+    });
+  }
+
   const lowestPrice =
     roomList.length > 0 ? Math.min(...roomList.map((r) => r.basePrice)) : 0;
 

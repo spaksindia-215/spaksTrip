@@ -52,6 +52,8 @@ function HotelDetailInner() {
   const rooms = Number(sp.get("rooms") ?? 1);
   const adults = Number(sp.get("adults") ?? 2);
   const children = Number(sp.get("children") ?? 0);
+  const childrenAges = (sp.get("childrenAges") ?? "")
+    .split(",").map(Number).filter((n) => !isNaN(n) && n >= 0).filter((_, i) => i < children);
   const guestNationality = sp.get("nationality") ?? "IN";
 
   const nights = checkIn && checkOut
@@ -83,11 +85,11 @@ function HotelDetailInner() {
   });
 
   useEffect(() => {
-    getHotel(decodeURIComponent(id), { checkIn, checkOut, rooms, adults, children }).then((h) => {
+    getHotel(decodeURIComponent(id), { checkIn, checkOut, rooms, adults, children, childrenAges }).then((h) => {
       setHotel(h);
       setLoading(false);
     });
-  }, [id, checkIn, checkOut, rooms, adults, children]);
+  }, [id, checkIn, checkOut, rooms, adults, children, childrenAges.join(",")]);
 
   const onSelectRoom = async (room: Room) => {
     if (!hotel) return;
@@ -97,25 +99,33 @@ function HotelDetailInner() {
     }
 
     // Initialize booking with Search data first
-    const bookingData = { hotel, room, checkIn, checkOut, rooms, adults, children, guestNationality };
+    const bookingData = { hotel, room, checkIn, checkOut, rooms, adults, children, childrenAges, guestNationality };
     startHotelBooking(bookingData);
 
-    // We'll check session validity after getting current from store
-    // Note: current will update after startHotelBooking, so we need to use the new booking's session time
-
-    // Get booking code from room (from Search response)
-    const bookingCode = (room as any).id; // Using room ID as booking code
+    // room.id is the BookingCode returned by the TBO Detail/Search call.
+    // For a multi-room search TBO encodes ALL rooms into a single compound
+    // BookingCode (e.g. "1125776!TB!1!TB!..."). There is exactly ONE PreBook
+    // call per booking regardless of room count — the compound code covers
+    // every room in the occupancy. Never call PreBook once per room.
+    const bookingCode = room.id;
     if (!bookingCode) {
       toast.push({ title: "Invalid room data. Please try again.", tone: "warn" });
       return;
     }
 
+    console.log("SEARCH OCCUPANCY", { rooms, adults, children, childrenAges });
+    console.log("SELECTED ROOMS", { roomId: room.id, roomName: room.name, basePrice: room.basePrice });
+    console.log("BOOKING CODES", { bookingCode });
+
     // Call PreBook to lock in rate and get final details
     try {
+      const preBookPayload = { bookingCode };
+      console.log("PREBOOK PAYLOAD", preBookPayload);
+
       const preBookRes = await fetch("/api/hotels/prebook", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bookingCode }),
+        body: JSON.stringify(preBookPayload),
       });
 
       if (!preBookRes.ok) {
@@ -125,12 +135,15 @@ function HotelDetailInner() {
       }
 
       const { data: preBookData } = await preBookRes.json();
+      console.log("PREBOOK RESPONSE rooms count", preBookData.rooms?.length, "codes", preBookData.rooms?.map((r: any) => r.bookingCode));
       const firstRoom = preBookData.rooms?.[0];
 
       if (!firstRoom) {
         toast.push({ title: "PreBook returned invalid data. Please try again.", tone: "warn" });
         return;
       }
+
+      console.log("ROOM OCCUPANCY", { requestedRooms: rooms, preBookRoomCount: preBookData.rooms?.length, netAmount: firstRoom.netAmount ?? firstRoom.totalFare });
 
       // Store PreBook info in booking store
       const preBookInfo: HotelPreBookInfo = {

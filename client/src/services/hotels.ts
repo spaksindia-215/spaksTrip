@@ -74,6 +74,7 @@ export async function getHotel(
     rooms?: number;
     adults?: number;
     children?: number;
+    childrenAges?: number[];
   },
 ): Promise<Hotel | null> {
   const qs = new URLSearchParams({
@@ -83,6 +84,9 @@ export async function getHotel(
     adults: String(searchParams?.adults ?? 2),
     children: String(searchParams?.children ?? 0),
   });
+  if (searchParams?.childrenAges?.length) {
+    qs.set("childrenAges", searchParams.childrenAges.join(","));
+  }
   const res = await fetch(`/api/hotels/${encodeURIComponent(id)}?${qs}`); // → /api/hotels/[id]
   if (!res.ok) return null;
   const json = await res.json().catch(() => null);

@@ -20,11 +20,12 @@ type NavItem = {
   menu?: { labelKey: string; href: string }[];
 };
 
-// Hydration-safe aria-label normalization:
-// Some i18n labels can include zero-width characters that differ between SSR and client.
-// Strip them so `aria-label` props are identical across hydration.
+// Strip invisible Unicode markers injected by Tolgee DevTools (U+200B–U+200D, U+FEFF,
+// U+2028, U+2029, U+2060–U+206F, U+2068, U+2069) that differ between SSR and client,
+// causing React hydration mismatches in text content and aria-label attributes.
 function normalizeAriaText(input: string) {
-  return input.replace(/[​-‍﻿]/g, "");
+  // eslint-disable-next-line no-control-regex
+  return input.replace(/[\u200b-\u200d\ufeff\u2028\u2029\u2060-\u206f\u2068\u2069]/g, "");
 }
 
 const NAV_ITEMS: NavItem[] = [
@@ -203,7 +204,10 @@ const megaItemVariants: Variants = {
 };
 
 function renderTopLevelNavLabel(label: string) {
-  const words = label.trim().split(/\s+/).filter(Boolean);
+  // Strip invisible Tolgee markers before splitting/rendering so SSR and
+  // client produce identical output and React hydration does not mismatch.
+  const clean = normalizeAriaText(label);
+  const words = clean.trim().split(/\s+/).filter(Boolean);
   if (words.length === 2) {
     return (
       <span className="flex flex-col items-center leading-[1.05]">
@@ -212,7 +216,7 @@ function renderTopLevelNavLabel(label: string) {
       </span>
     );
   }
-  return <span className="whitespace-nowrap">{label}</span>;
+  return <span className="whitespace-nowrap">{clean}</span>;
 }
 
 function NavIcon({ labelKey, className }: { labelKey: string; className?: string }) {
@@ -814,7 +818,7 @@ export default function Header() {
 
           <ul className="flex flex-col py-2">
             {visibleNavItems.map((item) => {
-              const itemLabel = t(item.labelKey);
+              const itemLabel = normalizeAriaText(t(item.labelKey));
               return (
                 <li key={item.labelKey}>
                   {item.menu ? (
@@ -875,7 +879,7 @@ export default function Header() {
                               setMobileExpanded(null);
                             }}
                           >
-                            {t(m.labelKey)}
+                            {normalizeAriaText(t(m.labelKey))}
                           </Link>
                         </li>
                       ))}
@@ -1319,7 +1323,7 @@ function MegaMenu({
               <NavIcon labelKey={parentKey} className="h-[16px] w-[16px]" />
             </span>
             <div>
-              <p className="text-[13px] font-semibold text-ink">{t(parentKey)}</p>
+              <p className="text-[13px] font-semibold text-ink">{normalizeAriaText(t(parentKey))}</p>
               <p className="text-[11px] text-ink-soft">Explore options</p>
             </div>
           </div>
@@ -1343,7 +1347,7 @@ function MegaMenu({
                 </span>
                 <span className="flex min-w-0 flex-col">
                   <span className="text-[13.5px] font-semibold text-ink transition-colors group-hover/mi:text-brand-700">
-                    {t(m.labelKey)}
+                    {normalizeAriaText(t(m.labelKey))}
                   </span>
                   <span className="mt-0.5 line-clamp-1 text-[11.5px] text-ink-soft">
                     {MEGA_DESCRIPTIONS[m.labelKey] ?? "Discover more"}
