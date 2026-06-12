@@ -60,7 +60,7 @@ function ReviewInner() {
       // For LCC domestic return, OB+IB are priced in one call (Guideline §6).
       const quote = await fetchFareQuote(
         current.offer.id,
-        undefined,
+        current.fareQuoteTraceId,
         current.offer.returnResultIndex,
       );
 
