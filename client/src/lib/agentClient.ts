@@ -11,6 +11,7 @@ export type AgentProfile = {
   email: string;
   role: UserRole;
   status: UserStatus;
+  slug: string | null;
   kyc: { aadharProvided: boolean; gst: string | null; pan: string | null };
   creditLimit: number | null;
   creditUsed: number;

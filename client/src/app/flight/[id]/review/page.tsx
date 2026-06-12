@@ -60,7 +60,7 @@ function ReviewInner() {
       // For LCC domestic return, OB+IB are priced in one call (Guideline §6).
       const quote = await fetchFareQuote(
         current.offer.id,
-        undefined,
+        current.fareQuoteTraceId,
         current.offer.returnResultIndex,
       );
 
@@ -105,8 +105,11 @@ function ReviewInner() {
         setQuoting(false);
         return;
       }
-    } catch {
-      // Non-fatal: if FareQuote fails the book/ticket call will surface the error.
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Could not refresh fare. Please try again.";
+      toast.push({ title: "Fare check failed", description: msg, tone: "warn" });
+      setQuoting(false);
+      return;
     }
     setQuoting(false);
     advanceStatus("TRAVELER");

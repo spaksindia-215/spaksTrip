@@ -17,6 +17,8 @@ import {
   type ProductType,
 } from "@/lib/agentClient";
 
+const APEX_DOMAIN = process.env.NEXT_PUBLIC_APEX_DOMAIN ?? "spakstrip.com";
+
 const PRODUCT_TYPES: ProductType[] = ["flight", "hotel", "taxi", "tour", "cruise", "package"];
 
 const PRODUCT_LABELS: Record<ProductType, string> = {
@@ -99,6 +101,7 @@ export default function AgentDashboardPage() {
   const [tab, setTab] = useState<BookingStatus | "all">("all");
   const [busyId, setBusyId] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [copied, setCopied] = useState(false);
 
   const [createOpen, setCreateOpen] = useState(false);
   const [form, setForm] = useState<{
@@ -133,6 +136,16 @@ export default function AgentDashboardPage() {
   }, [reloadKey]);
 
   const refresh = () => setReloadKey((k) => k + 1);
+
+  const copySubdomain = (slug: string) => {
+    const url = `https://${slug}.${APEX_DOMAIN}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }).catch(() => {
+      toast.push({ title: "Could not copy — please copy manually", tone: "warn" });
+    });
+  };
 
   const act = async (id: string, fn: () => Promise<Booking>) => {
     setBusyId(id);
@@ -228,6 +241,38 @@ export default function AgentDashboardPage() {
                 }).length,
               )}
             />
+          </div>
+
+          {/* Subdomain card */}
+          <div className="rounded-xl border border-border-soft bg-white p-4">
+            <p className="text-[12px] text-ink-muted">Your booking portal</p>
+            {profile.slug ? (
+              <>
+                <p className="mt-1 text-[15px] font-bold text-ink font-mono break-all">
+                  {profile.slug}
+                  <span className="font-normal text-ink-muted">.{APEX_DOMAIN}</span>
+                </p>
+                <div className="mt-3 flex gap-2">
+                  <a
+                    href={`https://${profile.slug}.${APEX_DOMAIN}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-lg border border-border-soft bg-surface-muted px-3 py-1.5 text-[12px] font-semibold text-ink hover:bg-border-soft transition-colors"
+                  >
+                    Open
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => copySubdomain(profile.slug!)}
+                    className="rounded-lg border border-border-soft bg-surface-muted px-3 py-1.5 text-[12px] font-semibold text-ink hover:bg-border-soft transition-colors"
+                  >
+                    {copied ? "Copied!" : "Copy link"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <p className="mt-1 text-[13px] text-ink-muted">Subdomain pending…</p>
+            )}
           </div>
         </div>
       ) : null}

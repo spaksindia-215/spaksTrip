@@ -7,7 +7,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
-    "seed:dev": "tsx --env-file=.env scripts/seed-dev-users.ts"
+    "seed:dev": "tsx --env-file=.env scripts/seed-dev-users.ts",
+    "generate:slugs": "tsx --env-file=.env scripts/generate-agent-slugs.ts"
   },
   "dependencies": {
     "axios": "^1.15.1",
