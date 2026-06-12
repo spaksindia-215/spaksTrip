@@ -24,7 +24,6 @@ export async function GET(
     const childrenAges = (sp.get("childrenAges") ?? "")
       .split(",").map(Number).filter((n) => !isNaN(n) && n >= 0);
 
-
     if (!checkIn || !checkOut) {
       return err("checkIn and checkOut query params are required.", 400);
     }
