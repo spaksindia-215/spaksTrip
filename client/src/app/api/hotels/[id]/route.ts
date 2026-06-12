@@ -14,14 +14,7 @@ export async function GET(
     const { id } = await params;
     if (!id) return err("hotel id (HotelCode) is required.", 400);
 
-<<<<<<< HEAD
-    const sp              = req.nextUrl.searchParams;
-    const checkIn         = sp.get("checkIn")  ?? "";
-    const checkOut        = sp.get("checkOut") ?? "";
-    const rooms           = parseInt(sp.get("rooms")    ?? "1", 10);
-    const adults          = parseInt(sp.get("adults")   ?? "2", 10);
-    const children        = parseInt(sp.get("children") ?? "0", 10);
-=======
+
     const sp = req.nextUrl.searchParams;
     const checkIn = sp.get("checkIn") ?? "";
     const checkOut = sp.get("checkOut") ?? "";
@@ -30,7 +23,7 @@ export async function GET(
     const children = parseInt(sp.get("children") ?? "0", 10);
     const childrenAges = (sp.get("childrenAges") ?? "")
       .split(",").map(Number).filter((n) => !isNaN(n) && n >= 0);
->>>>>>> origin/fb-fix-hotel
+
 
     if (!checkIn || !checkOut) {
       return err("checkIn and checkOut query params are required.", 400);
