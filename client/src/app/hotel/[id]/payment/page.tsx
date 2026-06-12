@@ -120,6 +120,8 @@ function PaymentInner() {
           guestNationality: booking.guestNationality,
           clientReferenceId: booking.id,
           adults: booking.adults,
+          children: booking.children,
+          childrenAges: booking.childrenAges,
           rooms: booking.rooms,
         }),
       });

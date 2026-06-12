@@ -166,12 +166,20 @@ export async function POST(request: NextRequest) {
       firstName: string;
       lastName: string;
       age?: number;
+      pan?: string;
+      passport?: string;
+      passportIssueDate?: string;
+      passportExpDate?: string;
     }> | undefined = body?.guests;
     const guestNationality: string = body?.guestNationality ?? "IN";
     // Total adults and rooms from the booking — needed to reconstruct per-room
-    // passenger count. Must match the formula in searchHolidays.ts exactly.
+    // passenger count. Must match the remainder-distribution in searchHolidays.ts exactly.
     const totalAdults: number = Math.max(1, Number(body?.adults ?? 1));
     const totalRooms: number = Math.max(1, Number(body?.rooms ?? 1));
+    const totalChildren: number = Math.max(0, Number(body?.children ?? 0));
+    const childrenAges: number[] = Array.isArray(body?.childrenAges)
+      ? (body.childrenAges as unknown[]).map(Number).filter((n) => !isNaN(n as number))
+      : [];
 
     // ── Validation ──────────────────────────────────────────────────────────
 
@@ -186,6 +194,13 @@ export async function POST(request: NextRequest) {
     if (!Array.isArray(guests) || guests.length === 0)
       return err("guests must be a non-empty array.", 400);
     if (!clientReferenceId) return err("clientReferenceId is required.", 400);
+
+    console.log(`[BOOK DEBUG] guests[0] identity:`, {
+      hasPan: !!guests[0]?.pan,
+      pan: guests[0]?.pan ? guests[0].pan.slice(0, 5) + "XXXXX" : null,
+      panRaw: guests[0]?.pan === undefined ? "undefined" : guests[0]?.pan === null ? "null" : `string(${guests[0].pan.length})`,
+      hasPassport: !!guests[0]?.passport,
+    });
 
     // ── Signature verification ──────────────────────────────────────────────
 
@@ -308,18 +323,30 @@ export async function POST(request: NextRequest) {
     // ── Build TBO roomsDetails ───────────────────────────────────────────────
     //
     // The guest form collects exactly ONE lead passenger per room (not per
-    // adult). TBO requires the passenger count per room to match the adult
-    // count that was sent during SearchHolidays — using the same formula:
-    //   adultsPerRoom = Math.max(1, Math.ceil(totalAdults / totalRooms))
+    // adult). TBO requires the passenger count per room to match the PaxRooms
+    // sent during SearchHolidays — using the same remainder-distribution:
+    //   room[i].adults   = Math.ceil(adultsRemaining / roomsLeft)
+    //   room[i].children = Math.ceil(childrenRemaining / roomsLeft)
     //
-    // Additional adult slots beyond the lead are filled with the lead's own
-    // name so the count satisfies TBO's validation. Only the lead passenger
-    // matters for check-in; the duplicates are a TBO API formality.
-    const adultsPerRoom = Math.max(1, Math.ceil(totalAdults / totalRooms));
+    // Additional adult slots beyond the lead are filled with the lead's name
+    // so the count satisfies TBO's validation. Only the lead passenger matters
+    // for check-in; the extras are a TBO API formality.
+    //
+    // PAN / passport are placed on the lead passenger only — that is what TBO
+    // requires when panMandatory / passportMandatory is set in PreBook.
+    let adultsRemaining = totalAdults;
+    let childrenRemaining = totalChildren;
+    // Track which child ages have been assigned across rooms.
+    let childAgeOffset = 0;
+    const roomsDetails: HotelBookRoomDetails[] = guests.map((lead, roomIdx) => {
+      const roomsLeft = totalRooms - roomIdx;
+      const roomAdults = Math.ceil(adultsRemaining / roomsLeft);
+      adultsRemaining -= roomAdults;
+      const roomChildren = Math.ceil(childrenRemaining / roomsLeft);
+      childrenRemaining -= roomChildren;
 
-    const roomsDetails: HotelBookRoomDetails[] = guests.map((lead) => {
       const roomPassengers = [
-        // Lead passenger — real form data
+        // Lead passenger — real form data including identity documents
         {
           title: lead.title as "Mr" | "Mrs" | "Ms",
           firstName: lead.firstName,
@@ -327,16 +354,41 @@ export async function POST(request: NextRequest) {
           paxType: 1 as const,
           leadPassenger: true,
           age: lead.age,
+          pan: lead.pan || undefined,
+          passportNo: lead.passport || undefined,
+          passportIssueDate: lead.passportIssueDate || undefined,
+          passportExpDate: lead.passportExpDate || undefined,
         },
-        // Additional adult slots required by TBO — filled with lead's details
-        ...Array.from({ length: adultsPerRoom - 1 }, () => ({
+        // Additional adult slots required by TBO — filled with lead's details.
+        // PAN and passport must be propagated to every adult: TBO validates
+        // PAN count against all adult passengers (PanCountRequired), not just
+        // the lead, and returns ErrorCode 3 "PAN is mandatory" if any adult
+        // is missing PAN when panMandatory=true.
+        ...Array.from({ length: roomAdults - 1 }, () => ({
           title: lead.title as "Mr" | "Mrs" | "Ms",
           firstName: lead.firstName,
           lastName: lead.lastName,
           paxType: 1 as const,
           leadPassenger: false,
           age: undefined as number | undefined,
+          pan: lead.pan || undefined,
+          passportNo: lead.passport || undefined,
+          passportIssueDate: lead.passportIssueDate || undefined,
+          passportExpDate: lead.passportExpDate || undefined,
         })),
+        // Child passengers — PaxType 2, Age required by TBO.
+        // Ages come from the search URL in the same order as PaxRooms.ChildrenAges.
+        ...Array.from({ length: roomChildren }, () => {
+          const age = childrenAges[childAgeOffset++] ?? 0;
+          return {
+            title: "Mr" as const,
+            firstName: lead.firstName,
+            lastName: lead.lastName,
+            paxType: 2 as const,
+            leadPassenger: false,
+            age,
+          };
+        }),
       ];
       return { passengers: roomPassengers };
     });
@@ -367,7 +419,8 @@ export async function POST(request: NextRequest) {
         GuestNationality: guestNationality,
         ClientReferenceId: clientReferenceId,
         rooms: roomsDetails.length,
-        adultsPerRoom,
+        totalAdults,
+        totalChildren,
         totalPassengers,
       },
     );
