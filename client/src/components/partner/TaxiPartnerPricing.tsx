@@ -82,7 +82,7 @@ export default function TaxiPartnerPricing({ data, onDataChange }: Props) {
               <label className="block text-sm font-medium text-brand-950 mb-2">
                 Currency *
               </label>
-              <div className="flex items-center gap-2 p-2 border border-slate-300 rounded-md bg-slate-50">
+              <div className="flex items-center gap-2 p-2 border border-border rounded-md bg-surface-muted">
                 <span className="font-medium text-brand-950">₹ INR</span>
               </div>
             </div>
@@ -148,24 +148,24 @@ export default function TaxiPartnerPricing({ data, onDataChange }: Props) {
         <div className="border-t pt-6">
           <h3 className="text-lg font-semibold text-brand-950 mb-4">Inclusions</h3>
           <div className="space-y-4">
-            <label className="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+            <label className="flex items-center p-3 border border-border-soft rounded-lg cursor-pointer hover:bg-surface-muted">
               <input
                 type="checkbox"
                 checked={data.tollIncluded || false}
                 onChange={(e) => handleChange("tollIncluded", e.target.checked)}
-                className="h-4 w-4 text-brand-600 rounded border-slate-300"
+                className="h-4 w-4 text-brand-600 rounded border-border"
               />
               <span className="ml-3 font-medium text-brand-950">
                 Toll Charges Included
               </span>
             </label>
 
-            <label className="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+            <label className="flex items-center p-3 border border-border-soft rounded-lg cursor-pointer hover:bg-surface-muted">
               <input
                 type="checkbox"
                 checked={data.parkingIncluded || false}
                 onChange={(e) => handleChange("parkingIncluded", e.target.checked)}
-                className="h-4 w-4 text-brand-600 rounded border-slate-300"
+                className="h-4 w-4 text-brand-600 rounded border-border"
               />
               <span className="ml-3 font-medium text-brand-950">
                 Parking Charges Included

@@ -63,7 +63,7 @@ export default function TaxiPartnerAvailability({ data, onDataChange }: Props) {
             className={`flex items-start p-4 border-2 rounded-lg cursor-pointer transition-colors ${
               data.status === option.value
                 ? "border-brand-600 bg-brand-50"
-                : "border-slate-200 bg-white hover:border-brand-300"
+                : "border-border-soft bg-white hover:border-brand-300"
             }`}
           >
             <input
@@ -72,7 +72,7 @@ export default function TaxiPartnerAvailability({ data, onDataChange }: Props) {
               value={option.value}
               checked={data.status === option.value}
               onChange={() => handleChange(option.value)}
-              className="h-5 w-5 text-brand-600 rounded-full border-slate-300 mt-0.5"
+              className="h-5 w-5 text-brand-600 rounded-full border-border mt-0.5"
             />
             <div className="ml-4 flex-1">
               <h3 className="text-lg font-semibold text-brand-950 flex items-center gap-2">
@@ -88,9 +88,9 @@ export default function TaxiPartnerAvailability({ data, onDataChange }: Props) {
       </div>
 
       <div className="grid md:grid-cols-3 gap-4 mt-6">
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <h4 className="font-semibold text-green-900 mb-2">Available</h4>
-          <ul className="text-sm text-green-800 space-y-1">
+        <div className="bg-success-50 border border-success-200 rounded-lg p-4">
+          <h4 className="font-semibold text-success-700 mb-2">Available</h4>
+          <ul className="text-sm text-success-700 space-y-1">
             <li>✓ Visible in search results</li>
             <li>✓ Customers can book</li>
             <li>✓ Receive booking requests</li>
@@ -106,9 +106,9 @@ export default function TaxiPartnerAvailability({ data, onDataChange }: Props) {
           </ul>
         </div>
 
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <h4 className="font-semibold text-red-900 mb-2">Under Maintenance</h4>
-          <ul className="text-sm text-red-800 space-y-1">
+        <div className="bg-danger-50 border border-danger-200 rounded-lg p-4">
+          <h4 className="font-semibold text-danger-700 mb-2">Under Maintenance</h4>
+          <ul className="text-sm text-danger-700 space-y-1">
             <li>✗ Completely hidden</li>
             <li>✗ No bookings possible</li>
             <li>⚙ Vehicle under repair</li>
@@ -123,8 +123,8 @@ export default function TaxiPartnerAvailability({ data, onDataChange }: Props) {
       </div>
 
       {errors.status && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-sm text-red-800">{errors.status}</p>
+        <div className="bg-danger-50 border border-danger-200 rounded-lg p-4">
+          <p className="text-sm text-danger-700">{errors.status}</p>
         </div>
       )}
     </div>

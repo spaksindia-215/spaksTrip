@@ -94,7 +94,7 @@ export default function TaxiPartnerReview({
       </div>
 
       {/* Vehicle Information */}
-      <div className="border border-slate-200 rounded-lg p-6">
+      <div className="border border-border-soft rounded-lg p-6">
         <h3 className="text-lg font-semibold text-brand-950 mb-4">Vehicle Information</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <div>
@@ -147,41 +147,41 @@ export default function TaxiPartnerReview({
       </div>
 
       {/* Documents */}
-      <div className="border border-slate-200 rounded-lg p-6">
+      <div className="border border-border-soft rounded-lg p-6">
         <h3 className="text-lg font-semibold text-brand-950 mb-4">Documents Uploaded</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="flex items-center">
-            <span className={documentData.vehicleRC ? "text-green-600" : "text-slate-400"}>
+            <span className={documentData.vehicleRC ? "text-success-600" : "text-ink-subtle"}>
               {documentData.vehicleRC ? "✓" : "✗"}
             </span>
             <span className="ml-2">Vehicle RC</span>
           </div>
           <div className="flex items-center">
-            <span className={documentData.commercialPermit ? "text-green-600" : "text-slate-400"}>
+            <span className={documentData.commercialPermit ? "text-success-600" : "text-ink-subtle"}>
               {documentData.commercialPermit ? "✓" : "✗"}
             </span>
             <span className="ml-2">Commercial Permit</span>
           </div>
           <div className="flex items-center">
-            <span className={documentData.insuranceCertificate ? "text-green-600" : "text-slate-400"}>
+            <span className={documentData.insuranceCertificate ? "text-success-600" : "text-ink-subtle"}>
               {documentData.insuranceCertificate ? "✓" : "✗"}
             </span>
             <span className="ml-2">Insurance Certificate</span>
           </div>
           <div className="flex items-center">
-            <span className={documentData.pollutionCertificate ? "text-green-600" : "text-slate-400"}>
+            <span className={documentData.pollutionCertificate ? "text-success-600" : "text-ink-subtle"}>
               {documentData.pollutionCertificate ? "✓" : "✗"}
             </span>
             <span className="ml-2">Pollution Certificate</span>
           </div>
           <div className="flex items-center">
-            <span className={documentData.driverLicense ? "text-green-600" : "text-slate-400"}>
+            <span className={documentData.driverLicense ? "text-success-600" : "text-ink-subtle"}>
               {documentData.driverLicense ? "✓" : "✗"}
             </span>
             <span className="ml-2">Driver License</span>
           </div>
           <div className="flex items-center">
-            <span className={documentData.vehiclePhotos && documentData.vehiclePhotos.length > 0 ? "text-green-600" : "text-slate-400"}>
+            <span className={documentData.vehiclePhotos && documentData.vehiclePhotos.length > 0 ? "text-success-600" : "text-ink-subtle"}>
               {documentData.vehiclePhotos && documentData.vehiclePhotos.length > 0 ? "✓" : "✗"}
             </span>
             <span className="ml-2">
@@ -192,7 +192,7 @@ export default function TaxiPartnerReview({
       </div>
 
       {/* Service Area */}
-      <div className="border border-slate-200 rounded-lg p-6">
+      <div className="border border-border-soft rounded-lg p-6">
         <h3 className="text-lg font-semibold text-brand-950 mb-4">Service Area</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <div>
@@ -215,7 +215,7 @@ export default function TaxiPartnerReview({
                   </span>
                 ))
               ) : (
-                <p className="text-slate-400">—</p>
+                <p className="text-ink-subtle">—</p>
               )}
             </div>
           </div>
@@ -223,7 +223,7 @@ export default function TaxiPartnerReview({
       </div>
 
       {/* Pricing */}
-      <div className="border border-slate-200 rounded-lg p-6">
+      <div className="border border-border-soft rounded-lg p-6">
         <h3 className="text-lg font-semibold text-brand-950 mb-4">Pricing</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <div>
@@ -264,7 +264,7 @@ export default function TaxiPartnerReview({
       </div>
 
       {/* Availability */}
-      <div className="border border-slate-200 rounded-lg p-6">
+      <div className="border border-border-soft rounded-lg p-6">
         <h3 className="text-lg font-semibold text-brand-950 mb-4">Availability Status</h3>
         <div>
           <p className="text-sm text-ink-muted">Status</p>

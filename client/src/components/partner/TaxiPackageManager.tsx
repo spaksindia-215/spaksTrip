@@ -309,7 +309,7 @@ export default function TaxiPackageManager() {
           <div className="flex flex-wrap gap-3">
             <StatCard label="Packages" value={String(packages.length)} />
             <StatCard label="Active" value={String(packages.filter((p) => p.status === "active").length)} />
-            <Button type="button" onClick={openCreate}>
+            <Button type="button" variant="accent" onClick={openCreate}>
               Create package
             </Button>
           </div>
@@ -326,7 +326,7 @@ export default function TaxiPackageManager() {
             title="No taxi packages yet"
             subtitle="Create your first fixed-route cab bundle with a day-wise itinerary and pricing."
             cta={
-              <Button type="button" onClick={openCreate}>
+              <Button type="button" variant="accent" onClick={openCreate}>
                 Create package
               </Button>
             }

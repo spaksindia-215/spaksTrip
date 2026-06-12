@@ -160,7 +160,7 @@ export default function HotelPartnerReview({
           </h3>
           <div className="space-y-3">
             {rooms.map((room) => (
-              <div key={room.id} className="p-3 bg-gray-50 rounded-lg">
+              <div key={room.id} className="p-3 bg-surface-muted rounded-lg">
                 <p className="font-medium text-brand-950">{room.name}</p>
                 <p className="text-sm text-ink-muted">
                   {room.bedType} • {room.roomSize} • {room.maxAdults} adults
@@ -179,7 +179,7 @@ export default function HotelPartnerReview({
           </h3>
           <div className="space-y-3">
             {rates.map((rate) => (
-              <div key={rate.id} className="p-3 bg-gray-50 rounded-lg">
+              <div key={rate.id} className="p-3 bg-surface-muted rounded-lg">
                 <p className="font-medium text-brand-950">{rate.name}</p>
                 <p className="text-sm text-ink-muted">
                   {rate.mealType} • {rate.refundable ? "Refundable" : "Non-Refundable"}
@@ -231,7 +231,7 @@ export default function HotelPartnerReview({
           </h3>
           <div className="space-y-3">
             {promotions.map((promo) => (
-              <div key={promo.id} className="p-3 bg-gray-50 rounded-lg">
+              <div key={promo.id} className="p-3 bg-surface-muted rounded-lg">
                 <p className="font-medium text-brand-950">{promo.name}</p>
                 <p className="text-sm text-ink-muted">
                   {promo.discountValue}

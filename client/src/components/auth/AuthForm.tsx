@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import Link from "next/link";
 import { ApiError } from "@/lib/api";
 import { authClient, type ApiAuthUser, type UserRole, type UserStatus } from "@/lib/authClient";
 import { useAuthStore } from "@/state/authStore";
@@ -503,7 +504,7 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
         <>
           {/* Card header */}
           <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
               <div
                 className="flex h-9 w-9 items-center justify-center rounded-xl text-[15px] font-bold text-white"
                 style={{ background: "linear-gradient(135deg, #1c4fa3, #0e2a5c)" }}
@@ -517,14 +518,24 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
               >
                 Spaks<span style={{ color: "#2563eb" }}>Trip</span>
               </span>
+            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/"
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold transition-colors hover:bg-gray-100"
+                style={{ background: "rgba(12,32,66,.05)", color: "#3f5170" }}
+              >
+                <Ic d={I.arrowLeft} size={13} stroke={2} />
+                Browse
+              </Link>
+              <span
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold"
+                style={{ background: "rgba(12,32,66,.05)", color: "#3f5170" }}
+              >
+                <Ic d={I.globe} size={14} stroke={2} />
+                India &amp; worldwide
+              </span>
             </div>
-            <span
-              className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold"
-              style={{ background: "rgba(12,32,66,.05)", color: "#3f5170" }}
-            >
-              <Ic d={I.globe} size={14} stroke={2} />
-              India &amp; worldwide
-            </span>
           </div>
 
           {/* Intro */}

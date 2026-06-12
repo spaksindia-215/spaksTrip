@@ -110,7 +110,7 @@ export default function HotelPartnerInventory({
               return (
                 <div
                   key={room.id}
-                  className="border rounded-lg p-4 hover:bg-gray-50 transition"
+                  className="border rounded-lg p-4 hover:bg-surface-muted transition"
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div>
@@ -143,7 +143,7 @@ export default function HotelPartnerInventory({
                               totalRooms: parseInt(e.target.value) || 0,
                             })
                           }
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+                          className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
                           placeholder="Total number of rooms"
                         />
                       </div>
@@ -162,7 +162,7 @@ export default function HotelPartnerInventory({
                               availableRooms: parseInt(e.target.value) || 0,
                             })
                           }
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+                          className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
                           placeholder="Currently available rooms"
                         />
                       </div>
@@ -197,7 +197,7 @@ export default function HotelPartnerInventory({
                           setEditingRoomId(null);
                           setFormData({});
                         }}
-                        className="flex-1 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50"
+                        className="flex-1 px-4 py-2 rounded-lg border border-border text-ink-soft font-medium hover:bg-surface-muted"
                       >
                         Cancel
                       </button>
@@ -208,7 +208,7 @@ export default function HotelPartnerInventory({
                             setEditingRoomId(null);
                             setFormData({});
                           }}
-                          className="flex-1 px-4 py-2 rounded-lg border border-red-500 text-red-500 font-medium hover:bg-red-50"
+                          className="flex-1 px-4 py-2 rounded-lg border border-danger-500 text-danger-500 font-medium hover:bg-danger-50"
                         >
                           Remove
                         </button>

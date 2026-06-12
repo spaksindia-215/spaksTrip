@@ -116,7 +116,7 @@ export default function HotelPartnerRates({ rooms, rates, onRatesChange }: Props
           </p>
         </div>
       ) : editingId ? (
-        <div className="space-y-6 border rounded-lg p-6 bg-gray-50">
+        <div className="space-y-6 border rounded-lg p-6 bg-surface-muted">
           <h3 className="text-lg font-semibold text-brand-950">
             {rates.find((r) => r.id === editingId) ? "Edit Rate Plan" : "Add New Rate Plan"}
           </h3>
@@ -129,7 +129,7 @@ export default function HotelPartnerRates({ rooms, rates, onRatesChange }: Props
               <select
                 value={formData.roomTypeId || ""}
                 onChange={(e) => setFormData({ ...formData, roomTypeId: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
               >
                 <option value="">Select room type</option>
                 {rooms.map((room) => (
@@ -148,7 +148,7 @@ export default function HotelPartnerRates({ rooms, rates, onRatesChange }: Props
                 type="text"
                 value={formData.name || ""}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
                 placeholder="e.g., Standard Rate"
               />
             </div>
@@ -160,7 +160,7 @@ export default function HotelPartnerRates({ rooms, rates, onRatesChange }: Props
               <select
                 value={formData.mealType || ""}
                 onChange={(e) => setFormData({ ...formData, mealType: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
               >
                 <option value="">Select meal type</option>
                 {MEAL_TYPES.map((type) => (
@@ -178,7 +178,7 @@ export default function HotelPartnerRates({ rooms, rates, onRatesChange }: Props
               <select
                 value={formData.refundable ? "yes" : "no"}
                 onChange={(e) => setFormData({ ...formData, refundable: e.target.value === "yes" })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
               >
                 <option value="yes">Refundable</option>
                 <option value="no">Non-Refundable</option>
@@ -215,7 +215,7 @@ export default function HotelPartnerRates({ rooms, rates, onRatesChange }: Props
                 setEditingId(null);
                 setFormData({});
               }}
-              className="flex-1 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50"
+              className="flex-1 px-4 py-2 rounded-lg border border-border text-ink-soft font-medium hover:bg-surface-muted"
             >
               Cancel
             </button>
@@ -236,7 +236,7 @@ export default function HotelPartnerRates({ rooms, rates, onRatesChange }: Props
           {rates.map((rate) => (
             <div
               key={rate.id}
-              className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+              className="flex items-center justify-between p-4 border rounded-lg hover:bg-surface-muted"
             >
               <div>
                 <h4 className="font-medium text-brand-950">{rate.name}</h4>
@@ -244,7 +244,7 @@ export default function HotelPartnerRates({ rooms, rates, onRatesChange }: Props
                   {getRoomName(rate.roomTypeId)} • {rate.mealType} • {rate.refundable ? "Refundable" : "Non-Refundable"}
                 </p>
                 {rate.inclusions.length > 0 && (
-                  <p className="text-xs text-gray-600 mt-1">
+                  <p className="text-xs text-ink-muted mt-1">
                     Includes: {rate.inclusions.join(", ")}
                   </p>
                 )}
@@ -258,7 +258,7 @@ export default function HotelPartnerRates({ rooms, rates, onRatesChange }: Props
                 </button>
                 <button
                   onClick={() => deleteRate(rate.id)}
-                  className="px-3 py-1 text-sm rounded-lg border border-red-500 text-red-500 hover:bg-red-50"
+                  className="px-3 py-1 text-sm rounded-lg border border-danger-500 text-danger-500 hover:bg-danger-50"
                 >
                   Delete
                 </button>

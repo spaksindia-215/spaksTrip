@@ -147,12 +147,12 @@ export default function TaxiPartnerRegistration() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white py-12">
+    <div className="min-h-screen bg-surface-muted py-12">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">List Your Taxi</h1>
-          <p className="mt-2 text-slate-600">
+          <h1 className="text-3xl font-bold text-ink">List Your Taxi</h1>
+          <p className="mt-2 text-ink-muted">
             Complete the registration to start listing your vehicle
           </p>
         </div>
@@ -164,9 +164,11 @@ export default function TaxiPartnerRegistration() {
               <div key={step} className="flex items-center flex-1">
                 <div
                   className={`h-10 w-10 rounded-full flex items-center justify-center font-semibold transition-colors ${
-                    index <= stepIndex
-                      ? "bg-brand-600 text-white"
-                      : "bg-slate-200 text-slate-500"
+                    index < stepIndex
+                      ? "bg-brand-50 text-brand-700"
+                      : index === stepIndex
+                        ? "bg-brand-600 text-white"
+                        : "bg-surface-sunken text-ink-muted"
                   }`}
                 >
                   {index + 1}
@@ -174,7 +176,7 @@ export default function TaxiPartnerRegistration() {
                 {index < steps.length - 1 && (
                   <div
                     className={`flex-1 h-1 mx-2 transition-colors ${
-                      index < stepIndex ? "bg-brand-600" : "bg-slate-200"
+                      index < stepIndex ? "bg-brand-600" : "bg-border"
                     }`}
                   />
                 )}
@@ -182,7 +184,7 @@ export default function TaxiPartnerRegistration() {
             ))}
           </div>
           <div className="mt-2 text-center">
-            <p className="text-sm font-medium text-slate-700">
+            <p className="text-sm font-medium text-ink-soft">
               Step {stepIndex + 1} of {steps.length}: {stepTitles[currentStep]}
             </p>
           </div>
@@ -190,13 +192,13 @@ export default function TaxiPartnerRegistration() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-6 rounded-lg bg-red-50 p-4 border border-red-200">
-            <p className="text-sm font-medium text-red-800">{error}</p>
+          <div className="mb-6 rounded-md bg-danger-50 p-4 border border-danger-200">
+            <p className="text-sm font-medium text-danger-700">{error}</p>
           </div>
         )}
 
         {/* Form Content */}
-        <div className="rounded-lg bg-white p-6 sm:p-8 shadow-sm border border-slate-200 mb-8">
+        <div className="rounded-md bg-white p-6 sm:p-8 shadow-card border border-border-soft mb-8">
           {currentStep === "info" && (
             <TaxiPartnerInfo data={taxiData} onDataChange={setTaxiData} />
           )}
@@ -236,9 +238,9 @@ export default function TaxiPartnerRegistration() {
             <Button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              variant="primary"
+              variant="accent"
             >
-              {isSubmitting ? "Submitting..." : "Submit Registration"}
+              {isSubmitting ? "Submitting..." : "Submit registration"}
             </Button>
           ) : (
             <Button onClick={handleNext} variant="primary">

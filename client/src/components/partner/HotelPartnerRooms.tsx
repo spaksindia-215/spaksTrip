@@ -106,7 +106,7 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
       </div>
 
       {editingId ? (
-        <div className="space-y-6 border rounded-lg p-6 bg-gray-50">
+        <div className="space-y-6 border rounded-lg p-6 bg-surface-muted">
           <h3 className="text-lg font-semibold text-brand-950">
             {rooms.find((r) => r.id === editingId) ? "Edit Room" : "Add New Room"}
           </h3>
@@ -119,7 +119,7 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
               <select
                 value={formData.name || ""}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
               >
                 <option value="">Select room type</option>
                 {EXAMPLE_ROOM_TYPES.map((type) => (
@@ -135,7 +135,7 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
                   placeholder="Enter custom room name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="mt-2 w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  className="mt-2 w-full px-4 py-2 border border-border rounded-lg"
                 />
               )}
             </div>
@@ -148,7 +148,7 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
                 type="text"
                 value={formData.bedType || ""}
                 onChange={(e) => setFormData({ ...formData, bedType: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
                 placeholder="e.g., Single, Double, Twin"
               />
             </div>
@@ -161,7 +161,7 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
                 type="text"
                 value={formData.roomSize || ""}
                 onChange={(e) => setFormData({ ...formData, roomSize: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
                 placeholder="e.g., 300 sq ft"
               />
             </div>
@@ -175,7 +175,7 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
                 min="1"
                 value={formData.maxAdults || ""}
                 onChange={(e) => setFormData({ ...formData, maxAdults: parseInt(e.target.value) })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
             </div>
 
@@ -188,7 +188,7 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
                 min="0"
                 value={formData.maxChildren || ""}
                 onChange={(e) => setFormData({ ...formData, maxChildren: parseInt(e.target.value) })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
               />
             </div>
           </div>
@@ -201,7 +201,7 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
               value={formData.description || ""}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={3}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
+              className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600"
               placeholder="Describe this room type..."
             />
           </div>
@@ -215,10 +215,10 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
               multiple
               accept="image/*"
               onChange={handleImageChange}
-              className="block w-full px-4 py-2 border border-gray-300 rounded-lg"
+              className="block w-full px-4 py-2 border border-border rounded-lg"
             />
             {formData.roomImages && formData.roomImages.length > 0 && (
-              <p className="mt-2 text-sm text-green-600">
+              <p className="mt-2 text-sm text-success-600">
                 ✓ {formData.roomImages.length} image(s) selected
               </p>
             )}
@@ -253,7 +253,7 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
                 setEditingId(null);
                 setFormData({});
               }}
-              className="flex-1 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50"
+              className="flex-1 px-4 py-2 rounded-lg border border-border text-ink-soft font-medium hover:bg-surface-muted"
             >
               Cancel
             </button>
@@ -274,7 +274,7 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
           {rooms.map((room) => (
             <div
               key={room.id}
-              className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+              className="flex items-center justify-between p-4 border rounded-lg hover:bg-surface-muted"
             >
               <div>
                 <h4 className="font-medium text-brand-950">{room.name}</h4>
@@ -291,7 +291,7 @@ export default function HotelPartnerRooms({ rooms, onRoomsChange }: Props) {
                 </button>
                 <button
                   onClick={() => deleteRoom(room.id)}
-                  className="px-3 py-1 text-sm rounded-lg border border-red-500 text-red-500 hover:bg-red-50"
+                  className="px-3 py-1 text-sm rounded-lg border border-danger-500 text-danger-500 hover:bg-danger-50"
                 >
                   Delete
                 </button>
