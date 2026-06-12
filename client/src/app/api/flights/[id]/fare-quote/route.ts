@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tboFareQuote } from "@/lib/adapters/tbo/flight/fareQuote";
 import { TboFareExpiredError } from "@/lib/adapters/tbo/errors";
+import { buildFarePricer } from "@/lib/server/agentMarkup";
 
 function err(message: string, status: number) {
   return NextResponse.json({ success: false, error: message }, { status });
@@ -27,6 +28,13 @@ export async function GET(
       : decodeURIComponent(id);
 
     const result = await tboFareQuote(resultIndex, traceId);
+
+    const priceFlight = await buildFarePricer("flights", req);
+    result.totalFare = priceFlight(result.totalFare);
+    if (result.updatedOffer) {
+      result.updatedOffer.basePrice = priceFlight(result.updatedOffer.basePrice);
+    }
+
     return NextResponse.json({ success: true, data: result });
   } catch (e) {
     if (e instanceof TboFareExpiredError) {

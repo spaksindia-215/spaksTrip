@@ -3,7 +3,7 @@ import { tboBookFlight } from "@/lib/adapters/tbo/flight/book";
 import { TboFareExpiredError, TboBookingFailedError, TboValidationError, isDuplicateBookingError } from "@/lib/adapters/tbo/errors";
 
 const DUPLICATE_MSG =
-  "This flight was already booked with these details recently. Please wait 24 hours or change the journey/passenger details.";
+  "This flight was already booked with these details recently. Please wait 5 days or change the journey/passenger details.";
 import type { TboBookFlightInput } from "@/lib/adapters/tbo/flight/book";
 
 function err(message: string, status: number) {

@@ -3,15 +3,18 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { env, isProd } from "./config/env";
 import { connectDb } from "./config/db";
+import { seedPlatformConfig } from "./models/PlatformConfig";
 import authRoutes from "./routes/auth.routes";
 import partnerRoutes from "./routes/partner.routes";
 import adminRoutes from "./routes/admin.routes";
 import customerRoutes from "./routes/customer.routes";
 import agentRoutes from "./routes/agent.routes";
+import internalRoutes from "./routes/internal.routes";
 import { errorHandler } from "./middleware/error";
 
 async function main(): Promise<void> {
   await connectDb();
+  await seedPlatformConfig();
 
   const app = express();
 
@@ -38,6 +41,7 @@ async function main(): Promise<void> {
   app.use("/api/admin", adminRoutes);
   app.use("/api/customer", customerRoutes);
   app.use("/api/agent", agentRoutes);
+  app.use("/api/internal", internalRoutes);
 
   app.use(errorHandler);
 

@@ -201,13 +201,6 @@ export async function tboFareQuote(
     const lastLeg = result.Segments?.[0] ?? [];
     const lastSeg = lastLeg[lastLeg.length - 1];
 
-    // Special-fare flags: TBO casing for these is not consistently documented
-    // (the validation doc writes them lowercase), so read either casing.
-    const raw = result as unknown as Record<string, unknown>;
-    const flag = (...keys: string[]) => keys.some((k) => raw[k] === true);
-    const isMealMandatory = flag("IsMealMandatory", "ismealmandatory");
-    const isSeatMandatory = flag("IsSeatMandatory", "isseatmandatory");
-
     return {
       resultIndex: result.ResultIndex,
       traceId: refreshedTraceId,
@@ -222,8 +215,9 @@ export async function tboFareQuote(
       isPassportRequiredAtBook: result.IsPassportRequiredAtBook ?? false,
       isPassportRequiredAtTicket: result.IsPassportRequiredAtTicket ?? false,
       isPassportFullDetailRequiredAtBook: result.IsPassportFullDetailRequiredAtBook ?? false,
-      isMealMandatory,
-      isSeatMandatory,
+      // TBO confirmed (Jun 2026) these are PascalCase in the FareQuote response.
+      isMealMandatory: result.IsMealMandatory ?? false,
+      isSeatMandatory: result.IsSeatMandatory ?? false,
       flightDetailChangeInfo: result.FlightDetailChangeInfo ?? null,
       airlineCode: firstSeg?.Airline?.AirlineCode ?? result.AirlineCode ?? "",
       origin: firstSeg?.Origin?.Airport?.AirportCode ?? "",

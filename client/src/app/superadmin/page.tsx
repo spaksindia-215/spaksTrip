@@ -9,8 +9,35 @@ import Modal from "@/components/ui/Modal";
 import Tabs from "@/components/ui/Tabs";
 import { useToast } from "@/components/ui/Toast";
 import { ApiError } from "@/lib/api";
-import { adminClient, type AdminUser } from "@/lib/adminClient";
+import {
+  adminClient,
+  type AdminUser,
+  type NavbarVisibility,
+  type PlatformMarkupConfig,
+  type PlatformMarkupRule,
+} from "@/lib/adminClient";
 import type { UserRole } from "@/lib/authClient";
+
+// All public (non-partner-only) navbar items the admin can show/hide.
+const CONTROLLABLE_NAV_ITEMS: Array<{ key: string; label: string }> = [
+  { key: "nav.flight", label: "Flight" },
+  { key: "Premium Hotel", label: "Premium Hotel" },
+  { key: "Hotel", label: "Hotel" },
+  { key: "nav.taxi_package", label: "Taxi Package" },
+  { key: "nav.holiday_packages", label: "Holiday Packages" },
+  { key: "nav.accommodation", label: "Accommodation" },
+  { key: "nav.transport", label: "Transport" },
+  { key: "nav.cruise", label: "Cruise" },
+  { key: "nav.train", label: "Train" },
+  { key: "Rail Europe", label: "Rail Europe" },
+  { key: "Events", label: "Events" },
+  { key: "SightSeeing", label: "SightSeeing" },
+  { key: "Transfer", label: "Transfer" },
+  { key: "Self-Drive", label: "Self-Drive" },
+  { key: "Islandhopper", label: "Islandhopper" },
+  { key: "nav.visa_consultancy", label: "Visa Consultancy" },
+  { key: "insaurance", label: "Insurance" },
+];
 
 const CREDIT_MIN = 8000;
 const CREDIT_MAX = 100000;
@@ -40,13 +67,19 @@ function formatInr(value: number): string {
   return `₹${value.toLocaleString("en-IN")}`;
 }
 
+function formatMarkupRule(rule: { type: "percent" | "flat"; value: number; cap?: number } | undefined): string {
+  if (!rule || rule.value === 0) return "0%";
+  const base = rule.type === "percent" ? `${rule.value}%` : `₹${rule.value} flat`;
+  return rule.cap ? `${base} (cap ₹${rule.cap})` : base;
+}
+
 export default function SuperadminPage() {
   const toast = useToast();
   const [session, setSession] = useState<"checking" | "out" | "in">("checking");
   const [password, setPassword] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
 
-  const [tab, setTab] = useState<"pending" | "users">("pending");
+  const [tab, setTab] = useState<"pending" | "users" | "navbar" | "markup">("pending");
 
   const [pending, setPending] = useState<AdminUser[]>([]);
   const [pendingLoading, setPendingLoading] = useState(true);
@@ -62,6 +95,20 @@ export default function SuperadminPage() {
   const [creditTarget, setCreditTarget] = useState<AdminUser | null>(null);
   const [creditValue, setCreditValue] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
+
+  const [navVisibility, setNavVisibility] = useState<NavbarVisibility>({});
+  const [navLoading, setNavLoading] = useState(false);
+  const [navSaving, setNavSaving] = useState(false);
+
+  const DEFAULT_MARKUP_RULE: PlatformMarkupRule = { type: "percent", value: 0 };
+  const [markupConfig, setMarkupConfig] = useState<PlatformMarkupConfig>({
+    flights: { ...DEFAULT_MARKUP_RULE },
+    hotels:  { ...DEFAULT_MARKUP_RULE },
+    taxi:    { ...DEFAULT_MARKUP_RULE },
+  });
+  const [markupLoading, setMarkupLoading] = useState(false);
+  const [markupSaving, setMarkupSaving] = useState(false);
+  const [markupMeta, setMarkupMeta] = useState<{ version: number; updatedAt: string } | null>(null);
 
   const loadPending = useCallback(async () => {
     setPendingLoading(true);
@@ -94,9 +141,20 @@ export default function SuperadminPage() {
         if (tab === "pending") {
           const items = await adminClient.pending();
           if (active) setPending(items);
-        } else {
+        } else if (tab === "users") {
           const items = await adminClient.users(userFilter === "all" ? undefined : userFilter);
           if (active) setUsers(items);
+        } else if (tab === "navbar") {
+          setNavLoading(true);
+          const vis = await adminClient.getNavbarSettings();
+          if (active) setNavVisibility(vis);
+        } else if (tab === "markup") {
+          setMarkupLoading(true);
+          const data = await adminClient.getPlatformMarkup();
+          if (active) {
+            setMarkupConfig(data.markup);
+            setMarkupMeta({ version: data.version, updatedAt: data.updatedAt });
+          }
         }
       } catch (error) {
         if (!active) return;
@@ -106,6 +164,8 @@ export default function SuperadminPage() {
         if (active) {
           setPendingLoading(false);
           setUsersLoading(false);
+          setNavLoading(false);
+          setMarkupLoading(false);
         }
       }
     }
@@ -115,6 +175,39 @@ export default function SuperadminPage() {
       active = false;
     };
   }, [session, tab, userFilter, toast]);
+
+  const toggleNavItem = (key: string) => {
+    setNavVisibility((prev) => ({ ...prev, [key]: !(prev[key] ?? true) }));
+  };
+
+  const saveNavSettings = async () => {
+    setNavSaving(true);
+    try {
+      const saved = await adminClient.updateNavbarSettings(navVisibility);
+      setNavVisibility(saved);
+      toast.push({ title: "Navbar settings saved", tone: "success" });
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : "Save failed";
+      toast.push({ title: "Error", description: message, tone: "danger" });
+    } finally {
+      setNavSaving(false);
+    }
+  };
+
+  const saveMarkup = async () => {
+    setMarkupSaving(true);
+    try {
+      const data = await adminClient.updatePlatformMarkup(markupConfig);
+      setMarkupConfig(data.markup);
+      setMarkupMeta({ version: data.version, updatedAt: data.updatedAt });
+      toast.push({ title: "Platform markup saved", tone: "success" });
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : "Save failed";
+      toast.push({ title: "Error", description: message, tone: "danger" });
+    } finally {
+      setMarkupSaving(false);
+    }
+  };
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -284,11 +377,155 @@ export default function SuperadminPage() {
           items={[
             { value: "pending", label: "Pending Approvals" },
             { value: "users", label: "All Users" },
+            { value: "navbar", label: "Navbar Visibility" },
+            { value: "markup", label: "Platform Markup" },
           ]}
           variant="underline"
         />
 
-        {tab === "pending" ? (
+        {tab === "markup" ? (
+          <section className="mt-6">
+            <div className="rounded-xl border border-border-soft bg-white p-6">
+              <div className="mb-5 flex items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-[15px] font-semibold text-ink">Platform Markup (L1)</h2>
+                  <p className="mt-0.5 text-[13px] text-ink-muted">
+                    Applied on top of TBO fares before agents see their net rate. Agents never see these values.
+                    {markupMeta && (
+                      <span className="ml-1 text-ink-subtle">
+                        v{markupMeta.version} · last saved {new Date(markupMeta.updatedAt).toLocaleString("en-IN")}
+                      </span>
+                    )}
+                  </p>
+                </div>
+                <Button type="button" variant="primary" size="sm" loading={markupSaving} onClick={saveMarkup}>
+                  Save Markup
+                </Button>
+              </div>
+
+              {markupLoading ? (
+                <p className="py-8 text-center text-sm text-ink-muted">Loading…</p>
+              ) : (
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {(["flights", "hotels", "taxi"] as const).map((product) => {
+                    const rule = markupConfig[product];
+                    const label = product.charAt(0).toUpperCase() + product.slice(1);
+                    return (
+                      <div key={product} className="rounded-lg border border-border-soft p-4 flex flex-col gap-3">
+                        <h3 className="text-[14px] font-semibold text-ink">{label}</h3>
+
+                        <div>
+                          <p className="mb-1.5 text-[12px] font-medium text-ink-soft">Type</p>
+                          <Tabs
+                            value={rule.type}
+                            onChange={(v) =>
+                              setMarkupConfig((prev) => ({
+                                ...prev,
+                                [product]: { ...prev[product], type: v as "percent" | "flat" },
+                              }))
+                            }
+                            items={[
+                              { value: "percent", label: "%" },
+                              { value: "flat", label: "₹ flat" },
+                            ]}
+                            variant="segmented"
+                          />
+                        </div>
+
+                        <Input
+                          id={`platform-${product}-value`}
+                          label={rule.type === "percent" ? "Markup (%)" : "Markup (₹)"}
+                          type="number"
+                          inputMode="decimal"
+                          min={0}
+                          max={rule.type === "percent" ? 30 : 5000}
+                          value={String(rule.value)}
+                          onChange={(e) =>
+                            setMarkupConfig((prev) => ({
+                              ...prev,
+                              [product]: { ...prev[product], value: Number(e.target.value) || 0 },
+                            }))
+                          }
+                          placeholder="0"
+                          sizeVariant="sm"
+                        />
+
+                        <Input
+                          id={`platform-${product}-cap`}
+                          label="Cap (₹) — optional"
+                          type="number"
+                          inputMode="decimal"
+                          min={0}
+                          value={rule.cap != null ? String(rule.cap) : ""}
+                          onChange={(e) => {
+                            const cap = e.target.value.trim() !== "" ? Number(e.target.value) : undefined;
+                            setMarkupConfig((prev) => ({
+                              ...prev,
+                              [product]: { ...prev[product], cap },
+                            }));
+                          }}
+                          placeholder="No cap"
+                          sizeVariant="sm"
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </section>
+        ) : tab === "navbar" ? (
+          <section className="mt-6">
+            <div className="rounded-xl border border-border-soft bg-white p-6">
+              <div className="mb-5 flex items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-[15px] font-semibold text-ink">Navbar Visibility</h2>
+                  <p className="mt-0.5 text-[13px] text-ink-muted">
+                    Toggle which items are visible to all website visitors. Changes take effect immediately after saving.
+                  </p>
+                </div>
+                <Button type="button" variant="primary" size="sm" loading={navSaving} onClick={saveNavSettings}>
+                  Save Changes
+                </Button>
+              </div>
+
+              {navLoading ? (
+                <p className="py-8 text-center text-sm text-ink-muted">Loading…</p>
+              ) : (
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {CONTROLLABLE_NAV_ITEMS.map(({ key, label }) => {
+                    const visible = navVisibility[key] ?? true;
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => toggleNavItem(key)}
+                        className="flex items-center justify-between rounded-lg border border-border-soft px-4 py-3 text-left transition-colors hover:bg-surface-muted"
+                      >
+                        <span className="text-[14px] font-medium text-ink">{label}</span>
+                        {/* Toggle pill */}
+                        <span
+                          aria-label={visible ? "Visible" : "Hidden"}
+                          className={[
+                            "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200",
+                            visible ? "bg-brand-600" : "bg-gray-200",
+                          ].join(" ")}
+                        >
+                          <span
+                            className={[
+                              "inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition-transform duration-200",
+                              visible ? "translate-x-5" : "translate-x-0",
+                            ].join(" ")}
+                          />
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </section>
+        ) : tab === "pending" ? (
           <section className="mt-6">
             {pendingLoading ? (
               <p className="py-12 text-center text-sm text-ink-muted">Loading…</p>
@@ -351,6 +588,7 @@ export default function SuperadminPage() {
                         <th className="px-4 py-3 font-semibold">Phone</th>
                         <th className="px-4 py-3 font-semibold">Status</th>
                         <th className="px-4 py-3 font-semibold">Credit</th>
+                        <th className="px-4 py-3 font-semibold">Markup</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -376,6 +614,19 @@ export default function SuperadminPage() {
                               >
                                 {user.creditLimit != null ? formatInr(user.creditLimit) : "Set limit"}
                               </button>
+                            ) : (
+                              "—"
+                            )}
+                          </td>
+                          <td className="px-4 py-3">
+                            {user.role === "agent" || user.role === "b2b_agent" ? (
+                              <span className="text-[12px] text-ink-soft">
+                                ✈ {formatMarkupRule(user.markup?.flights)}
+                                {" · "}
+                                🏨 {formatMarkupRule(user.markup?.hotels)}
+                                {" · "}
+                                🚕 {formatMarkupRule(user.markup?.taxi)}
+                              </span>
                             ) : (
                               "—"
                             )}

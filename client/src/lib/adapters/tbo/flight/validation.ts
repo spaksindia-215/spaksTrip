@@ -21,12 +21,13 @@ const FLYDUBAI = "FZ";
 const SPICEJET_PASSPORT_AIRPORTS = new Set(["DXB", "RUH", "SHJ"]);
 const NEPAL_CC = "NP";
 
-// Titles accepted by Navitaire 4X (SpiceJet) per pax type — CLAUDE.md "Pax Details".
+// Valid titles per pax type — TBO support (Jun 2026) requires these for ALL airlines:
+//   Male: MR | Female: MRS/MS | Child: MR/MS | Infant: MSTR (only).
 const VALID_TITLES: Record<"MALE" | "FEMALE" | "CHILD" | "INFANT", Set<string>> = {
   MALE: new Set(["MR"]),
   FEMALE: new Set(["MRS", "MS"]),
   CHILD: new Set(["MR", "MS"]),
-  INFANT: new Set(["MSTR", "MR", "MS"]),
+  INFANT: new Set(["MSTR"]),
 };
 
 const NAME_FORBIDDEN = /[.,/]/; // special characters disallowed by Navitaire
@@ -146,17 +147,16 @@ export function validateBookingPassengers(
       errs.push(`${who}: this airline does not allow spaces in the last name.`);
     }
 
-    // Title must be valid for the pax type / gender — this matrix is specific to
-    // Navitaire 4X (SpiceJet) per CLAUDE.md, so only enforce it for SG. Other
-    // sources (GDS/Amadeus) accept the broader Mr/Mrs/Ms/Mstr/Miss set.
-    if (code === SPICEJET && p.title) {
+    // Title must be valid for the pax type / gender — TBO requires this for ALL
+    // airlines (Male MR; Female MRS/MS; Child MR/MS; Infant MSTR).
+    if (p.title) {
       const t = p.title.trim().toUpperCase();
       const bucket =
         p.type === "INF" ? "INFANT" :
         p.type === "CHD" ? "CHILD" :
         p.gender === "F" ? "FEMALE" : "MALE";
       if (!VALID_TITLES[bucket].has(t)) {
-        errs.push(`${who}: title "${p.title}" is not valid for this passenger type on SpiceJet.`);
+        errs.push(`${who}: title "${p.title}" is not valid for this passenger type.`);
       }
     }
 

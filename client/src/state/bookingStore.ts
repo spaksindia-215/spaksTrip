@@ -195,6 +195,10 @@ export const useBookingStore = create<State & Actions>()(
             isGSTMandatory: false,
             isLCC: false,
             fareBreakdown: [],
+            // Seed the traceId from the search response so FareQuote can pass it
+            // back to the server even when the server-side traceCache is cold
+            // (different instance or post-restart on multi-replica deployments).
+            fareQuoteTraceId: offer.traceId,
             ssrSelections: [],
             createdAt: new Date().toISOString(),
           },

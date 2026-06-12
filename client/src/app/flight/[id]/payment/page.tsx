@@ -2,19 +2,44 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import Script from "next/script";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import BookingStepper from "@/components/flight/BookingStepper";
 import ItinerarySummary from "@/components/flight/ItinerarySummary";
 import PriceBreakdown from "@/components/flight/PriceBreakdown";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
-import Radio from "@/components/ui/Radio";
 import { useBookingStore } from "@/state/bookingStore";
 import { useToast } from "@/components/ui/Toast";
-import { submitBooking } from "@/services/flights";
+import { buildBookingPayload } from "@/services/flights";
 
-type Method = "card" | "upi" | "netbanking" | "wallet";
+// ─── Razorpay browser types ───────────────────────────────────────────────────
+
+interface RazorpaySuccessResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
+interface RazorpayOptions {
+  key: string;
+  order_id: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  prefill?: { name?: string; email?: string; contact?: string };
+  notes?: Record<string, string>;
+  theme?: { color?: string };
+  handler(response: RazorpaySuccessResponse): void;
+  modal?: { ondismiss?(): void };
+}
+
+declare global {
+  interface Window {
+    Razorpay: new (options: RazorpayOptions) => { open(): void };
+  }
+}
 
 export default function FlightPaymentPage() {
   return (
@@ -43,15 +68,9 @@ function PaymentInner() {
   const toast = useToast();
   const { current, confirm } = useBookingStore();
 
-  const [method, setMethod] = useState<Method>("upi");
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardName, setCardName] = useState("");
-  const [exp, setExp] = useState("");
-  const [cvv, setCvv] = useState("");
-  const [upi, setUpi] = useState("");
-  const [netBank, setNetBank] = useState("HDFC");
-  const [wallet, setWallet] = useState("Paytm");
-  const [processing, setProcessing] = useState(false);
+  const [phase, setPhase] = useState<
+    "idle" | "creating_order" | "awaiting_payment" | "verifying" | "booking"
+  >("idle");
 
   useEffect(() => {
     if (!current) router.replace("/flight");
@@ -59,240 +78,249 @@ function PaymentInner() {
 
   if (!current) return null;
 
-  const validate = (): string | null => {
-    if (method === "card") {
-      if (cardNumber.replace(/\s/g, "").length < 14) return "Enter a valid card number";
-      if (!cardName.trim()) return "Name on card is required";
-      if (!/^(\d{2})\/(\d{2})$/.test(exp)) return "Expiry must be MM/YY";
-      if (!/^\d{3,4}$/.test(cvv)) return "CVV must be 3 or 4 digits";
-    }
-    if (method === "upi" && !/^[\w.-]+@[\w]+$/.test(upi)) return "Enter a valid UPI ID";
-    return null;
-  };
+  const totalPaise = Math.round(current.totalPrice * 100);
+  const isBusy = phase !== "idle";
+  const from = current.offer.segments[0]?.from ?? "";
+  const to = current.offer.segments[current.offer.segments.length - 1]?.to ?? "";
 
-  const onPay = async () => {
-    const err = validate();
-    if (err) {
-      toast.push({ title: err, tone: "warn" });
+  // ── Verify payment + issue ticket server-side (atomic; auto-refund on failure) ─
+  // Idempotent on the server, so a network retry is safe.
+  async function verifyAndBook(response: RazorpaySuccessResponse, retry = 0) {
+    const booking = current!;
+    setPhase("booking");
+    try {
+      const res = await fetch("/api/flights/razorpay/verify-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          razorpayOrderId: response.razorpay_order_id,
+          razorpayPaymentId: response.razorpay_payment_id,
+          razorpaySignature: response.razorpay_signature,
+          amountPaise: totalPaise,
+          clientReferenceId: booking.id,
+          booking: buildBookingPayload(booking),
+        }),
+      });
+      const data = await res.json().catch(() => null);
+
+      // ── Success ──────────────────────────────────────────────────────────────
+      if (res.ok && data?.success) {
+        confirm(data.data.pnr, data.data.returnLeg?.pnr);
+        toast.push({ title: "Booking confirmed", description: `PNR: ${data.data.pnr}`, tone: "success" });
+        router.push(`/flight/${encodeURIComponent(booking.offer.id)}/confirmation?${sp.toString()}`);
+        return;
+      }
+
+      // ── Signature mismatch ─────────────────────────────────────────────────────
+      if (data?.signatureMismatch) {
+        toast.push({
+          title: "Payment verification failed",
+          description: `If any amount was deducted, contact support with payment ID: ${data.razorpayPaymentId}`,
+          tone: "warn",
+        });
+        setPhase("idle");
+        return;
+      }
+
+      // ── TBO timeout — payment captured, booking state unknown ──────────────────
+      if (data?.tboTimedOut) {
+        toast.push({
+          title: "Booking request timed out",
+          description: `Payment received (ID: ${response.razorpay_payment_id}). We'll confirm by email; reference: ${booking.id}.`,
+          tone: "warn",
+        });
+        setPhase("idle");
+        return;
+      }
+
+      // ── Partial (domestic return): outbound ticketed, inbound failed ───────────
+      // Outbound is confirmed — take the user to confirmation; ops reconciles the return.
+      if (data?.tboPartial) {
+        confirm(data.partialPnr);
+        toast.push({
+          title: "Outbound confirmed — return pending",
+          description: `Your outbound flight is ticketed (PNR: ${data.partialPnr}). The return leg couldn't be confirmed; our team will contact you to complete it — no extra charge without your consent.`,
+          tone: "warn",
+        });
+        router.push(`/flight/${encodeURIComponent(booking.offer.id)}/confirmation?${sp.toString()}`);
+        return;
+      }
+
+      // ── Hard failure / price change → refund already initiated server-side ─────
+      if (data?.tboFailed) {
+        const refundNote = data.razorpayRefundInitiated
+          ? "A full refund has been initiated (5–7 business days)."
+          : `Please contact support with payment ID: ${response.razorpay_payment_id}`;
+        toast.push({
+          title: data.reason === "price_changed" ? "Fare changed" : "Booking failed",
+          description: `${data.error ?? ""} ${refundNote}`.trim(),
+          tone: "warn",
+        });
+        setPhase("idle");
+        // Price changed → send the user back to re-price the itinerary.
+        if (data.reason === "price_changed") {
+          router.push(`/flight/${encodeURIComponent(booking.offer.id)}/review?${sp.toString()}`);
+        }
+        return;
+      }
+
+      // ── Generic server error ───────────────────────────────────────────────────
+      toast.push({
+        title: "Booking failed",
+        description: data?.error ?? `Contact support with payment ID: ${response.razorpay_payment_id}`,
+        tone: "warn",
+      });
+      setPhase("idle");
+    } catch {
+      // Network interruption — the server is idempotent, so retry safely.
+      if (retry < 2) {
+        toast.push({ title: `Connection issue — retrying (${retry + 1}/2)…`, description: "Please stay on this page.", tone: "info" });
+        await new Promise((r) => setTimeout(r, 3000 * (retry + 1)));
+        return verifyAndBook(response, retry + 1);
+      }
+      toast.push({
+        title: "Verification interrupted",
+        description: `Your payment was received but we couldn't confirm the booking. Contact support with payment ID: ${response.razorpay_payment_id}`,
+        tone: "warn",
+      });
+      setPhase("idle");
+    }
+  }
+
+  // ── Pay handler ───────────────────────────────────────────────────────────────
+  async function onPay() {
+    const booking = current!;
+    if (!booking.fareBreakdown?.length || !booking.travelers?.length) {
+      toast.push({ title: "Booking session incomplete", description: "Please go back to the review step and try again.", tone: "warn" });
+      router.push(`/flight/${encodeURIComponent(booking.offer.id)}/review?${sp.toString()}`);
       return;
     }
-    setProcessing(true);
-    try {
-      // Prompt-then-accept: if TBO reports a price/time change at Book or Ticket,
-      // ask the user to confirm the new fare before re-submitting (CLAUDE.md
-      // "Price and Cancellation Change Validation").
-      const result = await submitBooking(current, ({ stage, leg }) => {
-        const which = leg ? `the ${leg} flight` : "this flight";
-        return window.confirm(
-          stage === "book"
-            ? `The fare for ${which} changed after booking. Accept the new price and issue the ticket?`
-            : `The fare for ${which} changed. Accept the updated price and complete ticketing?`,
-        );
-      });
-      confirm(result.pnr, result.returnPnr);
-      toast.push({ title: "Booking confirmed", description: `PNR: ${result.pnr}`, tone: "success" });
-      router.push(`/flight/${encodeURIComponent(current.offer.id)}/confirmation?${sp.toString()}`);
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : "Booking failed. Please try again.";
-      toast.push({ title: "Booking failed", description: msg, tone: "warn" });
-      setProcessing(false);
+    if (!window.Razorpay) {
+      toast.push({ title: "Payment gateway not loaded. Please refresh the page.", tone: "warn" });
+      return;
     }
-  };
+    const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    if (!key) {
+      toast.push({ title: "Payment is not configured. Set NEXT_PUBLIC_RAZORPAY_KEY_ID.", tone: "warn" });
+      return;
+    }
 
-  const METHODS: Array<{ v: Method; label: string; icon: React.ReactNode }> = [
-    { v: "upi", label: "UPI", icon: <UpiIcon /> },
-    { v: "card", label: "Credit / Debit card", icon: <CardIcon /> },
-    { v: "netbanking", label: "Net banking", icon: <BankIcon /> },
-    { v: "wallet", label: "Wallet", icon: <WalletIcon /> },
-  ];
+    // Step 1: create the Razorpay order server-side.
+    setPhase("creating_order");
+    let orderId: string;
+    try {
+      const res = await fetch("/api/flights/razorpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amountPaise: totalPaise,
+          clientReferenceId: booking.id,
+          route: `${from}-${to}`,
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.success) {
+        toast.push({ title: data?.error ?? "Failed to initiate payment. Please try again.", tone: "warn" });
+        setPhase("idle");
+        return;
+      }
+      orderId = data.orderId;
+    } catch {
+      toast.push({ title: "Could not connect to payment gateway. Please try again.", tone: "warn" });
+      setPhase("idle");
+      return;
+    }
+
+    // Step 2: open Razorpay checkout.
+    setPhase("awaiting_payment");
+    const lead = booking.travelers[0];
+    const rzp = new window.Razorpay({
+      key,
+      order_id: orderId,
+      amount: totalPaise,
+      currency: "INR",
+      name: "SpaksTrip",
+      description: `Flight: ${from} → ${to}`,
+      prefill: {
+        name: lead ? `${lead.firstName} ${lead.lastName}` : undefined,
+        email: booking.contact?.email,
+        contact: booking.contact?.phone,
+      },
+      notes: { clientReferenceId: booking.id, route: `${from}-${to}` },
+      theme: { color: "#1a56db" },
+      handler(response: RazorpaySuccessResponse) {
+        verifyAndBook(response);
+      },
+      modal: {
+        ondismiss() {
+          setPhase("idle");
+          toast.push({
+            title: "Payment cancelled",
+            description: "Your booking session is still active. You can try paying again.",
+            tone: "info",
+          });
+        },
+      },
+    });
+    rzp.open();
+  }
+
+  const buttonLabel =
+    phase === "creating_order"
+      ? "Opening payment…"
+      : phase === "awaiting_payment"
+        ? "Awaiting payment…"
+        : phase === "verifying"
+          ? "Verifying payment…"
+          : phase === "booking"
+            ? "Issuing ticket…"
+            : `Pay ${current.totalPrice.toLocaleString("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 })}`;
 
   return (
     <div className="min-h-screen flex flex-col bg-surface-muted">
+      {/* Razorpay checkout.js — loaded after the page becomes interactive */}
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
+
       <Header />
       <BookingStepper active="payment" />
       <main className="flex-1">
         <div className="mx-auto max-w-5xl px-4 md:px-6 py-6">
+          {(phase === "verifying" || phase === "booking") && (
+            <div className="mb-4 rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 text-blue-800 text-[13px] font-medium flex items-center gap-2">
+              <svg className="animate-spin h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+              </svg>
+              {phase === "verifying" ? "Verifying payment…" : "Confirming your booking with the airline"} — please do not close this tab.
+            </div>
+          )}
+
           <div className="grid md:grid-cols-[1fr_340px] gap-5">
             <div className="flex flex-col gap-4">
               <ItinerarySummary offer={current.offer} compact />
 
-              <section className="rounded-xl bg-white border border-border-soft p-0 shadow-[var(--shadow-xs)] overflow-hidden">
-                <div className="px-5 py-4 border-b border-border-soft">
-                  <h2 className="text-[16px] font-bold text-ink">Payment</h2>
-                  <p className="text-[12px] text-ink-muted">All payments are 256-bit SSL encrypted.</p>
-                </div>
-                <div className="grid md:grid-cols-[220px_1fr]">
-                  <div className="bg-surface-muted p-3 md:p-4 flex md:flex-col gap-2 overflow-x-auto">
-                    {METHODS.map((m) => (
-                      <button
-                        key={m.v}
-                        type="button"
-                        onClick={() => setMethod(m.v)}
-                        className={
-                          "flex items-center gap-3 rounded-md px-3 py-2.5 text-left text-[13px] font-semibold whitespace-nowrap transition-colors " +
-                          (m.v === method
-                            ? "bg-white text-brand-700 shadow-[var(--shadow-xs)]"
-                            : "text-ink-soft hover:bg-white/60")
-                        }
-                      >
-                        <span className="text-brand-600">{m.icon}</span>
-                        {m.label}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="p-5">
-                    {method === "card" && (
-                      <div className="flex flex-col gap-3">
-                        <Input
-                          label="Card number"
-                          placeholder="1234 5678 9012 3456"
-                          value={cardNumber}
-                          onChange={(e) =>
-                            setCardNumber(
-                              e.target.value
-                                .replace(/\D/g, "")
-                                .slice(0, 16)
-                                .replace(/(\d{4})(?=\d)/g, "$1 "),
-                            )
-                          }
-                        />
-                        <Input
-                          label="Name on card"
-                          value={cardName}
-                          onChange={(e) => setCardName(e.target.value)}
-                          placeholder="As printed"
-                        />
-                        <div className="grid grid-cols-2 gap-3">
-                          <Input
-                            label="Expiry (MM/YY)"
-                            value={exp}
-                            onChange={(e) => {
-                              const v = e.target.value.replace(/[^\d]/g, "").slice(0, 4);
-                              setExp(v.length > 2 ? `${v.slice(0, 2)}/${v.slice(2)}` : v);
-                            }}
-                            placeholder="12/28"
-                          />
-                          <Input
-                            label="CVV"
-                            value={cvv}
-                            onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                            type="password"
-                            placeholder="•••"
-                          />
-                        </div>
-                      </div>
-                    )}
-                    {method === "upi" && (
-                      <div className="flex flex-col gap-3">
-                        <Input
-                          label="UPI ID"
-                          placeholder="name@bank"
-                          value={upi}
-                          onChange={(e) => setUpi(e.target.value)}
-                          hint="e.g. yourname@okhdfc, yourname@paytm"
-                        />
-                      </div>
-                    )}
-                    {method === "netbanking" && (
-                      <div className="flex flex-col gap-2">
-                        {["HDFC", "ICICI", "SBI", "Axis", "Kotak", "Yes Bank"].map((b) => (
-                          <Radio
-                            key={b}
-                            id={`bank-${b}`}
-                            name="bank"
-                            label={b}
-                            checked={netBank === b}
-                            onChange={() => setNetBank(b)}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    {method === "wallet" && (
-                      <div className="grid sm:grid-cols-3 gap-2">
-                        {["Paytm", "PhonePe", "Amazon Pay", "MobiKwik", "Freecharge", "Airtel Money"].map((w) => (
-                          <button
-                            key={w}
-                            type="button"
-                            onClick={() => setWallet(w)}
-                            className={
-                              "rounded-md border px-3 h-11 text-[13px] font-semibold transition-colors " +
-                              (wallet === w
-                                ? "bg-brand-50 border-brand-600 text-brand-700"
-                                : "bg-white border-border text-ink-soft hover:bg-surface-muted")
-                            }
-                          >
-                            {w}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </section>
-
-              <div className="rounded-xl bg-warn-50 text-warn-600 text-[12px] font-medium px-4 py-3 flex items-start gap-2">
-                <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden className="mt-0.5 shrink-0">
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                  <line x1="12" y1="9" x2="12" y2="13" />
-                  <line x1="12" y1="17" x2="12.01" y2="17" />
+              <div className="rounded-xl bg-green-50 text-green-700 text-[12px] font-medium px-4 py-3 flex items-center gap-2 border border-green-200">
+                <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="M9 12l2 2 4-4" />
                 </svg>
-                <span>
-                  Payment processing is not enabled in this environment yet.
-                </span>
+                Secured by Razorpay · 256-bit SSL · supports UPI, Cards, Net Banking &amp; Wallets
               </div>
             </div>
 
             <aside className="flex flex-col gap-4">
               <PriceBreakdown booking={current} />
-              <Button variant="accent" size="lg" onClick={onPay} loading={processing} fullWidth>
-                Pay {current.totalPrice.toLocaleString("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 })}
+              <Button variant="accent" size="lg" onClick={onPay} loading={isBusy} disabled={isBusy} fullWidth>
+                {buttonLabel}
               </Button>
+              <p className="text-[11px] text-ink-muted text-center">
+                Clicking Pay opens Razorpay&apos;s secure checkout. Your payment details are never stored by SpaksTrip.
+              </p>
             </aside>
           </div>
         </div>
       </main>
       <Footer />
     </div>
-  );
-}
-
-function CardIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <rect x="2" y="5" width="20" height="14" rx="2" />
-      <line x1="2" y1="10" x2="22" y2="10" />
-    </svg>
-  );
-}
-function UpiIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <rect x="3" y="3" width="7" height="7" />
-      <rect x="14" y="3" width="7" height="7" />
-      <rect x="14" y="14" width="7" height="7" />
-      <rect x="3" y="14" width="7" height="7" />
-    </svg>
-  );
-}
-function BankIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M3 21h18" />
-      <path d="M3 10h18" />
-      <path d="M5 6l7-3 7 3" />
-      <path d="M4 10v11" />
-      <path d="M20 10v11" />
-      <path d="M8 14v4" />
-      <path d="M12 14v4" />
-      <path d="M16 14v4" />
-    </svg>
-  );
-}
-function WalletIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M20 12V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v3" />
-      <path d="M3 6v12a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-3h-4a2 2 0 0 1 0-4h4" />
-    </svg>
   );
 }
