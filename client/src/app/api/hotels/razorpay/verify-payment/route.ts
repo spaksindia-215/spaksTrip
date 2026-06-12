@@ -172,6 +172,8 @@ export async function POST(request: NextRequest) {
       passportExpDate?: string;
     }> | undefined = body?.guests;
     const guestNationality: string = body?.guestNationality ?? "IN";
+    // Agent attribution (subdomain customer bookings only)
+    const agentId: string | undefined = body?.agentId;
     // Total adults and rooms from the booking — needed to reconstruct per-room
     // passenger count. Must match the remainder-distribution in searchHolidays.ts exactly.
     const totalAdults: number = Math.max(1, Number(body?.adults ?? 1));
