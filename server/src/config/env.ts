@@ -29,6 +29,18 @@ export const env = {
   cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME ?? "",
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY ?? "",
   cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET ?? "",
+  // PostgreSQL — additive second database for financial transactions only.
+  // Deliberately NOT required(): if unset the Express server must still boot and
+  // all existing MongoDB-backed features must keep working (graceful degradation).
+  databaseUrl: process.env.DATABASE_URL ?? "",
+  // Razorpay payment gateway. Optional for the same graceful-degradation reason.
+  razorpayKeyId: process.env.RAZORPAY_KEY_ID ?? "",
+  razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET ?? "",
+  razorpayWebhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET ?? "",
+  // Background worker intervals (ms). Defaults: heal 5m, reconcile 60m, DLQ 10m.
+  healWorkerIntervalMs: Number(process.env.HEAL_WORKER_INTERVAL_MS ?? 300000),
+  reconciliationWorkerIntervalMs: Number(process.env.RECONCILIATION_WORKER_INTERVAL_MS ?? 3600000),
+  dlqWorkerIntervalMs: Number(process.env.DLQ_WORKER_INTERVAL_MS ?? 600000),
 };
 
 export const isProd = env.nodeEnv === "production";

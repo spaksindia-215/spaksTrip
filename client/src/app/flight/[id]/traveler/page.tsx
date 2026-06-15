@@ -22,12 +22,15 @@ type FormTraveler = Omit<Traveler, "id"> & { id: string };
 // SSR pick state — one entry per traveler id
 type SSRPick = { baggageCode: string; mealCode: string };
 
-// Title options per pax type / gender. TBO requires these for ALL airlines:
-// Male: MR | Female: MRS/MS | Child: MR/MS | Infant: MSTR (only).
+// Title options per pax type / gender, per the TBO Pax-Details guideline:
+//   Adult  → Male: MR        | Female: MS, MRS
+//   Child  → Male: MR, MSTR  | Female: MS, MISS
+//   Infant → Male: MSTR, MR  | Female: MISS, MS
+// (The earlier build offered only "Mr" for every pax, which TBO certification flagged.)
 function titlesFor(type: TravelerType, gender: Gender): Traveler["title"][] {
   if (type === "ADT") return gender === "F" ? ["Ms", "Mrs"] : ["Mr"];
-  if (type === "CHD") return ["Mr", "Ms"];
-  return ["Mstr"]; // INF — MSTR only
+  if (type === "CHD") return gender === "F" ? ["Ms", "Miss"] : ["Mr", "Mstr"];
+  return gender === "F" ? ["Miss", "Ms"] : ["Mstr", "Mr"]; // INF
 }
 
 function emptyFor(type: TravelerType, idx: number): FormTraveler {
@@ -131,7 +134,23 @@ function TravelerInner() {
     current.passportRequiredAtBook || current.passportRequiredAtTicket || current.passportFullDetailRequiredAtBook,
   );
   const passportFullDetail = Boolean(current.passportFullDetailRequiredAtBook);
-  const NAME_BAD = /[.,/]/;
+  // Name rules per TBO guideline snapshot:
+  //   First name → 1–32 chars · Last name → 2–32 chars
+  //   Allowed: letters A–Z and single spaces (for multi-word/middle names).
+  //   Not allowed: digits, special chars (. , /), or a leading space.
+  const NAME_MAX = 32;
+  const FIRST_MIN = 1;
+  const LAST_MIN = 2;
+  const NAME_ALLOWED = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
+  // Validate one name field; returns an error string or "" when valid.
+  const nameError = (raw: string, label: string, min: number): string => {
+    const v = raw.trim();
+    if (!v) return `${label} required`;
+    if (v.length < min) return `${label} must be at least ${min} characters`;
+    if (v.length > NAME_MAX) return `${label} cannot exceed ${NAME_MAX} characters`;
+    if (!NAME_ALLOWED.test(v)) return `${label} can contain letters and spaces only`;
+    return "";
+  };
   // Strict email: no whitespace, single @, a dot-separated domain with a 2+ char TLD.
   // The previous loose check (/.+@.+\..+/) accepted spaces/malformed addresses that
   // passed this page but were rejected by TBO later at Book/Ticket.
@@ -167,12 +186,10 @@ function TravelerInner() {
   const validate = () => {
     const e: Record<string, string> = {};
     travelers.forEach((t, idx) => {
-      if (!t.firstName.trim()) e[`${t.id}.firstName`] = "First name required";
-      if (!t.lastName.trim()) e[`${t.id}.lastName`] = "Last name required";
-      // No special characters (. , /) in names — Navitaire/SpiceJet rule.
-      if (NAME_BAD.test(t.firstName) || NAME_BAD.test(t.lastName)) {
-        e[`${t.id}.firstName`] = "Name cannot contain . , or /";
-      }
+      const firstErr = nameError(t.firstName, "First name", FIRST_MIN);
+      if (firstErr) e[`${t.id}.firstName`] = firstErr;
+      const lastErr = nameError(t.lastName, "Last name", LAST_MIN);
+      if (lastErr) e[`${t.id}.lastName`] = lastErr;
       // SpiceJet requires the first and last name to be distinct.
       if (airlineCode === "SG" && t.firstName.trim() && t.firstName.trim().toUpperCase() === t.lastName.trim().toUpperCase()) {
         e[`${t.id}.lastName`] = "First and last name must be different";
@@ -361,12 +378,14 @@ function TravelerInner() {
                         <Input
                           label="First & middle name"
                           value={t.firstName}
+                          maxLength={32}
                           onChange={(e) => update(t.id, { firstName: e.target.value })}
                           error={errors[`${t.id}.firstName`]}
                         />
                         <Input
                           label="Last name"
                           value={t.lastName}
+                          maxLength={32}
                           onChange={(e) => update(t.id, { lastName: e.target.value })}
                           error={errors[`${t.id}.lastName`]}
                         />

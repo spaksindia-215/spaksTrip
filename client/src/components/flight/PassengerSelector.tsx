@@ -23,6 +23,11 @@ export default function PassengerSelector({
   onCabinChange: (c: CabinClass) => void;
 }) {
   const total = pax.adults + pax.children + pax.infants;
+  // TBO/Search rule: a single journey may carry at most 9 passengers (Adults +
+  // Children + Infants combined). Each "+" is gated on the remaining shared slots
+  // so no individual counter can push the total past 9.
+  const MAX_PAX = 9;
+  const remaining = Math.max(0, MAX_PAX - total);
 
   return (
     <Popover
@@ -52,7 +57,7 @@ export default function PassengerSelector({
               desc="12+ years"
               value={pax.adults}
               min={1}
-              max={9}
+              max={Math.min(MAX_PAX, pax.adults + remaining)}
               onChange={(v) => onPaxChange({ ...pax, adults: v })}
             />
             <Counter
@@ -60,7 +65,7 @@ export default function PassengerSelector({
               desc="2 – 12 years"
               value={pax.children}
               min={0}
-              max={8}
+              max={Math.min(MAX_PAX, pax.children + remaining)}
               onChange={(v) => onPaxChange({ ...pax, children: v })}
             />
             <Counter
@@ -68,10 +73,16 @@ export default function PassengerSelector({
               desc="Under 2 years"
               value={pax.infants}
               min={0}
-              max={pax.adults}
+              // Infants are also capped at one per adult (lap infants).
+              max={Math.min(pax.adults, pax.infants + remaining)}
               onChange={(v) => onPaxChange({ ...pax, infants: v })}
             />
           </div>
+          {remaining === 0 && (
+            <p className="mt-2 text-[11px] font-medium text-ink-muted">
+              Maximum {MAX_PAX} passengers per journey reached.
+            </p>
+          )}
           <div className="mt-5 mb-2 text-[12px] font-semibold uppercase tracking-wide text-ink-muted">
             Cabin class
           </div>

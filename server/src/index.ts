@@ -11,10 +11,21 @@ import customerRoutes from "./routes/customer.routes";
 import agentRoutes from "./routes/agent.routes";
 import internalRoutes from "./routes/internal.routes";
 import { errorHandler } from "./middleware/error";
+// ADDED: PostgreSQL transaction layer (additive — never replaces MongoDB)
+import { testConnection } from "./config/postgres";
+import webhookRoutes from "./routes/webhooks";
+import { startHealWorker } from "./workers/healWorker";
+import { startReconciliationWorker } from "./workers/reconciliationWorker";
+import { startDLQWorker } from "./workers/dlqWorker";
 
 async function main(): Promise<void> {
   await connectDb();
   await seedPlatformConfig();
+
+  // ADDED: probe PostgreSQL without blocking startup. If it is down or unset,
+  // testConnection() logs a warning and resolves — the server boots regardless
+  // and all existing MongoDB features keep working.
+  void testConnection();
 
   const app = express();
 
@@ -26,9 +37,16 @@ async function main(): Promise<void> {
       origin: env.clientOrigin,
       credentials: true,
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization"],
+      // ADDED: X-Razorpay-Idempotency-Key for future order-creation requests
+      allowedHeaders: ["Content-Type", "Authorization", "X-Razorpay-Idempotency-Key"],
     }),
   );
+
+  // ADDED: webhook route is mounted BEFORE express.json() so its own middleware
+  // can apply express.raw() and verify the HMAC signature against the raw body.
+  // All other routes below keep the global express.json() parser unchanged.
+  app.use("/api/webhooks", webhookRoutes);
+
   app.use(express.json({ limit: "1mb" }));
   app.use(cookieParser());
 
@@ -47,6 +65,11 @@ async function main(): Promise<void> {
 
   app.listen(env.port, () => {
     console.log(`[server] listening on http://localhost:${env.port}`);
+    // ADDED: start background workers after the server is listening. Each guards
+    // internally against PostgreSQL being unconfigured/unavailable.
+    startHealWorker();
+    startReconciliationWorker();
+    startDLQWorker();
   });
 }
 
