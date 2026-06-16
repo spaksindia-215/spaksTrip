@@ -55,6 +55,17 @@ function ts() {
   return new Date().toISOString();
 }
 
+// Razorpay SDK rejects with a plain object ({ statusCode, error: { code, description }}),
+// so String(e) is "[object Object]". Extract the real reason for logs/diagnostics.
+function rzpErrMsg(e: unknown): string {
+  if (e instanceof Error) return e.message;
+  if (e && typeof e === "object") {
+    const o = e as { error?: { description?: string; reason?: string; code?: string }; message?: string };
+    return o.error?.description || o.error?.reason || o.error?.code || o.message || JSON.stringify(o);
+  }
+  return String(e);
+}
+
 function err(message: string, status: number, extra?: Record<string, unknown>) {
   return NextResponse.json({ success: false, error: message, ...extra }, { status });
 }
@@ -98,7 +109,7 @@ async function tryInitiateRefund(
     console.log(`\n[RZP ${ts()}] ← INITIATE_REFUND (flight) [OK]\n  refundId: ${refund.id}\n  paymentId: ${paymentId}`);
     return refund.id as string;
   } catch (e) {
-    console.error(`\n[RZP ${ts()}] ✗ INITIATE_REFUND (flight) FAILED\n  paymentId: ${paymentId}\n  ERROR: ${e instanceof Error ? e.message : String(e)}`);
+    console.error(`\n[RZP ${ts()}] ✗ INITIATE_REFUND (flight) FAILED\n  paymentId: ${paymentId}\n  ERROR: ${rzpErrMsg(e)}`);
     return null;
   }
 }

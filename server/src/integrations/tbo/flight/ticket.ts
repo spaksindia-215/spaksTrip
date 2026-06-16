@@ -1,5 +1,5 @@
 import { withRetry, tboBase, tboApiUrl, TBO_BOOK_TIMEOUT_MS, AIR_BOOK_SVC } from "../auth";
-import { assertTboSuccess, TboFareExpiredError } from "../errors";
+import { assertTboSuccess, TboFareExpiredError, TboError } from "../errors";
 import { getTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
 import { getAirport } from "../data/airports";
@@ -86,6 +86,16 @@ function parseTicketResponse(data: TboTicketResponse, fallbackBookingId: number)
   };
 }
 
+// Detects TBO's "meal/seat selection is mandatory" rejection (special fares like
+// SpiceMax / Super 6E). Returns which SSR is required, or null if unrelated.
+function mandatorySsrError(e: unknown): { meal: boolean; seat: boolean } | null {
+  if (!(e instanceof TboError)) return null;
+  const m = e.message.toLowerCase();
+  const meal = m.includes("meal") && m.includes("mandatory");
+  const seat = m.includes("seat") && m.includes("mandatory");
+  return meal || seat ? { meal, seat } : null;
+}
+
 // ─── Non-LCC path ─────────────────────────────────────────────────────────────
 
 async function tboNonLccTicket(
@@ -150,6 +160,7 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
   // pull free (Price 0) meal/seat/baggage from SSR and include them. Only fills
   // selections the user didn't make, so it can't override a valid choice.
   let passengersIn = input.passengers;
+  let ssrIncluded = false;
   const origin = input.validation?.origin;
   const destination = input.validation?.destination;
   const origCc = origin ? getAirport(origin)?.countryCode : undefined;
@@ -160,22 +171,30 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
   // I5 domestic must also carry the free (Price 0) meal node from SSR (CLAUDE.md).
   const includeFreeMeal = airline === I5 && !isIntl;
 
+  // Pull free (Price 0) meal/seat/baggage from SSR and attach to passengers who
+  // didn't choose. Used proactively (FareQuote flagged it / intl / I5) and
+  // reactively (TBO rejects Ticket with "meal/seat selection is mandatory").
+  const includeMandatorySSR = async (opts: { isMealMandatory?: boolean; isSeatMandatory?: boolean }) => {
+    const ssr = await tboGetSSR(input.resultIndex, traceId);
+    passengersIn = applyMandatorySSR(input.passengers, ssr, {
+      isMealMandatory: opts.isMealMandatory,
+      isSeatMandatory: opts.isSeatMandatory,
+      includeFreeBaggage,
+      includeFreeMeal,
+    });
+    ssrIncluded = true;
+  };
+
   if (input.isMealMandatory || input.isSeatMandatory || includeFreeBaggage || includeFreeMeal) {
     try {
-      const ssr = await tboGetSSR(input.resultIndex, traceId);
-      passengersIn = applyMandatorySSR(input.passengers, ssr, {
-        isMealMandatory: input.isMealMandatory,
-        isSeatMandatory: input.isSeatMandatory,
-        includeFreeBaggage,
-        includeFreeMeal,
-      });
+      await includeMandatorySSR({ isMealMandatory: input.isMealMandatory, isSeatMandatory: input.isSeatMandatory });
     } catch (err) {
       // SSR is best-effort here; if it fails, proceed with user selections.
       logError("Flight Ticket (LCC) SSR auto-include", err);
     }
   }
 
-  return withRetry(async (token) => {
+  const sendTicket = () => withRetry(async (token) => {
     const passengers = passengersIn.map((p, i) => {
       const mapped = mapPassenger(p, i === 0, input.fareBreakdown, true);
       if (i === 0) {
@@ -223,6 +242,25 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
 
     return parseTicketResponse(data, 0);
   });
+
+  try {
+    return await sendTicket();
+  } catch (e) {
+    // Special fares can require a free meal/seat even when FareQuote didn't flag it.
+    // TBO rejects the first Ticket with ErrorCode 3 "Meal/Seat selection is
+    // mandatory" and creates NO booking, so it is safe to fetch SSR, attach the
+    // free meal/seat, and retry the Ticket exactly once.
+    const mandatory = mandatorySsrError(e);
+    if (mandatory && !ssrIncluded) {
+      logError("Flight Ticket (LCC) retry with mandatory SSR", e);
+      await includeMandatorySSR({
+        isMealMandatory: mandatory.meal || input.isMealMandatory,
+        isSeatMandatory: mandatory.seat || input.isSeatMandatory,
+      });
+      return await sendTicket();
+    }
+    throw e;
+  }
 }
 
 // ─── Public dispatch ──────────────────────────────────────────────────────────
