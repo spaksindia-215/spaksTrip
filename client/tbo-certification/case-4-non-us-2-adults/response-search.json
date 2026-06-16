@@ -1,0 +1,375 @@
+{
+  "Response": {
+    "ResponseStatus": 1,
+    "Error": {
+      "ErrorCode": 0,
+      "ErrorMessage": ""
+    },
+    "TraceId": "56d7d83e-8aca-4060-9af8-7ccdf15ffd47",
+    "Results": [
+      {
+        "PlanCode": "1",
+        "ResultIndex": 1,
+        "PlanType": 1,
+        "PlanName": "50K 7 DAYS",
+        "PlanDescription": null,
+        "PlanCoverage": 4,
+        "CoverageDetails": [
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Hospitalization expenses for Injury",
+            "SumInsured": "50000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Outpatient Treatment Expenses for Injury",
+            "SumInsured": "20000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Medical Evacuation",
+            "SumInsured": "50000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Personal Accident",
+            "SumInsured": "300000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Trip Cancellation",
+            "SumInsured": "10000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Trip Interruption & Curtailment",
+            "SumInsured": "10000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Repatriation of remains",
+            "SumInsured": "50000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Total Loss of Checked-in Baggage",
+            "SumInsured": "3000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Delay of Checked-in Baggage",
+            "SumInsured": "1000",
+            "Excess": null
+          }
+        ],
+        "PlanCategory": 1,
+        "PremiumList": [
+          {
+            "Commission": 0,
+            "CustomerPrice": 0,
+            "Premium": 0,
+            "PassengerCount": 2,
+            "MinAge": 0,
+            "MaxAge": 70,
+            "BaseCurrencyPrice": {
+              "Currency": "INR",
+              "GrossFare": 120,
+              "PublishedPrice": 120,
+              "PublishedPriceRoundedOff": 120,
+              "OfferedPrice": 78,
+              "OfferedPriceRoundedOff": 78,
+              "CommissionEarned": 42,
+              "TdsOnCommission": 16.8,
+              "ServiceTax": 0,
+              "SwachhBharatTax": 0,
+              "KrishiKalyanTax": 0
+            },
+            "Price": {
+              "Currency": "INR",
+              "GrossFare": 120,
+              "PublishedPrice": 120,
+              "PublishedPriceRoundedOff": 120,
+              "OfferedPrice": 78,
+              "OfferedPriceRoundedOff": 78,
+              "CommissionEarned": 42,
+              "TdsOnCommission": 16.8,
+              "ServiceTax": 0,
+              "SwachhBharatTax": 0,
+              "KrishiKalyanTax": 0
+            },
+            "BaseCurrencyCancellationCharge": 10,
+            "CancellationCharge": 10
+          }
+        ],
+        "Price": {
+          "Currency": "INR",
+          "GrossFare": 120,
+          "PublishedPrice": 120,
+          "PublishedPriceRoundedOff": 120,
+          "OfferedPrice": 78,
+          "OfferedPriceRoundedOff": 78,
+          "CommissionEarned": 42,
+          "TdsOnCommission": 16.8,
+          "ServiceTax": 0,
+          "SwachhBharatTax": 0,
+          "KrishiKalyanTax": 0
+        },
+        "PolicyStartDate": "2026-10-05T00:00:00",
+        "PolicyEndDate": "2026-10-05T23:59:59",
+        "PoweredBy": "Powered By SanKash - ICICI",
+        "SumInsuredCurrency": "INR",
+        "SumInsured": "50000"
+      },
+      {
+        "PlanCode": "5",
+        "ResultIndex": 2,
+        "PlanType": 1,
+        "PlanName": "100K 7 DAYS",
+        "PlanDescription": null,
+        "PlanCoverage": 4,
+        "CoverageDetails": [
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Hospitalization expenses for Injury",
+            "SumInsured": "100000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Outpatient Treatment Expenses for Injury",
+            "SumInsured": "50000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Medical Evacuation",
+            "SumInsured": "50000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Personal Accident",
+            "SumInsured": "400000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Trip Cancellation",
+            "SumInsured": "10000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Trip Interruption & Curtailment",
+            "SumInsured": "10000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Repatriation of remains",
+            "SumInsured": "50000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Total Loss of Checked-in Baggage",
+            "SumInsured": "4000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Delay of Checked-in Baggage",
+            "SumInsured": "2000",
+            "Excess": null
+          }
+        ],
+        "PlanCategory": 1,
+        "PremiumList": [
+          {
+            "Commission": 0,
+            "CustomerPrice": 0,
+            "Premium": 0,
+            "PassengerCount": 2,
+            "MinAge": 0,
+            "MaxAge": 70,
+            "BaseCurrencyPrice": {
+              "Currency": "INR",
+              "GrossFare": 162,
+              "PublishedPrice": 162,
+              "PublishedPriceRoundedOff": 162,
+              "OfferedPrice": 105.3,
+              "OfferedPriceRoundedOff": 105,
+              "CommissionEarned": 56.7,
+              "TdsOnCommission": 22.68,
+              "ServiceTax": 0,
+              "SwachhBharatTax": 0,
+              "KrishiKalyanTax": 0
+            },
+            "Price": {
+              "Currency": "INR",
+              "GrossFare": 162,
+              "PublishedPrice": 162,
+              "PublishedPriceRoundedOff": 162,
+              "OfferedPrice": 105.3,
+              "OfferedPriceRoundedOff": 105.3,
+              "CommissionEarned": 56.7,
+              "TdsOnCommission": 22.68,
+              "ServiceTax": 0,
+              "SwachhBharatTax": 0,
+              "KrishiKalyanTax": 0
+            },
+            "BaseCurrencyCancellationCharge": 10,
+            "CancellationCharge": 10
+          }
+        ],
+        "Price": {
+          "Currency": "INR",
+          "GrossFare": 162,
+          "PublishedPrice": 162,
+          "PublishedPriceRoundedOff": 162,
+          "OfferedPrice": 105.3,
+          "OfferedPriceRoundedOff": 105.3,
+          "CommissionEarned": 56.7,
+          "TdsOnCommission": 22.68,
+          "ServiceTax": 0,
+          "SwachhBharatTax": 0,
+          "KrishiKalyanTax": 0
+        },
+        "PolicyStartDate": "2026-10-05T00:00:00",
+        "PolicyEndDate": "2026-10-05T23:59:59",
+        "PoweredBy": "Powered By SanKash - ICICI",
+        "SumInsuredCurrency": "INR",
+        "SumInsured": "100000"
+      },
+      {
+        "PlanCode": "9",
+        "ResultIndex": 3,
+        "PlanType": 1,
+        "PlanName": "200K 7 DAYS",
+        "PlanDescription": null,
+        "PlanCoverage": 4,
+        "CoverageDetails": [
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Hospitalization expenses for Injury",
+            "SumInsured": "200000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Outpatient Treatment Expenses for Injury",
+            "SumInsured": "50000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Medical Evacuation",
+            "SumInsured": "50000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Personal Accident",
+            "SumInsured": "500000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Trip Cancellation",
+            "SumInsured": "10000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Trip Interruption & Curtailment",
+            "SumInsured": "10000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Repatriation of remains",
+            "SumInsured": "50000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Total Loss of Checked-in Baggage",
+            "SumInsured": "5000",
+            "Excess": null
+          },
+          {
+            "SumCurrency": "INR",
+            "Coverage": "Delay of Checked-in Baggage",
+            "SumInsured": "2000",
+            "Excess": null
+          }
+        ],
+        "PlanCategory": 1,
+        "PremiumList": [
+          {
+            "Commission": 0,
+            "CustomerPrice": 0,
+            "Premium": 0,
+            "PassengerCount": 2,
+            "MinAge": 0,
+            "MaxAge": 70,
+            "BaseCurrencyPrice": {
+              "Currency": "INR",
+              "GrossFare": 176,
+              "PublishedPrice": 176,
+              "PublishedPriceRoundedOff": 176,
+              "OfferedPrice": 114.4,
+              "OfferedPriceRoundedOff": 114,
+              "CommissionEarned": 61.6,
+              "TdsOnCommission": 24.64,
+              "ServiceTax": 0,
+              "SwachhBharatTax": 0,
+              "KrishiKalyanTax": 0
+            },
+            "Price": {
+              "Currency": "INR",
+              "GrossFare": 176,
+              "PublishedPrice": 176,
+              "PublishedPriceRoundedOff": 176,
+              "OfferedPrice": 114.4,
+              "OfferedPriceRoundedOff": 114.4,
+              "CommissionEarned": 61.6,
+              "TdsOnCommission": 24.64,
+              "ServiceTax": 0,
+              "SwachhBharatTax": 0,
+              "KrishiKalyanTax": 0
+            },
+            "BaseCurrencyCancellationCharge": 10,
+            "CancellationCharge": 10
+          }
+        ],
+        "Price": {
+          "Currency": "INR",
+          "GrossFare": 176,
+          "PublishedPrice": 176,
+          "PublishedPriceRoundedOff": 176,
+          "OfferedPrice": 114.4,
+          "OfferedPriceRoundedOff": 114.4,
+          "CommissionEarned": 61.6,
+          "TdsOnCommission": 24.64,
+          "ServiceTax": 0,
+          "SwachhBharatTax": 0,
+          "KrishiKalyanTax": 0
+        },
+        "PolicyStartDate": "2026-10-05T00:00:00",
+        "PolicyEndDate": "2026-10-05T23:59:59",
+        "PoweredBy": "Powered By SanKash - ICICI",
+        "SumInsuredCurrency": "INR",
+        "SumInsured": "200000"
+      }
+    ]
+  }
+}

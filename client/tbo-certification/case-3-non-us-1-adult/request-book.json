@@ -1,0 +1,30 @@
+{
+  "TokenId": "84f4897c-6edb-494b-97b4-561d6422c6c1",
+  "EndUserIp": "103.83.129.50",
+  "TraceId": "9a24f28d-0223-485a-abcc-5b13d28fcf4e",
+  "GenerateInsurancePolicy": "true",
+  "ResultIndex": 1,
+  "Passenger": [
+    {
+      "Title": "Mr",
+      "FirstName": "Vikram",
+      "LastName": "Patel",
+      "BeneficiaryName": "Vikram Patel",
+      "RelationShipToInsured": "Self",
+      "RelationToBeneficiary": "Self",
+      "Gender": "1",
+      "Sex": 1,
+      "DOB": "1992-11-08T00:00:00",
+      "PassportNo": "H4567890",
+      "PhoneNumber": "+91-9876543213",
+      "EmailId": "vikram.patel@example.com",
+      "AddressLine1": "789 Beach Road",
+      "AddressLine2": "Building C",
+      "CityCode": "BOM",
+      "CountryCode": "IN",
+      "PassportCountry": "IN",
+      "MajorDestination": "BKK",
+      "PinCode": 400001
+    }
+  ]
+}

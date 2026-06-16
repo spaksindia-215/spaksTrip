@@ -1,0 +1,51 @@
+{
+  "TokenId": "84f4897c-6edb-494b-97b4-561d6422c6c1",
+  "EndUserIp": "103.83.129.50",
+  "TraceId": "d538fcd6-06d4-4c3a-ad02-360ccb2ba452",
+  "GenerateInsurancePolicy": "true",
+  "ResultIndex": 1,
+  "Passenger": [
+    {
+      "Title": "Mr",
+      "FirstName": "Arjun",
+      "LastName": "Sharma",
+      "BeneficiaryName": "Arjun Sharma",
+      "RelationShipToInsured": "Self",
+      "RelationToBeneficiary": "Self",
+      "Gender": "1",
+      "Sex": 1,
+      "DOB": "1989-03-15T00:00:00",
+      "PassportNo": "H1234567",
+      "PhoneNumber": "+91-9876543211",
+      "EmailId": "arjun.sharma@example.com",
+      "AddressLine1": "456 Park Avenue",
+      "AddressLine2": "Suite 200",
+      "CityCode": "DEL",
+      "CountryCode": "IN",
+      "PassportCountry": "IN",
+      "MajorDestination": "GOA",
+      "PinCode": 110002
+    },
+    {
+      "Title": "Mrs",
+      "FirstName": "Priya",
+      "LastName": "Singh",
+      "BeneficiaryName": "Priya Singh",
+      "RelationShipToInsured": "Spouse",
+      "RelationToBeneficiary": "Spouse",
+      "Gender": "2",
+      "Sex": 2,
+      "DOB": "1970-07-22T00:00:00",
+      "PassportNo": "H7654321",
+      "PhoneNumber": "+91-9876543212",
+      "EmailId": "priya.singh@example.com",
+      "AddressLine1": "456 Park Avenue",
+      "AddressLine2": "Suite 200",
+      "CityCode": "DEL",
+      "CountryCode": "IN",
+      "PassportCountry": "IN",
+      "MajorDestination": "GOA",
+      "PinCode": 110002
+    }
+  ]
+}

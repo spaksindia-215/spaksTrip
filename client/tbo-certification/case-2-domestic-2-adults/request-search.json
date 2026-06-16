@@ -1,0 +1,13 @@
+{
+  "PlanCategory": 1,
+  "PlanType": 1,
+  "PlanCoverage": 4,
+  "TravelStartDate": "2026-08-01T00:00:00",
+  "NoOfPax": 2,
+  "PaxAge": [
+    37,
+    55
+  ],
+  "EndUserIp": "103.83.129.50",
+  "TokenId": "84f4897c-6edb-494b-97b4-561d6422c6c1"
+}

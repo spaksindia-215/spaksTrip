@@ -1,0 +1,8 @@
+{
+  "Status": 4,
+  "TokenId": null,
+  "Error": {
+    "ErrorCode": 1,
+    "ErrorMessage": "Incorrect Username or Password"
+  }
+}

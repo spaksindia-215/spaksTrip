@@ -1,0 +1,83 @@
+{
+  "executedAt": "2026-06-12T12:27:08.156Z",
+  "totalCases": 5,
+  "successfulCases": 0,
+  "failedCases": 5,
+  "results": [
+    {
+      "caseId": "case-1",
+      "status": "FAILED",
+      "startTime": "2026-06-12T12:27:08.157Z",
+      "endTime": "2026-06-12T12:27:10.391Z",
+      "duration": 2234,
+      "error": "Authentication failed",
+      "steps": [
+        {
+          "name": "Authentication",
+          "status": "FAILED",
+          "duration": 2233
+        }
+      ]
+    },
+    {
+      "caseId": "case-2",
+      "status": "FAILED",
+      "startTime": "2026-06-12T12:27:10.393Z",
+      "endTime": "2026-06-12T12:27:12.468Z",
+      "duration": 2075,
+      "error": "Authentication failed",
+      "steps": [
+        {
+          "name": "Authentication",
+          "status": "FAILED",
+          "duration": 2075
+        }
+      ]
+    },
+    {
+      "caseId": "case-3",
+      "status": "FAILED",
+      "startTime": "2026-06-12T12:27:12.470Z",
+      "endTime": "2026-06-12T12:27:14.553Z",
+      "duration": 2083,
+      "error": "Authentication failed",
+      "steps": [
+        {
+          "name": "Authentication",
+          "status": "FAILED",
+          "duration": 2083
+        }
+      ]
+    },
+    {
+      "caseId": "case-4",
+      "status": "FAILED",
+      "startTime": "2026-06-12T12:27:14.554Z",
+      "endTime": "2026-06-12T12:27:16.639Z",
+      "duration": 2085,
+      "error": "Authentication failed",
+      "steps": [
+        {
+          "name": "Authentication",
+          "status": "FAILED",
+          "duration": 2084
+        }
+      ]
+    },
+    {
+      "caseId": "case-5",
+      "status": "FAILED",
+      "startTime": "2026-06-12T12:27:16.641Z",
+      "endTime": "2026-06-12T12:27:18.731Z",
+      "duration": 2090,
+      "error": "Authentication failed",
+      "steps": [
+        {
+          "name": "Authentication",
+          "status": "FAILED",
+          "duration": 2090
+        }
+      ]
+    }
+  ]
+}

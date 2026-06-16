@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "insurance-certification": "ts-node --transpileOnly --project ../scripts/tbo-insurance-certification/tsconfig.json ../scripts/tbo-insurance-certification/index.ts",
+    "insurance-certification:case": "npm run insurance-certification --",
+    "tbo:cert": "node ../scripts/run-tbo-certification.js",
+    "tbo:cert-case": "npm run tbo:cert --"
   },
   "dependencies": {
     "@tolgee/react": "^7.0.0",
@@ -31,6 +35,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
