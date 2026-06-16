@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createOrder } from "@/lib/razorpay";
+import { flightProxyEnabled, forwardToRailway } from "@/lib/tboProxy";
 
 export const runtime = "nodejs";
 
@@ -15,6 +16,8 @@ function err(message: string, status: number) {
 // Creates a Razorpay order for the flight booking total (test or live, per keys).
 // NEVER returns or logs RAZORPAY_KEY_SECRET.
 export async function POST(request: NextRequest) {
+  if (flightProxyEnabled()) return forwardToRailway(request);
+
   try {
     const body = await request.json();
     const { amountPaise, clientReferenceId, route } = body;

@@ -10,6 +10,7 @@ import adminRoutes from "./routes/admin.routes";
 import customerRoutes from "./routes/customer.routes";
 import agentRoutes from "./routes/agent.routes";
 import internalRoutes from "./routes/internal.routes";
+import flightsRoutes from "./routes/flights.routes";
 import { errorHandler } from "./middleware/error";
 // ADDED: PostgreSQL transaction layer (additive — never replaces MongoDB)
 import { testConnection } from "./config/postgres";
@@ -60,6 +61,9 @@ async function main(): Promise<void> {
   app.use("/api/customer", customerRoutes);
   app.use("/api/agent", agentRoutes);
   app.use("/api/internal", internalRoutes);
+  // TBO flight endpoints (migrated from Next.js so outbound TBO calls use Railway's
+  // static IP). Public, like the original Next routes.
+  app.use("/api/flights", flightsRoutes);
 
   app.use(errorHandler);
 

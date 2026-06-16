@@ -5,12 +5,15 @@ import { TboFareExpiredError, TboBookingFailedError, TboValidationError, isDupli
 const DUPLICATE_MSG =
   "This flight was already booked with these details recently. Please wait 5 days or change the journey/passenger details.";
 import type { TboBookFlightInput } from "@/lib/adapters/tbo/flight/book";
+import { flightProxyEnabled, forwardToRailway } from "@/lib/tboProxy";
 
 function err(message: string, status: number) {
   return NextResponse.json({ success: false, error: message }, { status });
 }
 
 export async function POST(request: NextRequest) {
+  if (flightProxyEnabled()) return forwardToRailway(request);
+
   try {
     const body: TboBookFlightInput & { returnResultIndex?: string; returnTraceId?: string; returnFareBreakdown?: TboBookFlightInput["fareBreakdown"] } = await request.json();
 

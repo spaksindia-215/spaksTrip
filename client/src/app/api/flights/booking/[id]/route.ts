@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tboGetFlightBookingDetail } from "@/lib/adapters/tbo/flight/booking";
+import { flightProxyEnabled, forwardToRailway } from "@/lib/tboProxy";
 
 function err(message: string, status: number) {
   return NextResponse.json({ success: false, error: message }, { status });
@@ -9,6 +10,8 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  if (flightProxyEnabled()) return forwardToRailway(req);
+
   try {
     const { id } = await params;
     const bookingId = Number(id);

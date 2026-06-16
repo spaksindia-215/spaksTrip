@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tboUpdateCalendarFareOfDay } from "@/lib/adapters/tbo/flight/calendarFare";
+import { flightProxyEnabled, forwardToRailway } from "@/lib/tboProxy";
 
 function err(message: string, status: number) {
   return NextResponse.json({ success: false, error: message }, { status });
 }
 
 export async function POST(request: NextRequest) {
+  if (flightProxyEnabled()) return forwardToRailway(request);
+
   let body: { from?: string; to?: string; cabin?: string; date?: string } | null = null;
 
   try {

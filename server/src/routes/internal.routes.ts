@@ -112,4 +112,27 @@ router.post(
   },
 );
 
+// GET /api/internal/egress-ip
+// Diagnostic: returns the public IP that THIS server uses for outbound calls.
+// Used to confirm Railway provides a stable static egress IP before whitelisting
+// it with TBO. Call it across several redeploys and verify the value is constant.
+// Never add a Next.js proxy route — keep it off the browser-reachable surface.
+router.get(
+  "/egress-ip",
+  async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const upstream = await fetch("https://api.ipify.org?format=json", {
+        signal: AbortSignal.timeout(10_000),
+      });
+      if (!upstream.ok) {
+        throw new HttpError(502, `ipify returned HTTP ${upstream.status}`);
+      }
+      const data = (await upstream.json()) as { ip?: string };
+      res.json({ egressIp: data.ip ?? null, checkedAt: new Date().toISOString() });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
 export default router;

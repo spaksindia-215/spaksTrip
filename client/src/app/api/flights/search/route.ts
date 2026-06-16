@@ -3,12 +3,15 @@ import { tboSearchFlights } from "@/lib/adapters/tbo/flight/search";
 import { TboNoResultsError, TboError } from "@/lib/adapters/tbo/errors";
 import type { TboFlightSearchInput } from "@/lib/adapters/tbo/flight/search";
 import { buildFarePricer } from "@/lib/server/agentMarkup";
+import { flightProxyEnabled, forwardToRailway } from "@/lib/tboProxy";
 
 function err(message: string, status: number) {
   return NextResponse.json({ success: false, error: message }, { status });
 }
 
 export async function POST(request: NextRequest) {
+  if (flightProxyEnabled()) return forwardToRailway(request);
+
   let body: TboFlightSearchInput | null = null;
 
   try {

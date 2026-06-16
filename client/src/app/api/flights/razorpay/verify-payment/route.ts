@@ -7,6 +7,7 @@ import { logError } from "@/lib/adapters/tbo/log";
 import { buildTwoTierPricing, type TwoTierPricing } from "@/lib/server/agentMarkup";
 import type { TboFareBreakdown } from "@/lib/adapters/tbo/types";
 import { sendFlightConfirmation } from "@/lib/mailer";
+import { flightProxyEnabled, forwardToRailway } from "@/lib/tboProxy";
 
 export const runtime = "nodejs";
 
@@ -112,6 +113,8 @@ async function tryInitiateRefund(
 //   5. success → tbo_confirmed; timeout → tbo_timeout (202, no refund);
 //      price-change/hard failure → tbo_failed + idempotent refund (422).
 export async function POST(request: NextRequest) {
+  if (flightProxyEnabled()) return forwardToRailway(request);
+
   let razorpayOrderId: string | undefined;
   let razorpayPaymentId: string | undefined;
   let amountPaise: number | undefined;

@@ -4,6 +4,7 @@ import { pollFlightBookingDetail } from "@/lib/adapters/tbo/flight/booking";
 import { TboFareExpiredError, TboValidationError, isDuplicateBookingError } from "@/lib/adapters/tbo/errors";
 import { buildTwoTierPricing, type TwoTierPricing } from "@/lib/server/agentMarkup";
 import type { TboFareBreakdown } from "@/lib/adapters/tbo/types";
+import { flightProxyEnabled, forwardToRailway } from "@/lib/tboProxy";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:4000";
 
@@ -33,6 +34,8 @@ function err(message: string, status: number) {
 }
 
 export async function POST(request: NextRequest) {
+  if (flightProxyEnabled()) return forwardToRailway(request);
+
   try {
     const body = await request.json();
 
