@@ -298,3 +298,65 @@ export interface TboInsuranceSession {
   agencyId: number;
   expiresAt: number; // epoch ms
 }
+
+// ─── Certification ────────────────────────────────────────────────────────────
+
+export interface CertificationTestCase {
+  caseNumber: number;
+  caseName: string;
+  tripType: string;
+  planCategory: number;
+  planType: number;
+  planCoverage: number;
+  adultCount: number;
+  origin: string;
+  destination: string;
+  startDate: string;
+  endDate: string;
+  travellers: TravellerDetail[];
+}
+
+export interface TravellerDetail {
+  Title?: string;
+  FirstName: string;
+  LastName: string;
+  DateOfBirth: string;
+  Gender?: string;
+  Nationality?: string;
+  Passport?: string;
+  PhoneNumber: string;
+  Email: string;
+  BeneficiaryName?: string;
+  RelationShipToInsured?: string;
+  RelationToBeneficiary?: string;
+  AddressLine1?: string;
+  AddressLine2?: string;
+  CityCode?: string;
+  CountryCode?: string;
+  PinCode?: string;
+}
+
+export interface CertificationResult {
+  caseNumber: number;
+  caseName: string;
+  tripType: string;
+  adultCount: number;
+  travellerDetails: TravellerDetail[];
+  searchRequest: InsuranceSearchRequest;
+  searchResponse: InsuranceSearchResponse;
+  bookRequest: InsuranceBookRequest;
+  bookResponse: InsuranceBookResponse;
+  confirmationNumber: string;
+  bookingStatus: string;
+  executionTimestamp: string;
+  executionDurationMs: number;
+  success: boolean;
+  errorMessage?: string;
+}
+
+// ─── Request/Response Aliases ────────────────────────────────────────────────
+
+export type InsuranceSearchRequest = TboInsuranceSearchRequest;
+export type InsuranceSearchResponse = TboInsuranceSearchResponse;
+export type InsuranceBookRequest = TboInsuranceBookRequest;
+export type InsuranceBookResponse = TboInsuranceBookResponse;

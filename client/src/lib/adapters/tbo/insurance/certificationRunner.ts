@@ -11,6 +11,9 @@ import type {
   InsuranceBookRequest,
   InsuranceBookResponse,
   TravellerDetail,
+  TboInsuranceSearchPlanCategory,
+  TboInsurancePlanType,
+  TboInsurancePlanCoverage,
 } from "./types";
 
 const INSURANCE_SEARCH_URL =
@@ -84,9 +87,9 @@ class CertificationRunner {
     )}-${pad(startDate.getDate())}T00:00:00`;
 
     const request: InsuranceSearchRequest = {
-      PlanCategory: testCase.planCategory,
-      PlanType: testCase.planType,
-      PlanCoverage: testCase.planCoverage,
+      PlanCategory: testCase.planCategory as TboInsuranceSearchPlanCategory,
+      PlanType: testCase.planType as TboInsurancePlanType,
+      PlanCoverage: testCase.planCoverage as TboInsurancePlanCoverage,
       TravelStartDate: tboDate,
       NoOfPax: testCase.adultCount,
       PaxAge: testCase.travellers.map(() => {
@@ -139,7 +142,7 @@ class CertificationRunner {
       try {
         response = JSON.parse(text);
       } catch {
-        response = { Response: { ResponseStatus: 0, Error: { ErrorMessage: text } } };
+        response = { Response: { ResponseStatus: 0, Error: { ErrorCode: 0, ErrorMessage: text }, TraceId: "", Results: [] } };
       }
 
       logResponse("InsuranceSearch", httpStatus, response);
@@ -227,7 +230,7 @@ class CertificationRunner {
       try {
         response = JSON.parse(text);
       } catch {
-        response = { Response: { ResponseStatus: 0, Error: { ErrorMessage: text } } };
+        response = { Response: { ResponseStatus: 0, Error: { ErrorCode: 0, ErrorMessage: text }, TraceId: "", Itinerary: {} as any } };
       }
 
       logResponse("InsuranceBook", httpStatus, response);
@@ -275,14 +278,24 @@ class CertificationRunner {
       );
 
       // Check book response
-      const bookingDetails = bookResponse.Response?.BookingDetails;
-      if (bookResponse.Response?.ResponseStatus !== 1 || !bookingDetails) {
+      const itinerary = bookResponse.Response?.Itinerary;
+      if (bookResponse.Response?.ResponseStatus !== 1 || !itinerary) {
         throw new Error(
-          `Booking failed: ${bookResponse.Response?.Error?.ErrorMessage || "No booking details"}`,
+          `Booking failed: ${bookResponse.Response?.Error?.ErrorMessage || "No itinerary"}`,
         );
       }
 
-      const confirmationNumber = bookingDetails.ConfirmationNumber || bookingDetails.PolicyNumber;
+      const confirmationNumber = itinerary.PlanName || `Booking-${itinerary.BookingId}`;
+      const bookingDetails = {
+        BookingId: itinerary.BookingId,
+        PolicyNumber: itinerary["Passenger Info"]?.[0]?.PolicyNo || "N/A",
+        ConfirmationNumber: confirmationNumber,
+        BookingStatus: String(itinerary.Status),
+        Currency: "INR",
+        PremiumAmount: itinerary["Passenger Info"]?.[0]?.Price?.GrossFare || 0,
+        StartDate: itinerary.PolicyStartDate,
+        EndDate: itinerary.PolicyEndDate,
+      };
 
       // Save confirmation file
       this.saveTxt(

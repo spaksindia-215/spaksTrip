@@ -98,7 +98,7 @@ function HotelDetailInner() {
       return;
     }
 
-    // Initialize booking with Search data first
+    // Initialize booking with Search data (including childrenAges for multi-room support)
     const bookingData = { hotel, room, checkIn, checkOut, rooms, adults, children, childrenAges, guestNationality };
     startHotelBooking(bookingData);
 
