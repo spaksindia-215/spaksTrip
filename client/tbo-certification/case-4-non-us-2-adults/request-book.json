@@ -1,0 +1,51 @@
+{
+  "TokenId": "84f4897c-6edb-494b-97b4-561d6422c6c1",
+  "EndUserIp": "103.83.129.50",
+  "TraceId": "56d7d83e-8aca-4060-9af8-7ccdf15ffd47",
+  "GenerateInsurancePolicy": "true",
+  "ResultIndex": 1,
+  "Passenger": [
+    {
+      "Title": "Mr",
+      "FirstName": "Anil",
+      "LastName": "Gupta",
+      "BeneficiaryName": "Anil Gupta",
+      "RelationShipToInsured": "Self",
+      "RelationToBeneficiary": "Self",
+      "Gender": "1",
+      "Sex": 1,
+      "DOB": "1988-06-30T00:00:00",
+      "PassportNo": "H2345678",
+      "PhoneNumber": "+91-9876543214",
+      "EmailId": "anil.gupta@example.com",
+      "AddressLine1": "321 Commerce Street",
+      "AddressLine2": "Floor 5",
+      "CityCode": "BOM",
+      "CountryCode": "IN",
+      "PassportCountry": "IN",
+      "MajorDestination": "SIN",
+      "PinCode": 400002
+    },
+    {
+      "Title": "Mrs",
+      "FirstName": "Neha",
+      "LastName": "Iyer",
+      "BeneficiaryName": "Neha Iyer",
+      "RelationShipToInsured": "Spouse",
+      "RelationToBeneficiary": "Spouse",
+      "Gender": "2",
+      "Sex": 2,
+      "DOB": "1969-12-18T00:00:00",
+      "PassportNo": "H8765432",
+      "PhoneNumber": "+91-9876543215",
+      "EmailId": "neha.iyer@example.com",
+      "AddressLine1": "321 Commerce Street",
+      "AddressLine2": "Floor 5",
+      "CityCode": "BOM",
+      "CountryCode": "IN",
+      "PassportCountry": "IN",
+      "MajorDestination": "SIN",
+      "PinCode": 400002
+    }
+  ]
+}

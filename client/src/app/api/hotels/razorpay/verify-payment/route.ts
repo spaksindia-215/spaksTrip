@@ -172,12 +172,20 @@ export async function POST(request: NextRequest) {
       firstName: string;
       lastName: string;
       age?: number;
+      pan?: string;
+      passport?: string;
+      passportIssueDate?: string;
+      passportExpDate?: string;
     }> | undefined = body?.guests;
     const guestNationality: string = body?.guestNationality ?? "IN";
     // Total adults and rooms from the booking — needed to reconstruct per-room
-    // passenger count. Must match the formula in searchHolidays.ts exactly.
+    // passenger count. Must match the remainder-distribution in searchHolidays.ts exactly.
     const totalAdults: number = Math.max(1, Number(body?.adults ?? 1));
     const totalRooms: number = Math.max(1, Number(body?.rooms ?? 1));
+    const totalChildren: number = Math.max(0, Number(body?.children ?? 0));
+    const childrenAges: number[] = Array.isArray(body?.childrenAges)
+      ? (body.childrenAges as unknown[]).map(Number).filter((n) => !isNaN(n as number))
+      : [];
 
     // ── Validation ──────────────────────────────────────────────────────────
 
@@ -333,11 +341,23 @@ export async function POST(request: NextRequest) {
     // Additional adult slots beyond the lead are filled with the lead's own
     // name so the count satisfies TBO's validation. Only the lead passenger
     // matters for check-in; the duplicates are a TBO API formality.
-    const adultsPerRoom = Math.max(1, Math.ceil(totalAdults / totalRooms));
+    // ── Build TBO roomsDetails ───────────────────────────────────────────────
+    //
+    // PAN and passport must be propagated to ALL adult passengers: TBO validates
+    // PAN count against all adults (PanCountRequired), not just the lead.
+    // Children are separate passengers (PaxType 2) with their ages.
+    let adultsRemaining = totalAdults;
+    let childrenRemaining = totalChildren;
+    let childAgeOffset = 0;
+    const roomsDetails: HotelBookRoomDetails[] = guests.map((lead, roomIdx) => {
+      const roomsLeft = totalRooms - roomIdx;
+      const roomAdults = Math.ceil(adultsRemaining / roomsLeft);
+      adultsRemaining -= roomAdults;
+      const roomChildren = Math.ceil(childrenRemaining / roomsLeft);
+      childrenRemaining -= roomChildren;
 
-    const roomsDetails: HotelBookRoomDetails[] = guests.map((lead) => {
       const roomPassengers = [
-        // Lead passenger — real form data
+        // Lead passenger — real form data including identity documents
         {
           title: lead.title as "Mr" | "Mrs" | "Ms",
           firstName: lead.firstName,
@@ -345,16 +365,36 @@ export async function POST(request: NextRequest) {
           paxType: 1 as const,
           leadPassenger: true,
           age: lead.age,
+          pan: lead.pan || undefined,
+          passportNo: lead.passport || undefined,
+          passportIssueDate: lead.passportIssueDate || undefined,
+          passportExpDate: lead.passportExpDate || undefined,
         },
-        // Additional adult slots required by TBO — filled with lead's details
-        ...Array.from({ length: adultsPerRoom - 1 }, () => ({
+        // Additional adult slots — PAN and passport propagated to every adult.
+        ...Array.from({ length: roomAdults - 1 }, () => ({
           title: lead.title as "Mr" | "Mrs" | "Ms",
           firstName: lead.firstName,
           lastName: lead.lastName,
           paxType: 1 as const,
           leadPassenger: false,
           age: undefined as number | undefined,
+          pan: lead.pan || undefined,
+          passportNo: lead.passport || undefined,
+          passportIssueDate: lead.passportIssueDate || undefined,
+          passportExpDate: lead.passportExpDate || undefined,
         })),
+        // Child passengers — PaxType 2, Age required by TBO.
+        ...Array.from({ length: roomChildren }, () => {
+          const age = childrenAges[childAgeOffset++] ?? 0;
+          return {
+            title: "Mr" as const,
+            firstName: lead.firstName,
+            lastName: lead.lastName,
+            paxType: 2 as const,
+            leadPassenger: false,
+            age,
+          };
+        }),
       ];
       return { passengers: roomPassengers };
     });
@@ -385,7 +425,8 @@ export async function POST(request: NextRequest) {
         GuestNationality: guestNationality,
         ClientReferenceId: clientReferenceId,
         rooms: roomsDetails.length,
-        adultsPerRoom,
+        totalAdults,
+        totalChildren,
         totalPassengers,
       },
     );

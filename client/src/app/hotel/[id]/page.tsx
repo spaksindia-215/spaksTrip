@@ -52,6 +52,8 @@ function HotelDetailInner() {
   const rooms = Number(sp.get("rooms") ?? 1);
   const adults = Number(sp.get("adults") ?? 2);
   const children = Number(sp.get("children") ?? 0);
+  const childrenAges = (sp.get("childrenAges") ?? "")
+    .split(",").map(Number).filter((n) => !isNaN(n) && n >= 0).filter((_, i) => i < children);
   const guestNationality = sp.get("nationality") ?? "IN";
 
   const nights = checkIn && checkOut
@@ -83,11 +85,11 @@ function HotelDetailInner() {
   });
 
   useEffect(() => {
-    getHotel(decodeURIComponent(id), { checkIn, checkOut, rooms, adults, children }).then((h) => {
+    getHotel(decodeURIComponent(id), { checkIn, checkOut, rooms, adults, children, childrenAges }).then((h) => {
       setHotel(h);
       setLoading(false);
     });
-  }, [id, checkIn, checkOut, rooms, adults, children]);
+  }, [id, checkIn, checkOut, rooms, adults, children, childrenAges.join(",")]);
 
   const onSelectRoom = async (room: Room) => {
     if (!hotel) return;
@@ -96,8 +98,8 @@ function HotelDetailInner() {
       return;
     }
 
-    // Initialize booking with Search data first
-    const bookingData = { hotel, room, checkIn, checkOut, rooms, adults, children, guestNationality };
+    // Initialize booking with Search data (including childrenAges for multi-room support)
+    const bookingData = { hotel, room, checkIn, checkOut, rooms, adults, children, childrenAges, guestNationality };
     startHotelBooking(bookingData);
 
     // We'll check session validity after getting current from store

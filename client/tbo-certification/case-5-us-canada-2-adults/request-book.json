@@ -1,0 +1,51 @@
+{
+  "TokenId": "84f4897c-6edb-494b-97b4-561d6422c6c1",
+  "EndUserIp": "103.83.129.50",
+  "TraceId": "ee49124a-96d2-4523-8188-c2ab4cedf501",
+  "GenerateInsurancePolicy": "true",
+  "ResultIndex": 1,
+  "Passenger": [
+    {
+      "Title": "Mr",
+      "FirstName": "Rahul",
+      "LastName": "Desai",
+      "BeneficiaryName": "Rahul Desai",
+      "RelationShipToInsured": "Self",
+      "RelationToBeneficiary": "Self",
+      "Gender": "1",
+      "Sex": 1,
+      "DOB": "1987-09-25T00:00:00",
+      "PassportNo": "H5678901",
+      "PhoneNumber": "+91-9876543216",
+      "EmailId": "rahul.desai@example.com",
+      "AddressLine1": "654 Tech Park",
+      "AddressLine2": "Unit 10",
+      "CityCode": "BOM",
+      "CountryCode": "IN",
+      "PassportCountry": "IN",
+      "MajorDestination": "YYZ",
+      "PinCode": 400003
+    },
+    {
+      "Title": "Mrs",
+      "FirstName": "Anjali",
+      "LastName": "Nair",
+      "BeneficiaryName": "Anjali Nair",
+      "RelationShipToInsured": "Spouse",
+      "RelationToBeneficiary": "Spouse",
+      "Gender": "2",
+      "Sex": 2,
+      "DOB": "1968-04-14T00:00:00",
+      "PassportNo": "H9012345",
+      "PhoneNumber": "+91-9876543217",
+      "EmailId": "anjali.nair@example.com",
+      "AddressLine1": "654 Tech Park",
+      "AddressLine2": "Unit 10",
+      "CityCode": "BOM",
+      "CountryCode": "IN",
+      "PassportCountry": "IN",
+      "MajorDestination": "YYZ",
+      "PinCode": 400003
+    }
+  ]
+}

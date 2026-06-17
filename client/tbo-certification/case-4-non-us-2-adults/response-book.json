@@ -1,0 +1,12 @@
+{
+  "Response": {
+    "CFAR_Response": null,
+    "ResponseStatus": 3,
+    "Error": {
+      "ErrorCode": 3,
+      "ErrorMessage": "BeneficiaryName should be in proper format (i.e. Title FirstName LastName) for passenger 1"
+    },
+    "TraceId": "56d7d83e-8aca-4060-9af8-7ccdf15ffd47",
+    "Itinerary": null
+  }
+}

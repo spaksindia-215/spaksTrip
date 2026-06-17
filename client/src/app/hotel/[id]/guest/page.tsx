@@ -26,6 +26,10 @@ function buildGuestList(roomCount: number, existingGuests: HotelGuest[] = []): H
       firstName: guest.firstName ?? "",
       lastName: guest.lastName ?? "",
       age: guest.age,
+      pan: guest.pan,
+      passport: guest.passport,
+      passportIssueDate: guest.passportIssueDate,
+      passportExpDate: guest.passportExpDate,
     }));
   }
   return Array.from({ length: roomCount }, () => ({

@@ -42,6 +42,7 @@ export type HotelBooking = {
   rooms: number;
   adults: number;
   children: number;
+  childrenAges: number[];
   guests: HotelGuest[];
   contact: ContactInfo;
   addOns: { breakfast: boolean; insurance: boolean };
@@ -75,6 +76,7 @@ type Actions = {
     rooms: number;
     adults: number;
     children: number;
+    childrenAges: number[];
     guestNationality: string;
   }) => void;
   setGuests: (guests: HotelGuest[]) => void;
@@ -104,7 +106,7 @@ export const useHotelBookingStore = create<State & Actions>()(
     (set) => ({
       current: null,
       bookings: [],
-      startHotelBooking: ({ hotel, room, checkIn, checkOut, rooms, adults, children, guestNationality }) => {
+      startHotelBooking: ({ hotel, room, checkIn, checkOut, rooms, adults, children, childrenAges, guestNationality }) => {
         const nights = nightsBetween(checkIn, checkOut);
         const addOns: HotelBooking["addOns"] = { breakfast: room.breakfast, insurance: false };
         const { taxes, total } = computeHotelTotals(room, nights, rooms, addOns);
@@ -121,6 +123,7 @@ export const useHotelBookingStore = create<State & Actions>()(
             rooms,
             adults,
             children,
+            childrenAges,
             guests: [],
             contact: { email: "", phone: "", countryCode: "+91" },
             addOns,

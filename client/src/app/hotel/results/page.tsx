@@ -152,6 +152,7 @@ function HotelResultsInner() {
                           rooms={rooms}
                           adults={adults}
                           children={children}
+                          childrenAges={childrenAges}
                           nights={nights}
                         />
                       ))}

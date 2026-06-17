@@ -1,0 +1,30 @@
+{
+  "TokenId": "84f4897c-6edb-494b-97b4-561d6422c6c1",
+  "EndUserIp": "103.83.129.50",
+  "TraceId": "033ded1c-6e2a-4fff-b0c4-d9acdbb47063",
+  "GenerateInsurancePolicy": "true",
+  "ResultIndex": 1,
+  "Passenger": [
+    {
+      "Title": "Mr",
+      "FirstName": "Rajesh",
+      "LastName": "Kumar",
+      "BeneficiaryName": "Rajesh Kumar",
+      "RelationShipToInsured": "Self",
+      "RelationToBeneficiary": "Self",
+      "Gender": "1",
+      "Sex": 1,
+      "DOB": "2001-06-15T00:00:00",
+      "PassportNo": "H9876543",
+      "PhoneNumber": "+91-9876543210",
+      "EmailId": "rajesh.kumar@example.com",
+      "AddressLine1": "123 Main Street",
+      "AddressLine2": "Apartment 4B",
+      "CityCode": "DEL",
+      "CountryCode": "IN",
+      "PassportCountry": "IN",
+      "MajorDestination": "BOM",
+      "PinCode": 110001
+    }
+  ]
+}
