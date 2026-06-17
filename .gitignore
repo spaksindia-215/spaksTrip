@@ -5,7 +5,7 @@ TBO_Postman_Collection.json
 graphify-out
 .graphify_python
 TBO_Postman_Collection.json
-test*
+/test*
 TBO*
 .agents
 body.js
