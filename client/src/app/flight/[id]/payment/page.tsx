@@ -216,6 +216,8 @@ function PaymentInner() {
           amountPaise: totalPaise,
           clientReferenceId: booking.id,
           route: `${from}-${to}`,
+          // Signed price floor from FareQuote — server rejects orders below it.
+          priceToken: booking.priceToken,
         }),
       });
       const data = await res.json().catch(() => null);

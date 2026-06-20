@@ -37,6 +37,17 @@ export const env = {
   razorpayKeyId: process.env.RAZORPAY_KEY_ID ?? "",
   razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET ?? "",
   razorpayWebhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET ?? "",
+  // Signed price-token secret. Optional (graceful degradation): when set, the
+  // FareQuote→create-order amount binding is enforced. MUST be identical on the
+  // Next app and this server for tokens to verify across both layers.
+  priceTokenSecret: process.env.PRICE_TOKEN_SECRET ?? "",
+  // SMTP for transactional email (verification, password reset, notifications).
+  // When EMAIL_HOST is unset the mailer falls back to console logging (dev/CI).
+  emailHost: process.env.EMAIL_HOST ?? "",
+  emailPort: Number(process.env.EMAIL_PORT ?? 587),
+  emailUser: process.env.EMAIL_USER ?? "",
+  emailPass: process.env.EMAIL_PASS ?? "",
+  emailFrom: process.env.EMAIL_FROM ?? "SpaksTrip <no-reply@spakstrip.com>",
   // Background worker intervals (ms). Defaults: heal 5m, reconcile 60m, DLQ 10m.
   healWorkerIntervalMs: Number(process.env.HEAL_WORKER_INTERVAL_MS ?? 300000),
   reconciliationWorkerIntervalMs: Number(process.env.RECONCILIATION_WORKER_INTERVAL_MS ?? 3600000),

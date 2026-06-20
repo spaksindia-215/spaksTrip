@@ -42,6 +42,9 @@ export interface IUser {
   // crossed, the time until which login is blocked (exponential backoff).
   failedLoginAttempts: number;
   lockUntil?: Date | null;
+  // Email verification (double opt-in). New users start false; legacy users have
+  // the field absent and are grandfathered in (login only blocks on === false).
+  emailVerified?: boolean;
   // Timestamped record that the user accepted the Terms & Privacy Policy at
   // registration (DPDP / GDPR audit trail).
   consentAt?: Date;
@@ -114,6 +117,7 @@ const userSchema = new Schema<IUser>(
     rejectionReason: { type: String, trim: true },
     failedLoginAttempts: { type: Number, default: 0 },
     lockUntil:           { type: Date, default: null },
+    emailVerified:       { type: Boolean, default: false },
     consentAt:           { type: Date },
     consentVersion:      { type: String, trim: true },
     markup: {

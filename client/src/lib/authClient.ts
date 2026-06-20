@@ -17,9 +17,12 @@ type AuthResponse = {
   user: ApiAuthUser;
 };
 
+// Register no longer issues a session directly: every new account must confirm
+// its email first ("verify_email"); approval-gated roles return "pending".
+export type RegisterStatus = UserStatus | "verify_email";
+
 type RegisterResponse = AuthResponse & {
-  // "pending" for b2b_agent + partner (no session issued); "active" otherwise.
-  status: UserStatus;
+  status: RegisterStatus;
 };
 
 export type LoginInput = {
@@ -40,7 +43,13 @@ export type RegisterInput = {
 
 export type RegisterResult = {
   user: ApiAuthUser;
-  status: UserStatus;
+  status: RegisterStatus;
+};
+
+export type VerifyEmailResult = {
+  verified: boolean;
+  status: RegisterStatus;
+  user: ApiAuthUser;
 };
 
 export const authClient = {
@@ -69,5 +78,35 @@ export const authClient = {
 
   async logout(): Promise<void> {
     await api<{ ok: true }>("/api/auth/logout", { method: "POST" });
+  },
+
+  // Confirm email via the link token. On success the server issues a session
+  // (for active roles), so the caller can drop the user straight into the app.
+  async verifyEmail(token: string): Promise<VerifyEmailResult> {
+    return api<VerifyEmailResult>("/api/auth/verify-email", {
+      method: "POST",
+      body: { token },
+    });
+  },
+
+  async resendVerification(identifier: { email?: string; phone?: string }): Promise<{ ok: true; message: string }> {
+    return api<{ ok: true; message: string }>("/api/auth/resend-verification", {
+      method: "POST",
+      body: identifier,
+    });
+  },
+
+  async forgotPassword(identifier: { email?: string; phone?: string }): Promise<{ ok: true; message: string }> {
+    return api<{ ok: true; message: string }>("/api/auth/forgot-password", {
+      method: "POST",
+      body: identifier,
+    });
+  },
+
+  async resetPassword(token: string, password: string): Promise<{ ok: true; message: string }> {
+    return api<{ ok: true; message: string }>("/api/auth/reset-password", {
+      method: "POST",
+      body: { token, password },
+    });
   },
 };

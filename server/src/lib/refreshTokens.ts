@@ -57,3 +57,12 @@ export async function revokeRefreshToken(raw: string): Promise<void> {
     { $set: { revokedAt: new Date() } },
   );
 }
+
+// Revoke ALL active refresh tokens for a user — used after a password reset so
+// every existing session is invalidated.
+export async function revokeAllUserRefreshTokens(userId: string): Promise<void> {
+  await RefreshTokenModel.updateMany(
+    { userId, revokedAt: { $exists: false } },
+    { $set: { revokedAt: new Date() } },
+  );
+}

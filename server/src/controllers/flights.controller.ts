@@ -24,6 +24,7 @@ import { createOrder, verifySignature, initiateRefund, fetchPayment } from "../i
 import { getPaymentDb } from "../integrations/tbo/payments/db";
 import { sendFlightConfirmation } from "../integrations/tbo/payments/mailer";
 import { buildFarePricer, buildTwoTierPricing, type TwoTierPricing } from "../lib/tboMarkup";
+import { signPriceToken, verifyPriceToken } from "../lib/priceToken";
 import { recordSubdomainBooking } from "../services/subdomainBooking";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
@@ -141,7 +142,15 @@ export async function fareQuote(req: Request, res: Response): Promise<void> {
       result.updatedOffer.basePrice = priceFlight(result.updatedOffer.basePrice);
     }
 
-    res.json({ success: true, data: result });
+    // Signed price token binding the server-quoted supplier fare (the FLOOR the
+    // order amount must clear) → verified at create-order. Empty when
+    // PRICE_TOKEN_SECRET is unset (feature off).
+    const rawFarePaise = Math.round(
+      result.fareBreakdown.reduce((acc, b) => acc + b.BaseFare + b.Tax + b.YQTax, 0) * 100,
+    );
+    const priceToken = signPriceToken(resultIndex, rawFarePaise);
+
+    res.json({ success: true, data: { ...result, priceToken } });
   } catch (e) {
     if (e instanceof TboFareExpiredError) return fail(res, "Fare has expired. Please search again.", 410);
     return fail(res, e instanceof Error ? e.message : "FareQuote failed", 500);
@@ -433,13 +442,24 @@ export async function calendarFareUpdate(req: Request, res: Response): Promise<v
 
 export async function createPaymentOrder(req: Request, res: Response): Promise<void> {
   try {
-    const { amountPaise, clientReferenceId, route } = req.body ?? {};
+    const { amountPaise, clientReferenceId, route, priceToken } = req.body ?? {};
 
     if (typeof amountPaise !== "number" || amountPaise < 100) {
       return fail(res, "amountPaise must be a number >= 100 (smallest INR unit: paise).", 400);
     }
     if (!clientReferenceId || typeof clientReferenceId !== "string") {
       return fail(res, "clientReferenceId is required.", 400);
+    }
+
+    // Anti-tamper: the order amount must clear the signed price floor minted at
+    // FareQuote. No-op (skipped) when PRICE_TOKEN_SECRET is unset.
+    const priceCheck = verifyPriceToken(
+      typeof priceToken === "string" ? priceToken : undefined,
+      amountPaise,
+    );
+    if (!priceCheck.ok) {
+      console.error(`\n[RZP ${ts()}] ✗ PRICE TOKEN INVALID (flight)\n  reason: ${priceCheck.reason}\n  amount_paise: ${amountPaise}`);
+      return fail(res, "Price verification failed. Please search again for the latest fare.", 409, { priceTokenError: priceCheck.reason });
     }
 
     console.log(

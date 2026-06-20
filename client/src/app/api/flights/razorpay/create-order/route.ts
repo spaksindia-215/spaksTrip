@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createOrder } from "@/lib/razorpay";
 import { flightProxyEnabled, forwardToRailway } from "@/lib/tboProxy";
+import { verifyPriceToken } from "@/lib/priceToken";
 
 export const runtime = "nodejs";
 
@@ -20,13 +21,24 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { amountPaise, clientReferenceId, route } = body;
+    const { amountPaise, clientReferenceId, route, priceToken } = body;
 
     if (typeof amountPaise !== "number" || amountPaise < 100) {
       return err("amountPaise must be a number >= 100 (smallest INR unit: paise).", 400);
     }
     if (!clientReferenceId || typeof clientReferenceId !== "string") {
       return err("clientReferenceId is required.", 400);
+    }
+
+    // Anti-tamper: order amount must clear the signed price floor from FareQuote.
+    // No-op (skipped) when PRICE_TOKEN_SECRET is unset.
+    const priceCheck = verifyPriceToken(
+      typeof priceToken === "string" ? priceToken : undefined,
+      amountPaise,
+    );
+    if (!priceCheck.ok) {
+      console.error(`\n[RZP ${ts()}] ✗ PRICE TOKEN INVALID (flight)\n  reason: ${priceCheck.reason}\n  amount_paise: ${amountPaise}`);
+      return err("Price verification failed. Please search again for the latest fare.", 409);
     }
 
     console.log(

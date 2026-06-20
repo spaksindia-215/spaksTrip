@@ -1,5 +1,15 @@
 import { Router } from "express";
-import { register, login, refresh, logout, me } from "../controllers/auth.controller";
+import {
+  register,
+  login,
+  refresh,
+  logout,
+  me,
+  verifyEmail,
+  resendVerification,
+  forgotPassword,
+  resetPassword,
+} from "../controllers/auth.controller";
 import { authMiddleware } from "../middleware/auth";
 import { authRateLimiter } from "../middleware/rateLimit";
 
@@ -10,5 +20,12 @@ router.post("/login", authRateLimiter, login);
 router.post("/refresh", refresh);
 router.post("/logout", logout);
 router.get("/me", authMiddleware, me);
+
+// Email verification + password reset. The email-sending endpoints are rate
+// limited (authRateLimiter) to blunt enumeration / mail-bombing.
+router.post("/verify-email", verifyEmail);
+router.post("/resend-verification", authRateLimiter, resendVerification);
+router.post("/forgot-password", authRateLimiter, forgotPassword);
+router.post("/reset-password", authRateLimiter, resetPassword);
 
 export default router;

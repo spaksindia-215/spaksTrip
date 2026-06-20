@@ -101,6 +101,8 @@ export type FlightBooking = {
   fareBreakdown: TboFareBreakdown[];
   /** TBO TraceId echoed from FareQuote response — must be passed to all subsequent TBO calls. */
   fareQuoteTraceId?: string;
+  /** Signed price token from FareQuote — echoed at create-order for anti-tamper. */
+  priceToken?: string;
   /** FareQuote validation flags (PAN/Passport/Special-fare) + airline/route context. */
   panRequiredAtBook?: boolean;
   panRequiredAtTicket?: boolean;
@@ -140,6 +142,7 @@ type Actions = {
     isLCC: boolean;
     fareBreakdown: TboFareBreakdown[];
     traceId: string;
+    priceToken?: string;
     updatedOffer?: FlightOffer;
     panRequiredAtBook?: boolean;
     panRequiredAtTicket?: boolean;
@@ -233,6 +236,7 @@ export const useBookingStore = create<State & Actions>()(
               isLCC: data.isLCC,
               fareBreakdown: data.fareBreakdown,
               fareQuoteTraceId: data.traceId,
+              priceToken: data.priceToken,
               panRequiredAtBook: data.panRequiredAtBook,
               panRequiredAtTicket: data.panRequiredAtTicket,
               passportRequiredAtBook: data.passportRequiredAtBook,

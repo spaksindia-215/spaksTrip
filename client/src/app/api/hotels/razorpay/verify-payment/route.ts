@@ -202,6 +202,20 @@ export async function POST(request: NextRequest) {
       return err("guests must be a non-empty array.", 400);
     if (!clientReferenceId) return err("clientReferenceId is required.", 400);
 
+    // ── Passenger-count validation (server-side) ─────────────────────────────
+    // Enforce the invariants the room-distribution logic below assumes, so a
+    // tampered request can't desync passenger counts from the priced rooms.
+    if (totalRooms < 1 || totalRooms > 9)
+      return err("Number of rooms must be between 1 and 9.", 400);
+    if (totalAdults < 1)
+      return err("At least one adult guest is required.", 400);
+    if (totalAdults < totalRooms)
+      return err("Each room must have at least one adult guest.", 400);
+    if (guests.length !== totalRooms)
+      return err("Please provide exactly one lead guest per room.", 400);
+    if (totalAdults + totalChildren > 9 * totalRooms)
+      return err("Too many guests for the selected number of rooms.", 400);
+
     // ── Agent attribution (subdomain bookings only) ─────────────────────────
     // netAmount is what TBO charges (= tboFare). Compute the full pricing
     // breakdown so all 5 fields can be stamped on the booking record.

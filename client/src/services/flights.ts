@@ -143,6 +143,8 @@ export type FareQuoteResult = {
   origin: string;
   destination: string;
   updatedOffer?: FlightOffer;
+  /** Signed token binding totalFare → order amount (anti-tamper). "" when feature off. */
+  priceToken?: string;
 };
 
 export async function fetchFareQuote(
