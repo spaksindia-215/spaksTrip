@@ -38,6 +38,14 @@ export interface IUser {
   creditLimit: number | null;
   walletBalance: number;
   rejectionReason?: string;
+  // Brute-force lockout: consecutive failed logins and, once the threshold is
+  // crossed, the time until which login is blocked (exponential backoff).
+  failedLoginAttempts: number;
+  lockUntil?: Date | null;
+  // Timestamped record that the user accepted the Terms & Privacy Policy at
+  // registration (DPDP / GDPR audit trail).
+  consentAt?: Date;
+  consentVersion?: string;
   markup?: {
     flights: MarkupRule;
     hotels: MarkupRule;
@@ -104,6 +112,10 @@ const userSchema = new Schema<IUser>(
     creditLimit:     { type: Number, default: null },
     walletBalance:   { type: Number, default: 0 },
     rejectionReason: { type: String, trim: true },
+    failedLoginAttempts: { type: Number, default: 0 },
+    lockUntil:           { type: Date, default: null },
+    consentAt:           { type: Date },
+    consentVersion:      { type: String, trim: true },
     markup: {
       flights: { type: markupRuleSchema },
       hotels:  { type: markupRuleSchema },
@@ -144,6 +156,9 @@ userSchema.set("toJSON", {
     delete out._id;
     delete out.__v;
     delete out.passwordHash;
+    // Internal security bookkeeping — never expose to clients.
+    delete out.failedLoginAttempts;
+    delete out.lockUntil;
     return out;
   },
 });

@@ -656,6 +656,32 @@ export async function verifyPayment(req: Request, res: Response): Promise<void> 
     });
     console.log(`\n[RZP ${ts()}] ← VERIFY_SIGNATURE (flight) [OK] — payment record persisted\n  paymentId: ${razorpayPaymentId}`);
 
+    // ── Anti-tamper: captured amount must cover at least the raw supplier fare ──
+    // `amountPaise` is chosen by the client at order creation, so a tampered
+    // order could charge far less than the real fare. `capturedPaise` is what
+    // Razorpay ACTUALLY captured; the raw TBO fare is the hard floor (the
+    // customer always pays markup on top). A capture below the fare means the
+    // order amount was tampered — refund and abort BEFORE booking with TBO.
+    const expectedFloorPaise = Math.round(rawFare * 100);
+    const PRICE_TOLERANCE_PAISE = 100; // ₹1 slack for rounding
+    if (capturedPaise + PRICE_TOLERANCE_PAISE < expectedFloorPaise) {
+      console.error(
+        `\n[RZP ${ts()}] ✗ AMOUNT TAMPER (flight)` +
+          `\n  capturedPaise: ${capturedPaise}\n  expectedFloorPaise: ${expectedFloorPaise}\n  paymentId: ${razorpayPaymentId}`,
+      );
+      await col.updateOne(
+        { razorpayOrderId, razorpayPaymentId },
+        { $set: { status: "tbo_failed", tboError: "amount_below_fare", updatedAt: new Date() } },
+      );
+      const refundId = await tryInitiateRefund(razorpayPaymentId, clientReferenceId ?? "", db);
+      return fail(
+        res,
+        "Payment amount did not match the fare for this booking. A refund has been initiated and will reflect in 5-7 business days.",
+        422,
+        { tboFailed: true, reason: "amount_mismatch", razorpayPaymentId, razorpayRefundInitiated: refundId !== null, refundId },
+      );
+    }
+
     const result = await issueFlightBooking(booking);
 
     await col.updateOne(

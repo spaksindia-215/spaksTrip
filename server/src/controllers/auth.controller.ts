@@ -19,6 +19,23 @@ const BCRYPT_ROUNDS = 12;
 // b2b_agent + partner require superadmin approval; everyone else is active on register.
 const PENDING_ROLES = ["b2b_agent", "partner"] as const;
 
+// Brute-force lockout policy: after MAX_BEFORE_LOCK consecutive failed logins
+// the account is locked for an exponentially-growing window (capped). This sits
+// on top of the IP rate limiter and stops slow, distributed credential stuffing
+// against a single account.
+const MAX_BEFORE_LOCK = 5;
+const BASE_LOCK_MINUTES = 15;
+const MAX_LOCK_MINUTES = 60;
+
+// Version stamped alongside the consent timestamp so we can prove WHICH terms a
+// user accepted if the policy text changes later.
+const CONSENT_VERSION = process.env.CONSENT_VERSION ?? "2026-06";
+
+function lockMinutesFor(attempts: number): number {
+  const over = Math.max(0, attempts - MAX_BEFORE_LOCK);
+  return Math.min(MAX_LOCK_MINUTES, BASE_LOCK_MINUTES * 2 ** over);
+}
+
 export async function register(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const input = validateRegister(req.body);
@@ -44,6 +61,11 @@ export async function register(req: Request, res: Response, next: NextFunction):
       aadhar: input.aadhar,
       gst: input.gst,
       pan: input.pan,
+      // Timestamped consent record (DPDP/GDPR). Registration implies acceptance
+      // of the displayed Terms & Privacy Policy. TODO: surface an explicit,
+      // un-pre-ticked checkbox on the client and forward its value here.
+      consentAt: new Date(),
+      consentVersion: CONSENT_VERSION,
     });
 
     // Pending roles: no session is issued; superadmin is notified for review.
@@ -77,8 +99,30 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
     const user = await UserModel.findOne({ phone });
     if (!user) throw new HttpError(401, "Invalid credentials");
 
+    // Account temporarily locked after repeated failures — reject before even
+    // checking the password so a locked account can't be probed.
+    if (user.lockUntil && user.lockUntil.getTime() > Date.now()) {
+      const mins = Math.ceil((user.lockUntil.getTime() - Date.now()) / 60000);
+      throw new HttpError(429, `Too many failed attempts. Please try again in ${mins} minute(s).`);
+    }
+
     const ok = await bcrypt.compare(password, user.passwordHash);
-    if (!ok) throw new HttpError(401, "Invalid credentials");
+    if (!ok) {
+      // Count the failure; lock (with backoff) once the threshold is crossed.
+      user.failedLoginAttempts = (user.failedLoginAttempts ?? 0) + 1;
+      if (user.failedLoginAttempts >= MAX_BEFORE_LOCK) {
+        user.lockUntil = new Date(Date.now() + lockMinutesFor(user.failedLoginAttempts) * 60000);
+      }
+      await user.save();
+      throw new HttpError(401, "Invalid credentials");
+    }
+
+    // Successful auth — clear any accumulated failure state.
+    if ((user.failedLoginAttempts ?? 0) > 0 || user.lockUntil) {
+      user.failedLoginAttempts = 0;
+      user.lockUntil = null;
+      await user.save();
+    }
 
     // Credentials verified — now gate on approval status (only the real owner sees this).
     if (user.status === "pending") {

@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rateLimit";
 
 // Configurable via env so staging domains work without a code change.
 const APEX    = process.env.NEXT_PUBLIC_APEX_DOMAIN ?? "spakstrip.com";
@@ -16,6 +17,16 @@ interface AgentConfigResponse {
 }
 
 export async function middleware(req: NextRequest): Promise<NextResponse> {
+  const { pathname } = req.nextUrl;
+
+  // Rate-limit the API surface (best-effort, per-instance) before any other
+  // work. Express enforces the authoritative limit for proxied traffic; this
+  // covers routes that run inline in Next (hotel payments, bus search, etc.).
+  if (pathname.startsWith("/api/")) {
+    const limited = rateLimit(req, pathname);
+    if (limited) return limited;
+  }
+
   const host     = req.headers.get("host") ?? "";
   const hostname = host.split(":")[0].toLowerCase();
 
