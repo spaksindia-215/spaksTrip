@@ -17,13 +17,40 @@ import { env } from "../config/env";
 import { logger } from "../lib/logger";
 import { createAuthToken, consumeAuthToken, TTL } from "../lib/authTokens";
 
-// Build a client-facing link on the Next app origin.
-function clientUrl(path: string): string {
-  return `${env.clientOrigin.replace(/\/$/, "")}${path}`;
+// Build a client-facing link on the given Next app origin.
+function clientUrl(origin: string, path: string): string {
+  return `${origin.replace(/\/$/, "")}${path}`;
+}
+
+/**
+ * Pick the origin to use in emailed links. Prefers the origin the user is
+ * actually on (forwarded by the Next proxy as x-forwarded-origin) so links work
+ * on the apex domain AND on agent `*.<apex>` subdomains. SECURITY: the forwarded
+ * value is only trusted if it's the apex host or a subdomain of it — otherwise a
+ * forged header could send victims a reset link pointing at an attacker's site
+ * (host-header injection). Anything else falls back to CLIENT_ORIGIN.
+ */
+function resolveClientOrigin(req: Request): string {
+  const fallback = env.clientOrigin;
+  const raw = req.get("x-forwarded-origin");
+  if (!raw) return fallback;
+  try {
+    const u = new URL(raw);
+    const apexHost = new URL(fallback).hostname;
+    if (u.hostname === apexHost || u.hostname.endsWith(`.${apexHost}`)) {
+      return `${u.protocol}//${u.host}`;
+    }
+  } catch {
+    /* malformed header — ignore and fall back */
+  }
+  return fallback;
 }
 
 // Fire a verification email for a user (best-effort — never throws to caller).
-async function sendVerificationEmail(user: { _id: unknown; name: string; email: string }): Promise<void> {
+async function sendVerificationEmail(
+  user: { _id: unknown; name: string; email: string },
+  origin: string,
+): Promise<void> {
   try {
     const raw = await createAuthToken(String(user._id), "verify_email");
     await sendMail({
@@ -32,7 +59,7 @@ async function sendVerificationEmail(user: { _id: unknown; name: string; email: 
       template: "verifyEmail",
       data: {
         name: user.name,
-        verifyUrl: clientUrl(`/verify-email?token=${raw}`),
+        verifyUrl: clientUrl(origin, `/verify-email?token=${raw}`),
         expiresInHours: Math.round(TTL.verify_email / 3_600_000),
       },
     });
@@ -107,7 +134,7 @@ export async function register(req: Request, res: Response, next: NextFunction):
     });
 
     // Every new user must confirm their email before a session is issued.
-    await sendVerificationEmail(user);
+    await sendVerificationEmail(user, resolveClientOrigin(req));
 
     // Pending roles: superadmin is also notified for approval review.
     if (isPending) {
@@ -206,7 +233,7 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
     // Email verification gate. Strict === false so legacy users (field absent)
     // are grandfathered in and not locked out. A fresh verification link is sent.
     if (user.emailVerified === false) {
-      await sendVerificationEmail(user);
+      await sendVerificationEmail(user, resolveClientOrigin(req));
       throw new HttpError(
         403,
         "Please verify your email to continue. We've sent a fresh verification link to your inbox.",
@@ -336,7 +363,7 @@ export async function resendVerification(req: Request, res: Response, next: Next
   try {
     const user = await findByIdentifier(req.body);
     if (user && user.emailVerified === false) {
-      await sendVerificationEmail(user);
+      await sendVerificationEmail(user, resolveClientOrigin(req));
     }
     res.json({ ok: true, message: "If an unverified account matches, a verification link has been sent." });
   } catch (e) {
@@ -358,7 +385,7 @@ export async function forgotPassword(req: Request, res: Response, next: NextFunc
           template: "passwordReset",
           data: {
             name: user.name,
-            resetUrl: clientUrl(`/reset-password?token=${raw}`),
+            resetUrl: clientUrl(resolveClientOrigin(req), `/reset-password?token=${raw}`),
             expiresInMinutes: Math.round(TTL.password_reset / 60_000),
           },
         });
