@@ -81,12 +81,12 @@ type FieldDef = {
 };
 
 const F: Record<string, FieldDef> = {
-  name:      { key: "name",      label: "Full name",            type: "text",     icon: I.user,     ph: "Rishi Kumar" },
-  phone:     { key: "phone",     label: "Phone number",         type: "tel",      icon: I.phone,    ph: "+91 98765 43210" },
-  email:     { key: "email",     label: "Email",                type: "email",    icon: I.mail,     ph: "you@email.com" },
+  name:      { key: "name",      label: "Full name",            type: "text",     icon: I.user,     ph: "Your name" },
+  phone:     { key: "phone",     label: "Phone number",         type: "tel",      icon: I.phone,    ph: "+91 90000 00000" },
+  email:     { key: "email",     label: "Email",                type: "email",    icon: I.mail,     ph: "name@example.com" },
   aadhar:    { key: "aadhar",    label: "Aadhaar number",       type: "text",     icon: I.scan,     ph: "XXXX XXXX XXXX" },
-  company:   { key: "company",   label: "Company name",         type: "text",     icon: I.building, ph: "Acme Travels" },
-  gstin:     { key: "gstin",     label: "GSTIN",                type: "text",     icon: I.receipt,  ph: "22AAAAA0000A1Z" },
+  company:   { key: "company",   label: "Company name",         type: "text",     icon: I.building, ph: "Your company name" },
+  gstin:     { key: "gstin",     label: "GSTIN",                type: "text",     icon: I.receipt,  ph: "22AAAAA0000A1Z5" },
   pan:       { key: "pan",       label: "PAN number",           type: "text",     icon: I.id,       ph: "ABCDE1234F" },
   credit:    { key: "credit",    label: "Credit limit request", type: "number",   icon: I.coins,    prefix: "₹", ph: "0" },
   wallet:    { key: "wallet",    label: "Opening balance",      type: "number",   icon: I.wallet,   prefix: "₹", ph: "0" },
