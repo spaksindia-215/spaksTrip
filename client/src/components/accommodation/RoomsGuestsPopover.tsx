@@ -81,17 +81,15 @@ export default function RoomsGuestsPopover({ rooms, adults, children, childrenAg
   const agesIncomplete = children > 0 && childrenAges.slice(0, children).some((a) => a === -1);
 
   const handleAdultsChange = (value: number) => {
-    if (value <= maxAdultsTotal) onAdultsChange(value);
+    onAdultsChange(value);
   };
 
   const handleChildrenChange = (value: number) => {
-    if (value <= maxChildrenTotal) {
-      onChildrenChange(value);
-      // Sync ages array length: pad with -1 (unset) or truncate
-      const current = childrenAges.slice(0, value);
-      while (current.length < value) current.push(-1);
-      onChildrenAgesChange(current);
-    }
+    onChildrenChange(value);
+    // Sync ages array length: pad with -1 (unset) or truncate
+    const current = childrenAges.slice(0, value);
+    while (current.length < value) current.push(-1);
+    onChildrenAgesChange(current);
   };
 
   const handleChildAgeChange = (idx: number, age: number) => {

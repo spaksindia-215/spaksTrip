@@ -96,7 +96,6 @@ const userSchema = new Schema<IUser>(
       required: true,
       unique:   true,
       trim:     true,
-      index:    true,
     },
     email: {
       type:      String,
@@ -104,7 +103,6 @@ const userSchema = new Schema<IUser>(
       unique:    true,
       lowercase: true,
       trim:      true,
-      index:     true,
     },
     passwordHash:    { type: String, required: true },
     role:            { type: String, enum: ROLES, required: true, default: "customer" },
@@ -138,8 +136,8 @@ const userSchema = new Schema<IUser>(
   { timestamps: { createdAt: true, updatedAt: false } },
 );
 
-// Sparse unique index — non-agent users have no slug and don't conflict.
-userSchema.index({ slug: 1 }, { unique: true, sparse: true });
+// Sparse unique index for `slug` is declared field-level (unique + sparse) above.
+// Non-agent users have no slug and don't conflict.
 
 // Auto-generate a permanent slug for agents on first save.
 userSchema.pre("save", function (next) {

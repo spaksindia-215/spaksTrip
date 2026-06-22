@@ -12,7 +12,7 @@ export interface IRefreshToken {
 const refreshTokenSchema = new Schema<IRefreshToken>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
-    tokenHash: { type: String, required: true, unique: true, index: true },
+    tokenHash: { type: String, required: true, unique: true },
     // TTL index: Mongo auto-removes the doc once expiresAt passes.
     expiresAt: { type: Date, required: true, expires: 0 },
     revokedAt: { type: Date },
