@@ -12,6 +12,8 @@ import agentRoutes from "./routes/agent.routes";
 import internalRoutes from "./routes/internal.routes";
 import flightsRoutes from "./routes/flights.routes";
 import { errorHandler } from "./middleware/error";
+import { securityHeaders } from "./middleware/securityHeaders";
+import { apiRateLimiter } from "./middleware/rateLimit";
 // ADDED: PostgreSQL transaction layer (additive — never replaces MongoDB)
 import { testConnection } from "./config/postgres";
 import webhookRoutes from "./routes/webhooks";
@@ -32,6 +34,9 @@ async function main(): Promise<void> {
 
   // Trust Railway's reverse proxy so req.ip and secure flag are accurate
   if (isProd) app.set("trust proxy", 1);
+
+  // Security headers on every response (HSTS in prod, nosniff, frame-deny, etc.)
+  app.use(securityHeaders);
 
   app.use(
     cors({
@@ -54,6 +59,11 @@ async function main(): Promise<void> {
   app.get("/health", (_req, res) => {
     res.json({ ok: true });
   });
+
+  // Outer rate-limit bound for the whole API surface (skips /api/internal).
+  // Per-route stricter tiers (auth / booking / search) are layered on top inside
+  // each router. Mounted AFTER /api/webhooks so Razorpay retries are never throttled.
+  app.use("/api", apiRateLimiter);
 
   app.use("/api/auth", authRoutes);
   app.use("/api/partner", partnerRoutes);

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import Link from "next/link";
 import { ApiError } from "@/lib/api";
-import { authClient, type ApiAuthUser, type UserRole, type UserStatus } from "@/lib/authClient";
+import { authClient, type ApiAuthUser, type UserRole, type RegisterStatus } from "@/lib/authClient";
 import { useAuthStore } from "@/state/authStore";
 import Image from "next/image";
 
@@ -78,15 +78,18 @@ type FieldDef = {
   ph?: string;
   prefix?: string;
   options?: string[];
+  autoComplete?: string;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  maxLength?: number;
 };
 
 const F: Record<string, FieldDef> = {
-  name:      { key: "name",      label: "Full name",            type: "text",     icon: I.user,     ph: "Rishi Kumar" },
-  phone:     { key: "phone",     label: "Phone number",         type: "tel",      icon: I.phone,    ph: "+91 98765 43210" },
-  email:     { key: "email",     label: "Email",                type: "email",    icon: I.mail,     ph: "you@email.com" },
+  name:      { key: "name",      label: "Full name",            type: "text",     icon: I.user,     ph: "Your name" },
+  phone:     { key: "phone",     label: "Phone number",         type: "tel",      icon: I.phone,    ph: "+91 90000 00000" },
+  email:     { key: "email",     label: "Email",                type: "email",    icon: I.mail,     ph: "name@example.com" },
   aadhar:    { key: "aadhar",    label: "Aadhaar number",       type: "text",     icon: I.scan,     ph: "XXXX XXXX XXXX" },
-  company:   { key: "company",   label: "Company name",         type: "text",     icon: I.building, ph: "Acme Travels" },
-  gstin:     { key: "gstin",     label: "GSTIN",                type: "text",     icon: I.receipt,  ph: "22AAAAA0000A1Z" },
+  company:   { key: "company",   label: "Company name",         type: "text",     icon: I.building, ph: "Your company name" },
+  gstin:     { key: "gstin",     label: "GSTIN",                type: "text",     icon: I.receipt,  ph: "22AAAAA0000A1Z5" },
   pan:       { key: "pan",       label: "PAN number",           type: "text",     icon: I.id,       ph: "ABCDE1234F" },
   credit:    { key: "credit",    label: "Credit limit request", type: "number",   icon: I.coins,    prefix: "₹", ph: "0" },
   wallet:    { key: "wallet",    label: "Opening balance",      type: "number",   icon: I.wallet,   prefix: "₹", ph: "0" },
@@ -94,6 +97,7 @@ const F: Record<string, FieldDef> = {
     options: ["Hotel", "Flight", "Holiday Package", "Transport", "Cruise", "Activity"] },
   password:  { key: "password",  label: "Password",             type: "password", icon: I.lock,     ph: "••••••••" },
   confirm:   { key: "confirm",   label: "Confirm password",     type: "password", icon: I.lockOpen, ph: "••••••••" },
+  otpCode:   { key: "otpCode",   label: "Verification code",    type: "text",     icon: I.shield,   ph: "6-digit code", autoComplete: "one-time-code", inputMode: "numeric", maxLength: 6 },
 };
 
 type Group = { title: string | null; fields: FieldDef[] };
@@ -134,7 +138,7 @@ const REGISTER: Record<UserRole, Flow> = {
 
 function signInFlow(role: UserRole): Flow {
   const label = role === "b2b_agent" ? "B2B agent" : ROLES.find((r) => r.id === role)!.label.toLowerCase();
-  return { cta: `Sign in as ${label}`, groups: [{ title: null, fields: [F.phone, F.password] }] };
+  return { cta: `Sign in as ${label}`, groups: [{ title: null, fields: [F.email, F.password] }] };
 }
 
 // ── Single field ──────────────────────────────────────────────────────────────
@@ -190,7 +194,9 @@ function Field({ def, value, onChange }: { def: FieldDef; value: string; onChang
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onChange={(e) => onChange(e.target.value)}
-            inputMode={def.type === "number" ? "numeric" : undefined}
+            autoComplete={def.autoComplete}
+            inputMode={def.inputMode ?? (def.type === "number" ? "numeric" : undefined)}
+            maxLength={def.maxLength}
           />
         )}
         {isPw && (
@@ -302,9 +308,45 @@ function RolePills({ role, onChange }: { role: UserRole; onChange: (r: UserRole)
 }
 
 // ── Result panel (success / pending) ─────────────────────────────────────────
-function ResultPanel({ mode, role, status, onBack }: { mode: "signin" | "register"; role: UserRole; status: UserStatus; onBack: () => void }) {
+function ResendBlock({ state, onResend }: { state: "idle" | "sending" | "sent"; onResend: () => void }) {
+  if (state === "sent") {
+    return (
+      <p className="mb-4 rounded-xl bg-emerald-50 px-4 py-2.5 text-[13px] font-medium text-emerald-700">
+        Verification email sent — check your inbox (and spam folder).
+      </p>
+    );
+  }
+  return (
+    <button
+      type="button"
+      onClick={onResend}
+      disabled={state === "sending"}
+      className="mb-4 text-[13px] font-semibold hover:underline disabled:opacity-60"
+      style={{ color: "#F2611C" }}
+    >
+      {state === "sending" ? "Sending…" : "Didn't get it? Resend verification email"}
+    </button>
+  );
+}
+
+function ResultPanel({
+  mode,
+  role,
+  status,
+  onBack,
+  resendState,
+  onResend,
+}: {
+  mode: "signin" | "register";
+  role: UserRole;
+  status: RegisterStatus;
+  onBack: () => void;
+  resendState: "idle" | "sending" | "sent";
+  onResend: () => void;
+}) {
   const roleName = ROLES.find((r) => r.id === role)?.label ?? role;
   const isPending = status === "pending";
+  const needsVerify = status === "verify_email";
 
   return (
     <div className="flex flex-col items-center py-8 text-center">
@@ -321,17 +363,20 @@ function ResultPanel({ mode, role, status, onBack }: { mode: "signin" | "registe
         className="mb-2 text-2xl font-bold tracking-tight"
         style={{ fontFamily: "'Poppins',system-ui,sans-serif", color: "#0c2042" }}
       >
-        {mode === "signin" ? "Welcome back!" : isPending ? "Application received!" : "You're all set!"}
+        {mode === "signin" ? "Welcome back!" : isPending ? "Application received!" : needsVerify ? "Check your email" : "You're all set!"}
       </h2>
       <p className="mb-6 max-w-[38ch] text-[14px] leading-relaxed" style={{ color: "#3f5170" }}>
         {mode === "signin" ? (
           <>Signing you into your <strong style={{ color: "#0c2042" }}>{roleName}</strong> dashboard…</>
         ) : isPending ? (
           <>Your <strong style={{ color: "#0c2042" }}>{roleName}</strong> application is under review. We&apos;ll notify you once it&apos;s approved.</>
+        ) : needsVerify ? (
+          <>We&apos;ve sent a verification link to your email. Click it to activate your <strong style={{ color: "#0c2042" }}>{roleName}</strong> account, then sign in.</>
         ) : (
           <>Your <strong style={{ color: "#0c2042" }}>{roleName}</strong> account is ready. Redirecting to your dashboard…</>
         )}
       </p>
+      {needsVerify && <ResendBlock state={resendState} onResend={onResend} />}
       <button
         type="button"
         onClick={onBack}
@@ -393,7 +438,21 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
-  const [resultStatus, setResultStatus] = useState<UserStatus>("active");
+  const [resultStatus, setResultStatus] = useState<RegisterStatus>("active");
+  // Resend-verification affordance (post-signup panel + "please verify" login error).
+  const [resendState, setResendState] = useState<"idle" | "sending" | "sent">("idle");
+  const [resendIdentifier, setResendIdentifier] = useState<{ email?: string; phone?: string } | null>(null);
+
+  const handleResend = async () => {
+    if (!resendIdentifier || resendState === "sending") return;
+    setResendState("sending");
+    try {
+      await authClient.resendVerification(resendIdentifier);
+    } catch {
+      // Response is intentionally generic (no account enumeration) — show "sent" either way.
+    }
+    setResendState("sent");
+  };
 
   // Floating scroll hint — shown when the card has more content below the fold.
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -428,12 +487,19 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
   };
 
   const setValue = (k: string, v: string) => dispatch({ key: k, value: v });
-  const reset = () => { dispatch({ reset: true }); setError(null); };
+  const reset = () => {
+    dispatch({ reset: true });
+    setError(null);
+    setResendIdentifier(null);
+    setResendState("idle");
+  };
 
   const flow = useMemo(
     () => (mode === "signin" ? signInFlow(role) : REGISTER[role]),
     [mode, role],
   );
+  const submitLabel = flow.cta;
+  const submitIcon = mode === "signin" ? I.logIn : I.userPlus;
 
   const switchMode = (m: Mode) => { setMode(m); reset(); };
   const switchRole = (r: UserRole) => { setRole(r); reset(); };
@@ -447,7 +513,11 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
         if (!values.name?.trim()) { setError("Full name is required."); setLoading(false); return; }
         if (!values.phone?.trim()) { setError("Phone number is required."); setLoading(false); return; }
         if (values.password !== values.confirm) { setError("Passwords do not match."); setLoading(false); return; }
-        if ((values.password ?? "").length < 8) { setError("Password must be at least 8 characters."); setLoading(false); return; }
+        {
+          const pw = values.password ?? "";
+          const strong = pw.length >= 8 && /[a-z]/.test(pw) && /[A-Z]/.test(pw) && /[0-9]/.test(pw) && /[^A-Za-z0-9]/.test(pw);
+          if (!strong) { setError("Password must be 8+ characters with uppercase, lowercase, a number, and a symbol."); setLoading(false); return; }
+        }
 
         const result = await authClient.register({
           name: values.name.trim(),
@@ -465,19 +535,30 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
         if (result.status === "active") {
           loginToStore(result.user);
           await onSuccess?.(result.user);
+        } else if (result.status === "verify_email") {
+          setResendIdentifier({ email: values.email?.trim() || undefined, phone: values.phone?.trim() || undefined });
+          setResendState("idle");
         }
       } else {
-        if (!values.phone?.trim()) { setError("Phone number is required."); setLoading(false); return; }
+        if (!values.email?.trim()) { setError("Email is required."); setLoading(false); return; }
         if (!values.password) { setError("Password is required."); setLoading(false); return; }
 
-        const user = await authClient.login({ phone: values.phone.trim(), password: values.password });
+        const user = await authClient.login({ email: values.email.trim(), password: values.password });
         loginToStore(user);
         setResultStatus(user.status);
         setDone(true);
+        setResendIdentifier(null);
+        setResendState("idle");
         await onSuccess?.(user);
       }
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+      const msg = err instanceof ApiError ? err.message : "Something went wrong. Please try again.";
+      setError(msg);
+      // Offer a resend when login is blocked specifically on email verification.
+      if (mode === "signin" && err instanceof ApiError && err.status === 403 && /verify your email/i.test(msg)) {
+        setResendIdentifier({ email: values.email?.trim() || undefined });
+        setResendState("idle");
+      }
     } finally {
       setLoading(false);
     }
@@ -499,6 +580,8 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
           role={role}
           status={resultStatus}
           onBack={() => { setDone(false); reset(); }}
+          resendState={resendState}
+          onResend={handleResend}
         />
       ) : (
         <>
@@ -557,6 +640,11 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
           <RolePills role={role} onChange={switchRole} />
 
           {error && <ErrorBanner message={error} onDismiss={() => setError(null)} />}
+          {resendIdentifier && mode === "signin" && (
+            <div className="mb-4">
+              <ResendBlock state={resendState} onResend={handleResend} />
+            </div>
+          )}
 
           <form
             onSubmit={handleSubmit}
@@ -580,9 +668,9 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
                   <input type="checkbox" defaultChecked style={{ accentColor: "#F2611C", width: 15, height: 15 }} />
                   Keep me signed in
                 </label>
-                <button type="button" className="text-[13px] font-semibold hover:underline" style={{ color: "#F2611C" }}>
+                <Link href="/forgot-password" className="text-[13px] font-semibold hover:underline" style={{ color: "#F2611C" }}>
                   Forgot password?
-                </button>
+                </Link>
               </div>
             )}
 
@@ -590,11 +678,11 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
               type="submit"
               disabled={loading}
               className="mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] py-3 text-[15px] font-bold text-white transition-all duration-150 hover:-translate-y-0.5 active:scale-[.99] disabled:pointer-events-none"
-              style={{
-                background: "linear-gradient(180deg, #f96f34 0%, #F2611C 100%)",
-                boxShadow: "0 12px 26px -10px rgba(242,97,28,.8), 0 1px 0 rgba(255,255,255,.3) inset",
-              }}
-            >
+                style={{
+                  background: "linear-gradient(180deg, #f96f34 0%, #F2611C 100%)",
+                  boxShadow: "0 12px 26px -10px rgba(242,97,28,.8), 0 1px 0 rgba(255,255,255,.3) inset",
+                }}
+              >
               {loading ? (
                 <span
                   className="h-5 w-5 animate-spin rounded-full border-[2.5px] border-white/40 border-t-white"
@@ -602,8 +690,8 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
                 />
               ) : (
                 <>
-                  <Ic d={mode === "signin" ? I.logIn : I.userPlus} size={18} stroke={2} />
-                  <span>{flow.cta}</span>
+                  <Ic d={submitIcon} size={18} stroke={2} />
+                  <span>{submitLabel}</span>
                   <Ic d={I.arrowRight} size={18} stroke={2} />
                 </>
               )}

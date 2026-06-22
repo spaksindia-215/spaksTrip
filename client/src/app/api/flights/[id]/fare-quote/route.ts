@@ -3,6 +3,7 @@ import { tboFareQuote } from "@/lib/adapters/tbo/flight/fareQuote";
 import { TboFareExpiredError } from "@/lib/adapters/tbo/errors";
 import { buildFarePricer } from "@/lib/server/agentMarkup";
 import { flightProxyEnabled, forwardToRailway } from "@/lib/tboProxy";
+import { signPriceToken } from "@/lib/priceToken";
 
 function err(message: string, status: number) {
   return NextResponse.json({ success: false, error: message }, { status });
@@ -38,7 +39,16 @@ export async function GET(
       result.updatedOffer.basePrice = priceFlight(result.updatedOffer.basePrice);
     }
 
-    return NextResponse.json({ success: true, data: result });
+    // Mint a signed price token binding the server-quoted supplier fare (the
+    // FLOOR the order amount must clear). The client echoes it at create-order;
+    // the server rejects any order created below this floor (see
+    // /api/flights/razorpay/create-order). Empty when PRICE_TOKEN_SECRET is unset.
+    const rawFarePaise = Math.round(
+      result.fareBreakdown.reduce((acc, b) => acc + b.BaseFare + b.Tax + b.YQTax, 0) * 100,
+    );
+    const priceToken = signPriceToken(resultIndex, rawFarePaise);
+
+    return NextResponse.json({ success: true, data: { ...result, priceToken } });
   } catch (e) {
     if (e instanceof TboFareExpiredError) {
       return err("Fare has expired. Please search again.", 410);

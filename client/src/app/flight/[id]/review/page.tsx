@@ -74,6 +74,7 @@ function ReviewInner() {
         isLCC: quote.isLCC,
         fareBreakdown: quote.fareBreakdown,
         traceId: quote.traceId,
+        priceToken: quote.priceToken,
         updatedOffer: quote.updatedOffer,
         panRequiredAtBook: quote.isPanRequiredAtBook,
         panRequiredAtTicket: quote.isPanRequiredAtTicket,

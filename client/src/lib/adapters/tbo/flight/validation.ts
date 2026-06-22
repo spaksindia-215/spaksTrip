@@ -114,6 +114,23 @@ export function validateBookingPassengers(
 
   if (!passengers.length) errs.push("At least one passenger is required.");
 
+  // Passenger-count limits (server-side, independent of the client form):
+  //   • TBO allows at most 9 passengers per booking.
+  //   • Every booking needs at least one adult.
+  //   • Infants cannot outnumber adults (one lap-infant per adult).
+  const MAX_PAX = 9;
+  if (passengers.length > MAX_PAX) {
+    errs.push(`A maximum of ${MAX_PAX} passengers is allowed per booking.`);
+  }
+  const adultCount = passengers.filter((p) => p.type === "ADT").length;
+  const infantCount = passengers.filter((p) => p.type === "INF").length;
+  if (passengers.length > 0 && adultCount < 1) {
+    errs.push("At least one adult passenger is required.");
+  }
+  if (infantCount > adultCount) {
+    errs.push("The number of infants cannot exceed the number of adults.");
+  }
+
   // Phone is mandatory for all journeys (LCC & Non-LCC).
   if (!ctx.contactPhone || ctx.contactPhone.replace(/\D/g, "").length < 10) {
     errs.push("A valid contact phone number is required for all journeys.");
@@ -169,6 +186,29 @@ export function validateBookingPassengers(
     }
     if (AIRASIA_CODES.has(code) && p.type === "ADT" && !p.dob) {
       errs.push(`${who}: AirAsia requires date of birth for adult passengers.`);
+    }
+
+    // DOB sanity + age bracket (when a DOB is provided): must be a real, past
+    // date, and the age must match the passenger type (infant <2, child 2–11,
+    // adult 12+). Catches typos and mismatched pax types that TBO would reject.
+    if (p.dob) {
+      const dobDate = new Date(p.dob);
+      if (Number.isNaN(dobDate.getTime())) {
+        errs.push(`${who}: date of birth is not a valid date.`);
+      } else if (dobDate.getTime() > Date.now()) {
+        errs.push(`${who}: date of birth cannot be in the future.`);
+      } else {
+        const age = ageFromDob(p.dob);
+        if (age !== null) {
+          if (p.type === "INF" && age >= 2) {
+            errs.push(`${who}: an infant must be under 2 years old.`);
+          } else if (p.type === "CHD" && (age < 2 || age >= 12)) {
+            errs.push(`${who}: a child must be between 2 and 11 years old.`);
+          } else if (p.type === "ADT" && age < 12) {
+            errs.push(`${who}: an adult must be 12 years or older.`);
+          }
+        }
+      }
     }
 
     // PAN & guardian rules.

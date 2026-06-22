@@ -11,7 +11,28 @@ const PAN_RE = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
 // 15-char GSTIN: 2 state digits + 10-char PAN + 1 entity char + 'Z' + 1 checksum.
 const GST_RE = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][0-9A-Z]Z[0-9A-Z]$/;
 const MIN_PASSWORD = 8;
+// bcrypt only hashes the first 72 BYTES; cap below that so nothing is silently
+// truncated and so an over-long password can't be used to burn CPU.
+const MAX_PASSWORD = 72;
 const MIN_NAME = 2;
+
+// Strength rules: at least one lowercase, one uppercase, one digit, one symbol.
+const PW_LOWER = /[a-z]/;
+const PW_UPPER = /[A-Z]/;
+const PW_DIGIT = /[0-9]/;
+const PW_SYMBOL = /[^A-Za-z0-9]/;
+
+export function assertPasswordStrength(password: string): void {
+  if (password.length < MIN_PASSWORD || password.length > MAX_PASSWORD) {
+    throw new HttpError(400, `Password must be ${MIN_PASSWORD}-${MAX_PASSWORD} characters`);
+  }
+  if (!PW_LOWER.test(password) || !PW_UPPER.test(password) || !PW_DIGIT.test(password) || !PW_SYMBOL.test(password)) {
+    throw new HttpError(
+      400,
+      "Password must include uppercase, lowercase, a number, and a symbol",
+    );
+  }
+}
 
 // Roles that require admin approval and extra KYC (GST + PAN).
 const KYC_ROLES: readonly Role[] = ["b2b_agent", "partner"];
@@ -28,7 +49,7 @@ export interface RegisterInput {
 }
 
 export interface LoginInput {
-  phone: string;
+  email: string;
   password: string;
 }
 
@@ -49,9 +70,10 @@ export function validateRegister(body: unknown): RegisterInput {
   if (typeof email !== "string" || !EMAIL_RE.test(email)) {
     throw new HttpError(400, "Invalid email");
   }
-  if (typeof password !== "string" || password.length < MIN_PASSWORD) {
-    throw new HttpError(400, `Password must be at least ${MIN_PASSWORD} characters`);
+  if (typeof password !== "string") {
+    throw new HttpError(400, "Password is required");
   }
+  assertPasswordStrength(password);
   if (typeof aadhar !== "string" || !AADHAR_RE.test(aadhar.trim())) {
     throw new HttpError(400, "Invalid Aadhaar number (12 digits)");
   }
@@ -91,12 +113,12 @@ export function validateRegister(body: unknown): RegisterInput {
 
 export function validateLogin(body: unknown): LoginInput {
   if (!isObject(body)) throw new HttpError(400, "Invalid body");
-  const { phone, password } = body;
-  if (typeof phone !== "string" || !PHONE_RE.test(phone.trim())) {
-    throw new HttpError(400, "Invalid phone number");
+  const { email, password } = body;
+  if (typeof email !== "string" || !EMAIL_RE.test(email.trim())) {
+    throw new HttpError(400, "Invalid email");
   }
   if (typeof password !== "string" || password.length === 0) {
     throw new HttpError(400, "Password required");
   }
-  return { phone: phone.trim(), password };
+  return { email: email.toLowerCase().trim(), password };
 }

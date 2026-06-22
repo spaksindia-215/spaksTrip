@@ -1,8 +1,16 @@
-// Pluggable mailer. For now a console/log transport ships; a real SMTP
-// transport (nodemailer) can be dropped in behind the same `sendMail` interface
-// later without touching callers. Raw secrets are never logged.
+import nodemailer, { type Transporter } from "nodemailer";
+import { env } from "../config/env";
 
-export type MailTemplate = "superadminNewPending" | "applicantApproved" | "applicantRejected";
+// Transactional mailer. Uses SMTP when EMAIL_HOST is configured; otherwise falls
+// back to a console transport (dev/CI) so flows still work without a mail server.
+// Raw secrets are never logged.
+
+export type MailTemplate =
+  | "superadminNewPending"
+  | "applicantApproved"
+  | "applicantRejected"
+  | "verifyEmail"
+  | "passwordReset";
 
 export interface MailMessage {
   to: string;
@@ -40,25 +48,67 @@ function renderBody(template: MailTemplate, data: Record<string, unknown>): stri
       ]
         .filter(Boolean)
         .join("\n");
+    case "verifyEmail":
+      return [
+        `Hi ${data.name ?? "there"},`,
+        ``,
+        `Welcome to SpaksTrip! Please confirm your email address to activate your account:`,
+        ``,
+        `${data.verifyUrl}`,
+        ``,
+        `This link expires in ${data.expiresInHours ?? 24} hours. If you didn't sign up, you can ignore this email.`,
+      ].join("\n");
+    case "passwordReset":
+      return [
+        `Hi ${data.name ?? "there"},`,
+        ``,
+        `We received a request to reset your SpaksTrip password. Use the link below to choose a new one:`,
+        ``,
+        `${data.resetUrl}`,
+        ``,
+        `This link expires in ${data.expiresInMinutes ?? 30} minutes and can be used once. If you didn't request this, your password is unchanged — you can safely ignore this email.`,
+      ].join("\n");
   }
 }
 
-// Transport: swap this implementation for SMTP later; signature stays the same.
+let transporter: Transporter | null = null;
+function getTransport(): Transporter | null {
+  if (transporter) return transporter;
+  if (!env.emailHost) return null;
+  transporter = nodemailer.createTransport({
+    host: env.emailHost,
+    port: env.emailPort,
+    secure: env.emailPort === 465,
+    auth: env.emailUser ? { user: env.emailUser, pass: env.emailPass } : undefined,
+  });
+  return transporter;
+}
+
 async function deliver(message: MailMessage, body: string): Promise<void> {
-  // eslint-disable-next-line no-console
-  console.log(
-    [
-      "",
-      "──────── MAIL (console transport) ────────",
-      `To:      ${message.to}`,
-      `Subject: ${message.subject}`,
-      `Template:${message.template}`,
-      "",
-      body,
-      "──────────────────────────────────────────",
-      "",
-    ].join("\n"),
-  );
+  const transport = getTransport();
+  if (!transport) {
+    // eslint-disable-next-line no-console
+    console.log(
+      [
+        "",
+        "──────── MAIL (console transport) ────────",
+        `To:      ${message.to}`,
+        `Subject: ${message.subject}`,
+        `Template:${message.template}`,
+        "",
+        body,
+        "──────────────────────────────────────────",
+        "",
+      ].join("\n"),
+    );
+    return;
+  }
+  await transport.sendMail({
+    from: env.emailFrom,
+    to: message.to,
+    subject: message.subject,
+    text: body,
+  });
 }
 
 export async function sendMail(message: MailMessage): Promise<void> {

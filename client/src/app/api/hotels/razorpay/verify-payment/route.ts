@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifySignature, initiateRefund } from "@/lib/razorpay";
+import { verifySignature, initiateRefund, fetchPayment } from "@/lib/razorpay";
 import { getDb } from "@/lib/mongodb";
 import { tboBookHotel } from "@/lib/adapters/tbo/hotel/book";
 import type {
@@ -153,6 +153,7 @@ export async function POST(request: NextRequest) {
   let razorpayPaymentId: string | undefined;
   let razorpayOrderId: string | undefined;
   let amountPaise: number | undefined;
+  let capturedPaise: number | undefined; // authoritative amount from Razorpay
   let clientReferenceId: string | undefined;
 
   try {
@@ -200,6 +201,20 @@ export async function POST(request: NextRequest) {
     if (!Array.isArray(guests) || guests.length === 0)
       return err("guests must be a non-empty array.", 400);
     if (!clientReferenceId) return err("clientReferenceId is required.", 400);
+
+    // ── Passenger-count validation (server-side) ─────────────────────────────
+    // Enforce the invariants the room-distribution logic below assumes, so a
+    // tampered request can't desync passenger counts from the priced rooms.
+    if (totalRooms < 1 || totalRooms > 9)
+      return err("Number of rooms must be between 1 and 9.", 400);
+    if (totalAdults < 1)
+      return err("At least one adult guest is required.", 400);
+    if (totalAdults < totalRooms)
+      return err("Each room must have at least one adult guest.", 400);
+    if (guests.length !== totalRooms)
+      return err("Please provide exactly one lead guest per room.", 400);
+    if (totalAdults + totalChildren > 9 * totalRooms)
+      return err("Too many guests for the selected number of rooms.", 400);
 
     // ── Agent attribution (subdomain bookings only) ─────────────────────────
     // netAmount is what TBO charges (= tboFare). Compute the full pricing
@@ -300,6 +315,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ── Authoritative captured amount ───────────────────────────────────────
+    // Read what Razorpay ACTUALLY captured (and which order it belongs to) —
+    // never trust the client-sent amountPaise for money. Falls back to the body
+    // amount only if the fetch fails, so a transient Razorpay error never blocks
+    // a legitimate booking.
+    capturedPaise = amountPaise;
+    try {
+      const payment = await fetchPayment(razorpayPaymentId);
+      capturedPaise = payment.amountPaise;
+      if (payment.orderId && payment.orderId !== razorpayOrderId) {
+        console.error(
+          `\n[RZP ${ts()}] ✗ ORDER MISMATCH (hotel)` +
+            `\n  payment.order_id: ${payment.orderId}\n  body.orderId: ${razorpayOrderId}`,
+        );
+        return err("Payment does not match this order.", 400, { razorpayPaymentId });
+      }
+      if (capturedPaise !== amountPaise) {
+        console.warn(`\n[RZP ${ts()}] ⚠ client amountPaise (${amountPaise}) ≠ captured (${capturedPaise}); using captured.`);
+      }
+    } catch (e) {
+      console.error(`\n[RZP ${ts()}] ⚠ fetchPayment failed; falling back to body amount\n  ERROR: ${e instanceof Error ? e.message : String(e)}`);
+    }
+
     // ── Persist payment record BEFORE calling TBO ───────────────────────────
     // This is the durability guarantee: even if the process crashes between
     // here and the TBO response, there is a DB record with proof of payment.
@@ -308,7 +346,7 @@ export async function POST(request: NextRequest) {
     const record: HotelPaymentRecord = {
       razorpayOrderId,
       razorpayPaymentId,
-      amountPaise,
+      amountPaise:      capturedPaise, // authoritative — from Razorpay, not the client
       currency:         "INR",
       clientReferenceId,
       bookingCode,
@@ -430,6 +468,33 @@ export async function POST(request: NextRequest) {
         totalPassengers,
       },
     );
+
+    // ── Anti-tamper: captured amount must cover at least the TBO net price ──
+    // `amountPaise` is chosen by the client at order creation; `netAmount` is
+    // what TBO charges and is itself re-validated by TBO at book time. The
+    // customer always pays markup on top of net, so the net is the hard floor.
+    // A capture below it means the order amount was tampered — refund and abort
+    // BEFORE booking with TBO.
+    {
+      const expectedFloorPaise = Math.round(Number(netAmount) * 100);
+      const PRICE_TOLERANCE_PAISE = 100; // ₹1 slack for rounding
+      if (capturedPaise + PRICE_TOLERANCE_PAISE < expectedFloorPaise) {
+        console.error(
+          `\n[RZP ${ts()}] ✗ AMOUNT TAMPER (hotel)` +
+            `\n  capturedPaise: ${capturedPaise}\n  expectedFloorPaise: ${expectedFloorPaise}\n  paymentId: ${razorpayPaymentId}`,
+        );
+        await col.updateOne(
+          { razorpayOrderId, razorpayPaymentId },
+          { $set: { status: "tbo_failed", tboError: "amount_below_fare", updatedAt: new Date() } },
+        );
+        const refundId = await tryInitiateRefund(razorpayPaymentId, capturedPaise, clientReferenceId ?? "", db);
+        return err(
+          "Payment amount did not match the price for this booking. A refund has been initiated and will reflect in 5-7 business days.",
+          422,
+          { tboFailed: true, reason: "amount_mismatch", razorpayPaymentId, razorpayRefundInitiated: refundId !== null, refundId },
+        );
+      }
+    }
 
     // ── Call TBO ─────────────────────────────────────────────────────────────
 
@@ -559,7 +624,7 @@ export async function POST(request: NextRequest) {
 
       const refundId = await tryInitiateRefund(
         razorpayPaymentId,
-        amountPaise,
+        capturedPaise ?? amountPaise, // refund the amount actually captured
         clientReferenceId ?? "",
         db,
       );

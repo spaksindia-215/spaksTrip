@@ -15,6 +15,11 @@ export async function proxyToRailway(req: NextRequest, upstreamPath: string): Pr
     if (v) agentHeaders[h] = v;
   }
 
+  // Forward the browser-facing origin so the server can build emailed links
+  // (verification / password reset) that point back to the exact domain the user
+  // is on — apex or an agent subdomain — instead of a hard-coded env value.
+  const forwardedOrigin = req.headers.get("origin") ?? req.nextUrl.origin;
+
   const upstreamInit: RequestInit = {
     method: req.method,
     cache: "no-store",
@@ -24,6 +29,7 @@ export async function proxyToRailway(req: NextRequest, upstreamPath: string): Pr
         : {}),
       ...(cookieHeader ? { cookie: cookieHeader } : {}),
       ...agentHeaders,
+      "x-forwarded-origin": forwardedOrigin,
     },
   };
 
