@@ -75,10 +75,12 @@ const BCRYPT_ROUNDS = 12;
 // in again. Must be > the access TTL so an active user is never logged out.
 const IDLE_TIMEOUT_MS = Number(process.env.IDLE_SESSION_TIMEOUT_MIN ?? 30) * 60 * 1000;
 
-// Mask a phone for logs — keep only the last 4 digits (PII minimisation).
-function maskPhone(phone: unknown): string {
-  const s = typeof phone === "string" ? phone : "";
-  return s.length <= 4 ? "***" : `***${s.slice(-4)}`;
+// Mask an email for logs — keep the first char + domain (PII minimisation).
+function maskEmail(email: unknown): string {
+  const s = typeof email === "string" ? email : "";
+  const at = s.indexOf("@");
+  if (at <= 0) return "***";
+  return `${s[0]}***${s.slice(at)}`;
 }
 
 // b2b_agent + partner require superadmin approval; everyone else is active on register.
@@ -158,14 +160,14 @@ export async function register(req: Request, res: Response, next: NextFunction):
 
 export async function login(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const { phone, password } = validateLogin(req.body);
+    const { email, password } = validateLogin(req.body);
     const ip = req.ip;
     const userAgent = req.get("user-agent") ?? undefined;
 
-    const user = await UserModel.findOne({ phone });
+    const user = await UserModel.findOne({ email });
     if (!user) {
       logger.warn(
-        { event: "login_failed", reason: "unknown_user", ip, phone: maskPhone(phone), userAgent },
+        { event: "login_failed", reason: "unknown_user", ip, email: maskEmail(email), userAgent },
         "Login failed — no such user",
       );
       throw new HttpError(401, "Invalid credentials");
@@ -176,7 +178,7 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
     if (user.lockUntil && user.lockUntil.getTime() > Date.now()) {
       const mins = Math.ceil((user.lockUntil.getTime() - Date.now()) / 60000);
       logger.warn(
-        { event: "login_blocked", reason: "locked", ip, userId: String(user._id), phone: maskPhone(phone), lockMinutes: mins },
+        { event: "login_blocked", reason: "locked", ip, userId: String(user._id), email: maskEmail(email), lockMinutes: mins },
         "Login blocked — account locked",
       );
       throw new HttpError(429, `Too many failed attempts. Please try again in ${mins} minute(s).`);
@@ -197,7 +199,7 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
           reason: "bad_password",
           ip,
           userId: String(user._id),
-          phone: maskPhone(phone),
+          email: maskEmail(email),
           userAgent,
           attempts: user.failedLoginAttempts,
         },
@@ -212,12 +214,8 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
       user.lockUntil = null;
       await user.save();
     }
-    logger.info(
-      { event: "login_success", ip, userId: String(user._id), role: user.role, phone: maskPhone(phone), userAgent },
-      "Login success",
-    );
 
-    // Credentials verified — now gate on approval status (only the real owner sees this).
+    // Approval-status gate (only the real owner, post-password, sees this).
     if (user.status === "pending") {
       throw new HttpError(403, "Your account is awaiting approval. We'll email you once it's reviewed.");
     }
@@ -230,8 +228,9 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
       );
     }
 
-    // Email verification gate. Strict === false so legacy users (field absent)
-    // are grandfathered in and not locked out. A fresh verification link is sent.
+    // Email-only auth: the account must have a verified email to sign in. Strict
+    // === false so legacy users (field absent) are grandfathered in. A fresh
+    // verification link is sent so the user can complete it immediately.
     if (user.emailVerified === false) {
       await sendVerificationEmail(user, resolveClientOrigin(req));
       throw new HttpError(
@@ -243,8 +242,12 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
     const userId = String(user._id);
     const accessToken = signAccessToken({ sub: userId, role: user.role, email: user.email });
     const refreshToken = await issueRefreshToken(userId);
-
     setAuthCookies(res, accessToken, refreshToken);
+
+    logger.info(
+      { event: "login_success", ip, userId, role: user.role, email: maskEmail(email), userAgent },
+      "Login success",
+    );
     res.json({ user: user.toJSON() });
   } catch (e) {
     next(e);

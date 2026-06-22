@@ -49,7 +49,7 @@ export interface RegisterInput {
 }
 
 export interface LoginInput {
-  phone: string;
+  email: string;
   password: string;
 }
 
@@ -113,12 +113,12 @@ export function validateRegister(body: unknown): RegisterInput {
 
 export function validateLogin(body: unknown): LoginInput {
   if (!isObject(body)) throw new HttpError(400, "Invalid body");
-  const { phone, password } = body;
-  if (typeof phone !== "string" || !PHONE_RE.test(phone.trim())) {
-    throw new HttpError(400, "Invalid phone number");
+  const { email, password } = body;
+  if (typeof email !== "string" || !EMAIL_RE.test(email.trim())) {
+    throw new HttpError(400, "Invalid email");
   }
   if (typeof password !== "string" || password.length === 0) {
     throw new HttpError(400, "Password required");
   }
-  return { phone: phone.trim(), password };
+  return { email: email.toLowerCase().trim(), password };
 }

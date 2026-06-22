@@ -35,6 +35,10 @@ check() { # check EXPECTED ACTUAL LABEL
   if [ "$1" = "$2" ]; then echo "  ✓ $3 ($2)"; else echo "  ✗ $3 (expected $1, got $2)"; cat "$TMP/body"; echo; fi
 }
 
+json_field() {
+  node -e 'const fs = require("fs"); const key = process.argv[2]; const payload = JSON.parse(fs.readFileSync(process.argv[1], "utf8")); process.stdout.write(String(payload?.[key] ?? ""));' "$TMP/body" "$1"
+}
+
 echo "== 1. Customer registers (instant active) =="
 code=$(req POST /api/auth/register "$cust_jar" \
   "{\"name\":\"Cust One\",\"phone\":\"90000$RND\",\"email\":\"cust$RND@ex.com\",\"password\":\"$PASS\",\"role\":\"customer\",\"aadhar\":\"123412341234\"}")
@@ -67,7 +71,18 @@ B2B_ID=$(grep -o '"id":"[a-f0-9]\{24\}"' "$TMP/body" | head -1 | cut -d'"' -f4)
 code=$(req POST "/api/admin/approve/$B2B_ID" "$admin_jar" "{\"creditLimit\":50000}"); check 200 "$code" "approve b2b (₹50k)"
 
 echo "== 8. B2B can now log in =="
-code=$(req POST /api/auth/login "$b2b_jar" "{\"phone\":\"92000$RND\",\"password\":\"$PASS\"}"); check 200 "$code" "b2b login after approval"
+code=$(req POST /api/auth/login "$b2b_jar" "{\"phone\":\"92000$RND\",\"password\":\"$PASS\"}")
+check 200 "$code" "b2b login challenge issued"
+CHALLENGE_ID=$(json_field challengeId)
+OTP_CODE=$(json_field debugCode)
+if [ -z "$OTP_CODE" ]; then
+  echo "  ✗ b2b OTP code missing from dev response"
+  cat "$TMP/body"
+  echo
+  exit 1
+fi
+code=$(req POST /api/auth/login/verify-otp "$b2b_jar" "{\"challengeId\":\"$CHALLENGE_ID\",\"code\":\"$OTP_CODE\"}")
+check 200 "$code" "b2b login after approval"
 
 echo "== 9. Cross-role isolation: customer hitting agent API => 403 =="
 code=$(req GET /api/agent/bookings "$cust_jar"); check 403 "$code" "customer blocked from /api/agent"

@@ -35,11 +35,11 @@ const faqs = [
 export default function TaxiLandingPage() {
   return (
     <main className="bg-white">
-      <section className="relative min-h-[680px] overflow-hidden bg-ink">
+      <section className="relative min-h-[680px] overflow-hidden bg-ink lg:min-h-[calc(100svh-7rem)]">
         <img src={heroImage} alt="Premium road trip taxi in mountains" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/88 via-ink/58 to-ink/20" />
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white to-transparent" />
-        <div className="relative mx-auto grid max-w-7xl gap-8 px-4 pb-14 pt-24 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:pt-32">
+        <div className="relative mx-auto grid min-h-[inherit] max-w-7xl gap-8 px-4 pb-14 pt-24 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:py-16">
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="flex flex-col justify-center text-white">
             <Badge tone="accent" className="mb-4 w-fit bg-white/14 text-white ring-1 ring-white/25">
               SpaksTrip Taxi Packages
@@ -75,7 +75,7 @@ export default function TaxiLandingPage() {
               </Link>
             </div>
           </motion.div>
-          <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.08 }} className="self-end lg:pt-28">
+          <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.08 }} className="self-center lg:justify-self-end">
             <TaxiSearchForm />
           </motion.div>
         </div>

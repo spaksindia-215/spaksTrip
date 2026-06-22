@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import Link from "next/link";
 import { ApiError } from "@/lib/api";
-import { authClient, type ApiAuthUser, type UserRole, type UserStatus, type RegisterStatus } from "@/lib/authClient";
+import { authClient, type ApiAuthUser, type UserRole, type RegisterStatus } from "@/lib/authClient";
 import { useAuthStore } from "@/state/authStore";
 import Image from "next/image";
 
@@ -78,6 +78,9 @@ type FieldDef = {
   ph?: string;
   prefix?: string;
   options?: string[];
+  autoComplete?: string;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  maxLength?: number;
 };
 
 const F: Record<string, FieldDef> = {
@@ -94,6 +97,7 @@ const F: Record<string, FieldDef> = {
     options: ["Hotel", "Flight", "Holiday Package", "Transport", "Cruise", "Activity"] },
   password:  { key: "password",  label: "Password",             type: "password", icon: I.lock,     ph: "••••••••" },
   confirm:   { key: "confirm",   label: "Confirm password",     type: "password", icon: I.lockOpen, ph: "••••••••" },
+  otpCode:   { key: "otpCode",   label: "Verification code",    type: "text",     icon: I.shield,   ph: "6-digit code", autoComplete: "one-time-code", inputMode: "numeric", maxLength: 6 },
 };
 
 type Group = { title: string | null; fields: FieldDef[] };
@@ -134,7 +138,7 @@ const REGISTER: Record<UserRole, Flow> = {
 
 function signInFlow(role: UserRole): Flow {
   const label = role === "b2b_agent" ? "B2B agent" : ROLES.find((r) => r.id === role)!.label.toLowerCase();
-  return { cta: `Sign in as ${label}`, groups: [{ title: null, fields: [F.phone, F.password] }] };
+  return { cta: `Sign in as ${label}`, groups: [{ title: null, fields: [F.email, F.password] }] };
 }
 
 // ── Single field ──────────────────────────────────────────────────────────────
@@ -190,7 +194,9 @@ function Field({ def, value, onChange }: { def: FieldDef; value: string; onChang
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onChange={(e) => onChange(e.target.value)}
-            inputMode={def.type === "number" ? "numeric" : undefined}
+            autoComplete={def.autoComplete}
+            inputMode={def.inputMode ?? (def.type === "number" ? "numeric" : undefined)}
+            maxLength={def.maxLength}
           />
         )}
         {isPw && (
@@ -481,12 +487,19 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
   };
 
   const setValue = (k: string, v: string) => dispatch({ key: k, value: v });
-  const reset = () => { dispatch({ reset: true }); setError(null); setResendIdentifier(null); setResendState("idle"); };
+  const reset = () => {
+    dispatch({ reset: true });
+    setError(null);
+    setResendIdentifier(null);
+    setResendState("idle");
+  };
 
   const flow = useMemo(
     () => (mode === "signin" ? signInFlow(role) : REGISTER[role]),
     [mode, role],
   );
+  const submitLabel = flow.cta;
+  const submitIcon = mode === "signin" ? I.logIn : I.userPlus;
 
   const switchMode = (m: Mode) => { setMode(m); reset(); };
   const switchRole = (r: UserRole) => { setRole(r); reset(); };
@@ -527,13 +540,15 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
           setResendState("idle");
         }
       } else {
-        if (!values.phone?.trim()) { setError("Phone number is required."); setLoading(false); return; }
+        if (!values.email?.trim()) { setError("Email is required."); setLoading(false); return; }
         if (!values.password) { setError("Password is required."); setLoading(false); return; }
 
-        const user = await authClient.login({ phone: values.phone.trim(), password: values.password });
+        const user = await authClient.login({ email: values.email.trim(), password: values.password });
         loginToStore(user);
         setResultStatus(user.status);
         setDone(true);
+        setResendIdentifier(null);
+        setResendState("idle");
         await onSuccess?.(user);
       }
     } catch (err) {
@@ -541,7 +556,7 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
       setError(msg);
       // Offer a resend when login is blocked specifically on email verification.
       if (mode === "signin" && err instanceof ApiError && err.status === 403 && /verify your email/i.test(msg)) {
-        setResendIdentifier({ phone: values.phone?.trim() || undefined });
+        setResendIdentifier({ email: values.email?.trim() || undefined });
         setResendState("idle");
       }
     } finally {
@@ -663,11 +678,11 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
               type="submit"
               disabled={loading}
               className="mt-4 flex w-full items-center justify-center gap-2 rounded-[14px] py-3 text-[15px] font-bold text-white transition-all duration-150 hover:-translate-y-0.5 active:scale-[.99] disabled:pointer-events-none"
-              style={{
-                background: "linear-gradient(180deg, #f96f34 0%, #F2611C 100%)",
-                boxShadow: "0 12px 26px -10px rgba(242,97,28,.8), 0 1px 0 rgba(255,255,255,.3) inset",
-              }}
-            >
+                style={{
+                  background: "linear-gradient(180deg, #f96f34 0%, #F2611C 100%)",
+                  boxShadow: "0 12px 26px -10px rgba(242,97,28,.8), 0 1px 0 rgba(255,255,255,.3) inset",
+                }}
+              >
               {loading ? (
                 <span
                   className="h-5 w-5 animate-spin rounded-full border-[2.5px] border-white/40 border-t-white"
@@ -675,8 +690,8 @@ export default function AuthForm({ initialMode = "signin", initialRole = "custom
                 />
               ) : (
                 <>
-                  <Ic d={mode === "signin" ? I.logIn : I.userPlus} size={18} stroke={2} />
-                  <span>{flow.cta}</span>
+                  <Ic d={submitIcon} size={18} stroke={2} />
+                  <span>{submitLabel}</span>
                   <Ic d={I.arrowRight} size={18} stroke={2} />
                 </>
               )}

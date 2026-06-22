@@ -26,7 +26,7 @@ type RegisterResponse = AuthResponse & {
 };
 
 export type LoginInput = {
-  phone: string;
+  email: string;
   password: string;
 };
 
@@ -58,7 +58,6 @@ export const authClient = {
       method: "POST",
       body: input,
     });
-
     return response.user;
   },
 
