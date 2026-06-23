@@ -20,6 +20,8 @@ function buildTransport() {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
+    // IPv4 forced process-wide in index.ts (see note there) to avoid Gmail's
+    // unreachable IPv6 address on hosts without IPv6 egress.
     // Reuse connections and fail fast rather than hanging on a slow SMTP server.
     pool: true,
     maxConnections: 3,

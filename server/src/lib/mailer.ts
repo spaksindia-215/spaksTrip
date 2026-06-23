@@ -80,6 +80,8 @@ function getTransport(): Transporter | null {
     port: env.emailPort,
     secure: env.emailPort === 465,
     auth: env.emailUser ? { user: env.emailUser, pass: env.emailPass } : undefined,
+    // IPv4 is forced process-wide in index.ts (dns.setDefaultResultOrder) so the
+    // unreachable Gmail AAAA record is never tried on hosts without IPv6 egress.
     // Reuse one connection across sends instead of a fresh ~4s TLS+AUTH handshake
     // every time, and fail fast instead of hanging the request when SMTP is slow.
     pool: true,
