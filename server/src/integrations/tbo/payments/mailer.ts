@@ -1,13 +1,18 @@
-import nodemailer from "nodemailer";
+import nodemailer, { type Transporter } from "nodemailer";
 
 // Configured via env vars — set these in .env.local:
 //   EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS, EMAIL_FROM
 // Falls back to console logging when EMAIL_HOST is unset (dev/CI).
 
+let cachedTransport: Transporter | null | undefined;
 function buildTransport() {
-  const host = process.env.EMAIL_HOST;
-  if (!host) return null;
-  return nodemailer.createTransport({
+  if (cachedTransport !== undefined) return cachedTransport;
+  const host = process.env.EMAIL_HOST?.trim();
+  if (!host) {
+    cachedTransport = null;
+    return cachedTransport;
+  }
+  cachedTransport = nodemailer.createTransport({
     host,
     port: Number(process.env.EMAIL_PORT ?? 587),
     secure: Number(process.env.EMAIL_PORT ?? 587) === 465,
@@ -15,7 +20,14 @@ function buildTransport() {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
+    // Reuse connections and fail fast rather than hanging on a slow SMTP server.
+    pool: true,
+    maxConnections: 3,
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 20_000,
   });
+  return cachedTransport;
 }
 
 export interface FlightConfirmationData {
