@@ -1,3 +1,4 @@
+import dns from "node:dns";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -22,6 +23,12 @@ import { startReconciliationWorker } from "./workers/reconciliationWorker";
 import { startDLQWorker } from "./workers/dlqWorker";
 
 async function main(): Promise<void> {
+  // Prefer IPv4 for all outbound connections. Some hosts (e.g. Railway) have no
+  // IPv6 egress, so connecting to an AAAA record fails with ENETUNREACH and then
+  // times out — which was breaking Gmail SMTP. Node otherwise follows the
+  // resolver order, which can return IPv6 first.
+  dns.setDefaultResultOrder("ipv4first");
+
   await connectDb();
   await seedPlatformConfig();
 
