@@ -1,3 +1,5 @@
+import refData from "./airportReference.json";
+
 export type Airport = {
   code: string;          // IATA
   name: string;
@@ -6,6 +8,19 @@ export type Airport = {
   countryCode: string;
   tz: string;
 };
+
+// Static names reference (IATA → [name, city, country, countryCode(ISO-2), tz]), the
+// same dataset that backs the airport picker. The curated AIRPORTS below stay the
+// priority source (hand-tuned), but getAirport()/searchAirports() fall back to this so
+// the now-expanded set of bookable airports also resolves countryCode for the
+// supplementary passport/visa pre-checks in validation.ts and ticket.ts.
+const reference = refData as unknown as Record<string, [string, string, string, string, string]>;
+
+function airportFromReference(code: string): Airport | null {
+  const r = reference[code];
+  if (!r) return null;
+  return { code, name: r[0], city: r[1] || code, country: r[2], countryCode: r[3], tz: r[4] };
+}
 
 export const AIRPORTS: Airport[] = [
   // India
@@ -121,5 +136,6 @@ export function searchAirports(q: string, limit = 10): Airport[] {
 }
 
 export function getAirport(code: string) {
-  return AIRPORTS.find((a) => a.code === code.toUpperCase()) ?? null;
+  const upper = code.toUpperCase();
+  return AIRPORTS.find((a) => a.code === upper) ?? airportFromReference(upper);
 }

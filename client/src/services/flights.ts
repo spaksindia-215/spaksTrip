@@ -3,8 +3,7 @@ import {
   type FlightSearchInput,
   type CabinClass,
 } from "@/lib/mock/flights";
-import { searchAirports, type Airport } from "@/lib/mock/airports";
-import { jitter, sleep } from "./delay";
+import { searchAirports, ensureAirportData, type Airport } from "@/lib/mock/airports";
 import type { TboFareBreakdown } from "@/lib/adapters/tbo/types";
 import type { FlightBooking } from "@/state/bookingStore";
 
@@ -301,8 +300,10 @@ export function buildBookingPayload(booking: FlightBooking) {
 }
 
 export async function searchAirportOptions(q: string): Promise<Airport[]> {
-  // Airport autocomplete uses local IATA data — TBO does not expose a faster lookup.
-  await sleep(jitter(120, 60));
+  // Airport autocomplete searches a local in-memory list. ensureAirportData() expands
+  // that list ONCE from /api/flights/airports-data (monthly-refreshed server-side from
+  // TBO's GetAirlineSectorList); every later keystroke is a local lookup, no API call.
+  await ensureAirportData();
   return searchAirports(q, 12);
 }
 
