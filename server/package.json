@@ -7,11 +7,12 @@
   },
   "scripts": {
     "dev": "tsx watch --env-file=.env src/index.ts",
-    "build": "tsc",
+    "build": "tsc && node scripts/copy-assets.mjs",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "seed:dev": "tsx --env-file=.env scripts/seed-dev-users.ts",
-    "generate:slugs": "tsx --env-file=.env scripts/generate-agent-slugs.ts"
+    "generate:slugs": "tsx --env-file=.env scripts/generate-agent-slugs.ts",
+    "update:airports": "tsx --env-file=.env scripts/updateAirportData.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",

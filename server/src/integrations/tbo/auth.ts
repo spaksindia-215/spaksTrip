@@ -41,6 +41,10 @@ interface TokenEntry {
 
 let tokenCache: TokenEntry | null = null;
 let refreshPromise: Promise<string> | null = null;
+// AgencyId is returned alongside the token in the Authenticate response (Member.AgencyId).
+// Some endpoints (e.g. GetAirlineSectorList) require it in the request body, so we cache
+// it whenever we authenticate. An explicit env override wins if set.
+let agencyIdCache: number | null = null;
 
 function getBaseUrl(): string {
   const url = process.env.TBO_API_URL;
@@ -178,7 +182,25 @@ async function authenticate(): Promise<string> {
   }
 
   tokenCache = { tokenId: data.TokenId, expiresAt: endOfDayMs() };
+  if (typeof data.Member?.AgencyId === "number") {
+    agencyIdCache = data.Member.AgencyId;
+  }
   return data.TokenId;
+}
+
+/**
+ * Returns the agency id for the authenticated account. Prefers the TBO_AGENCY_ID
+ * env override; otherwise ensures we have a token (which populates the cache from
+ * the Authenticate response's Member.AgencyId).
+ */
+export async function getTboAgencyId(): Promise<number> {
+  const override = process.env.TBO_AGENCY_ID;
+  if (override && override.trim().length > 0) return Number(override);
+  await getTboToken();
+  if (agencyIdCache == null) {
+    throw new Error("TBO AgencyId unavailable: not present in Authenticate response and TBO_AGENCY_ID not set");
+  }
+  return agencyIdCache;
 }
 
 export async function getTboToken(): Promise<string> {

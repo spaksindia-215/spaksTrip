@@ -93,17 +93,53 @@ export const AIRPORTS: Airport[] = [
   { code: "DAC", name: "Hazrat Shahjalal International", city: "Dhaka", country: "Bangladesh", countryCode: "BD", tz: "Asia/Dhaka" },
 ];
 
+// ─── Runtime expansion ──────────────────────────────────────────────────────────
+//
+// `AIRPORTS` above is the curated fallback — small, hand-tuned, in-bundle so the picker
+// works instantly on first paint (and offline). ensureAirportData() expands the in-memory
+// list ONCE from /airports.generated.json — a static asset regenerated monthly by the
+// server-side `npm run update:airports` script (the only thing allowed to call TBO, from
+// the whitelisted IP). It holds the ~3.1k *bookable* airports (served codes ∩ names),
+// loaded lazily (not in the JS bundle). After that, all search runs locally over the
+// expanded list — there is NO API call per keystroke.
+const AIRPORTS_DATA_URL = "/airports.generated.json";
+
+let runtimeAirports: Airport[] = AIRPORTS;
+let byCode: Map<string, Airport> = new Map(AIRPORTS.map((a) => [a.code, a]));
+let loadPromise: Promise<void> | null = null;
+
+export function ensureAirportData(): Promise<void> {
+  if (loadPromise) return loadPromise;
+  loadPromise = (async () => {
+    try {
+      const res = await fetch(AIRPORTS_DATA_URL);
+      if (!res.ok) return;
+      const json = (await res.json()) as { airports?: Airport[] };
+      const list = json?.airports;
+      if (!Array.isArray(list) || list.length === 0) return;
+      const map = new Map<string, Airport>();
+      for (const a of list) if (a?.code) map.set(a.code.toUpperCase(), a);
+      // Keep curated entries the generated set might miss (hand-tuned names/tz).
+      for (const a of AIRPORTS) if (!map.has(a.code)) map.set(a.code, a);
+      runtimeAirports = [...map.values()];
+      byCode = map;
+    } catch {
+      // network/parse error → keep curated fallback
+    }
+  })();
+  return loadPromise;
+}
+
+const POPULAR_CODES = ["DEL", "BOM", "BLR", "MAA", "HYD", "GOI", "DXB", "SIN", "BKK", "LHR"];
+
 export function searchAirports(q: string, limit = 10): Airport[] {
   const query = q.trim().toLowerCase();
   if (!query) {
-    return [
-      "DEL", "BOM", "BLR", "MAA", "HYD", "GOI", "DXB", "SIN", "BKK", "LHR",
-    ]
-      .map((code) => AIRPORTS.find((a) => a.code === code)!)
-      .filter(Boolean)
+    return POPULAR_CODES.map((code) => byCode.get(code))
+      .filter((a): a is Airport => Boolean(a))
       .slice(0, limit);
   }
-  const scored = AIRPORTS.map((a) => {
+  const scored = runtimeAirports.map((a) => {
     let score = 0;
     if (a.code.toLowerCase() === query) score += 100;
     else if (a.code.toLowerCase().startsWith(query)) score += 60;
@@ -121,5 +157,5 @@ export function searchAirports(q: string, limit = 10): Airport[] {
 }
 
 export function getAirport(code: string) {
-  return AIRPORTS.find((a) => a.code === code.toUpperCase()) ?? null;
+  return byCode.get(code.toUpperCase()) ?? null;
 }
