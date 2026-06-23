@@ -76,10 +76,17 @@ function getTransport(): Transporter | null {
   if (transporter) return transporter;
   if (!env.emailHost) return null;
   transporter = nodemailer.createTransport({
-    host: env.emailHost,
+    host: env.emailHost.trim(),
     port: env.emailPort,
     secure: env.emailPort === 465,
     auth: env.emailUser ? { user: env.emailUser, pass: env.emailPass } : undefined,
+    // Reuse one connection across sends instead of a fresh ~4s TLS+AUTH handshake
+    // every time, and fail fast instead of hanging the request when SMTP is slow.
+    pool: true,
+    maxConnections: 3,
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 20_000,
   });
   return transporter;
 }

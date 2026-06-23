@@ -135,17 +135,25 @@ export async function register(req: Request, res: Response, next: NextFunction):
       consentVersion: CONSENT_VERSION,
     });
 
-    // Every new user must confirm their email before a session is issued.
-    await sendVerificationEmail(user, resolveClientOrigin(req));
+    // Fire emails in the background — SMTP can take several seconds and must
+    // never hold the HTTP response (or block it behind a slow mail server).
+    // Both helpers swallow their own errors, so we just log if a promise rejects.
+    const origin = resolveClientOrigin(req);
+    void sendVerificationEmail(user, origin).catch(() => {});
 
     // Pending roles: superadmin is also notified for approval review.
     if (isPending) {
-      await sendMail({
+      void sendMail({
         to: env.superadminEmail,
         subject: `New ${user.role} registration awaiting approval`,
         template: "superadminNewPending",
         data: { role: user.role, name: user.name, phone: user.phone, email: user.email },
-      });
+      }).catch((e) =>
+        logger.error(
+          { event: "superadmin_notify_failed", error: e instanceof Error ? e.message : String(e) },
+          "Failed to send superadmin pending-registration notification",
+        ),
+      );
       res.status(201).json({ status: "pending", user: user.toJSON() });
       return;
     }
