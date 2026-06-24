@@ -274,7 +274,7 @@ export async function tboSearchHotelsHolidays(
         ResponseTime: 23,
         Filters: {
           Refundable: f?.refundable ?? false,
-          NoOfRooms: f?.noOfRooms ?? 0,
+          NoOfRooms: f?.noOfRooms ?? rooms,
           MealType: f?.mealType ?? null,
           StarRating: f?.starRating ?? null,
         },
