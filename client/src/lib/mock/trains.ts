@@ -315,5 +315,12 @@ export function getTrainById(id: string): Train | null {
   const toCode = parts[2];
   const date = parts.slice(3).join("-");
   const trains = generateTrains({ fromCode, toCode, date });
-  return trains.find((t) => t.number === number) ?? null;
+  const match = trains.find((t) => t.number === number);
+  if (match) return match;
+  // Live "trains between stations" returns real train numbers that won't exist in
+  // the deterministic mock set. Rather than dead-ending the in-app fare/detail
+  // preview (real booking happens on IRCTC), surface a representative train for the
+  // same route stamped with the requested number so the page still renders.
+  const base = trains[0];
+  return base ? { ...base, number, id } : null;
 }

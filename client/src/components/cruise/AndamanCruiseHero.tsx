@@ -7,7 +7,7 @@ const HIGHLIGHTS = ["Port Blair", "Havelock Island", "Neil Island", "Fast Ferry 
 
 export default function AndamanCruiseHero() {
   return (
-    <section className="relative overflow-hidden bg-[#071426]">
+    <section className="relative overflow-hidden bg-[#071426] lg:min-h-[calc(100svh-7rem)]">
       <img
         src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2200&q=80"
         alt="Andaman blue waters with boats and island coastline"
@@ -16,8 +16,8 @@ export default function AndamanCruiseHero() {
       />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,197,246,0.22),transparent_32%),linear-gradient(115deg,rgba(4,14,29,0.92),rgba(4,14,29,0.62)_52%,rgba(4,14,29,0.2))]" />
 
-      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-18">
-        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+      <div className="relative mx-auto flex min-h-[inherit] max-w-7xl flex-col justify-center px-4 py-12 sm:px-6 lg:px-8 lg:py-10">
+        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -50,7 +50,6 @@ export default function AndamanCruiseHero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:translate-y-8"
           >
             <AndamanCruiseSearchForm />
           </motion.div>

@@ -2,11 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Chip from "@/components/ui/Chip";
 import { useToast } from "@/components/ui/Toast";
 import { toIsoDate } from "@/lib/format";
+
+const heroImage = "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1800&q=82";
 
 type TripMode = "oneway" | "round";
 
@@ -33,10 +36,21 @@ export default function CabSearchForm() {
   };
 
   return (
-    <div className="bg-accent-500 px-6 py-8">
-      <div className="mx-auto max-w-7xl">
-        <h1 className="text-2xl font-extrabold text-white mb-5 tracking-tight">Book a Cab</h1>
-        <div className="rounded-2xl bg-white p-5 shadow-(--shadow-lg)">
+    <section className="relative overflow-hidden bg-ink">
+      <img src={heroImage} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/65 to-ink/35" />
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
+      <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-12 sm:px-6">
+        <Badge tone="accent" className="mb-3 w-fit bg-white/14 text-white ring-1 ring-white/25">
+          SpaksTrip Cabs
+        </Badge>
+        <h1 className="max-w-2xl text-3xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-4xl">
+          Book a cab for airport runs, city rides and outstation trips
+        </h1>
+        <p className="mt-3 max-w-xl text-base leading-6 text-white/80">
+          Verified drivers, transparent fares and support that stays with you until drop-off.
+        </p>
+        <div className="mt-7 rounded-2xl bg-white p-5 shadow-(--shadow-lg)">
           <div className="flex gap-2 mb-4">
             <Chip active={mode === "oneway"} onClick={() => setMode("oneway")}>One Way</Chip>
             <Chip active={mode === "round"} onClick={() => setMode("round")}>Round Trip</Chip>
@@ -92,6 +106,6 @@ export default function CabSearchForm() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

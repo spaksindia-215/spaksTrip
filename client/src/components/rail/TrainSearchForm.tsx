@@ -1,27 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Combobox, { type ComboOption } from "@/components/ui/Combobox";
 import Button from "@/components/ui/Button";
-import Chip from "@/components/ui/Chip";
-import { searchStationOptions } from "@/services/trains";
-import { STATIONS, type TrainClass, type Quota } from "@/lib/mock/trains";
+import { searchStations } from "@/lib/mock/trains";
+import { openIrctcBooking } from "@/lib/irctc";
 
-const CLASSES: Array<{ value: TrainClass; label: string }> = [
-  { value: "SL", label: "Sleeper (SL)" },
-  { value: "3A", label: "AC 3 Tier (3A)" },
-  { value: "2A", label: "AC 2 Tier (2A)" },
-  { value: "1A", label: "AC First (1A)" },
-  { value: "CC", label: "Chair Car (CC)" },
-  { value: "EC", label: "Exec. Chair (EC)" },
-];
-
-const QUOTAS: Array<{ value: Quota; label: string }> = [
-  { value: "GENERAL", label: "General" },
-  { value: "TATKAL", label: "Tatkal" },
-  { value: "LADIES", label: "Ladies" },
-];
+// Train booking is a hand-off to IRCTC — we don't hold an IRCTC B2B ticketing
+// contract, so this form collects the journey for the user's convenience and opens
+// IRCTC's booking site in a new tab. (IRCTC's app ignores prefill params; see
+// src/lib/irctc.ts.) The From/To station pickers use a bundled station list.
 
 function stationToOption(s: { code: string; name: string; city: string }): ComboOption {
   return { value: s.code, label: s.name, sublabel: `${s.code} · ${s.city}` };
@@ -29,40 +17,10 @@ function stationToOption(s: { code: string; name: string; city: string }): Combo
 
 const today = new Date().toISOString().slice(0, 10);
 
-function stationCodeToOption(code: string | null | undefined): ComboOption | null {
-  if (!code) return null;
-  const station = STATIONS.find((item) => item.code === code);
-  if (!station) return null;
-  return stationToOption(station);
-}
-
-type Props = {
-  variant?: "hero" | "inline";
-  searchPath?: string;
-  initialValues?: {
-    fromCode?: string | null;
-    toCode?: string | null;
-    date?: string | null;
-    cls?: TrainClass | null;
-    quota?: Quota | null;
-  };
-};
-
-export default function TrainSearchForm({
-  variant = "hero",
-  searchPath = "/rail/results",
-  initialValues,
-}: Props) {
-  const router = useRouter();
-  const [from, setFrom] = useState<ComboOption | null>(
-    stationCodeToOption(initialValues?.fromCode),
-  );
-  const [to, setTo] = useState<ComboOption | null>(
-    stationCodeToOption(initialValues?.toCode),
-  );
-  const [date, setDate] = useState(initialValues?.date ?? today);
-  const [cls, setCls] = useState<TrainClass>(initialValues?.cls ?? "SL");
-  const [quota, setQuota] = useState<Quota>(initialValues?.quota ?? "GENERAL");
+export default function TrainSearchForm() {
+  const [from, setFrom] = useState<ComboOption | null>(null);
+  const [to, setTo] = useState<ComboOption | null>(null);
+  const [date, setDate] = useState(today);
 
   const swap = () => {
     const tmp = from;
@@ -70,25 +28,19 @@ export default function TrainSearchForm({
     setTo(tmp);
   };
 
-  const searchFrom = (q: string) =>
-    searchStationOptions(q).map(stationToOption);
+  const searchFrom = (q: string) => searchStations(q).map(stationToOption);
 
-  const onSearch = () => {
-    if (!from || !to || !date) return;
-    const params = new URLSearchParams({ from: from.value, to: to.value, date, cls, quota });
-    router.push(`${searchPath}?${params}`);
+  const onBook = () => {
+    openIrctcBooking({
+      fromCode: from?.value,
+      toCode: to?.value,
+      date,
+    });
   };
 
   return (
-    <div
-      className={
-        variant === "hero"
-          ? "rounded-2xl bg-white p-5 shadow-(--shadow-lg)"
-          : "rounded-2xl border border-border-soft bg-white p-5 shadow-(--shadow-sm)"
-      }
-    >
-      {/* Station row */}
-      <div className="flex flex-col md:flex-row items-stretch gap-3">
+    <div className="rounded-2xl bg-white p-5 shadow-(--shadow-lg)">
+      <div className="flex flex-col items-stretch gap-3 md:flex-row">
         <div className="flex-1">
           <Combobox
             label="From Station"
@@ -105,12 +57,11 @@ export default function TrainSearchForm({
           />
         </div>
 
-        {/* Swap */}
         <button
           type="button"
           onClick={swap}
           aria-label="Swap stations"
-          className="self-center md:mt-5 h-9 w-9 shrink-0 flex items-center justify-center rounded-full border border-border bg-surface-muted hover:bg-brand-50 hover:border-brand-400 transition-colors"
+          className="flex h-9 w-9 shrink-0 items-center justify-center self-center rounded-full border border-border bg-surface-muted transition-colors hover:border-brand-400 hover:bg-brand-50 md:mt-5"
         >
           <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M7 16V4m0 0L3 8m4-4l4 4" />
@@ -135,50 +86,24 @@ export default function TrainSearchForm({
           />
         </div>
 
-        <div className="flex flex-col gap-1 min-w-[150px]">
+        <div className="flex min-w-[150px] flex-col gap-1">
           <label className="text-[12px] font-semibold text-ink-muted">Date of Journey</label>
           <input
             type="date"
             value={date}
             min={today}
             onChange={(e) => setDate(e.target.value)}
-            className="h-11 rounded-lg border border-border bg-white px-3 text-[14px] text-ink outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"
+            className="h-11 rounded-lg border border-border bg-white px-3 text-[14px] text-ink outline-none transition-colors focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
           />
         </div>
       </div>
 
-      {/* Class + Quota + Search */}
-      <div className="mt-4 flex flex-wrap items-end gap-4 justify-between">
-        <div className="flex flex-col gap-1.5">
-          <span className="text-[12px] font-semibold text-ink-muted">Class</span>
-          <div className="flex flex-wrap gap-1.5">
-            {CLASSES.map((c) => (
-              <Chip key={c.value} active={cls === c.value} onClick={() => setCls(c.value)}>
-                {c.value}
-              </Chip>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <span className="text-[12px] font-semibold text-ink-muted">Quota</span>
-          <div className="flex gap-1.5">
-            {QUOTAS.map((q) => (
-              <Chip key={q.value} active={quota === q.value} onClick={() => setQuota(q.value)}>
-                {q.label}
-              </Chip>
-            ))}
-          </div>
-        </div>
-
-        <Button
-          variant="primary"
-          size="lg"
-          onClick={onSearch}
-          disabled={!from || !to || !date}
-          className="min-w-[140px]"
-        >
-          Search Trains
+      <div className="mt-4 flex flex-col items-center justify-between gap-3 sm:flex-row">
+        <p className="text-[12px] leading-5 text-ink-muted">
+          Tickets are booked securely on IRCTC. We&apos;ll take you there to complete your booking.
+        </p>
+        <Button variant="accent" size="lg" onClick={onBook} className="w-full shrink-0 sm:w-auto sm:min-w-[200px]">
+          Book on IRCTC ↗
         </Button>
       </div>
     </div>

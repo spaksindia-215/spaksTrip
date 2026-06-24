@@ -10,10 +10,9 @@ import Badge from "@/components/ui/Badge";
 import EmptyState from "@/components/ui/EmptyState";
 import { useBookingStore, type FlightBooking } from "@/state/bookingStore";
 import { useHotelBookingStore, type HotelBooking } from "@/state/hotelBookingStore";
-import { useTrainBookingStore, type TrainBooking } from "@/state/trainBookingStore";
 import { formatINR } from "@/lib/format";
 
-type TabValue = "flights" | "hotels" | "trains";
+type TabValue = "flights" | "hotels";
 
 const STATUS_TONE: Record<string, "success" | "warn" | "info" | "danger"> = {
   CONFIRMED: "success",
@@ -24,29 +23,6 @@ const STATUS_TONE: Record<string, "success" | "warn" | "info" | "danger"> = {
   SELECTED: "info",
   PASSENGER: "info",
 };
-
-function TrainCard({ b }: { b: TrainBooking }) {
-  return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs) hover:shadow-(--shadow-sm) transition-shadow">
-      <div className="flex items-center gap-4">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
-          <svg viewBox="0 0 24 24" width={22} height={22} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden className="text-emerald-600">
-            <rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" /><line x1="12" y1="12" x2="12" y2="16" /><line x1="10" y1="14" x2="14" y2="14" />
-          </svg>
-        </div>
-        <div>
-          <p className="text-[15px] font-bold text-ink">{b.train.fromCode} → {b.train.toCode}</p>
-          <p className="text-[12px] text-ink-muted mt-0.5">{b.train.name} · #{b.train.number} · {b.date} · {b.selectedClass}</p>
-          {b.pnr && <p className="text-[11px] font-mono text-ink-soft mt-0.5">PNR: {b.pnr}</p>}
-        </div>
-      </div>
-      <div className="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-1.5">
-        <Badge tone={STATUS_TONE[b.status] ?? "info"} size="sm">{b.status}</Badge>
-        <p className="text-[15px] font-extrabold text-ink">{formatINR(b.totalFare)}</p>
-      </div>
-    </div>
-  );
-}
 
 function FlightCard({ b }: { b: FlightBooking }) {
   const seg = b.offer.segments[0];
@@ -116,12 +92,10 @@ export default function MyTripsPage() {
 
   const flightBookings = useBookingStore((s) => s.bookings);
   const hotelBookings = useHotelBookingStore((s) => s.bookings);
-  const trainBookings = useTrainBookingStore((s) => s.bookings);
 
   const tabItems: Array<{ value: TabValue; label: string }> = [
     { value: "flights", label: `Flights (${flightBookings.length})` },
     { value: "hotels", label: `Hotels (${hotelBookings.length})` },
-    { value: "trains", label: `Trains (${trainBookings.length})` },
   ];
 
   return (
@@ -179,27 +153,6 @@ export default function MyTripsPage() {
           </>
         )}
 
-        {tab === "trains" && (
-          <>
-            {trainBookings.length === 0 ? (
-              <div className="rounded-xl bg-white border border-border-soft">
-                <EmptyState
-                  title="No train bookings yet"
-                  subtitle="Search for trains and book a ticket to see it here."
-                  cta={
-                    <Link href="/rail" className="inline-flex rounded-lg bg-brand-600 px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-brand-700 transition-colors">
-                      Search Trains
-                    </Link>
-                  }
-                />
-              </div>
-            ) : (
-              <div className="flex flex-col gap-3" aria-live="polite">
-                {trainBookings.map((b) => <TrainCard key={b.id} b={b} />)}
-              </div>
-            )}
-          </>
-        )}
       </main>
       <Footer />
       <BackToTop />
