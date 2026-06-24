@@ -151,13 +151,15 @@ export const useHotelBookingStore = create<State & Actions>()(
       setPreBook: (preBook, netAmount) =>
         set((s) => {
           if (!s.current) return s;
-          // If netAmount differs from current totalPrice, update it (PreBook price is final)
+          // PreBook response contains the authoritative price from TBO
+          // Use netAmount as the total (this is what TBO expects us to charge)
           const updatedTotal = netAmount ?? s.current.totalPrice;
           return {
             current: {
               ...s.current,
               preBook,
               totalPrice: updatedTotal,
+              taxes: 0,  // Clear frontend-calculated taxes; TBO's price is authoritative
               status: "PAYMENT",
             },
           };

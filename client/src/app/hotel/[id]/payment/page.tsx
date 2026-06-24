@@ -510,21 +510,9 @@ function PaymentInner() {
                   Price Breakdown
                 </h2>
                 <div className="flex flex-col gap-2 text-[13px]">
-                  <div className="flex justify-between">
-                    <span className="text-ink-soft">
-                      Room ({current.nights}N × {current.rooms}R)
-                    </span>
-                    <span className="font-semibold">
-                      {formatINR(
-                        current.room.basePrice *
-                          current.nights *
-                          current.rooms,
-                      )}
-                    </span>
-                  </div>
                   {current.addOns.breakfast && (
                     <div className="flex justify-between">
-                      <span className="text-ink-soft">Breakfast</span>
+                      <span className="text-ink-soft">Breakfast ({current.nights}N × {current.rooms}R)</span>
                       <span className="font-semibold">
                         {formatINR(650 * current.nights * current.rooms)}
                       </span>
@@ -536,12 +524,6 @@ function PaymentInner() {
                       <span className="font-semibold">{formatINR(499)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between">
-                    <span className="text-ink-soft">Taxes (12%)</span>
-                    <span className="font-semibold">
-                      {formatINR(current.taxes)}
-                    </span>
-                  </div>
                   <div className="flex justify-between border-t border-border-soft pt-2 mt-1">
                     <span className="font-bold text-ink">Total</span>
                     <span className="font-extrabold text-[17px] text-ink">
