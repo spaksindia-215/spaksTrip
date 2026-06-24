@@ -71,6 +71,7 @@ export function usePreBook(options: UsePreBookOptions) {
           netAmount: newPrice,
           panMandatory: firstRoom.panMandatory,
           passportMandatory: firstRoom.passportMandatory,
+          corporateBookingAllowed: firstRoom.corporateBookingAllowed,
           paxNameMinLength: firstRoom.paxNameMinLength,
           paxNameMaxLength: firstRoom.paxNameMaxLength,
         },

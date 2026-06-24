@@ -123,6 +123,8 @@ function PaymentInner() {
           children: booking.children,
           childrenAges: booking.childrenAges,
           rooms: booking.rooms,
+          isCorporate: booking.guests[0]?.isCorporate ?? false,
+          corporatePan: booking.guests[0]?.corporatePan,
         }),
       });
 

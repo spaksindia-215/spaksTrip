@@ -179,6 +179,8 @@ export async function POST(request: NextRequest) {
       passportExpDate?: string;
     }> | undefined = body?.guests;
     const guestNationality: string = body?.guestNationality ?? "IN";
+    const isCorporate: boolean | undefined = body?.isCorporate;
+    const corporatePan: string | undefined = body?.corporatePan;
     // Total adults and rooms from the booking — needed to reconstruct per-room
     // passenger count. Must match the remainder-distribution in searchHolidays.ts exactly.
     const totalAdults: number = Math.max(1, Number(body?.adults ?? 1));
@@ -449,6 +451,8 @@ export async function POST(request: NextRequest) {
       guestNationality,
       clientReferenceId,
       roomsDetails,
+      isCorporate: isCorporate ?? false,
+      corporatePan: corporatePan,
     };
 
     // Log request — mask PAN/passport; show per-room passenger breakdown

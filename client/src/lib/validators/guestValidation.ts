@@ -49,3 +49,18 @@ export function validateNoDuplicateFirstNames(
   }
   return { valid: true };
 }
+
+export function validateCorporatePAN(pan: string): { valid: boolean; error?: string } {
+  if (!pan || !pan.trim()) {
+    return { valid: false, error: "Corporate PAN is required" };
+  }
+  const trimmed = pan.trim().toUpperCase();
+
+  // PAN format: 5 letters + 4 digits + 1 letter = 10 chars total
+  // Pattern: XXXXX9999X (e.g., AAAPN5055K)
+  if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(trimmed)) {
+    return { valid: false, error: "PAN must be 10 characters (5 letters, 4 digits, 1 letter). Format: XXXXX9999X" };
+  }
+
+  return { valid: true };
+}

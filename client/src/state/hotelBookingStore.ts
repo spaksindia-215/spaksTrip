@@ -15,6 +15,9 @@ export type HotelGuest = {
   passport?: string; // Required: Foreign nationals booking domestic hotels
   passportIssueDate?: string; // ISO format: YYYY-MM-DD
   passportExpDate?: string; // ISO format: YYYY-MM-DD
+  // Corporate booking fields (when hotel allows corporate bookings)
+  isCorporate?: boolean; // true = corporate booking, false = individual
+  corporatePan?: string; // Required when isCorporate=true (10 chars: XXXXX9999X)
 };
 
 export type HotelPreBookInfo = {
@@ -28,6 +31,7 @@ export type HotelPreBookInfo = {
   netAmount: number;
   panMandatory: boolean;
   passportMandatory: boolean;
+  corporateBookingAllowed: boolean; // TBO flag: whether corporate booking is allowed for this room
   paxNameMinLength: number;
   paxNameMaxLength: number;
 };

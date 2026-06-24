@@ -15,7 +15,7 @@ import { formatINR } from "@/lib/format";
 import { useHotelBookingStore, type HotelGuest } from "@/state/hotelBookingStore";
 import { useToast } from "@/components/ui/Toast";
 import { useParams } from "next/navigation";
-import { validateGuestName, validateGuestAge, validateNoDuplicateFirstNames } from "@/lib/validators/guestValidation";
+import { validateGuestName, validateGuestAge, validateNoDuplicateFirstNames, validateCorporatePAN } from "@/lib/validators/guestValidation";
 import { getIdentityRequirement, validatePAN, validatePassport, validatePassportExpiry } from "@/lib/validators/nationalityValidation";
 import { validateSession } from "@/lib/validators/sessionValidation";
 
@@ -177,6 +177,14 @@ function GuestInner() {
           }
         }
 
+        // Corporate PAN validation: required when corporate booking is selected
+        if (guest.isCorporate) {
+          const corpPanVal = validateCorporatePAN(guest.corporatePan ?? "");
+          if (!corpPanVal.valid) {
+            guestErr.corporatePan = corpPanVal.error;
+          }
+        }
+
         // Passport validation: required if nationality rules OR PreBook says mandatory
         const passportRequired = identityReq.passportRequired || preBookPassportMandatory;
         if (passportRequired) {
@@ -331,6 +339,7 @@ function GuestInner() {
                         isLeadPassenger={i === 0}
                         preBookPanMandatory={current?.preBook?.panMandatory}
                         preBookPassportMandatory={current?.preBook?.passportMandatory}
+                        preBookCorporateBookingAllowed={current?.preBook?.corporateBookingAllowed}
                       />
                     </div>
                   ))}
