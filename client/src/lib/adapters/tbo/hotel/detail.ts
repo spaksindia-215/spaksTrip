@@ -9,6 +9,7 @@ import {
 import {
   basicAuthHeader,
   mapAmenities,
+  getUnmatchedFacilities,
   mapRoomType,
   mapBedType,
   mapCancelPolicies,
@@ -130,6 +131,11 @@ function mergeStaticDetails(hotel: Hotel, s: TboStaticHotelDetail): Hotel {
   if (s.HotelFacilities && s.HotelFacilities.length > 0) {
     const extra = mapAmenities(s.HotelFacilities);
     merged.amenities = Array.from(new Set([...merged.amenities, ...extra]));
+
+    const unmatched = getUnmatchedFacilities(s.HotelFacilities);
+    if (unmatched.length > 0) {
+      merged.otherServices = unmatched;
+    }
   }
 
   if (typeof s.HotelRating === "number" && s.HotelRating >= 2 && s.HotelRating <= 5) {

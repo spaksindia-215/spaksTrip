@@ -121,19 +121,37 @@ const AMENITY_CONFIG: Record<Amenity, { label: string; icon: React.ReactNode }> 
   },
 };
 
-export default function HotelAmenitiesGrid({ amenities }: { amenities: Amenity[] }) {
+export default function HotelAmenitiesGrid({ amenities, otherServices }: { amenities: Amenity[]; otherServices?: string[] }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-      {amenities.map((a) => {
-        const config = AMENITY_CONFIG[a];
-        if (!config) return null;
-        return (
-          <div key={a} className="flex items-center gap-2.5 rounded-lg bg-surface-muted px-3 py-2.5">
-            <span className="text-brand-600 shrink-0">{config.icon}</span>
-            <span className="text-[12px] font-semibold text-ink">{config.label}</span>
-          </div>
-        );
-      })}
+    <div className="space-y-4">
+      {amenities.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {amenities.map((a) => {
+            const config = AMENITY_CONFIG[a];
+            if (!config) return null;
+            return (
+              <div key={a} className="flex items-center gap-2.5 rounded-lg bg-surface-muted px-3 py-2.5">
+                <span className="text-brand-600 shrink-0">{config.icon}</span>
+                <span className="text-[12px] font-semibold text-ink">{config.label}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {otherServices && otherServices.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-[12px] font-semibold text-ink-muted">Other Services & Facilities</p>
+          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+            {otherServices.map((service, idx) => (
+              <li key={idx} className="text-[12px] text-ink-soft flex items-start gap-2">
+                <span className="text-brand-600 mt-0.5 flex-shrink-0">•</span>
+                <span>{service}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

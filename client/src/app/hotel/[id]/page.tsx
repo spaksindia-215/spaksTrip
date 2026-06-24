@@ -323,7 +323,7 @@ function HotelDetailInner() {
               {/* Amenities */}
               <section className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
                 <h2 className="text-[16px] font-bold text-ink mb-4">Hotel Amenities</h2>
-                <HotelAmenitiesGrid amenities={hotel.amenities} />
+                <HotelAmenitiesGrid amenities={hotel.amenities} otherServices={hotel.otherServices} />
               </section>
 
               {/* Rooms */}

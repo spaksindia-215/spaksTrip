@@ -34,19 +34,30 @@ export function basicAuthHeader(distributionType: DistributionType = "b2c"): str
 export const AMENITY_KEYWORDS: Array<[string[], Amenity]> = [
   [["wi-fi", "wifi", "internet", "wireless"], "wifi"],
   [["pool", "swimming"], "pool"],
-  [["gym", "fitness", "health club"], "gym"],
-  [["spa"], "spa"],
-  [["restaurant", "dining"], "restaurant"],
+  [["gym", "fitness", "health club", "fitness facilities"], "gym"],
+  [["spa", "steam room", "hammam", "sauna"], "spa"],
+  [["restaurant", "dining", "coffee", "cafe", "snack bar"], "restaurant"],
   [["bar", "lounge"], "bar"],
   [["parking", "car park"], "parking"],
   [["air condition", "air-condition"], "ac"],
   [["breakfast"], "breakfast"],
   [["pet"], "pet_friendly"],
-  [["business center", "business centre"], "business_center"],
-  [["shuttle", "airport transfer"], "airport_shuttle"],
+  [["business center", "business centre", "conference"], "business_center"],
+  [["shuttle", "airport transfer", "airport transportation", "transfer"], "airport_shuttle"],
   [["beach"], "beach_access"],
   [["rooftop"], "rooftop"],
 ];
+
+function shouldFilterFacility(facility: string): boolean {
+  const lower = facility.toLowerCase();
+  // Filter out metadata and unhelpful entries
+  const filterPatterns = [
+    /^(conference space size|number of)/i, // "Conference space size (meters) - 44", "Number of meeting rooms"
+    /wheelchair accessible.*no/i, // "Wheelchair accessible — no"
+    /^free newspapers/i, // Generic meta info
+  ];
+  return filterPatterns.some((p) => p.test(lower));
+}
 
 export function mapAmenities(raw: string[]): Amenity[] {
   const found = new Set<Amenity>();
@@ -60,6 +71,25 @@ export function mapAmenities(raw: string[]): Amenity[] {
     }
   }
   return Array.from(found);
+}
+
+export function getUnmatchedFacilities(raw: string[]): string[] {
+  const unmatched: string[] = [];
+  for (const str of raw) {
+    if (shouldFilterFacility(str)) continue;
+    const lower = str.toLowerCase();
+    let isMatched = false;
+    for (const [kws] of AMENITY_KEYWORDS) {
+      if (kws.some((kw) => lower.includes(kw))) {
+        isMatched = true;
+        break;
+      }
+    }
+    if (!isMatched) {
+      unmatched.push(str);
+    }
+  }
+  return unmatched;
 }
 
 export function mapRoomType(name: string): Room["type"] {
@@ -87,11 +117,59 @@ export interface TboSearchCancelPolicy {
   CancellationCharge: number;
 }
 
+function formatCancelPolicyDate(dateStr: string): string {
+  if (!dateStr) return dateStr;
+
+  // TBO returns dates without timezone markers, treat as UTC per API spec
+  // Two formats observed:
+  // 1. ISO 8601: "2024-04-18T00:00:00"
+  // 2. DD-MM-YYYY: "15-04-2024 00:00:00"
+  // Convert to IST (UTC+5:30) for display to Indian users
+  try {
+    let date: Date;
+
+    if (dateStr.includes('T')) {
+      // ISO 8601 format — add Z to mark as UTC
+      const withZ = dateStr.endsWith('Z') ? dateStr : dateStr + 'Z';
+      date = new Date(withZ);
+    } else if (dateStr.includes('-') && dateStr.includes(':')) {
+      // DD-MM-YYYY HH:MM:SS format — parse manually
+      const parts = dateStr.split(' ');
+      const dateParts = parts[0].split('-');
+      const timeParts = parts[1].split(':');
+
+      const day = parseInt(dateParts[0], 10);
+      const month = parseInt(dateParts[1], 10) - 1;
+      const year = parseInt(dateParts[2], 10);
+      const hours = parseInt(timeParts[0], 10);
+      const minutes = parseInt(timeParts[1], 10);
+      const seconds = parseInt(timeParts[2], 10);
+
+      date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+    } else {
+      return dateStr;
+    }
+
+    // Format using IST timezone for display
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'Asia/Kolkata',
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
 export function mapCancelPolicies(raw: TboSearchCancelPolicy[] | undefined): CancelPolicy[] {
   if (!raw) return [];
   return raw.map((p) => ({
     index: p.Index,
-    fromDate: p.FromDate,
+    fromDate: formatCancelPolicyDate(p.FromDate),
     chargeType: p.ChargeType,
     cancellationCharge: p.CancellationCharge,
   }));
@@ -100,8 +178,8 @@ export function mapCancelPolicies(raw: TboSearchCancelPolicy[] | undefined): Can
 export interface TboSupplement {
   Index: number | string;
   Type: string;
-  Description: string;
-  Price: number;
+  Supplement: string;
+  Amount: number;
   Currency: string;
 }
 
@@ -110,8 +188,8 @@ export function mapSupplements(raw: TboSupplement[] | undefined): Supplement[] {
   return raw.map((s) => ({
     index: String(s.Index),
     type: s.Type,
-    description: s.Description,
-    price: s.Price,
+    description: s.Supplement,
+    price: s.Amount,
     currency: s.Currency, // May differ from account default currency
   }));
 }

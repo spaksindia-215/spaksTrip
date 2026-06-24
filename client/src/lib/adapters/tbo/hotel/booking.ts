@@ -301,6 +301,46 @@ function mapStatus(raw: string | undefined, code: number | undefined): BookingDe
   return statusFromName ?? statusFromCode ?? "Unknown";
 }
 
+function formatCancelPolicyDate(dateStr: string | undefined): string | undefined {
+  if (!dateStr) return dateStr;
+
+  try {
+    let date: Date;
+
+    if (dateStr.includes('T')) {
+      const withZ = dateStr.endsWith('Z') ? dateStr : dateStr + 'Z';
+      date = new Date(withZ);
+    } else if (dateStr.includes('-') && dateStr.includes(':')) {
+      const parts = dateStr.split(' ');
+      const dateParts = parts[0].split('-');
+      const timeParts = parts[1].split(':');
+
+      const day = parseInt(dateParts[0], 10);
+      const month = parseInt(dateParts[1], 10) - 1;
+      const year = parseInt(dateParts[2], 10);
+      const hours = parseInt(timeParts[0], 10);
+      const minutes = parseInt(timeParts[1], 10);
+      const seconds = parseInt(timeParts[2], 10);
+
+      date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+    } else {
+      return dateStr;
+    }
+
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'Asia/Kolkata',
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
 function mapPassengers(raw: TboPassenger[] | undefined): BookingPassenger[] {
   if (!raw) return [];
   return raw.map((p) => ({
@@ -354,8 +394,8 @@ function mapRoom(r: TboBookingRoom): BookingRoom {
       charge: p.Charge,
       chargeType: p.ChargeType,
       currency: p.Currency,
-      fromDate: p.FromDate,
-      toDate: p.ToDate,
+      fromDate: formatCancelPolicyDate(p.FromDate),
+      toDate: formatCancelPolicyDate(p.ToDate),
     })),
     cancellationPolicy: r.CancellationPolicy,
     lastCancellationDate: r.LastCancellationDate,
