@@ -8,6 +8,7 @@ import Button from "@/components/ui/Button";
 import { formatINR } from "@/lib/format";
 import { useToast } from "@/components/ui/Toast";
 import { getVoucherDeadlineInfo } from "@/lib/adapters/tbo/hotel/voucherDeadline";
+import CancelBookingButton from "@/components/accommodation/CancelBookingButton";
 
 type BookingStatus = "confirmed" | "held" | "voucher" | "cancelled";
 
@@ -208,11 +209,58 @@ function BookingInner() {
 
           {/* Confirmed Booking */}
           {booking.status === "confirmed" && (
-            <div className="rounded-xl bg-green-50 border border-green-200 p-4 shadow-(--shadow-xs)">
-              <p className="text-[13px] text-green-800">
-                ✓ Your booking is confirmed! Check your email for the voucher and booking details.
-              </p>
-            </div>
+            <>
+              <div className="rounded-xl bg-green-50 border border-green-200 p-4 shadow-(--shadow-xs) mb-6">
+                <p className="text-[13px] text-green-800">
+                  ✓ Your booking is confirmed! Check your email for the voucher and booking details.
+                </p>
+              </div>
+
+              {/* Cancel Booking Section */}
+              <section className="rounded-xl bg-blue-50 border border-blue-200 p-6 shadow-(--shadow-xs) mb-6">
+                <h2 className="text-[15px] font-bold text-blue-900 mb-4">Cancel Booking</h2>
+
+                <p className="text-[13px] text-blue-800 mb-4">
+                  You can cancel this booking anytime before the cancellation deadline.{" "}
+                  {booking.lastCancellationDeadline && (
+                    <span className="font-semibold">Free cancellation until {booking.lastCancellationDeadline}</span>
+                  )}
+                </p>
+
+                {/* Refund Estimate */}
+                <div className="bg-white rounded-lg px-4 py-3 mb-4 border border-blue-200">
+                  <p className="text-[12px] text-blue-900 font-semibold mb-3">If you cancel now:</p>
+                  <div className="space-y-2 text-[12px]">
+                    <div className="flex justify-between">
+                      <span className="text-ink">Paid Amount</span>
+                      <span className="font-mono font-semibold text-ink">{formatINR(booking.netAmount)}</span>
+                    </div>
+                    <div className="flex justify-between text-orange-700">
+                      <span>Cancellation Fee (estimated)</span>
+                      <span className="font-mono font-semibold">-₹1,000</span>
+                    </div>
+                    <div className="flex justify-between text-green-700 font-bold border-t border-blue-100 pt-2">
+                      <span>Estimated Refund</span>
+                      <span className="font-mono">{formatINR(Math.max(0, booking.netAmount - 1000))}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-blue-800 italic mb-4">
+                  Final refund amount may vary based on TBO's cancellation policy. You'll see the exact amount after confirmation.
+                </p>
+
+                <CancelBookingButton
+                  bookingId={booking.bookingId}
+                  bookingRefNo={booking.bookingRefNo}
+                  hotelName={booking.hotelName}
+                  paidAmount={booking.netAmount}
+                  refundAmount={Math.max(0, booking.netAmount - 1000)}
+                  cancellationFee={1000}
+                  lastCancellationDeadline={booking.lastCancellationDeadline}
+                />
+              </section>
+            </>
           )}
 
           {/* Cancelled Booking */}

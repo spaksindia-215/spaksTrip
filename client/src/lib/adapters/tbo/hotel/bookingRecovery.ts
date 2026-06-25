@@ -20,12 +20,22 @@ export async function verifyBookingStatusAfterTimeout(
     confirmationNo?: string;
     traceId?: string;
     clientReferenceId?: string;
+    tboFailureReason?: string;
   },
 ): Promise<{ found: boolean; booking?: HotelBookingDetailResult; error?: string }> {
   if (!input.bookingId && !input.confirmationNo && !input.traceId) {
     return {
       found: false,
       error: "Cannot verify booking: provide at least bookingId, confirmationNo, or traceId",
+    };
+  }
+
+  // TBO compliance: Block recovery for explicit failures
+  // Per TBO requirement: "No calling in failed booking case"
+  if (input.tboFailureReason === "explicit_failure") {
+    return {
+      found: false,
+      error: "Booking was explicitly failed; recovery is not allowed per TBO policy.",
     };
   }
 

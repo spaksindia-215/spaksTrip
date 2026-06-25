@@ -67,6 +67,9 @@ interface TboPreBookRoom {
   TaxBreakup?: TboPreBookTaxBreakup[];
   NetAmount?: number;
   NetTax?: number;
+  // Deadline fields
+  LastVoucherDate?: string;
+  LastCancellationDeadline?: string;
 }
 
 interface TboPreBookHotel {
@@ -156,6 +159,9 @@ export interface PreBookRoom {
   agentCommission?: number;
   netAmount?: number;
   netTax?: number;
+  // Deadline fields
+  lastVoucherDate?: string;
+  lastCancellationDeadline?: string;
 }
 
 export interface HotelPreBookResult {
@@ -217,6 +223,8 @@ function mapRoom(r: TboPreBookRoom): PreBookRoom {
     agentCommission: r.AgentCommission,
     netAmount: r.NetAmount,
     netTax: r.NetTax,
+    lastVoucherDate: r.LastVoucherDate,
+    lastCancellationDeadline: r.LastCancellationDeadline,
   };
 }
 

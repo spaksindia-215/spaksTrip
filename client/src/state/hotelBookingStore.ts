@@ -34,6 +34,9 @@ export type HotelPreBookInfo = {
   corporateBookingAllowed: boolean; // TBO flag: whether corporate booking is allowed for this room
   paxNameMinLength: number;
   paxNameMaxLength: number;
+  // Hold/Voucher deadlines from TBO PreBook
+  lastVoucherDate?: string; // When voucher must be generated (for hold bookings)
+  lastCancellationDeadline?: string; // When booking can no longer be cancelled
 };
 
 export type HotelBooking = {

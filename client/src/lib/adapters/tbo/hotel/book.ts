@@ -262,9 +262,17 @@ export async function tboBookHotel(input: HotelBookInput): Promise<HotelBookOutp
     );
   }
 
-  if (bookingStatus === "BookFailed" || bookingStatus === "Unknown") {
+  if (bookingStatus === "BookFailed") {
+    // Explicit failure (status code 0) — no recovery allowed per TBO policy
+    // TBO requirement: "No calling in failed booking case"
     throw new TboBookingFailedError(
-      `Booking returned status "${r.HotelBookingStatus ?? bookingStatus}"`,
+      `Booking explicitly failed (status_code=0). No recovery attempted.`,
+    );
+  }
+
+  if (bookingStatus === "Unknown") {
+    throw new TboBookingFailedError(
+      `Booking returned unknown status "${r.HotelBookingStatus ?? bookingStatus}"`,
     );
   }
 

@@ -10,6 +10,7 @@ import Button from "@/components/ui/Button";
 import { formatINR } from "@/lib/format";
 import { useHotelBookingStore } from "@/state/hotelBookingStore";
 import { useToast } from "@/components/ui/Toast";
+import { useAuthStore } from "@/state/authStore";
 
 // ─── Razorpay browser types ───────────────────────────────────────────────────
 
@@ -72,6 +73,7 @@ function PaymentInner() {
   const router = useRouter();
   const toast = useToast();
   const { current, confirm } = useHotelBookingStore();
+  const userId = useAuthStore((s) => s.user?.sub);
 
   const [bookingOption, setBookingOption] = useState<BookingOption>("hold");
   const [phase, setPhase] = useState<
@@ -104,28 +106,35 @@ function PaymentInner() {
     // Capture snapshot so TypeScript knows it's non-null inside async callbacks.
     const booking = current;
 
+    console.log("[Hotel Payment] Verifying payment with userId:", userId);
+
     try {
+      const payload = {
+        razorpayOrderId: response.razorpay_order_id,
+        razorpayPaymentId: response.razorpay_payment_id,
+        razorpaySignature: response.razorpay_signature,
+        amountPaise: totalPaise,
+        bookingCode: booking.preBook!.bookingCode,
+        netAmount: booking.preBook!.netAmount,
+        isVoucherBooking: bookingOption === "voucher",
+        guests: booking.guests,
+        guestNationality: booking.guestNationality,
+        clientReferenceId: booking.id,
+        adults: booking.adults,
+        children: booking.children,
+        childrenAges: booking.childrenAges,
+        rooms: booking.rooms,
+        isCorporate: booking.guests[0]?.isCorporate ?? false,
+        corporatePan: booking.guests[0]?.corporatePan,
+        customerId: userId,
+      };
+
+      console.log("[Hotel Payment] Request payload keys:", Object.keys(payload));
+
       const res = await fetch("/api/hotels/razorpay/verify-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          razorpayOrderId: response.razorpay_order_id,
-          razorpayPaymentId: response.razorpay_payment_id,
-          razorpaySignature: response.razorpay_signature,
-          amountPaise: totalPaise,
-          bookingCode: booking.preBook!.bookingCode,
-          netAmount: booking.preBook!.netAmount,
-          isVoucherBooking: bookingOption === "voucher",
-          guests: booking.guests,
-          guestNationality: booking.guestNationality,
-          clientReferenceId: booking.id,
-          adults: booking.adults,
-          children: booking.children,
-          childrenAges: booking.childrenAges,
-          rooms: booking.rooms,
-          isCorporate: booking.guests[0]?.isCorporate ?? false,
-          corporatePan: booking.guests[0]?.corporatePan,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -446,10 +455,10 @@ function PaymentInner() {
                         Keep booking on hold. Generate voucher later before the
                         deadline.
                       </p>
-                      {current.preBook?.cancelPolicies?.[0]?.fromDate && (
+                      {current.preBook?.lastVoucherDate && (
                         <p className="text-[11px] text-blue-700 mt-2 font-medium">
                           Generate voucher by:{" "}
-                          {current.preBook.cancelPolicies[0].fromDate}
+                          {current.preBook.lastVoucherDate}
                         </p>
                       )}
                     </div>

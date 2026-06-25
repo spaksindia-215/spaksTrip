@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Button from "@/components/ui/Button";
-import DateRangePicker, { type DateRange } from "@/components/ui/DateRangePicker";
+import DateRangePicker from "@/components/ui/DateRangePicker";
 import { useFlightSearchStore, type FareCategory } from "@/state/flightSearchStore";
 import AirportField from "./AirportField";
 import PassengerSelector from "./PassengerSelector";
@@ -108,13 +108,12 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
   const [submitting, setSubmitting] = useState(false);
 
   const primaryLeg = legs[0];
-  const returnRange: DateRange = useMemo(
-    () => ({
-      from: primaryLeg.date ? new Date(primaryLeg.date) : null,
-      to: returnDate ? new Date(returnDate) : null,
-    }),
-    [primaryLeg.date, returnDate],
-  );
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const departureDate = primaryLeg.date ? new Date(primaryLeg.date) : null;
+  const returnDateMin = departureDate
+    ? new Date(departureDate.getTime() + 24 * 60 * 60 * 1000)
+    : today;
 
   const onSearch = () => {
     if (!primaryLeg.from || !primaryLeg.to) {
@@ -129,9 +128,15 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
       toast.push({ title: "Pick a departure date", tone: "warn" });
       return;
     }
-    if (tripType === "ROUND" && !returnDate) {
-      toast.push({ title: "Pick a return date", tone: "warn" });
-      return;
+    if (tripType === "ROUND") {
+      if (!returnDate) {
+        toast.push({ title: "Pick a return date", tone: "warn" });
+        return;
+      }
+      if (departureDate && new Date(returnDate) <= departureDate) {
+        toast.push({ title: "Return must be after departure", tone: "warn" });
+        return;
+      }
     }
 
     setSubmitting(true);
@@ -235,14 +240,32 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
             <span className="text-[12px] font-medium text-ink-muted">
               {tripType === "ROUND" ? "Depart — Return" : "Departure"}
             </span>
-            <DateRangePicker
-              mode={tripType === "ROUND" ? "range" : "single"}
-              value={returnRange}
-              onChange={(v) => {
-                setLeg(0, { date: v.from ? toIsoDate(v.from) : null });
-                setReturnDate(v.to ? toIsoDate(v.to) : null);
-              }}
-            />
+            <div className={tripType === "ROUND" ? "grid gap-2 sm:grid-cols-2" : ""}>
+              <DateRangePicker
+                mode="single"
+                value={{ from: departureDate, to: null }}
+                minDate={today}
+                onChange={(v) => {
+                  const nextDeparture = v.from ? toIsoDate(v.from) : null;
+                  setLeg(0, { date: nextDeparture });
+                  if (returnDate && nextDeparture && new Date(returnDate) <= new Date(nextDeparture)) {
+                    setReturnDate(null);
+                  }
+                }}
+                labelFrom="Departure"
+                placeholderFrom="Pick date"
+              />
+              {tripType === "ROUND" && (
+                <DateRangePicker
+                  mode="single"
+                  value={{ from: returnDate ? new Date(returnDate) : null, to: null }}
+                  minDate={returnDateMin}
+                  onChange={(v) => setReturnDate(v.from ? toIsoDate(v.from) : null)}
+                  labelFrom="Return"
+                  placeholderFrom="Pick date"
+                />
+              )}
+            </div>
           </div>
           <div className="flex flex-col justify-end">
             <PassengerSelector
