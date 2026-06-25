@@ -8,7 +8,6 @@ type Props = {
   source: string;
   destination: string;
   travelDate: string;
-  loading?: boolean;
   error?: string;
   onChange: (field: "source" | "destination" | "travelDate", value: string) => void;
   onSwap: () => void;
@@ -19,14 +18,13 @@ export default function BusSearchForm({
   source,
   destination,
   travelDate,
-  loading,
   error,
   onChange,
   onSwap,
   onSubmit,
 }: Props) {
   return (
-    <div className="rounded-2xl border border-white/20 bg-white/95 p-5 shadow-(--shadow-lg) backdrop-blur-sm md:p-6">
+    <div className="rounded-2xl bg-white p-5 shadow-(--shadow-lg) md:p-6">
       <div className="grid gap-4 md:grid-cols-[1fr_auto_1fr_180px]">
         <label className="flex flex-col gap-1.5">
           <span className="text-[13px] font-semibold text-ink-soft">From</span>
@@ -80,23 +78,18 @@ export default function BusSearchForm({
       </div>
 
       <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-wrap gap-2 text-[12px] text-ink-muted">
-          {["Seat map", "Boarding details", "Live inventory required"].map((item) => (
-            <span key={item} className="rounded-full bg-brand-50 px-3 py-1 font-medium text-brand-700">
-              {item}
-            </span>
-          ))}
-        </div>
+        <p className="text-[12px] leading-5 text-ink-muted">
+          Tickets are booked securely on RedBus. We&apos;ll take you there with your route pre-filled.
+        </p>
 
         <Button
           size="lg"
           variant="accent"
           onClick={onSubmit}
-          loading={loading}
           disabled={!source || !destination || !travelDate}
-          className="md:min-w-[180px]"
+          className="w-full md:w-auto md:min-w-[200px]"
         >
-          Search Buses
+          Search on RedBus ↗
         </Button>
       </div>
 

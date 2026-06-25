@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { listBookings, requestCancel, getProfile } from "../controllers/customer.controller";
+import { listBookings, createBooking, requestCancel, getProfile } from "../controllers/customer.controller";
 import { authMiddleware } from "../middleware/auth";
 import { roleMiddleware } from "../middleware/role";
 
@@ -9,6 +9,7 @@ const router = Router();
 router.use(authMiddleware, roleMiddleware("customer"));
 
 router.get("/bookings", listBookings);
+router.post("/bookings", createBooking);
 router.post("/bookings/:id/cancel-request", requestCancel);
 router.get("/profile", getProfile);
 

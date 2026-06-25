@@ -40,28 +40,27 @@ const NAV_ITEMS: NavItem[] = [
       { labelKey: "nav.international_tour_packages", href: "/international-tour-packages" },
     ],
   },
-  {
-    labelKey: "nav.accommodation",
-    href: "#",
-    menu: [
-      { labelKey: "Hotel", href: "/hotel" },
-      { labelKey: "nav.homestay", href: "#" },
-      { labelKey: "nav.airbnb", href: "#" },
-      { labelKey: "nav.villa", href: "#" },
-      { labelKey: "nav.guest_house", href: "#" },
-      { labelKey: "nav.house_board", href: "#" },
-      { labelKey: "nav.hostels", href: "#" },
-      { labelKey: "nav.resorts", href: "#" },
-    ],
-  },
+  // Accommodation hidden from navbar
+  // {
+  //   labelKey: "nav.accommodation",
+  //   href: "#",
+  //   menu: [
+  //     { labelKey: "Hotel", href: "/hotel" },
+  //     { labelKey: "nav.homestay", href: "#" },
+  //     { labelKey: "nav.airbnb", href: "#" },
+  //     { labelKey: "nav.villa", href: "#" },
+  //     { labelKey: "nav.guest_house", href: "#" },
+  //     { labelKey: "nav.house_board", href: "#" },
+  //     { labelKey: "nav.hostels", href: "#" },
+  //     { labelKey: "nav.resorts", href: "#" },
+  //   ],
+  // },
   {
     labelKey: "nav.transport",
     href: "#",
     menu: [
-      { labelKey: "Taxi Tour Package", href: "/taxi-package" },
       { labelKey: "nav.cabs", href: "/cabs" },
-      { labelKey: "nav.tour_bus", href: "/tour-bus" },
-      { labelKey: "nav.train", href: "https://www.irctc.co.in/nget/train-search                                                                         "},
+      { labelKey: "nav.tour_bus", href: "/bus" },
     ],
   },
   {
@@ -74,21 +73,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   {
     labelKey: "nav.train",
-    href: "https://www.irctc.co.in/nget/train-search",
-    menu: [
-      { labelKey: "nav.search", href: "/train/search" },
-      { labelKey: "nav.tickets", href: "/train/tickets" },
-      { labelKey: "nav.change_request", href: "/train/change-request" },
-      { labelKey: "nav.file_tdr_online", href: "/train/file-tdr-online" },
-    ],
-  },
-  {
-    labelKey: "Rail Europe",
-    href: "#",
-    menu: [
-      { labelKey: "Search Trains", href: "/rail-europe" },
-      { labelKey: "Bookings", href: "/rail-europe/bookings" },
-    ],
+    href: "/train/search",
   },
   {
     labelKey: "Events",
@@ -343,17 +328,6 @@ function NavIcon({ labelKey, className }: { labelKey: string; className?: string
           <path d="M9 12c2-1.2 3-2.8 3.5-5" />
           <path d="M9 12c-1.8-1.1-3-2.5-3.5-4.5" />
           <path d="M9 10.5c2.1-.8 4.3-.8 6.4 0" />
-        </svg>
-      );
-    case "Rail Europe":
-      return (
-        <svg {...common}>
-          <rect x="5" y="3" width="14" height="14" rx="2" />
-          <path d="M5 10h14" />
-          <circle cx="9" cy="13.5" r="1" />
-          <circle cx="15" cy="13.5" r="1" />
-          <path d="M7 21l2-3M17 21l-2-3" />
-          <path d="M9 6h6" />
         </svg>
       );
     case "SightSeeing":
@@ -1247,7 +1221,6 @@ const MEGA_DESCRIPTIONS: Record<string, string> = {
   Transfer: "Airport and city transfer bookings",
   SightSeeing: "Tours and local experience tickets",
   "Self-Drive": "Rental cars for flexible road trips",
-  "Rail Europe": "Cross-border European train booking",
   Packages: "Browse and manage your travel packages",
   Queues: "Monitor pending tasks and workflows",
   Accounts: "Billing, deposits, and ledgers",

@@ -52,6 +52,41 @@ export const env = {
   healWorkerIntervalMs: Number(process.env.HEAL_WORKER_INTERVAL_MS ?? 300000),
   reconciliationWorkerIntervalMs: Number(process.env.RECONCILIATION_WORKER_INTERVAL_MS ?? 3600000),
   dlqWorkerIntervalMs: Number(process.env.DLQ_WORKER_INTERVAL_MS ?? 600000),
+  // Events module. Soft-hold duration for reserved tickets, platform service fee
+  // and GST (on the fee). All optional with sane defaults so the server boots
+  // unchanged when unset.
+  eventBookingHoldMinutes: Number(process.env.EVENT_BOOKING_HOLD_MINUTES ?? 10),
+  eventPlatformFeePercent: Number(process.env.EVENT_PLATFORM_FEE_PERCENT ?? 5),
+  eventGstPercent: Number(process.env.EVENT_GST_PERCENT ?? 18),
+  // Event reminder worker (Phase 4). Opt-in so non-prod envs don't email; emits a
+  // reminder ~EVENT_REMINDER_LEAD_HOURS before start, scanning on an interval.
+  eventRemindersEnabled: process.env.EVENT_REMINDERS_ENABLED === "true",
+  eventReminderIntervalMs: Number(process.env.EVENT_REMINDER_INTERVAL_MS ?? 3_600_000),
+  eventReminderLeadHours: Number(process.env.EVENT_REMINDER_LEAD_HOURS ?? 24),
+  // ── External event discovery (Phase 2) — all OFF by default. The aggregation
+  // worker and merge are pure no-ops until explicitly enabled, so zero impact on
+  // existing behaviour. ──────────────────────────────────────────────────────
+  ticketmasterApiKey: process.env.TICKETMASTER_API_KEY ?? "",
+  ticketmasterEnabled: process.env.TICKETMASTER_ENABLED === "true",
+  insiderApiEnabled: process.env.INSIDER_API_ENABLED === "true",
+  insiderApiKey: process.env.INSIDER_API_KEY ?? "",
+  // BookMyShow affiliate deep-links (Phase 3).
+  bookmyshowAffiliateId: process.env.BOOKMYSHOW_AFFILIATE_ID ?? "",
+  bookmyshowAffiliateEnabled: process.env.BOOKMYSHOW_AFFILIATE_ENABLED === "true",
+  // Master switch + cadence for the external-events sync worker. Interval (ms),
+  // following the existing setInterval worker pattern (default 6h). Cache TTL in
+  // hours drives the ExternalEvent TTL index expiry.
+  externalEventsSyncEnabled: process.env.EXTERNAL_EVENTS_SYNC_ENABLED === "true",
+  externalEventsSyncIntervalMs: Number(process.env.EXTERNAL_EVENTS_SYNC_INTERVAL_MS ?? 21_600_000),
+  externalEventsCacheTtlHours: Number(process.env.EXTERNAL_EVENTS_CACHE_TTL_HOURS ?? 24),
+  // Metros to sync, comma-separated. Defaults to the top-10 list from instruct.md.
+  externalEventsSyncCities: (
+    process.env.EXTERNAL_EVENTS_SYNC_CITIES ??
+    "delhi,mumbai,bangalore,hyderabad,chennai,kolkata,pune,ahmedabad,jaipur,goa"
+  )
+    .split(",")
+    .map((c) => c.trim().toLowerCase())
+    .filter(Boolean),
 };
 
 export const isProd = env.nodeEnv === "production";

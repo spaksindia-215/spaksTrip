@@ -35,34 +35,34 @@ const faqs = [
 export default function TaxiLandingPage() {
   return (
     <main className="bg-white">
-      <section className="relative min-h-[680px] overflow-hidden bg-ink lg:min-h-[calc(100svh-7rem)]">
+      <section className="relative overflow-hidden bg-ink lg:min-h-[calc(100svh-7rem)]">
         <img src={heroImage} alt="Premium road trip taxi in mountains" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/88 via-ink/58 to-ink/20" />
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-white to-transparent" />
-        <div className="relative mx-auto grid min-h-[inherit] max-w-7xl gap-8 px-4 pb-14 pt-24 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:py-16">
+        <div className="relative mx-auto grid min-h-[inherit] max-w-7xl gap-8 px-4 pb-12 pt-16 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-10 lg:py-10">
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="flex flex-col justify-center text-white">
-            <Badge tone="accent" className="mb-4 w-fit bg-white/14 text-white ring-1 ring-white/25">
+            <Badge tone="accent" className="mb-3 w-fit bg-white/14 text-white ring-1 ring-white/25">
               SpaksTrip Taxi Packages
             </Badge>
-            <h1 className="max-w-2xl text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-2xl text-4xl font-extrabold leading-[1.05] sm:text-5xl">
               Private cabs for city rides, airport transfers and outstation escapes
             </h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-white/82">
+            <p className="mt-4 max-w-xl text-base leading-6 text-white/82">
               Search curated cab packages with fixed inclusions, verified drivers, clear fare rules and support that stays with you until drop-off.
             </p>
-            <div className="mt-7 grid max-w-xl grid-cols-3 gap-3">
+            <div className="mt-5 grid max-w-xl grid-cols-3 gap-3">
               {[
                 ["500+", "routes"],
                 ["4.7/5", "avg rating"],
                 ["24x7", "support"],
               ].map(([value, label]) => (
-                <div key={label} className="rounded-md border border-white/18 bg-white/10 p-3 backdrop-blur">
-                  <div className="text-2xl font-extrabold">{value}</div>
+                <div key={label} className="rounded-md border border-white/18 bg-white/10 p-2.5 backdrop-blur">
+                  <div className="text-xl font-extrabold">{value}</div>
                   <div className="text-[12px] font-medium text-white/72">{label}</div>
                 </div>
               ))}
             </div>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-wrap gap-3">
               <Link href="/taxi-package/list-your-taxi">
                 <Button type="button" variant="secondary" className="bg-white text-ink hover:bg-white/90">
                   Add Your Taxi
@@ -81,6 +81,9 @@ export default function TaxiLandingPage() {
         </div>
       </section>
 
+      {/* Hidden until real taxi inventory is connected, so we never advertise
+          "fixed fare rides" that can't be booked. */}
+      {popularTaxiRoutes.length > 0 && (
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <div>
@@ -115,6 +118,7 @@ export default function TaxiLandingPage() {
           ))}
         </div>
       </section>
+      )}
 
       <section className="bg-surface-muted py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -207,21 +211,26 @@ export default function TaxiLandingPage() {
       </section>
 
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-2">
-        <div>
-          <p className="text-[12px] font-bold uppercase tracking-wide text-brand-600">Customer testimonials</p>
-          <h2 className="mt-1 text-2xl font-extrabold text-ink">Travelers notice the details</h2>
-          <div className="mt-5 grid gap-3">
-            {taxiPackages.slice(0, 3).map((pkg) => (
-              <div key={pkg.slug} className="rounded-lg border border-border-soft p-4">
-                <div className="mb-2 flex items-center gap-1 text-accent-500">
-                  {Array.from({ length: 5 }, (_, index) => <StarIcon key={index} className="h-4 w-4" />)}
+        {/* Testimonials are derived from real package reviews. Hidden until live
+            inventory (with genuine reviews) is connected, so we never show
+            fabricated testimonials. */}
+        {taxiPackages.length > 0 && (
+          <div>
+            <p className="text-[12px] font-bold uppercase tracking-wide text-brand-600">Customer testimonials</p>
+            <h2 className="mt-1 text-2xl font-extrabold text-ink">Travelers notice the details</h2>
+            <div className="mt-5 grid gap-3">
+              {taxiPackages.slice(0, 3).map((pkg) => (
+                <div key={pkg.slug} className="rounded-lg border border-border-soft p-4">
+                  <div className="mb-2 flex items-center gap-1 text-accent-500">
+                    {Array.from({ length: 5 }, (_, index) => <StarIcon key={index} className="h-4 w-4" />)}
+                  </div>
+                  <p className="text-[14px] leading-6 text-ink">&ldquo;{pkg.reviews[0]?.text}&rdquo;</p>
+                  <p className="mt-2 text-[12px] font-semibold text-ink-muted">{pkg.reviews[0]?.name} · {pkg.reviews[0]?.route}</p>
                 </div>
-                <p className="text-[14px] leading-6 text-ink">&ldquo;{pkg.reviews[0]?.text}&rdquo;</p>
-                <p className="mt-2 text-[12px] font-semibold text-ink-muted">{pkg.reviews[0]?.name} · {pkg.reviews[0]?.route}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
         <div>
           <p className="text-[12px] font-bold uppercase tracking-wide text-brand-600">FAQ</p>
           <h2 className="mt-1 text-2xl font-extrabold text-ink">Before you book</h2>

@@ -4,20 +4,15 @@ import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import BackToTop from "@/components/landing/BackToTop";
 import CruiseDetailContent from "@/components/cruise/CruiseDetailContent";
-import { generateCruises } from "@/lib/mock/cruises";
+import type { CruiseOffer } from "@/lib/mock/cruises";
 
 type Props = { params: Promise<{ id: string }> };
 
-function getCruiseById(id: string) {
-  // ID format: CRZ-{port}-{month}-{index}
-  const parts = id.split("-");
-  if (parts.length < 4 || parts[0] !== "CRZ") return null;
-  const index = parseInt(parts[parts.length - 1]);
-  const month = parts[parts.length - 2];
-  const port = parts.slice(1, parts.length - 2).join("-");
-  if (Number.isNaN(index)) return null;
-  const cruises = generateCruises(port, month);
-  return cruises[index] ?? null;
+function getCruiseById(_id: string): CruiseOffer | null {
+  // No live cruise supplier is connected yet. Generated sailings have been
+  // removed, so every cruise detail page resolves to "not found" until a real
+  // inventory source is wired in. See /cruise/results for the unavailable state.
+  return null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

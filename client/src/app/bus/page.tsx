@@ -5,83 +5,74 @@ import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import BackToTop from "@/components/landing/BackToTop";
 import BusSearchForm from "@/components/bus/BusSearchForm";
-import BusResultCard from "@/components/bus/BusResultCard";
-import EmptyState from "@/components/ui/EmptyState";
-import ErrorState from "@/components/ui/ErrorState";
-import Skeleton from "@/components/ui/Skeleton";
 import { toIsoDate } from "@/lib/format";
-import type { ApiResponse, BusSearchResult } from "@/lib/busTypes";
+import { openRedbusSearch } from "@/lib/redbus";
 
 const today = toIsoDate(new Date());
+
+const INFO = [
+  {
+    title: "Every operator, one search",
+    sub: "Pick your route and date, then jump straight into RedBus's full list of operators.",
+  },
+  {
+    title: "Secure on RedBus",
+    sub: "Seat selection, boarding points and payment all happen on RedBus's official platform.",
+  },
+  {
+    title: "Tickets & cancellations on RedBus",
+    sub: "Manage bookings, M-tickets and cancellations directly in your RedBus account.",
+  },
+];
 
 export default function BusPage() {
   const [source, setSource] = useState("Delhi");
   const [destination, setDestination] = useState("Jaipur");
   const [travelDate, setTravelDate] = useState(today);
-  const [results, setResults] = useState<BusSearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [searched, setSearched] = useState(false);
 
-  const runSearch = async () => {
+  // Bus booking is a hand-off to RedBus — we collect the journey and deep-link into
+  // RedBus's search results (route + date pre-filled). See src/lib/redbus.ts.
+  const goToRedbus = () => {
     if (source === destination) {
       setError("Source and destination must be different.");
-      setResults([]);
-      setSearched(true);
       return;
     }
-
-    setLoading(true);
     setError(null);
-    setSearched(true);
-
-    try {
-      const response = await fetch("/api/bus/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ source, destination, travelDate }),
-      });
-
-      const payload = (await response.json()) as ApiResponse<BusSearchResult[]>;
-      if (!payload.success) {
-        setError(payload.error);
-        setResults([]);
-        return;
-      }
-
-      setResults(payload.data);
-    } catch {
-      setError("Unable to search buses right now.");
-      setResults([]);
-    } finally {
-      setLoading(false);
-    }
+    openRedbusSearch({ source, destination, date: travelDate });
   };
 
   return (
     <div className="min-h-screen bg-surface-muted">
       <Header />
       <main>
-        <section className="relative overflow-hidden bg-brand-900">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(242,90,26,0.22),transparent_30%)]" />
-          <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <section className="relative overflow-hidden bg-ink lg:min-h-[calc(100svh-7rem)]">
+          <img
+            src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1800&q=80"
+            alt="Intercity bus on a highway at dusk"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/65 to-ink/35" />
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-surface-muted to-transparent" />
+
+          <div className="relative mx-auto flex min-h-[inherit] max-w-6xl flex-col justify-center px-4 py-12 sm:px-6">
             <div className="max-w-2xl">
-              <span className="inline-flex rounded-full bg-white/10 px-3 py-1 text-[12px] font-semibold text-white/80">
-                Bus booking service
+              <span className="inline-flex items-center rounded-full bg-white/12 px-3 py-1 text-[12px] font-semibold text-white/85 ring-1 ring-white/20">
+                Bus tickets · powered by RedBus
               </span>
-              <h1 className="mt-4 text-[38px] font-black leading-tight text-white">
-                Search intercity buses with a TBO-ready frontend flow
+              <h1 className="mt-4 max-w-xl text-[34px] font-extrabold leading-[1.1] text-white sm:text-[42px]">
+                Book intercity bus tickets online
               </h1>
-              <p className="mt-3 max-w-xl text-[15px] text-white/75">
-                Search routes, review operators, and continue once live bus inventory is connected.
+              <p className="mt-3 max-w-md text-[15px] leading-6 text-white/80">
+                Pick your route and travel date, then complete your booking securely on RedBus.
               </p>
             </div>
+
             <div className="mt-8">
               <BusSearchForm
                 source={source}
                 destination={destination}
                 travelDate={travelDate}
-                loading={loading}
                 error={error ?? undefined}
                 onChange={(field, value) => {
                   if (field === "source") setSource(value);
@@ -92,62 +83,21 @@ export default function BusPage() {
                   setSource(destination);
                   setDestination(source);
                 }}
-                onSubmit={runSearch}
+                onSubmit={goToRedbus}
               />
             </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-          {!searched ? (
-            <div className="rounded-2xl border border-border-soft bg-white">
-              <EmptyState
-                title="Search buses when live inventory is available"
-                subtitle="This flow is ready for a real provider connection and no longer falls back to generated bus results."
-              />
-            </div>
-          ) : null}
-
-          {loading ? (
-            <div className="flex flex-col gap-4">
-              {Array.from({ length: 4 }, (_, index) => (
-                <Skeleton key={index} className="h-52 rounded-2xl" />
-              ))}
-            </div>
-          ) : null}
-
-          {!loading && error && searched ? (
-            <div className="rounded-2xl border border-border-soft bg-white">
-              <ErrorState message={error} onRetry={runSearch} />
-            </div>
-          ) : null}
-
-          {!loading && searched && !error && results.length === 0 ? (
-            <div className="rounded-2xl border border-border-soft bg-white">
-              <EmptyState
-                title="No buses found"
-                subtitle="Try another route or date, or check back after live bus inventory is connected."
-              />
-            </div>
-          ) : null}
-
-          {!loading && !error && results.length > 0 ? (
-            <div className="space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="text-[26px] font-black text-ink">
-                    {source} to {destination}
-                  </p>
-                  <p className="text-[14px] text-ink-muted">
-                    {results.length} buses for {travelDate}
-                  </p>
-                </div>
+        <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {INFO.map((item) => (
+              <div key={item.title} className="rounded-2xl border border-border-soft bg-white p-5 shadow-(--shadow-xs)">
+                <p className="text-[15px] font-extrabold text-ink">{item.title}</p>
+                <p className="mt-1.5 text-[13px] leading-6 text-ink-muted">{item.sub}</p>
               </div>
-              {results.map((bus) => (
-                <BusResultCard key={bus.id} bus={bus} travelDate={travelDate} />
-              ))}
-            </div>
-          ) : null}
+            ))}
+          </div>
         </section>
       </main>
       <Footer />

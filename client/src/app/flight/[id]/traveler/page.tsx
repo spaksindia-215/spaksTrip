@@ -12,6 +12,8 @@ import Input from "@/components/ui/Input";
 import Checkbox from "@/components/ui/Checkbox";
 import Radio from "@/components/ui/Radio";
 import { useBookingStore } from "@/state/bookingStore";
+import { useAuthStore } from "@/state/authStore";
+import SignInGateModal from "@/components/auth/SignInGateModal";
 import { useToast } from "@/components/ui/Toast";
 import type { Traveler, TravelerType, Gender, GSTInfo, TravelerSSR } from "@/state/bookingStore";
 import { fetchSSR } from "@/services/flights";
@@ -72,6 +74,8 @@ function TravelerInner() {
   const sp = useSearchParams();
   const toast = useToast();
   const { current, setTravelers, setContact, setAddOns, setGST, setSSRSelections, advanceStatus } = useBookingStore();
+  const authedUser = useAuthStore((s) => s.user);
+  const [showSignIn, setShowSignIn] = useState(false);
 
   const initial = useMemo(() => {
     if (!current) return [];
@@ -156,6 +160,44 @@ function TravelerInner() {
   // passed this page but were rejected by TBO later at Book/Ticket.
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+  // Age must be evaluated at the date of travel (not "today"), since TBO/the airline
+  // classifies pax by their age on the departure date.
+  const travelDate = (() => {
+    const iso = current.offer.segments[0]?.depart;
+    const d = iso ? new Date(iso) : new Date();
+    return Number.isNaN(d.getTime()) ? new Date() : d;
+  })();
+  // Full years between a YYYY-MM-DD DOB and the travel date.
+  const ageOnTravel = (dob: string): number => {
+    const [y, m, d] = dob.split("-").map(Number);
+    if (!y || !m || !d) return NaN;
+    let age = travelDate.getFullYear() - y;
+    const beforeBirthday =
+      travelDate.getMonth() + 1 < m ||
+      (travelDate.getMonth() + 1 === m && travelDate.getDate() < d);
+    if (beforeBirthday) age -= 1;
+    return age;
+  };
+  // Standard airline pax-type age bands, measured on the travel date:
+  //   Adult  → 12 years and above
+  //   Child  → 2 to under 12 years
+  //   Infant → under 2 years
+  const AGE_BANDS: Record<TravelerType, { min: number; max: number; label: string }> = {
+    ADT: { min: 12, max: 120, label: "Adult must be 12 years or older on the travel date" },
+    CHD: { min: 2, max: 11, label: "Child must be 2–11 years old on the travel date" },
+    INF: { min: 0, max: 1, label: "Infant must be under 2 years on the travel date" },
+  };
+  // Validate a DOB against the pax-type band; returns an error string or "" when valid.
+  const dobError = (dob: string | null, type: TravelerType): string => {
+    if (!dob) return "Date of birth required";
+    const age = ageOnTravel(dob);
+    if (Number.isNaN(age)) return "Enter a valid date of birth";
+    if (new Date(dob) > travelDate) return "Date of birth cannot be after the travel date";
+    const band = AGE_BANDS[type];
+    if (age < band.min || age > band.max) return band.label;
+    return "";
+  };
+
   // Available baggage options for LCC — first segment (index 0).
   // KNOWN GAP (intl multi-leg): paid baggage is only collected for segment 0.
   // Free baggage for all segments is added server-side (ticket.ts applyMandatorySSR);
@@ -194,8 +236,10 @@ function TravelerInner() {
       if (airlineCode === "SG" && t.firstName.trim() && t.firstName.trim().toUpperCase() === t.lastName.trim().toUpperCase()) {
         e[`${t.id}.lastName`] = "First and last name must be different";
       }
-      // DOB mandatory for everyone (Child/Infant always; AirAsia adults too).
-      if (!t.dob) e[`${t.id}.dob`] = "Date of birth required";
+      // DOB mandatory for everyone (Child/Infant always; AirAsia adults too) and the
+      // age must fall within the pax-type band on the travel date.
+      const dobErr = dobError(t.dob, t.type);
+      if (dobErr) e[`${t.id}.dob`] = dobErr;
 
       // PAN: Adult own PAN; Child/Infant guardian PAN + name.
       if (panRequired) {
@@ -262,6 +306,17 @@ function TravelerInner() {
       toast.push({ title: "Please fix the highlighted fields", tone: "warn" });
       return;
     }
+    // Account capture: a trip must be attributed to an account so it lands in the
+    // customer's dashboard (guest bookings can't be claimed later). Validation has
+    // passed, so the entered details are safe; gate behind sign-in, then proceed.
+    if (!authedUser) {
+      setShowSignIn(true);
+      return;
+    }
+    proceedToPayment();
+  };
+
+  const proceedToPayment = () => {
     // Safety net: ensure every title is valid for its pax type/gender/airline.
     const normalizedTravelers = travelers.map((t) => ({
       ...t,
@@ -707,6 +762,16 @@ function TravelerInner() {
         </div>
       </main>
       <Footer />
+
+      <SignInGateModal
+        open={showSignIn}
+        onClose={() => setShowSignIn(false)}
+        onSuccess={() => {
+          setShowSignIn(false);
+          proceedToPayment();
+        }}
+        prefillEmail={email}
+      />
     </div>
   );
 }

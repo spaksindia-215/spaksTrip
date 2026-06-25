@@ -10,7 +10,13 @@ export type MailTemplate =
   | "applicantApproved"
   | "applicantRejected"
   | "verifyEmail"
-  | "passwordReset";
+  | "passwordReset"
+  | "eventBookingConfirmed"
+  | "eventBookingCancelled"
+  | "eventReminder"
+  | "eventUpdated"
+  | "eventPartnerNewBooking"
+  | "eventPartnerBookingCancelled";
 
 export interface MailMessage {
   to: string;
@@ -67,6 +73,74 @@ function renderBody(template: MailTemplate, data: Record<string, unknown>): stri
         `${data.resetUrl}`,
         ``,
         `This link expires in ${data.expiresInMinutes ?? 30} minutes and can be used once. If you didn't request this, your password is unchanged — you can safely ignore this email.`,
+      ].join("\n");
+    case "eventBookingConfirmed":
+      return [
+        `Hi ${data.name ?? "there"},`,
+        ``,
+        `Your booking is confirmed! 🎉`,
+        ``,
+        `Event:    ${data.eventTitle}`,
+        data.startDate ? `When:     ${data.startDate}` : ``,
+        data.venue ? `Where:    ${data.venue}` : ``,
+        `Tickets:  ${data.tickets}`,
+        `Booking:  ${data.bookingReference}`,
+        `Total:    ₹${data.totalAmount}`,
+        ``,
+        `Show your QR code (in My Bookings) at entry. We've saved it to your booking.`,
+      ]
+        .filter(Boolean)
+        .join("\n");
+    case "eventBookingCancelled":
+      return [
+        `Hi ${data.name ?? "there"},`,
+        ``,
+        `Your booking ${data.bookingReference} for "${data.eventTitle}" has been cancelled.`,
+        Number(data.refundAmount) > 0
+          ? `A refund of ₹${data.refundAmount} has been initiated and will reflect in 5-7 business days.`
+          : `No refund applies under this event's cancellation policy.`,
+      ]
+        .filter(Boolean)
+        .join("\n");
+    case "eventReminder":
+      return [
+        `Hi ${data.name ?? "there"},`,
+        ``,
+        `A quick reminder — "${data.eventTitle}" is coming up.`,
+        data.startDate ? `When:  ${data.startDate}` : ``,
+        data.venue ? `Where: ${data.venue}` : ``,
+        `Booking: ${data.bookingReference}`,
+        ``,
+        `See you there!`,
+      ]
+        .filter(Boolean)
+        .join("\n");
+    case "eventUpdated":
+      return [
+        `Hi ${data.name ?? "there"},`,
+        ``,
+        `Details for "${data.eventTitle}" (booking ${data.bookingReference}) have changed:`,
+        `${data.changes}`,
+        ``,
+        `If the new details don't work for you, you can cancel from My Bookings.`,
+      ]
+        .filter(Boolean)
+        .join("\n");
+    case "eventPartnerNewBooking":
+      return [
+        `Hi ${data.name ?? "there"},`,
+        ``,
+        `New booking received for "${data.eventTitle}".`,
+        `Booking:  ${data.bookingReference}`,
+        `Tickets:  ${data.tickets}`,
+        `Amount:   ₹${data.totalAmount}`,
+      ].join("\n");
+    case "eventPartnerBookingCancelled":
+      return [
+        `Hi ${data.name ?? "there"},`,
+        ``,
+        `Booking ${data.bookingReference} for "${data.eventTitle}" was cancelled by the customer.`,
+        `Tickets released: ${data.tickets}`,
       ].join("\n");
   }
 }
