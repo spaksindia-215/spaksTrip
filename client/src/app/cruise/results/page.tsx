@@ -6,7 +6,7 @@ import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import CruiseResultCard from "@/components/cruise/CruiseResultCard";
 import Chip from "@/components/ui/Chip";
-import { generateCruises, type CruiseOffer } from "@/lib/mock/cruises";
+import type { CruiseOffer } from "@/lib/mock/cruises";
 import { sleep } from "@/services/delay";
 import Skeleton from "@/components/ui/Skeleton";
 import InventoryUnavailable from "@/components/shared/InventoryUnavailable";
@@ -74,7 +74,10 @@ function CruiseResultsContent({
 
   useEffect(() => {
     sleep(700).then(() => {
-      setCruises(generateCruises(port, month));
+      // No live cruise supplier is connected yet, so no inventory is returned.
+      // The empty state below renders <InventoryUnavailable /> instead of
+      // fabricated sailings (matches the taxi/cabs services which return []).
+      setCruises([]);
       setLoading(false);
     });
   }, [port, month]);

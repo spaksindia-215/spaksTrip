@@ -26,6 +26,8 @@ import { sendFlightConfirmation } from "../integrations/tbo/payments/mailer";
 import { buildFarePricer, buildTwoTierPricing, type TwoTierPricing } from "../lib/tboMarkup";
 import { signPriceToken, verifyPriceToken } from "../lib/priceToken";
 import { recordSubdomainBooking } from "../services/subdomainBooking";
+import { recordCustomerBooking } from "../services/customerBooking";
+import { resolveOptionalUser } from "../middleware/auth";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -740,6 +742,29 @@ export async function verifyPayment(req: Request, res: Response): Promise<void> 
     // Settlement attribution (fire-and-forget, in-process).
     if (agentId && pricing) {
       void recordSubdomainBooking({ agentId, productType: "flight", pnr: result.pnr, pricing });
+    }
+
+    // Customer dashboard: record the trip against the logged-in customer (main-site
+    // bookings). No-op for agent-subdomain visitors / guests — resolveOptionalUser
+    // returns null unless a valid customer-role token rode along on the cookie.
+    {
+      const customer = resolveOptionalUser(req);
+      if (customer?.role === "customer") {
+        const v = booking.validation;
+        void recordCustomerBooking({
+          ownerId: customer.sub,
+          ownerRole: customer.role,
+          productType: "flight",
+          pnr: result.pnr,
+          amount: Math.round(capturedPaise / 100),
+          details: {
+            origin: v?.origin,
+            destination: v?.destination,
+            passengers: booking.passengers.length,
+            airline: v?.airlineCode,
+          },
+        });
+      }
     }
 
     res.json({

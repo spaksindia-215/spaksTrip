@@ -117,3 +117,93 @@ export type CabinType = (typeof CABIN_TYPES)[number];
 
 export const CRUISE_DEPARTURE_STATUS = ["open", "filling_fast", "closed"] as const;
 export type CruiseDepartureStatus = (typeof CRUISE_DEPARTURE_STATUS)[number];
+
+// ── Event ────────────────────────────────────────────────────────────────────
+// Events get their own richer lifecycle than the shared RESOURCE_STATUS
+// (draft|active|paused|suspended): a listing is submitted for review, published,
+// rejected, archived (soft-delete) or cancelled. Kept separate so the existing
+// partner resources are untouched.
+export const EVENT_STATUS = [
+  "draft",
+  "pending_review",
+  "published",
+  "rejected",
+  "archived",
+  "cancelled",
+] as const;
+export type EventStatus = (typeof EVENT_STATUS)[number];
+
+export const EVENT_CATEGORIES = [
+  "wedding",
+  "corporate",
+  "birthday_party",
+  "engagement",
+  "cocktail_party",
+  "concert",
+  "music_festival",
+  "comedy_show",
+  "theatre",
+  "sports",
+  "exhibition",
+  "conference",
+  "workshop",
+  "cultural_festival",
+  "religious",
+  "charity",
+  "networking",
+  "food_festival",
+  "nightlife",
+  "other",
+] as const;
+export type EventCategory = (typeof EVENT_CATEGORIES)[number];
+
+export const EVENT_TYPES = ["in_person", "virtual", "hybrid"] as const;
+export type EventType = (typeof EVENT_TYPES)[number];
+
+export const RECURRING_FREQUENCIES = ["daily", "weekly", "monthly"] as const;
+export type RecurringFrequency = (typeof RECURRING_FREQUENCIES)[number];
+
+export const VIRTUAL_PLATFORMS = ["zoom", "google_meet", "teams", "custom"] as const;
+export type VirtualPlatform = (typeof VIRTUAL_PLATFORMS)[number];
+
+export const EVENT_VENUE_TYPES = ["indoor", "outdoor", "both"] as const;
+export type EventVenueType = (typeof EVENT_VENUE_TYPES)[number];
+
+export const EVENT_CANCELLATION_POLICIES = [
+  "no_refund",
+  "full_refund",
+  "partial_refund",
+  "custom",
+] as const;
+export type EventCancellationPolicy = (typeof EVENT_CANCELLATION_POLICIES)[number];
+
+// ── Event booking ────────────────────────────────────────────────────────────
+export const EVENT_BOOKING_STATUS = [
+  "pending",
+  "confirmed",
+  "cancelled",
+  "checked_in",
+  "no_show",
+] as const;
+export type EventBookingStatus = (typeof EVENT_BOOKING_STATUS)[number];
+
+export const EVENT_PAYMENT_STATUS = [
+  "pending",
+  "initiated",
+  "paid",
+  "failed",
+  "refunded",
+  "partially_refunded",
+] as const;
+export type EventPaymentStatus = (typeof EVENT_PAYMENT_STATUS)[number];
+
+export const EVENT_REFUND_STATUS = [
+  "not_applicable",
+  "pending",
+  "processed",
+  "failed",
+] as const;
+export type EventRefundStatus = (typeof EVENT_REFUND_STATUS)[number];
+
+export const EVENT_BOOKING_SOURCE = ["web", "agent_portal", "api"] as const;
+export type EventBookingSource = (typeof EVENT_BOOKING_SOURCE)[number];

@@ -9,6 +9,7 @@ import type {
 import { TboBookingFailedError, TboError } from "@/lib/adapters/tbo/errors";
 import { logRequest, logResponse, logError } from "@/lib/adapters/tbo/log";
 import { buildTwoTierPricing, type TwoTierPricing } from "@/lib/server/agentMarkup";
+import { recordCustomerBooking } from "@/lib/server/recordCustomerBooking";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:4000";
 
@@ -548,6 +549,17 @@ export async function POST(request: NextRequest) {
       cache: "no-store",
     }).catch((e: unknown) => {
       console.error("[record-booking] fire-and-forget failed:", e instanceof Error ? e.message : String(e));
+    });
+
+    // Customer dashboard recording (main-site logged-in customers). Best-effort.
+    void recordCustomerBooking({
+      productType: "hotel",
+      pnr: tboResult.bookingRefNo ?? undefined,
+      amount: Math.round(capturedPaise / 100),
+      details: {
+        guests: totalAdults + totalChildren,
+        hotelCode: bookingCode,
+      },
     });
 
     return NextResponse.json({ success: true, data: tboResult });

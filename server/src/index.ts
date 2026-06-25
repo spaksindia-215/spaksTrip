@@ -12,6 +12,10 @@ import customerRoutes from "./routes/customer.routes";
 import agentRoutes from "./routes/agent.routes";
 import internalRoutes from "./routes/internal.routes";
 import flightsRoutes from "./routes/flights.routes";
+import eventsRoutes from "./routes/events.routes";
+import partnerEventsRoutes from "./routes/partnerEvents.routes";
+import adminEventsRoutes from "./routes/adminEvents.routes";
+import eventBookingsRoutes from "./routes/eventBookings.routes";
 import { errorHandler } from "./middleware/error";
 import { securityHeaders } from "./middleware/securityHeaders";
 import { apiRateLimiter } from "./middleware/rateLimit";
@@ -21,6 +25,8 @@ import webhookRoutes from "./routes/webhooks";
 import { startHealWorker } from "./workers/healWorker";
 import { startReconciliationWorker } from "./workers/reconciliationWorker";
 import { startDLQWorker } from "./workers/dlqWorker";
+import { startExternalEventsSyncWorker } from "./workers/syncExternalEventsWorker";
+import { startEventReminderWorker } from "./workers/eventReminderWorker";
 
 async function main(): Promise<void> {
   // Prefer IPv4 for all outbound connections. Some hosts (e.g. Railway) have no
@@ -73,6 +79,11 @@ async function main(): Promise<void> {
   app.use("/api", apiRateLimiter);
 
   app.use("/api/auth", authRoutes);
+  // Events module — specific sub-paths MUST be mounted before the generic
+  // /api/partner and /api/admin routers so they are matched first.
+  app.use("/api/partner/events", partnerEventsRoutes);
+  app.use("/api/admin/events", adminEventsRoutes);
+  app.use("/api/bookings/events", eventBookingsRoutes);
   app.use("/api/partner", partnerRoutes);
   app.use("/api/admin", adminRoutes);
   app.use("/api/customer", customerRoutes);
@@ -81,6 +92,8 @@ async function main(): Promise<void> {
   // TBO flight endpoints (migrated from Next.js so outbound TBO calls use Railway's
   // static IP). Public, like the original Next routes.
   app.use("/api/flights", flightsRoutes);
+  // Public events discovery + customer booking entrypoints.
+  app.use("/api/events", eventsRoutes);
 
   app.use(errorHandler);
 
@@ -91,6 +104,10 @@ async function main(): Promise<void> {
     startHealWorker();
     startReconciliationWorker();
     startDLQWorker();
+    // No-op unless EXTERNAL_EVENTS_SYNC_ENABLED=true.
+    startExternalEventsSyncWorker();
+    // No-op unless EVENT_REMINDERS_ENABLED=true.
+    startEventReminderWorker();
   });
 }
 

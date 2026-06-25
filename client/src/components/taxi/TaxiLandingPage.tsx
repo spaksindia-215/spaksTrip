@@ -81,6 +81,9 @@ export default function TaxiLandingPage() {
         </div>
       </section>
 
+      {/* Hidden until real taxi inventory is connected, so we never advertise
+          "fixed fare rides" that can't be booked. */}
+      {popularTaxiRoutes.length > 0 && (
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <div>
@@ -115,6 +118,7 @@ export default function TaxiLandingPage() {
           ))}
         </div>
       </section>
+      )}
 
       <section className="bg-surface-muted py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -207,21 +211,26 @@ export default function TaxiLandingPage() {
       </section>
 
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-2">
-        <div>
-          <p className="text-[12px] font-bold uppercase tracking-wide text-brand-600">Customer testimonials</p>
-          <h2 className="mt-1 text-2xl font-extrabold text-ink">Travelers notice the details</h2>
-          <div className="mt-5 grid gap-3">
-            {taxiPackages.slice(0, 3).map((pkg) => (
-              <div key={pkg.slug} className="rounded-lg border border-border-soft p-4">
-                <div className="mb-2 flex items-center gap-1 text-accent-500">
-                  {Array.from({ length: 5 }, (_, index) => <StarIcon key={index} className="h-4 w-4" />)}
+        {/* Testimonials are derived from real package reviews. Hidden until live
+            inventory (with genuine reviews) is connected, so we never show
+            fabricated testimonials. */}
+        {taxiPackages.length > 0 && (
+          <div>
+            <p className="text-[12px] font-bold uppercase tracking-wide text-brand-600">Customer testimonials</p>
+            <h2 className="mt-1 text-2xl font-extrabold text-ink">Travelers notice the details</h2>
+            <div className="mt-5 grid gap-3">
+              {taxiPackages.slice(0, 3).map((pkg) => (
+                <div key={pkg.slug} className="rounded-lg border border-border-soft p-4">
+                  <div className="mb-2 flex items-center gap-1 text-accent-500">
+                    {Array.from({ length: 5 }, (_, index) => <StarIcon key={index} className="h-4 w-4" />)}
+                  </div>
+                  <p className="text-[14px] leading-6 text-ink">&ldquo;{pkg.reviews[0]?.text}&rdquo;</p>
+                  <p className="mt-2 text-[12px] font-semibold text-ink-muted">{pkg.reviews[0]?.name} · {pkg.reviews[0]?.route}</p>
                 </div>
-                <p className="text-[14px] leading-6 text-ink">&ldquo;{pkg.reviews[0]?.text}&rdquo;</p>
-                <p className="mt-2 text-[12px] font-semibold text-ink-muted">{pkg.reviews[0]?.name} · {pkg.reviews[0]?.route}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
         <div>
           <p className="text-[12px] font-bold uppercase tracking-wide text-brand-600">FAQ</p>
           <h2 className="mt-1 text-2xl font-extrabold text-ink">Before you book</h2>
