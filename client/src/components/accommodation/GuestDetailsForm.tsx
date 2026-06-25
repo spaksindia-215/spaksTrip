@@ -16,6 +16,7 @@ type Props = {
   isLeadPassenger?: boolean;
   preBookPanMandatory?: boolean; // From PreBook response - TBO requirement
   preBookPassportMandatory?: boolean; // From PreBook response - TBO requirement
+  preBookCorporateBookingAllowed?: boolean; // From PreBook response - TBO corporate booking option
 };
 
 export default function GuestDetailsForm({
@@ -29,6 +30,7 @@ export default function GuestDetailsForm({
   isLeadPassenger = true,
   preBookPanMandatory = false,
   preBookPassportMandatory = false,
+  preBookCorporateBookingAllowed = false,
 }: Props) {
   const handleTitleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChange({
@@ -84,6 +86,23 @@ export default function GuestDetailsForm({
     onChange({
       ...guest,
       passportExpDate: e.target.value,
+    });
+  };
+
+  const handleCorporateBookingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isCorp = e.target.checked;
+    onChange({
+      ...guest,
+      isCorporate: isCorp,
+      // Clear corporate PAN if unchecking corporate booking
+      corporatePan: isCorp ? guest.corporatePan : undefined,
+    });
+  };
+
+  const handleCorporatePanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange({
+      ...guest,
+      corporatePan: e.target.value.toUpperCase(),
     });
   };
 
@@ -174,6 +193,42 @@ export default function GuestDetailsForm({
             placeholder="Child age (0-17)"
             error={ageError}
           />
+        </div>
+      )}
+
+      {/* Corporate Booking Option (only if allowed by hotel) */}
+      {isLeadPassenger && preBookCorporateBookingAllowed && (
+        <div className="mt-4 pt-4 border-t border-border-soft">
+          <div className="flex items-center gap-2 mb-3">
+            <input
+              id={`guest-corporate-${roomNumber}`}
+              type="checkbox"
+              checked={guest.isCorporate ?? false}
+              onChange={handleCorporateBookingChange}
+              className="w-4 h-4 rounded border-border cursor-pointer accent-brand-500"
+              aria-label="This is a corporate booking"
+            />
+            <label htmlFor={`guest-corporate-${roomNumber}`} className="text-[13px] font-medium text-ink cursor-pointer">
+              This is a corporate booking
+            </label>
+          </div>
+
+          {/* Corporate PAN (shown only if corporate booking is selected) */}
+          {guest.isCorporate && (
+            <div className="flex flex-col gap-1">
+              <label htmlFor={`guest-corporate-pan-${roomNumber}`} className="text-[13px] font-medium text-ink">
+                Corporate PAN <span className="text-danger-600">*</span>
+              </label>
+              <Input
+                id={`guest-corporate-pan-${roomNumber}`}
+                value={guest.corporatePan ?? ""}
+                onChange={handleCorporatePanChange}
+                placeholder="E.g., AAAPN5055K"
+                error={errors.corporatePan}
+                hint={errors.corporatePan ? undefined : "10 characters (5 letters, 4 digits, 1 letter)"}
+              />
+            </div>
+          )}
         </div>
       )}
 

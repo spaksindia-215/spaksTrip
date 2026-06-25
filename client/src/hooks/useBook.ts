@@ -32,6 +32,8 @@ export function useBook() {
     guests: HotelGuest[];
     guestNationality?: string;
     clientReferenceId?: string;
+    isCorporate?: boolean;
+    corporatePan?: string;
   }): Promise<BookResult | null> => {
     setState({ loading: true, error: null, result: null, timedOut: false });
 
@@ -60,6 +62,8 @@ export function useBook() {
               passengers,
             },
           ],
+          isCorporate: params.isCorporate ?? false,
+          corporatePan: params.corporatePan,
         }),
       });
 

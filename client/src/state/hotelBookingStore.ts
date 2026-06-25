@@ -15,6 +15,9 @@ export type HotelGuest = {
   passport?: string; // Required: Foreign nationals booking domestic hotels
   passportIssueDate?: string; // ISO format: YYYY-MM-DD
   passportExpDate?: string; // ISO format: YYYY-MM-DD
+  // Corporate booking fields (when hotel allows corporate bookings)
+  isCorporate?: boolean; // true = corporate booking, false = individual
+  corporatePan?: string; // Required when isCorporate=true (10 chars: XXXXX9999X)
 };
 
 export type HotelPreBookInfo = {
@@ -28,8 +31,12 @@ export type HotelPreBookInfo = {
   netAmount: number;
   panMandatory: boolean;
   passportMandatory: boolean;
+  corporateBookingAllowed: boolean; // TBO flag: whether corporate booking is allowed for this room
   paxNameMinLength: number;
   paxNameMaxLength: number;
+  // Hold/Voucher deadlines from TBO PreBook
+  lastVoucherDate?: string; // When voucher must be generated (for hold bookings)
+  lastCancellationDeadline?: string; // When booking can no longer be cancelled
 };
 
 export type HotelBooking = {
@@ -151,13 +158,15 @@ export const useHotelBookingStore = create<State & Actions>()(
       setPreBook: (preBook, netAmount) =>
         set((s) => {
           if (!s.current) return s;
-          // If netAmount differs from current totalPrice, update it (PreBook price is final)
+          // PreBook response contains the authoritative price from TBO
+          // Use netAmount as the total (this is what TBO expects us to charge)
           const updatedTotal = netAmount ?? s.current.totalPrice;
           return {
             current: {
               ...s.current,
               preBook,
               totalPrice: updatedTotal,
+              taxes: 0,  // Clear frontend-calculated taxes; TBO's price is authoritative
               status: "PAYMENT",
             },
           };

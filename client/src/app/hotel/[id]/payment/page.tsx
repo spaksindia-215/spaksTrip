@@ -10,6 +10,7 @@ import Button from "@/components/ui/Button";
 import { formatINR } from "@/lib/format";
 import { useHotelBookingStore } from "@/state/hotelBookingStore";
 import { useToast } from "@/components/ui/Toast";
+import { useAuthStore } from "@/state/authStore";
 
 // ─── Razorpay browser types ───────────────────────────────────────────────────
 
@@ -72,6 +73,7 @@ function PaymentInner() {
   const router = useRouter();
   const toast = useToast();
   const { current, confirm } = useHotelBookingStore();
+  const userId = useAuthStore((s) => s.user?.id);
 
   const [bookingOption, setBookingOption] = useState<BookingOption>("hold");
   const [phase, setPhase] = useState<
@@ -104,26 +106,35 @@ function PaymentInner() {
     // Capture snapshot so TypeScript knows it's non-null inside async callbacks.
     const booking = current;
 
+    console.log("[Hotel Payment] Verifying payment with userId:", userId);
+
     try {
+      const payload = {
+        razorpayOrderId: response.razorpay_order_id,
+        razorpayPaymentId: response.razorpay_payment_id,
+        razorpaySignature: response.razorpay_signature,
+        amountPaise: totalPaise,
+        bookingCode: booking.preBook!.bookingCode,
+        netAmount: booking.preBook!.netAmount,
+        isVoucherBooking: bookingOption === "voucher",
+        guests: booking.guests,
+        guestNationality: booking.guestNationality,
+        clientReferenceId: booking.id,
+        adults: booking.adults,
+        children: booking.children,
+        childrenAges: booking.childrenAges,
+        rooms: booking.rooms,
+        isCorporate: booking.guests[0]?.isCorporate ?? false,
+        corporatePan: booking.guests[0]?.corporatePan,
+        customerId: userId,
+      };
+
+      console.log("[Hotel Payment] Request payload keys:", Object.keys(payload));
+
       const res = await fetch("/api/hotels/razorpay/verify-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          razorpayOrderId: response.razorpay_order_id,
-          razorpayPaymentId: response.razorpay_payment_id,
-          razorpaySignature: response.razorpay_signature,
-          amountPaise: totalPaise,
-          bookingCode: booking.preBook!.bookingCode,
-          netAmount: booking.preBook!.netAmount,
-          isVoucherBooking: bookingOption === "voucher",
-          guests: booking.guests,
-          guestNationality: booking.guestNationality,
-          clientReferenceId: booking.id,
-          adults: booking.adults,
-          children: booking.children,
-          childrenAges: booking.childrenAges,
-          rooms: booking.rooms,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -444,10 +455,10 @@ function PaymentInner() {
                         Keep booking on hold. Generate voucher later before the
                         deadline.
                       </p>
-                      {current.preBook?.cancelPolicies?.[0]?.fromDate && (
+                      {current.preBook?.lastVoucherDate && (
                         <p className="text-[11px] text-blue-700 mt-2 font-medium">
                           Generate voucher by:{" "}
-                          {current.preBook.cancelPolicies[0].fromDate}
+                          {current.preBook.lastVoucherDate}
                         </p>
                       )}
                     </div>
@@ -510,21 +521,9 @@ function PaymentInner() {
                   Price Breakdown
                 </h2>
                 <div className="flex flex-col gap-2 text-[13px]">
-                  <div className="flex justify-between">
-                    <span className="text-ink-soft">
-                      Room ({current.nights}N × {current.rooms}R)
-                    </span>
-                    <span className="font-semibold">
-                      {formatINR(
-                        current.room.basePrice *
-                          current.nights *
-                          current.rooms,
-                      )}
-                    </span>
-                  </div>
                   {current.addOns.breakfast && (
                     <div className="flex justify-between">
-                      <span className="text-ink-soft">Breakfast</span>
+                      <span className="text-ink-soft">Breakfast ({current.nights}N × {current.rooms}R)</span>
                       <span className="font-semibold">
                         {formatINR(650 * current.nights * current.rooms)}
                       </span>
@@ -536,12 +535,6 @@ function PaymentInner() {
                       <span className="font-semibold">{formatINR(499)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between">
-                    <span className="text-ink-soft">Taxes (12%)</span>
-                    <span className="font-semibold">
-                      {formatINR(current.taxes)}
-                    </span>
-                  </div>
                   <div className="flex justify-between border-t border-border-soft pt-2 mt-1">
                     <span className="font-bold text-ink">Total</span>
                     <span className="font-extrabold text-[17px] text-ink">

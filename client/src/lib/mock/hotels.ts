@@ -137,6 +137,7 @@ export type Hotel = {
   checkOutTime?: string;
   latitude?: number;
   longitude?: number;
+  otherServices?: string[]; // Unmatched facilities from TBO API shown as-is
 };
 
 export type SearchFilters = {

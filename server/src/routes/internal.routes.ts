@@ -49,16 +49,19 @@ router.get(
 );
 
 // POST /api/internal/record-booking
-// Called by Next.js routes after TBO confirms a subdomain customer booking.
-// Creates a BookingModel entry so the agent's settlement query sees all bookings.
-// ownerId is set to agentId — the agent "owns" subdomain bookings for dashboard display.
+// Called by Next.js routes after TBO confirms a booking.
+// Creates a BookingModel entry so the customer dashboard and agent settlement sees all bookings.
+// For agent bookings: ownerId=agentId, ownerRole="agent", agentId=agentId
+// For customer bookings: ownerId=customerId (extracted from ownerIdStr if provided), ownerRole="customer"
 router.post(
   "/record-booking",
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const {
         agentId: agentIdStr,
+        customerId: customerIdStr,
         productType,
+        status,
         pnr,
         tboFare,
         platformMarkup,
@@ -66,8 +69,10 @@ router.post(
         agentMarkup,
         customerPaid,
       } = req.body as {
-        agentId:        string;
+        agentId?:       string;
+        customerId?:    string;
         productType:    string;
+        status?:        string;
         pnr?:           string;
         tboFare:        number;
         platformMarkup: number;
@@ -76,9 +81,6 @@ router.post(
         customerPaid:   number;
       };
 
-      if (!agentIdStr || !mongoose.isValidObjectId(agentIdStr)) {
-        throw new HttpError(400, "agentId must be a valid ObjectId");
-      }
       if (!(PRODUCT_TYPES as readonly string[]).includes(productType)) {
         throw new HttpError(400, `productType must be one of: ${PRODUCT_TYPES.join(", ")}`);
       }
@@ -86,14 +88,37 @@ router.post(
         throw new HttpError(400, "customerPaid must be a positive number");
       }
 
-      const agentId = new mongoose.Types.ObjectId(agentIdStr);
+      // Determine owner based on whether this is an agent or customer booking
+      let ownerId: mongoose.Types.ObjectId;
+      let ownerRole: "agent" | "customer";
+      let agentIdObj: mongoose.Types.ObjectId | undefined;
+
+      if (agentIdStr) {
+        // Agent booking (subdomain customer)
+        if (!mongoose.isValidObjectId(agentIdStr)) {
+          throw new HttpError(400, "agentId must be a valid ObjectId");
+        }
+        ownerId = new mongoose.Types.ObjectId(agentIdStr);
+        ownerRole = "agent";
+        agentIdObj = ownerId;
+      } else if (customerIdStr) {
+        // Regular customer booking
+        if (!mongoose.isValidObjectId(customerIdStr)) {
+          throw new HttpError(400, "customerId must be a valid ObjectId");
+        }
+        ownerId = new mongoose.Types.ObjectId(customerIdStr);
+        ownerRole = "customer";
+        agentIdObj = undefined;
+      } else {
+        throw new HttpError(400, "Either agentId or customerId must be provided");
+      }
 
       const booking = await BookingModel.create({
-        ownerId:        agentId,
-        ownerRole:      "agent",
-        agentId,
+        ownerId,
+        ownerRole,
+        agentId:        agentIdObj,
         productType:    productType as ProductType,
-        status:         "active",
+        status:         (status as any) || "active",
         pnr,
         amount:         customerPaid,
         currency:       "INR",

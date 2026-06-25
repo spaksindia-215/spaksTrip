@@ -38,6 +38,7 @@ interface HotelPaymentRecord {
   tboConfirmationNo?: string | null;
   tboInvoiceNumber?:  string | null;
   tboError?:          string;
+  tboFailureReason?:  "explicit_failure" | "timeout" | "network_error" | "unknown";
   refundId?:          string;
   refundInitiated:    boolean;
   // Agent attribution — present on subdomain customer bookings only
@@ -168,6 +169,9 @@ export async function POST(request: NextRequest) {
     const bookingCode: string | undefined = body?.bookingCode;
     const netAmount: number | undefined = body?.netAmount;
     const isVoucherBooking: boolean | undefined = body?.isVoucherBooking;
+    const customerId: string | undefined = body?.customerId;
+
+    console.log(`[VERIFY_PAYMENT] customerId received: ${customerId}`);
     const guests: Array<{
       title: string;
       firstName: string;
@@ -179,6 +183,8 @@ export async function POST(request: NextRequest) {
       passportExpDate?: string;
     }> | undefined = body?.guests;
     const guestNationality: string = body?.guestNationality ?? "IN";
+    const isCorporate: boolean | undefined = body?.isCorporate;
+    const corporatePan: string | undefined = body?.corporatePan;
     // Total adults and rooms from the booking — needed to reconstruct per-room
     // passenger count. Must match the remainder-distribution in searchHolidays.ts exactly.
     const totalAdults: number = Math.max(1, Number(body?.adults ?? 1));
@@ -449,6 +455,8 @@ export async function POST(request: NextRequest) {
       guestNationality,
       clientReferenceId,
       roomsDetails,
+      isCorporate: isCorporate ?? false,
+      corporatePan: corporatePan,
     };
 
     // Log request — mask PAN/passport; show per-room passenger breakdown
@@ -523,35 +531,41 @@ export async function POST(request: NextRequest) {
       },
     );
 
-    // Create a BookingModel entry for settlement reporting (non-fatal: fire-and-forget).
-    if (agentId && twoTierPricing) {
-      fetch(new URL("/api/internal/record-booking", API_BASE), {
-        method:  "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          agentId,
-          productType:  "hotel",
-          pnr:          tboResult.bookingRefNo ?? undefined,
-          ...twoTierPricing,
-        }),
-        cache: "no-store",
-      }).catch((e: unknown) => {
-        console.error("[record-booking] fire-and-forget failed:", e instanceof Error ? e.message : String(e));
-      });
-    }
+    // Create a BookingModel entry for settlement reporting and customer dashboard (non-fatal: fire-and-forget).
+    // For agent bookings (twoTierPricing), include full pricing; for customers, use simplified pricing.
+    // Hotel bookings are marked as "completed" since they are immediately confirmed by TBO.
+    fetch(new URL("/api/internal/record-booking", API_BASE), {
+      method:  "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        agentId,
+        customerId,
+        productType:  "hotel",
+        status:       "completed",
+        pnr:          tboResult.bookingRefNo ?? undefined,
+        ...(twoTierPricing ? twoTierPricing : { tboFare: Number(netAmount), platformMarkup: 0, netFare: Number(netAmount), agentMarkup: 0, customerPaid: capturedPaise / 100 }),
+      }),
+      cache: "no-store",
+    }).catch((e: unknown) => {
+      console.error("[record-booking] fire-and-forget failed:", e instanceof Error ? e.message : String(e));
+    });
 
     return NextResponse.json({ success: true, data: tboResult });
 
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
+    const isExplicitFailure = msg.includes("explicitly failed") || msg.includes("status_code=0");
     const isTimeout =
-      msg.includes("timed out") ||
-      msg.includes("timeout") ||
-      msg.includes("120");
+      !isExplicitFailure &&
+      (msg.includes("timed out") ||
+        msg.includes("timeout") ||
+        msg.includes("120"));
     const isPriceChanged =
       e instanceof TboBookingFailedError &&
       (msg.toLowerCase().includes("price") ||
         msg.toLowerCase().includes("verify"));
+    const tboFailureReason: "explicit_failure" | "timeout" | "unknown" =
+      isExplicitFailure ? "explicit_failure" : isTimeout ? "timeout" : "unknown";
 
     logError("BOOK_HOTEL", e, {
       razorpayPaymentId,
@@ -581,6 +595,7 @@ export async function POST(request: NextRequest) {
             $set: {
               status: "tbo_timeout",
               tboError: msg,
+              tboFailureReason: "timeout",
               updatedAt: new Date(),
             },
           },
@@ -617,6 +632,7 @@ export async function POST(request: NextRequest) {
           $set: {
             status: "tbo_failed",
             tboError: msg,
+            tboFailureReason,
             updatedAt: new Date(),
           },
         },

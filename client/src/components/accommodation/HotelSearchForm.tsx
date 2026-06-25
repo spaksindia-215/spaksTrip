@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Button from "@/components/ui/Button";
-import DateRangePicker, { type DateRange } from "@/components/ui/DateRangePicker";
+import DateRangePicker from "@/components/ui/DateRangePicker";
 import { useToast } from "@/components/ui/Toast";
 import { useHotelSearchStore } from "@/state/hotelSearchStore";
 import { toIsoDate } from "@/lib/format";
@@ -25,13 +25,11 @@ export default function HotelSearchForm() {
     destination?.kind === "country" ? destination.city ?? null : null
   );
 
-  const dateRange: DateRange = {
-    from: checkIn ? new Date(checkIn) : null,
-    to: checkOut ? new Date(checkOut) : null,
-  };
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const checkoutMinDate = checkIn
+    ? new Date(new Date(checkIn).getTime() + 24 * 60 * 60 * 1000)
+    : today;
 
   const onSearch = () => {
     if (!destination) {
@@ -111,19 +109,30 @@ export default function HotelSearchForm() {
         />
         <div className="flex flex-col gap-1">
           <span className="text-[12px] font-medium text-ink-muted">Check-in — Check-out</span>
-          <DateRangePicker
-            mode="range"
-            value={dateRange}
-            minDate={today}
-            onChange={(v) => {
-              setCheckIn(v.from ? toIsoDate(v.from) : null);
-              setCheckOut(v.to ? toIsoDate(v.to) : null);
-            }}
-            labelFrom="Check-in"
-            labelTo="Check-out"
-            placeholderFrom="Add date"
-            placeholderTo="Add date"
-          />
+          <div className="grid gap-2 sm:grid-cols-2">
+            <DateRangePicker
+              mode="single"
+              value={{ from: checkIn ? new Date(checkIn) : null, to: null }}
+              minDate={today}
+              onChange={(v) => {
+                const nextCheckIn = v.from ? toIsoDate(v.from) : null;
+                setCheckIn(nextCheckIn);
+                if (checkOut && nextCheckIn && new Date(checkOut) <= new Date(nextCheckIn)) {
+                  setCheckOut(null);
+                }
+              }}
+              labelFrom="Check-in"
+              placeholderFrom="Add date"
+            />
+            <DateRangePicker
+              mode="single"
+              value={{ from: checkOut ? new Date(checkOut) : null, to: null }}
+              minDate={checkoutMinDate}
+              onChange={(v) => setCheckOut(v.from ? toIsoDate(v.from) : null)}
+              labelFrom="Check-out"
+              placeholderFrom="Add date"
+            />
+          </div>
         </div>
         <RoomsGuestsPopover
           rooms={rooms}

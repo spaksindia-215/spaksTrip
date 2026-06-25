@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getDb } from "@/lib/mongodb";
 import { verifyBookingStatusAfterTimeout } from "@/lib/adapters/tbo/hotel/bookingRecovery";
 
 function err(message: string, status: number) {
@@ -22,6 +23,19 @@ export async function POST(request: NextRequest) {
       return err("firstName and lastName are required when querying by confirmationNo", 400);
     }
 
+    // Fetch failure reason from database for compliance check
+    let tboFailureReason: string | undefined;
+    try {
+      const db = await getDb();
+      const col = db.collection<any>("hotel_payment_records");
+      if (clientReferenceId) {
+        const record = await col.findOne({ clientReferenceId });
+        tboFailureReason = record?.tboFailureReason;
+      }
+    } catch {
+      // If DB lookup fails, continue without failure reason (non-blocking)
+    }
+
     const result = await verifyBookingStatusAfterTimeout({
       bookingId,
       confirmationNo,
@@ -30,6 +44,7 @@ export async function POST(request: NextRequest) {
       traceId,
       clientReferenceId,
       endUserIp,
+      tboFailureReason,
     });
 
     if (!result.found) {

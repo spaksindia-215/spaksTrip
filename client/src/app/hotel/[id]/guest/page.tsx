@@ -15,7 +15,7 @@ import { formatINR } from "@/lib/format";
 import { useHotelBookingStore, type HotelGuest } from "@/state/hotelBookingStore";
 import { useToast } from "@/components/ui/Toast";
 import { useParams } from "next/navigation";
-import { validateGuestName, validateGuestAge, validateNoDuplicateFirstNames } from "@/lib/validators/guestValidation";
+import { validateGuestName, validateGuestAge, validateNoDuplicateFirstNames, validateCorporatePAN } from "@/lib/validators/guestValidation";
 import { getIdentityRequirement, validatePAN, validatePassport, validatePassportExpiry } from "@/lib/validators/nationalityValidation";
 import { validateSession } from "@/lib/validators/sessionValidation";
 
@@ -177,6 +177,14 @@ function GuestInner() {
           }
         }
 
+        // Corporate PAN validation: required when corporate booking is selected
+        if (guest.isCorporate) {
+          const corpPanVal = validateCorporatePAN(guest.corporatePan ?? "");
+          if (!corpPanVal.valid) {
+            guestErr.corporatePan = corpPanVal.error;
+          }
+        }
+
         // Passport validation: required if nationality rules OR PreBook says mandatory
         const passportRequired = identityReq.passportRequired || preBookPassportMandatory;
         if (passportRequired) {
@@ -331,6 +339,7 @@ function GuestInner() {
                         isLeadPassenger={i === 0}
                         preBookPanMandatory={current?.preBook?.panMandatory}
                         preBookPassportMandatory={current?.preBook?.passportMandatory}
+                        preBookCorporateBookingAllowed={current?.preBook?.corporateBookingAllowed}
                       />
                     </div>
                   ))}
@@ -394,24 +403,12 @@ function GuestInner() {
               <div className="rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
                 <h2 className="text-[15px] font-bold text-ink mb-3">Price Summary</h2>
                 <div className="flex flex-col gap-2 text-[13px]">
-                  <div className="flex justify-between">
-                    <span className="text-ink-soft">{current.room.name}</span>
-                    <span className="font-semibold text-ink">{formatINR(current.room.basePrice)}/night</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-ink-soft">{current.nights} nights × {current.rooms} room{current.rooms !== 1 ? "s" : ""}</span>
-                    <span className="font-semibold text-ink">{formatINR(current.room.basePrice * current.nights * current.rooms)}</span>
-                  </div>
                   {addOnTotal > 0 && (
                     <div className="flex justify-between">
                       <span className="text-ink-soft">Add-ons</span>
                       <span className="font-semibold text-ink">{formatINR(addOnTotal)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between">
-                    <span className="text-ink-soft">Taxes & fees</span>
-                    <span className="font-semibold text-ink">{formatINR(current.taxes)}</span>
-                  </div>
                   <div className="flex justify-between border-t border-border-soft pt-2 mt-1">
                     <span className="font-bold text-ink">Total</span>
                     <span className="font-extrabold text-[16px] text-ink">{formatINR(current.totalPrice)}</span>
