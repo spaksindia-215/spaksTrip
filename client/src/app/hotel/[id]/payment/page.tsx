@@ -73,7 +73,7 @@ function PaymentInner() {
   const router = useRouter();
   const toast = useToast();
   const { current, confirm } = useHotelBookingStore();
-  const userId = useAuthStore((s) => s.user?.sub);
+  const userId = useAuthStore((s) => s.user?.id);
 
   const [bookingOption, setBookingOption] = useState<BookingOption>("hold");
   const [phase, setPhase] = useState<
