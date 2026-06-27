@@ -16,7 +16,8 @@ export type MailTemplate =
   | "eventReminder"
   | "eventUpdated"
   | "eventPartnerNewBooking"
-  | "eventPartnerBookingCancelled";
+  | "eventPartnerBookingCancelled"
+  | "hotelEnquiryReceived";
 
 export interface MailMessage {
   to: string;
@@ -27,6 +28,23 @@ export interface MailMessage {
 
 function renderBody(template: MailTemplate, data: Record<string, unknown>): string {
   switch (template) {
+    case "hotelEnquiryReceived":
+      return [
+        `Hi ${data.partnerName ?? "there"},`,
+        ``,
+        `You've received a new enquiry for "${data.hotelName}".`,
+        ``,
+        `Guest:   ${data.contactName}`,
+        `Phone:   ${data.contactPhone}`,
+        data.contactEmail ? `Email:   ${data.contactEmail}` : ``,
+        data.dates ? `Dates:   ${data.dates}` : ``,
+        `Guests:  ${data.pax}`,
+        data.message ? `Message: ${data.message}` : ``,
+        ``,
+        `Please reach out to the guest directly to confirm availability and pricing.`,
+      ]
+        .filter(Boolean)
+        .join("\n");
     case "superadminNewPending":
       return [
         `A new ${data.role} registration is awaiting approval.`,

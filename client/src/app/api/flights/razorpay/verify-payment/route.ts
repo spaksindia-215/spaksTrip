@@ -327,13 +327,15 @@ export async function POST(request: NextRequest) {
       }).catch((e: unknown) => console.error("[record-booking] fire-and-forget failed:", e instanceof Error ? e.message : String(e)));
     }
 
-    // Customer dashboard recording (main-site logged-in customers). Best-effort.
-    {
+    // Customer dashboard recording. Logged-in customer → owned; guest → claimed later
+    // by the contact email. Skip agent-subdomain bookings (attributed to the agent).
+    if (!agentId) {
       const v = (booking as { validation?: { origin?: string; destination?: string; airlineCode?: string } }).validation;
       void recordCustomerBooking({
         productType: "flight",
         pnr: result.pnr,
         amount: Math.round(capturedPaise / 100),
+        claimEmail: booking.contactEmail,
         details: {
           origin: v?.origin,
           destination: v?.destination,

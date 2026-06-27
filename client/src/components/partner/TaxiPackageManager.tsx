@@ -8,6 +8,8 @@ import EmptyState from "@/components/ui/EmptyState";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import { useToast } from "@/components/ui/Toast";
+import StatusBadge from "@/components/dashboard/StatusBadge";
+import { useSubmitForReview, SUBMITTABLE_STATUSES } from "./useSubmitForReview";
 import { partnerClient, type TaxiListingApi, type TaxiPackageApi } from "@/lib/partnerClient";
 import {
   buildTaxiPackageFormData,
@@ -57,6 +59,8 @@ export default function TaxiPackageManager() {
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  const { submittingId, submit: submitForReview } = useSubmitForReview("taxi_package", refresh);
 
   function setField<K extends keyof TaxiPackageFormState>(key: K, value: TaxiPackageFormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -345,10 +349,8 @@ export default function TaxiPackageManager() {
                 </div>
               )}
               <div className="space-y-3 p-5">
-                <div className="flex items-center gap-2">
-                  <Badge tone={pkg.status === "active" ? "success" : "warn"} size="sm">
-                    {pkg.status}
-                  </Badge>
+                <div className="flex flex-wrap items-center gap-2">
+                  <StatusBadge status={pkg.status} />
                   <Badge tone="brand" size="sm">
                     {pkg.route.durationDays}D/{pkg.route.durationNights}N
                   </Badge>
@@ -369,10 +371,15 @@ export default function TaxiPackageManager() {
                     </span>
                   ) : null}
                 </div>
-                <div className="flex gap-2 pt-1">
+                <div className="flex flex-wrap gap-2 pt-1">
                   <Button type="button" variant="secondary" onClick={() => openEdit(pkg)}>
                     Edit
                   </Button>
+                  {SUBMITTABLE_STATUSES.includes(pkg.status) && (
+                    <Button type="button" variant="primary" loading={submittingId === pkg.id} onClick={() => submitForReview(pkg.id)}>
+                      Submit for review
+                    </Button>
+                  )}
                   <Button type="button" variant="danger" onClick={() => removePackage(pkg)}>
                     Delete
                   </Button>

@@ -91,6 +91,9 @@ export default function HotelPartnerRegistration() {
   const [inventory, setInventory] = useState<InventoryData[]>([]);
   const [pricing, setPricing] = useState<Partial<PricingData>>({});
   const [promotions, setPromotions] = useState<PromotionData[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   const steps: RegistrationStep[] = ["info", "rooms", "rates", "inventory", "pricing", "promotions", "review"];
   const stepIndex = steps.indexOf(currentStep);
@@ -108,6 +111,8 @@ export default function HotelPartnerRegistration() {
   };
 
   const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setSubmitError(null);
     try {
       const formData = new FormData();
 
@@ -139,13 +144,51 @@ export default function HotelPartnerRegistration() {
         throw new Error("Failed to submit hotel registration");
       }
 
-      const result = await response.json();
-      setCurrentStep("review");
+      await response.json();
+      setSubmitted(true);
     } catch (error) {
       console.error("Error submitting hotel registration:", error);
-      alert("Error submitting registration. Please try again.");
+      setSubmitError(
+        "We couldn't submit your listing. Please check your connection and try again.",
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-white py-12 px-6">
+        <div className="mx-auto max-w-4xl">
+          <div className="rounded-md border border-border-soft bg-white p-12 text-center shadow-card">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-brand-50">
+              <svg
+                className="h-8 w-8 text-brand-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold text-brand-950">Listing submitted</h1>
+            <p className="mt-3 text-lg text-ink-muted">
+              Thanks! Your property has been submitted for review. Our team will verify
+              the details and get back to you shortly.
+            </p>
+            <a
+              href="/partner/hotels"
+              className="mt-6 inline-flex items-center justify-center rounded-md bg-brand-600 px-5 py-2.5 text-[14px] font-semibold text-white hover:bg-brand-700"
+            >
+              Go to My Hotels
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white py-12 px-6">
@@ -244,8 +287,21 @@ export default function HotelPartnerRegistration() {
           )}
         </div>
 
+        {submitError && (
+          <div
+            role="alert"
+            className="mt-6 rounded-md border border-danger-200 bg-danger-50 px-4 py-3 text-sm text-danger-700"
+          >
+            {submitError}
+          </div>
+        )}
+
         <div className="mt-8 flex justify-between">
-          <Button variant="outline" onClick={handlePrevious} disabled={stepIndex === 0}>
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={stepIndex === 0 || isSubmitting}
+          >
             Previous
           </Button>
           {currentStep !== "review" ? (
@@ -253,8 +309,8 @@ export default function HotelPartnerRegistration() {
               Next
             </Button>
           ) : (
-            <Button variant="accent" onClick={handleSubmit}>
-              Submit listing
+            <Button variant="accent" onClick={handleSubmit} loading={isSubmitting}>
+              {isSubmitting ? "Submitting…" : "Submit listing"}
             </Button>
           )}
         </div>

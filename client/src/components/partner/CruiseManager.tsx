@@ -8,6 +8,8 @@ import EmptyState from "@/components/ui/EmptyState";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import { useToast } from "@/components/ui/Toast";
+import StatusBadge from "@/components/dashboard/StatusBadge";
+import { useSubmitForReview, SUBMITTABLE_STATUSES } from "./useSubmitForReview";
 import { partnerClient, type CruiseListingApi } from "@/lib/partnerClient";
 import {
   buildCruiseFormData,
@@ -59,6 +61,8 @@ export default function CruiseManager() {
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  const { submittingId, submit: submitForReview } = useSubmitForReview("cruise", refresh);
 
   function setField<K extends keyof CruiseFormState>(key: K, value: CruiseFormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -315,7 +319,7 @@ export default function CruiseManager() {
               )}
               <div className="space-y-3 p-5">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge tone={c.status === "active" ? "success" : "warn"} size="sm">{c.status}</Badge>
+                  <StatusBadge status={c.status} />
                   <Badge tone="accent" size="sm">{titleCase(c.cruiseType)}</Badge>
                   <Badge tone="brand" size="sm">{c.route.durationDays}D{c.route.durationNights ? `/${c.route.durationNights}N` : ""}</Badge>
                 </div>
@@ -331,8 +335,13 @@ export default function CruiseManager() {
                   </p>
                   <span className="text-[13px] text-ink-muted">{c.cabins.length} cabin types</span>
                 </div>
-                <div className="flex gap-2 pt-1">
+                <div className="flex flex-wrap gap-2 pt-1">
                   <Button type="button" variant="secondary" onClick={() => openEdit(c)}>Edit</Button>
+                  {SUBMITTABLE_STATUSES.includes(c.status) && (
+                    <Button type="button" variant="primary" loading={submittingId === c.id} onClick={() => submitForReview(c.id)}>
+                      Submit for review
+                    </Button>
+                  )}
                   <Button type="button" variant="danger" onClick={() => removeCruise(c)}>Delete</Button>
                 </div>
               </div>

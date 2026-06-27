@@ -4,7 +4,9 @@
 // five models land. Mirrors the const-array + derived-union pattern used by
 // ../../partnerInventory.ts.
 
-export const RESOURCE_STATUS = ["draft", "active", "paused", "suspended"] as const;
+// "pending" = submitted by the partner and awaiting admin approval; "active" is
+// only reachable via admin approval, never set directly by a partner.
+export const RESOURCE_STATUS = ["draft", "pending", "active", "paused", "suspended"] as const;
 export type ResourceStatus = (typeof RESOURCE_STATUS)[number];
 
 export const CURRENCY_CODES = ["INR", "USD", "EUR", "AED", "GBP"] as const;
@@ -207,3 +209,49 @@ export type EventRefundStatus = (typeof EVENT_REFUND_STATUS)[number];
 
 export const EVENT_BOOKING_SOURCE = ["web", "agent_portal", "api"] as const;
 export type EventBookingSource = (typeof EVENT_BOOKING_SOURCE)[number];
+
+// ── Marketplace packages (Package + PackageOffer + PackageEnquiry) ─────────────
+// A shared package catalog where the definition (the package) is decoupled from
+// pricing (per-operator offers). One package can carry many operator offers; a
+// customer enquiry is a lead routed to the chosen operator + the platform.
+
+// Vertical the package belongs to. "holiday" is split national/international via
+// PACKAGE_SCOPE; the four taxi/tour variants mirror the existing partner models.
+export const PACKAGE_KINDS = [
+  "taxi",
+  "taxi_package",
+  "tour",
+  "tour_package",
+  "holiday",
+] as const;
+export type PackageKind = (typeof PACKAGE_KINDS)[number];
+
+// Geographic scope — drives the national vs international holiday/tour surfaces.
+export const PACKAGE_SCOPES = ["domestic", "international"] as const;
+export type PackageScope = (typeof PACKAGE_SCOPES)[number];
+
+// Who authored the package definition: a platform-curated fixed template (admin)
+// or a partner's own custom package. Operators attach offers to either.
+export const PACKAGE_ORIGINS = ["platform", "partner"] as const;
+export type PackageOrigin = (typeof PACKAGE_ORIGINS)[number];
+
+// Lead lifecycle for a customer enquiry against an operator's offer.
+export const ENQUIRY_STATUS = [
+  "new",
+  "contacted",
+  "quoted",
+  "converted",
+  "closed",
+  "spam",
+] as const;
+export type EnquiryStatus = (typeof ENQUIRY_STATUS)[number];
+
+// Placeholder payment state — enquiries are lead-only today; this leaves room to
+// attach an online payment later without a schema migration.
+export const ENQUIRY_PAYMENT_STATUS = [
+  "not_applicable",
+  "pending",
+  "paid",
+  "refunded",
+] as const;
+export type EnquiryPaymentStatus = (typeof ENQUIRY_PAYMENT_STATUS)[number];

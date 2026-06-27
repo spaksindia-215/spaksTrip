@@ -11,7 +11,7 @@ export const env = {
   nodeEnv: process.env.NODE_ENV ?? "development",
   port: Number(process.env.PORT ?? 4000),
   clientOrigin: process.env.CLIENT_ORIGIN ?? "http://localhost:3000",
-  mongoUri: required("MONGO_URI"),
+  mongoUri: process.env.MONGO_URI ?? process.env.MONGODB_URI ?? required("MONGO_URI"),
   accessSecret: required("ACCESS_TOKEN_SECRET"),
   refreshSecret: required("REFRESH_TOKEN_SECRET"),
   accessTtl: process.env.ACCESS_TOKEN_TTL ?? "15m",

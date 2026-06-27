@@ -14,7 +14,7 @@ export default function HotelPartnerCTA() {
               List your property and reach millions of travelers worldwide
             </p>
           </div>
-          <Link href="/partner/hotels" className="flex-shrink-0">
+          <Link href="/partner/hotels/new" className="flex-shrink-0">
             <Button variant="secondary" size="lg">
               List Your Hotel
             </Button>

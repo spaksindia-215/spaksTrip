@@ -138,13 +138,55 @@ export type TourListingApi = {
   updatedAt: string;
 };
 
-// Minimal hotel listing shape (used for the tour-package includes picker).
+// Minimal hotel listing shape (used for the tour-package includes picker and
+// the partner dashboard's recent-activity / status display).
 export type HotelListingApi = {
   id: string;
   name: string;
   type: string;
-  status: string;
+  status: "draft" | "pending" | "active" | "paused" | "suspended";
   address?: { city?: string };
+  createdAt: string;
+  updatedAt: string;
+};
+
+// Full hotel listing as returned by GET /api/partner/hotels/:id — used to prefill
+// the partner edit form. Images/rooms/rates/inventory are read-only here.
+export type HotelListingDetail = {
+  id: string;
+  name: string;
+  description?: string;
+  type: string;
+  status: "draft" | "pending" | "active" | "paused" | "suspended";
+  starRating?: number;
+  address: {
+    street?: string;
+    city: string;
+    state?: string;
+    country?: string;
+    postalCode?: string;
+  };
+  contact?: { phone?: string; email?: string };
+  policies?: { checkIn?: string; checkOut?: string; cancellation?: string };
+  amenities?: string[];
+  images?: { url: string; caption?: string }[];
+  rooms?: { name: string }[];
+  pricing?: { basePricePerNight?: number; taxPercentage?: number; currency?: string };
+  createdAt: string;
+  updatedAt: string;
+};
+
+// Editable subset sent to PUT /api/partner/hotels/:id.
+export type HotelListingUpdate = {
+  name?: string;
+  description?: string;
+  type?: string;
+  starRating?: number;
+  amenities?: string[];
+  address?: { street?: string; city?: string; state?: string; country?: string; postalCode?: string };
+  contact?: { phone?: string; email?: string };
+  policies?: { checkIn?: string; checkOut?: string; cancellation?: string };
+  pricing?: { basePricePerNight?: number; taxPercentage?: number; currency?: string };
 };
 
 // Typed TourPackage as returned by the backend (mirrors the model's toJSON).
@@ -321,6 +363,17 @@ export const partnerClient = {
     return response.items;
   },
 
+  // Submit any partner-resource listing for admin review (draft/paused/suspended
+  // → pending). `type` is the vertical: taxi | taxi_package | tour | tour_package
+  // | cruise | hotel. Returns the new status.
+  async submitListing(type: string, id: string): Promise<{ status: string }> {
+    const response = await api<{ item: { status: string } }>(
+      `/api/partner/listings/${type}/${id}/submit`,
+      { method: "POST" },
+    );
+    return response.item;
+  },
+
   // Taxi listings are persisted server-side (MTI TaxiListing model); images and
   // documents are uploaded through the same multipart request to Cloudinary.
   taxis: {
@@ -390,11 +443,36 @@ export const partnerClient = {
     },
   },
 
-  // Hotels — list only (used by the tour-package includes picker).
+  // Hotels — created via the multipart wizard (POST elsewhere); here we list,
+  // fetch one for editing, save core-field edits, and submit for admin review.
   hotels: {
     async list(): Promise<HotelListingApi[]> {
       const response = await api<{ items: HotelListingApi[] }>("/api/partner/hotels");
       return response.items;
+    },
+
+    async get(id: string): Promise<HotelListingDetail> {
+      const response = await api<{ item: HotelListingDetail }>(`/api/partner/hotels/${id}`);
+      return response.item;
+    },
+
+    async update(id: string, patch: HotelListingUpdate): Promise<HotelListingDetail> {
+      const response = await api<{ item: HotelListingDetail }>(`/api/partner/hotels/${id}`, {
+        method: "PUT",
+        body: patch,
+      });
+      return response.item;
+    },
+
+    async submit(id: string): Promise<HotelListingDetail> {
+      const response = await api<{ item: HotelListingDetail }>(`/api/partner/hotels/${id}/submit`, {
+        method: "POST",
+      });
+      return response.item;
+    },
+
+    async remove(id: string): Promise<void> {
+      await api<{ ok: true }>(`/api/partner/hotels/${id}`, { method: "DELETE" });
     },
   },
 

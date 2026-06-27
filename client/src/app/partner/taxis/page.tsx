@@ -1,5 +1,5 @@
-import ResourceManager from "@/components/partner/ResourceManager";
+import TaxiManager from "@/components/partner/TaxiManager";
 
 export default function PartnerTaxisPage() {
-  return <ResourceManager type="taxi" />;
+  return <TaxiManager />;
 }

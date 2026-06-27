@@ -7,9 +7,20 @@ import ErrorState from "@/components/ui/ErrorState";
 import StatCard from "@/components/dashboard/StatCard";
 import StatusBadge from "@/components/dashboard/StatusBadge";
 import DataTable, { type Column } from "@/components/dashboard/DataTable";
+import { useToast } from "@/components/ui/Toast";
 import { ApiError } from "@/lib/api";
 import { useAuthStore } from "@/state/authStore";
 import { partnerClient, type PartnerResource, type ResourceType } from "@/lib/partnerClient";
+
+// Per-vertical delete — each type lives in its own collection/endpoint.
+const REMOVE: Record<ResourceType, (id: string) => Promise<void>> = {
+  hotel: (id) => partnerClient.hotels.remove(id),
+  taxi: (id) => partnerClient.taxis.remove(id),
+  taxi_package: (id) => partnerClient.taxiPackages.remove(id),
+  tour: (id) => partnerClient.tours.remove(id),
+  tour_package: (id) => partnerClient.tourPackages.remove(id),
+  cruise: (id) => partnerClient.cruises.remove(id),
+};
 
 const RESOURCE_TYPES: ResourceType[] = [
   "hotel",
@@ -30,7 +41,7 @@ const META: Record<ResourceType, { label: string; href: string }> = {
 };
 
 const QUICK_ACTIONS: { label: string; href: string }[] = [
-  { label: "Add hotel", href: "/partner/hotels" },
+  { label: "Add hotel", href: "/partner/hotels/new" },
   { label: "Add taxi", href: "/partner/taxis" },
   { label: "Add tour", href: "/partner/tours" },
   { label: "Add package", href: "/partner/tour-packages" },
@@ -56,6 +67,7 @@ function resourceStatus(item: PartnerResource): string {
 }
 
 export default function PartnerDashboardPage() {
+  const toast = useToast();
   const displayName = useAuthStore((state) => state.user?.displayName ?? "");
   const firstName = displayName.trim().split(/\s+/)[0] || "Partner";
 
@@ -64,6 +76,28 @@ export default function PartnerDashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [reloadKey, setReloadKey] = useState(0);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  async function handleDelete(row: Row) {
+    if (!window.confirm(`Delete "${row.title || "this listing"}"? This cannot be undone.`)) return;
+    setDeletingId(row.id);
+    try {
+      await REMOVE[row.type](row.id);
+      setRecent((prev) => prev.filter((r) => r.id !== row.id));
+      setCounts((prev) =>
+        prev ? { ...prev, [row.type]: Math.max(0, (prev[row.type] ?? 1) - 1) } : prev,
+      );
+      toast.push({ title: "Listing deleted", tone: "success" });
+    } catch (err) {
+      toast.push({
+        title: "Could not delete",
+        description: err instanceof ApiError ? err.message : "Please try again.",
+        tone: "danger",
+      });
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   useEffect(() => {
     let active = true;
@@ -72,22 +106,43 @@ export default function PartnerDashboardPage() {
       setLoading(true);
       setError(null);
       try {
-        const entries = await Promise.all(
-          RESOURCE_TYPES.map(async (type) => {
-            const items = await partnerClient.list(type);
-            return [type, items] as const;
-          }),
-        );
+        // Hotels live in their own collection (/api/partner/hotels), not in the
+        // generic PartnerResource store the other verticals use — so fetch them
+        // separately and adapt into the same Row shape.
+        const [entries, hotelListings] = await Promise.all([
+          Promise.all(
+            RESOURCE_TYPES.filter((type) => type !== "hotel").map(async (type) => {
+              const items = await partnerClient.list(type);
+              return [type, items] as const;
+            }),
+          ),
+          partnerClient.hotels.list(),
+        ]);
 
         if (!active) return;
 
-        const countMap = Object.fromEntries(
-          entries.map(([type, items]) => [type, items.length]),
-        ) as Record<ResourceType, number>;
+        const hotelRows: Row[] = hotelListings.map((h) => ({
+          id: h.id,
+          partnerId: "",
+          type: "hotel",
+          title: h.name,
+          description: "",
+          price: 0,
+          metadata: { status: h.status },
+          createdAt: h.createdAt,
+          updatedAt: h.updatedAt,
+          typeLabel: META.hotel.label,
+        }));
+
+        const countMap = Object.fromEntries([
+          ...entries.map(([type, items]) => [type, items.length]),
+          ["hotel", hotelListings.length],
+        ]) as Record<ResourceType, number>;
 
         const allRows: Row[] = entries.flatMap(([type, items]) =>
           items.map((item) => ({ ...item, typeLabel: META[type].label })),
         );
+        allRows.push(...hotelRows);
         allRows.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
         setCounts(countMap);
@@ -134,6 +189,21 @@ export default function PartnerDashboardPage() {
       cell: (r) => <span className="text-ink-muted">{timeAgo(r.updatedAt)}</span>,
     },
     { key: "status", header: "Status", align: "right", cell: (r) => <StatusBadge status={resourceStatus(r)} /> },
+    {
+      key: "actions",
+      header: "",
+      align: "right",
+      cell: (r) => (
+        <Button
+          variant="danger"
+          size="sm"
+          loading={deletingId === r.id}
+          onClick={() => handleDelete(r)}
+        >
+          Delete
+        </Button>
+      ),
+    },
   ];
 
   return (

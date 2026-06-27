@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
+import { getMongoUri } from './mongoEnv.mjs';
 
 // MongoDB connection string
-const MONGO_URI = 'mongodb+srv://oskmeenaa_db_user:iZyshq2zgAn2mQFq@cluster0.mqaf036.mongodb.net/?appName=Cluster0';
+const MONGO_URI = getMongoUri();
 
 // Booking Schema
 const bookingSchema = new mongoose.Schema({

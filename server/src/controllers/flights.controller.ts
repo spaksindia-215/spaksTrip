@@ -744,27 +744,27 @@ export async function verifyPayment(req: Request, res: Response): Promise<void> 
       void recordSubdomainBooking({ agentId, productType: "flight", pnr: result.pnr, pricing });
     }
 
-    // Customer dashboard: record the trip against the logged-in customer (main-site
-    // bookings). No-op for agent-subdomain visitors / guests — resolveOptionalUser
-    // returns null unless a valid customer-role token rode along on the cookie.
-    {
+    // Customer dashboard: record the trip so it lands in the customer's history.
+    // Logged-in customer → owned immediately; otherwise a guest booking tagged with
+    // the contact email, claimed when they register/log in with that same email.
+    // Skip agent-subdomain bookings (those are attributed to the agent above).
+    if (!agentId) {
       const customer = resolveOptionalUser(req);
-      if (customer?.role === "customer") {
-        const v = booking.validation;
-        void recordCustomerBooking({
-          ownerId: customer.sub,
-          ownerRole: customer.role,
-          productType: "flight",
-          pnr: result.pnr,
-          amount: Math.round(capturedPaise / 100),
-          details: {
-            origin: v?.origin,
-            destination: v?.destination,
-            passengers: booking.passengers.length,
-            airline: v?.airlineCode,
-          },
-        });
-      }
+      const v = booking.validation;
+      void recordCustomerBooking({
+        productType: "flight",
+        pnr: result.pnr,
+        amount: Math.round(capturedPaise / 100),
+        details: {
+          origin: v?.origin,
+          destination: v?.destination,
+          passengers: booking.passengers.length,
+          airline: v?.airlineCode,
+        },
+        ...(customer?.role === "customer"
+          ? { ownerId: customer.sub, ownerRole: "customer" as const }
+          : { claimEmail: booking.contactEmail }),
+      });
     }
 
     res.json({

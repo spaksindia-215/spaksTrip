@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import LocationPicker from "@/components/ui/LocationPicker";
 
 type HotelData = {
   hotelName: string;
@@ -271,42 +272,18 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
           )}
         </div>
 
-        <div>
+        <div className="md:col-span-2">
           <label className="block text-sm font-medium text-brand-950 mb-2">
-            Latitude *
+            Location *
           </label>
-          <input
-            type="number"
-            step="0.000001"
-            value={data.latitude || ""}
-            onChange={(e) => handleChange("latitude", parseFloat(e.target.value))}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.latitude ? "border-danger-500" : "border-border"
-            }`}
-            placeholder="Latitude"
+          <LocationPicker
+            latitude={typeof data.latitude === "number" ? data.latitude : undefined}
+            longitude={typeof data.longitude === "number" ? data.longitude : undefined}
+            error={errors.latitude || errors.longitude}
+            onChange={({ latitude, longitude }) =>
+              onDataChange({ ...data, latitude, longitude })
+            }
           />
-          {errors.latitude && (
-            <p className="mt-1 text-sm text-danger-500">{errors.latitude}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-brand-950 mb-2">
-            Longitude *
-          </label>
-          <input
-            type="number"
-            step="0.000001"
-            value={data.longitude || ""}
-            onChange={(e) => handleChange("longitude", parseFloat(e.target.value))}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-600 ${
-              errors.longitude ? "border-danger-500" : "border-border"
-            }`}
-            placeholder="Longitude"
-          />
-          {errors.longitude && (
-            <p className="mt-1 text-sm text-danger-500">{errors.longitude}</p>
-          )}
         </div>
 
         <div>

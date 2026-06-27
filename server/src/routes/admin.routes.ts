@@ -12,7 +12,15 @@ import {
   updateNavbarSettings,
   getPlatformMarkup,
   updatePlatformMarkup,
+  listHotelListings,
+  approveHotelListing,
+  rejectHotelListing,
 } from "../controllers/admin.controller";
+import {
+  adminListListings,
+  adminApproveListing,
+  adminRejectListing,
+} from "../controllers/moderation.controller";
 import { adminSessionMiddleware } from "../middleware/adminSession";
 import { authRateLimiter } from "../middleware/rateLimit";
 
@@ -27,6 +35,18 @@ router.post("/approve/:id", adminSessionMiddleware, approve);
 router.post("/reject/:id", adminSessionMiddleware, reject);
 router.get("/users", adminSessionMiddleware, listUsers);
 router.patch("/users/:id/credit-limit", adminSessionMiddleware, setCreditLimit);
+
+// Partner hotel-listing review queue. Submitted listings land as "pending" and
+// only become "active" (publicly visible) once an admin approves here.
+router.get("/hotel-listings", adminSessionMiddleware, listHotelListings);
+router.post("/hotel-listings/:id/approve", adminSessionMiddleware, approveHotelListing);
+router.post("/hotel-listings/:id/reject", adminSessionMiddleware, rejectHotelListing);
+
+// Unified review queue across every partner-resource vertical (hotel, taxi,
+// taxi_package, tour, tour_package, cruise). Approve → active, reject → draft.
+router.get("/listings", adminSessionMiddleware, adminListListings);
+router.post("/listings/:type/:id/approve", adminSessionMiddleware, adminApproveListing);
+router.post("/listings/:type/:id/reject", adminSessionMiddleware, adminRejectListing);
 
 // Navbar visibility — GET is public (read by all visitors), PUT requires admin session.
 router.get("/navbar-settings", getNavbarSettings);

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { getMongoUri } from './mongoEnv.mjs';
 
-const MONGO_URI = 'mongodb+srv://oskmeenaa_db_user:iZyshq2zgAn2mQFq@cluster0.mqaf036.mongodb.net/?appName=Cluster0';
+const MONGO_URI = getMongoUri();
 
 async function checkBookings() {
   try {
