@@ -35,6 +35,14 @@ function ensureValidId(id: string): void {
   if (!mongoose.isValidObjectId(id)) throw new HttpError(400, "Invalid id");
 }
 
+function paramStr(v: unknown): string {
+  return typeof v === "string" ? v : "";
+}
+
+function isObject(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null && !Array.isArray(v);
+}
+
 export async function listResources(
   req: Request,
   res: Response,
@@ -127,7 +135,12 @@ export async function createHotelListing(
       roomImageUrls,
     });
 
-    const doc = await HotelListingModel.create({ ...input, partner: partnerId });
+    // Always enters the admin review queue — a partner can never self-publish.
+    const doc = await HotelListingModel.create({
+      ...input,
+      partner: partnerId,
+      status: "pending",
+    });
     res.status(201).json({ item: doc.toJSON() });
   } catch (e) {
     next(e);
@@ -144,6 +157,134 @@ export async function listHotelListings(
     const partnerId = partnerIdFrom(req);
     const items = await HotelListingModel.find({ partner: partnerId }).sort({ createdAt: -1 });
     res.json({ items: items.map((i) => i.toJSON()) });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// GET /api/partner/hotels/:id — owner-scoped single listing (for the edit form).
+export async function getHotelListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramStr(req.params.id);
+    ensureValidId(id);
+    const doc = await HotelListingModel.findOne({ _id: id, partner: partnerId });
+    if (!doc) throw new HttpError(404, "Hotel listing not found");
+    res.json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// PUT /api/partner/hotels/:id — owner-scoped edit of the core listing fields.
+// Images, rooms, rates, inventory and promotions are preserved as-is (managed in
+// the create wizard); status is untouched here — use the submit endpoint to send
+// a listing for admin review.
+export async function updateHotelListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramStr(req.params.id);
+    ensureValidId(id);
+    const doc = await HotelListingModel.findOne({ _id: id, partner: partnerId });
+    if (!doc) throw new HttpError(404, "Hotel listing not found");
+
+    const body = (req.body ?? {}) as Record<string, unknown>;
+    const str = (v: unknown): string | undefined =>
+      typeof v === "string" ? v.trim() : undefined;
+
+    if (str(body.name) !== undefined) doc.name = str(body.name)!;
+    if (str(body.description) !== undefined) doc.description = str(body.description);
+    if (str(body.type) !== undefined) doc.type = str(body.type) as typeof doc.type;
+    if (body.starRating !== undefined && body.starRating !== null && body.starRating !== "") {
+      doc.starRating = Number(body.starRating) as typeof doc.starRating;
+    }
+    if (Array.isArray(body.amenities)) {
+      doc.amenities = body.amenities.filter((a): a is string => typeof a === "string");
+    }
+
+    const address = (body.address ?? {}) as Record<string, unknown>;
+    if (isObject(body.address)) {
+      doc.address.street = str(address.street);
+      if (str(address.city) !== undefined) doc.address.city = str(address.city)!;
+      doc.address.state = str(address.state);
+      doc.address.country = str(address.country);
+      doc.address.postalCode = str(address.postalCode);
+    }
+
+    const contact = (body.contact ?? {}) as Record<string, unknown>;
+    if (isObject(body.contact)) {
+      doc.contact.phone = str(contact.phone);
+      doc.contact.email = str(contact.email);
+    }
+
+    const policies = (body.policies ?? {}) as Record<string, unknown>;
+    if (isObject(body.policies)) {
+      doc.policies.checkIn = str(policies.checkIn);
+      doc.policies.checkOut = str(policies.checkOut);
+      doc.policies.cancellation = str(policies.cancellation);
+    }
+
+    const pricing = (body.pricing ?? {}) as Record<string, unknown>;
+    if (isObject(body.pricing)) {
+      if (pricing.basePricePerNight !== undefined)
+        doc.pricing.basePricePerNight = Number(pricing.basePricePerNight);
+      if (pricing.taxPercentage !== undefined)
+        doc.pricing.taxPercentage = Number(pricing.taxPercentage);
+      if (str(pricing.currency) !== undefined)
+        doc.pricing.currency = str(pricing.currency) as typeof doc.pricing.currency;
+    }
+
+    await doc.save(); // schema validators run on save
+    res.json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// POST /api/partner/hotels/:id/submit — owner sends a listing for admin review
+// (draft/paused/suspended → pending). The admin queue then surfaces it.
+export async function submitHotelListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramStr(req.params.id);
+    ensureValidId(id);
+    const doc = await HotelListingModel.findOne({ _id: id, partner: partnerId });
+    if (!doc) throw new HttpError(404, "Hotel listing not found");
+    if (doc.status === "pending") throw new HttpError(409, "Listing is already pending review");
+    if (doc.status === "active") throw new HttpError(409, "Listing is already live");
+    doc.status = "pending";
+    await doc.save();
+    res.json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// DELETE /api/partner/hotels/:id — owner-scoped delete of a listing.
+export async function deleteHotelListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const partnerId = partnerIdFrom(req);
+    const id = paramStr(req.params.id);
+    ensureValidId(id);
+    const doc = await HotelListingModel.findOneAndDelete({ _id: id, partner: partnerId });
+    if (!doc) throw new HttpError(404, "Hotel listing not found");
+    res.json({ ok: true });
   } catch (e) {
     next(e);
   }
@@ -184,7 +325,9 @@ export async function createTaxiListing(
     };
 
     const input = validateTaxiListing(payload, media);
-    const doc = await TaxiListingModel.create({ ...input, partner: partnerId });
+    // Enters the admin review queue — never auto-published (schema default is
+    // "active", so we set "pending" explicitly here).
+    const doc = await TaxiListingModel.create({ ...input, partner: partnerId, status: "pending" });
     res.status(201).json({ item: doc.toJSON() });
   } catch (e) {
     next(e);
@@ -320,6 +463,7 @@ export async function createTaxiPackage(
     const doc = await TaxiPackageModel.create({
       ...fields,
       partner: partnerId,
+      status: "pending",
       thumbnail,
       images: imageUrls.map((url, i) => ({ url, isPrimary: i === 0 })),
       vehicle,
@@ -422,6 +566,7 @@ export async function createTourListing(
     const doc = await TourListingModel.create({
       ...fields,
       partner: partnerId,
+      status: "pending",
       images: imageUrls.map((url, i) => ({ url, isPrimary: i === 0 })),
     });
     res.status(201).json({ item: doc.toJSON() });
@@ -560,6 +705,7 @@ export async function createTourPackage(
     const doc = await TourPackageModel.create({
       ...fields,
       partner: partnerId,
+      status: "pending",
       includes,
       thumbnail,
       images: imageUrls.map((url, i) => ({ url, isPrimary: i === 0 })),
@@ -653,7 +799,7 @@ export async function createCruiseListing(
     );
     fields.vessel.images = vesselImageUrls.map((url, i) => ({ url, isPrimary: i === 0 }));
 
-    const doc = await CruiseListingModel.create({ ...fields, partner: partnerId });
+    const doc = await CruiseListingModel.create({ ...fields, partner: partnerId, status: "pending" });
     res.status(201).json({ item: doc.toJSON() });
   } catch (e) {
     next(e);

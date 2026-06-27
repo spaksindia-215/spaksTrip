@@ -8,6 +8,8 @@ import EmptyState from "@/components/ui/EmptyState";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import { useToast } from "@/components/ui/Toast";
+import StatusBadge from "@/components/dashboard/StatusBadge";
+import { useSubmitForReview, SUBMITTABLE_STATUSES } from "./useSubmitForReview";
 import { partnerClient, type TourListingApi } from "@/lib/partnerClient";
 import {
   buildTourFormData,
@@ -71,6 +73,8 @@ export default function TourManager() {
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  const { submittingId, submit: submitForReview } = useSubmitForReview("tour", refresh);
 
   function setField<K extends keyof TourFormState>(key: K, value: TourFormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -383,8 +387,8 @@ export default function TourManager() {
                 <div className="flex h-40 w-full items-center justify-center bg-surface-muted text-sm text-ink-muted">No image</div>
               )}
               <div className="space-y-3 p-5">
-                <div className="flex items-center gap-2">
-                  <Badge tone={tour.status === "active" ? "success" : "warn"} size="sm">{tour.status}</Badge>
+                <div className="flex flex-wrap items-center gap-2">
+                  <StatusBadge status={tour.status} />
                   <Badge tone="accent" size="sm">{titleCase(tour.category)}</Badge>
                 </div>
                 <div>
@@ -395,8 +399,13 @@ export default function TourManager() {
                   From {tour.pricing[0]?.currency ?? "INR"}{" "}
                   {(tour.pricing.length ? Math.min(...tour.pricing.map((p) => p.price)) : 0).toLocaleString("en-IN")}
                 </p>
-                <div className="flex gap-2 pt-1">
+                <div className="flex flex-wrap gap-2 pt-1">
                   <Button type="button" variant="secondary" onClick={() => openEdit(tour)}>Edit</Button>
+                  {SUBMITTABLE_STATUSES.includes(tour.status) && (
+                    <Button type="button" variant="primary" loading={submittingId === tour.id} onClick={() => submitForReview(tour.id)}>
+                      Submit for review
+                    </Button>
+                  )}
                   <Button type="button" variant="danger" onClick={() => removeTour(tour)}>Delete</Button>
                 </div>
               </div>

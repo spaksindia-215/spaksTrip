@@ -16,6 +16,10 @@ import eventsRoutes from "./routes/events.routes";
 import partnerEventsRoutes from "./routes/partnerEvents.routes";
 import adminEventsRoutes from "./routes/adminEvents.routes";
 import eventBookingsRoutes from "./routes/eventBookings.routes";
+import packagesRoutes from "./routes/packages.routes";
+import partnerHotelsRoutes from "./routes/partnerHotels.routes";
+import partnerPackagesRoutes from "./routes/partnerPackages.routes";
+import adminPackagesRoutes from "./routes/adminPackages.routes";
 import { errorHandler } from "./middleware/error";
 import { securityHeaders } from "./middleware/securityHeaders";
 import { apiRateLimiter } from "./middleware/rateLimit";
@@ -84,6 +88,10 @@ async function main(): Promise<void> {
   app.use("/api/partner/events", partnerEventsRoutes);
   app.use("/api/admin/events", adminEventsRoutes);
   app.use("/api/bookings/events", eventBookingsRoutes);
+  // Marketplace packages — specific sub-paths mounted before the generic
+  // /api/partner and /api/admin routers so they win.
+  app.use("/api/partner/packages", partnerPackagesRoutes);
+  app.use("/api/admin/packages", adminPackagesRoutes);
   app.use("/api/partner", partnerRoutes);
   app.use("/api/admin", adminRoutes);
   app.use("/api/customer", customerRoutes);
@@ -94,6 +102,9 @@ async function main(): Promise<void> {
   app.use("/api/flights", flightsRoutes);
   // Public events discovery + customer booking entrypoints.
   app.use("/api/events", eventsRoutes);
+  // Public marketplace packages + customer/guest enquiry entrypoint.
+  app.use("/api/packages", packagesRoutes);
+  app.use("/api/partner-hotels", partnerHotelsRoutes);
 
   app.use(errorHandler);
 

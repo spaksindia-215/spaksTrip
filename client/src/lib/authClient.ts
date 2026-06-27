@@ -75,6 +75,16 @@ export const authClient = {
     return response.user;
   },
 
+  // Checks whether an email already has an account, to route guest checkout:
+  // existing → must log in; brand-new → may continue as guest and claim later.
+  async emailStatus(email: string): Promise<boolean> {
+    const response = await api<{ exists: boolean }>("/api/auth/email-status", {
+      method: "POST",
+      body: { email },
+    });
+    return response.exists;
+  },
+
   async logout(): Promise<void> {
     await api<{ ok: true }>("/api/auth/logout", { method: "POST" });
   },

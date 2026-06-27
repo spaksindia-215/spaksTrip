@@ -4,6 +4,9 @@ import { getAgentConfig } from "../lib/agentCache";
 import { getPlatformConfig } from "../lib/platformConfig";
 import { BookingModel, PRODUCT_TYPES, type ProductType } from "../models/Booking";
 import { HttpError } from "../middleware/error";
+import { resolveOptionalUser } from "../middleware/auth";
+import { recordCustomerBooking } from "../services/customerBooking";
+import type { AnyBookingDetails } from "../models/bookingDetails";
 
 const router = Router();
 
@@ -131,6 +134,53 @@ router.post(
       });
 
       res.status(201).json({ bookingId: String(booking._id) });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+// POST /api/internal/record-customer-booking
+// Called server-side by the Next.js booking routes (which run the TBO flow inline,
+// e.g. hotels) after a confirmation, forwarding the browser's cookie + a claimEmail.
+// Resolves the customer from the cookie WITHOUT requiring auth: a logged-in customer
+// → owned booking; otherwise a guest booking tagged with claimEmail for later claim.
+// Never add a Next.js proxy route — this must not be browser-reachable.
+router.post(
+  "/record-customer-booking",
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { productType, pnr, amount, currency, claimEmail, details } = req.body as {
+        productType?: string;
+        pnr?: string;
+        amount?: number;
+        currency?: string;
+        claimEmail?: string;
+        details?: AnyBookingDetails;
+      };
+
+      if (!(PRODUCT_TYPES as readonly string[]).includes(String(productType))) {
+        throw new HttpError(400, `productType must be one of: ${PRODUCT_TYPES.join(", ")}`);
+      }
+      if (typeof amount !== "number" || !Number.isFinite(amount) || amount <= 0) {
+        throw new HttpError(400, "amount must be a positive number");
+      }
+
+      // Prefer the authenticated customer (secure, cookie-derived); fall back to the
+      // guest claimEmail. A logged-in non-customer (e.g. agent) is ignored here.
+      const user = resolveOptionalUser(req);
+      const owned = user?.role === "customer";
+
+      await recordCustomerBooking({
+        productType: productType as ProductType,
+        pnr,
+        amount,
+        currency,
+        details,
+        ...(owned ? { ownerId: user.sub, ownerRole: "customer" } : { claimEmail }),
+      });
+
+      res.status(202).json({ ok: true });
     } catch (err) {
       next(err);
     }

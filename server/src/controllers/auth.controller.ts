@@ -16,6 +16,7 @@ import { sendMail } from "../lib/mailer";
 import { env } from "../config/env";
 import { logger } from "../lib/logger";
 import { createAuthToken, consumeAuthToken, TTL } from "../lib/authTokens";
+import { claimGuestBookings } from "../services/customerBooking";
 
 // Build a client-facing link on the given Next app origin.
 function clientUrl(origin: string, path: string): string {
@@ -252,6 +253,9 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
     const refreshToken = await issueRefreshToken(userId);
     setAuthCookies(res, accessToken, refreshToken);
 
+    // Email is verified (gated above) → safe to attach any guest bookings made with it.
+    void claimGuestBookings(userId, user.email, user.role);
+
     logger.info(
       { event: "login_success", ip, userId, role: user.role, email: maskEmail(email), userAgent },
       "Login success",
@@ -362,6 +366,11 @@ export async function verifyEmail(req: Request, res: Response, next: NextFunctio
     const accessToken = signAccessToken({ sub: userId, role: user.role, email: user.email });
     const refreshToken = await issueRefreshToken(userId);
     setAuthCookies(res, accessToken, refreshToken);
+
+    // Email just verified → attach any guest bookings made with it (brand-new user
+    // who booked, then registered with the same email — the core claim-by-email case).
+    void claimGuestBookings(userId, user.email, user.role);
+
     res.json({ verified: true, status: "active", user: user.toJSON() });
   } catch (e) {
     next(e);
@@ -437,6 +446,24 @@ export async function resetPassword(req: Request, res: Response, next: NextFunct
     logger.info({ event: "password_reset_done", userId }, "Password reset complete");
 
     res.json({ ok: true, message: "Your password has been reset. Please log in." });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// POST /api/auth/email-status  { email }  → { exists: boolean }
+// Used at guest checkout to route the user: an existing account must log in (so the
+// booking is attributed via session), a brand-new email may continue as a guest and
+// claim the booking later. Rate-limited; the enumeration exposure is an accepted
+// trade-off for this booking-attribution UX.
+export async function emailStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const raw = typeof req.body?.email === "string" ? req.body.email.trim().toLowerCase() : "";
+    if (!raw || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(raw)) {
+      throw new HttpError(400, "A valid email is required.");
+    }
+    const user = await UserModel.findOne({ email: raw }).select("_id").lean();
+    res.json({ exists: Boolean(user) });
   } catch (e) {
     next(e);
   }

@@ -8,6 +8,8 @@ import EmptyState from "@/components/ui/EmptyState";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import { useToast } from "@/components/ui/Toast";
+import StatusBadge from "@/components/dashboard/StatusBadge";
+import { useSubmitForReview, SUBMITTABLE_STATUSES } from "./useSubmitForReview";
 import {
   partnerClient,
   type HotelListingApi,
@@ -77,6 +79,8 @@ export default function TourPackageManager() {
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  const { submittingId, submit: submitForReview } = useSubmitForReview("tour_package", refresh);
 
   function setField<K extends keyof TourPackageFormState>(key: K, value: TourPackageFormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -357,7 +361,7 @@ export default function TourPackageManager() {
               )}
               <div className="space-y-3 p-5">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge tone={pkg.status === "active" ? "success" : "warn"} size="sm">{pkg.status}</Badge>
+                  <StatusBadge status={pkg.status} />
                   <Badge tone="accent" size="sm">{titleCase(pkg.packageType)}</Badge>
                   <Badge tone="brand" size="sm">{pkg.route.durationDays}D/{pkg.route.durationNights}N</Badge>
                 </div>
@@ -374,8 +378,13 @@ export default function TourPackageManager() {
                   </p>
                   <span className="text-[13px] text-ink-muted">{pkg.departures.length} departures</span>
                 </div>
-                <div className="flex gap-2 pt-1">
+                <div className="flex flex-wrap gap-2 pt-1">
                   <Button type="button" variant="secondary" onClick={() => openEdit(pkg)}>Edit</Button>
+                  {SUBMITTABLE_STATUSES.includes(pkg.status) && (
+                    <Button type="button" variant="primary" loading={submittingId === pkg.id} onClick={() => submitForReview(pkg.id)}>
+                      Submit for review
+                    </Button>
+                  )}
                   <Button type="button" variant="danger" onClick={() => removePackage(pkg)}>Delete</Button>
                 </div>
               </div>

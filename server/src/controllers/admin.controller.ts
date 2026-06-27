@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import { UserModel, ROLES, MARKUP_TYPES, type Role, type MarkupType, type MarkupRule } from "../models/User";
+import { HotelListingModel } from "../models/partner/HotelListing";
+import { RESOURCE_STATUS } from "../models/partner/_shared/enums";
 import { NavbarSettingsModel } from "../models/NavbarSettings";
 import { PlatformConfigModel } from "../models/PlatformConfig";
 import { invalidatePlatformConfigCache } from "../lib/platformConfig";
@@ -138,6 +140,74 @@ export async function reject(req: Request, res: Response, next: NextFunction): P
     });
 
     res.json({ user: user.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// GET /api/admin/hotel-listings?status=pending — partner hotel listings for
+// the review queue. Defaults to "pending"; pass ?status=all to see every one.
+export async function listHotelListings(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const statusRaw = typeof req.query.status === "string" ? req.query.status : "pending";
+    const filter: Record<string, unknown> = {};
+    if (statusRaw !== "all") {
+      if (!(RESOURCE_STATUS as readonly string[]).includes(statusRaw)) {
+        throw new HttpError(400, `status must be one of: ${RESOURCE_STATUS.join(", ")}, all`);
+      }
+      filter.status = statusRaw;
+    }
+    const items = await HotelListingModel.find(filter)
+      .sort({ createdAt: -1 })
+      .populate("partner", "name email");
+    res.json({ items: items.map((i) => i.toJSON()) });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// POST /api/admin/hotel-listings/:id/approve — publish a pending listing.
+export async function approveHotelListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const id = paramId(req);
+    const listing = await HotelListingModel.findById(id);
+    if (!listing) throw new HttpError(404, "Hotel listing not found");
+    if (listing.status !== "pending") {
+      throw new HttpError(409, `Listing is already ${listing.status}`);
+    }
+    listing.status = "active";
+    await listing.save();
+    res.json({ item: listing.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// POST /api/admin/hotel-listings/:id/reject — send a pending listing back to
+// the partner as a draft so they can fix and resubmit.
+export async function rejectHotelListing(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const id = paramId(req);
+    const listing = await HotelListingModel.findById(id);
+    if (!listing) throw new HttpError(404, "Hotel listing not found");
+    if (listing.status !== "pending") {
+      throw new HttpError(409, `Listing is already ${listing.status}`);
+    }
+    listing.status = "draft";
+    await listing.save();
+    res.json({ item: listing.toJSON() });
   } catch (e) {
     next(e);
   }

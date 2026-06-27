@@ -9,6 +9,7 @@ import {
   resendVerification,
   forgotPassword,
   resetPassword,
+  emailStatus,
 } from "../controllers/auth.controller";
 import { authMiddleware } from "../middleware/auth";
 import { authRateLimiter } from "../middleware/rateLimit";
@@ -20,6 +21,7 @@ router.post("/login", authRateLimiter, login);
 router.post("/refresh", refresh);
 router.post("/logout", logout);
 router.get("/me", authMiddleware, me);
+router.post("/email-status", authRateLimiter, emailStatus);
 
 // Email verification + password reset. The email-sending endpoints are rate
 // limited (authRateLimiter) to blunt enumeration / mail-bombing.

@@ -9,6 +9,10 @@ import {
   listBookings,
   createHotelListing,
   listHotelListings,
+  getHotelListing,
+  updateHotelListing,
+  submitHotelListing,
+  deleteHotelListing,
   createTaxiListing,
   listTaxiListings,
   updateTaxiListing,
@@ -30,6 +34,7 @@ import {
   updateCruiseListing,
   deleteCruiseListing,
 } from "../controllers/partner.controller";
+import { partnerSubmitListing } from "../controllers/moderation.controller";
 import { mediaUpload } from "../middleware/upload";
 import { HttpError } from "../middleware/error";
 
@@ -57,6 +62,13 @@ function uploadAny(req: Request, res: Response, next: NextFunction): void {
 
 router.get("/hotels", listHotelListings);
 router.post("/hotels", uploadAny, createHotelListing);
+router.get("/hotels/:id", getHotelListing);
+router.put("/hotels/:id", updateHotelListing);
+router.post("/hotels/:id/submit", submitHotelListing);
+router.delete("/hotels/:id", deleteHotelListing);
+
+// Generic "submit for review" for every partner-resource vertical (draft → pending).
+router.post("/listings/:type/:id/submit", partnerSubmitListing);
 
 // Taxi listings (DB-backed; images/docs to Cloudinary).
 router.get("/taxis", listTaxiListings);

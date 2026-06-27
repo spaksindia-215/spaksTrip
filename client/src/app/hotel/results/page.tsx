@@ -1,10 +1,12 @@
 "use client";
 
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import HotelResultCard from "@/components/accommodation/HotelResultCard";
+import PartnerHotelCard from "@/components/accommodation/PartnerHotelCard";
+import PartnerHotelEnquiryModal from "@/components/accommodation/PartnerHotelEnquiryModal";
 import HotelFilters from "@/components/accommodation/HotelFilters";
 import HotelSortBar from "@/components/accommodation/HotelSortBar";
 import HotelResultsSkeleton from "@/components/accommodation/HotelResultsSkeleton";
@@ -12,6 +14,7 @@ import Drawer from "@/components/ui/Drawer";
 import Button from "@/components/ui/Button";
 import { useHotelSearch } from "@/hooks/useHotelSearch";
 import { applyHotelFilters, sortHotels, type HotelFilters as FiltersType, type HotelSortBy } from "@/services/hotels";
+import { searchPartnerHotels, type PartnerHotel } from "@/services/partnerHotels";
 import { CITIES } from "@/lib/mock/hotels";
 
 export default function HotelResultsPage() {
@@ -69,6 +72,45 @@ function HotelResultsInner() {
     const filtered = applyHotelFilters(hotels, filters);
     return sortHotels(filtered, sort);
   }, [hotels, filters, sort]);
+
+  // Partner hotels are an independent vertical (Mongo-backed, enquiry-only) —
+  // fetched separately by city name and shown in their own section below TBO.
+  const [partnerHotels, setPartnerHotels] = useState<PartnerHotel[]>([]);
+  const [partnerStatus, setPartnerStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [enquiryHotel, setEnquiryHotel] = useState<PartnerHotel | null>(null);
+
+  const cityName = cityObj?.name;
+  useEffect(() => {
+    let active = true;
+
+    async function load() {
+      if (!cityName) {
+        if (active) {
+          setPartnerHotels([]);
+          setPartnerStatus("idle");
+        }
+        return;
+      }
+      setPartnerStatus("loading");
+      try {
+        const items = await searchPartnerHotels(cityName);
+        if (active) {
+          setPartnerHotels(items);
+          setPartnerStatus("ready");
+        }
+      } catch {
+        if (active) {
+          setPartnerHotels([]);
+          setPartnerStatus("error");
+        }
+      }
+    }
+
+    void load();
+    return () => {
+      active = false;
+    };
+  }, [cityName]);
 
   const filtersPanel = (
     <HotelFilters
@@ -128,6 +170,10 @@ function HotelResultsInner() {
 
               {status === "ready" && (
                 <>
+                  <div className="flex items-baseline justify-between gap-2">
+                    <h2 className="text-[18px] font-bold text-ink">Premium Hotels</h2>
+                    <span className="text-[12px] text-ink-muted">Curated via our global supply</span>
+                  </div>
                   <HotelSortBar value={sort} onChange={setSort} hotels={displayed} total={displayed.length} />
                   {displayed.length === 0 ? (
                     <div className="rounded-xl bg-white border border-border-soft p-12 text-center">
@@ -167,10 +213,45 @@ function HotelResultsInner() {
                   <p className="text-[13px] text-ink-muted mt-1">Please refresh and try again</p>
                 </div>
               )}
+
+              {/* Our Partner Hotels — independent vertical, enquiry-only */}
+              {partnerStatus === "ready" && partnerHotels.length > 0 && (
+                <section className="mt-4 flex flex-col gap-3">
+                  <div className="flex items-baseline justify-between gap-2 border-t border-border-soft pt-5">
+                    <h2 className="text-[18px] font-bold text-ink">Our Partner Hotels</h2>
+                    <span className="text-[12px] text-ink-muted">
+                      {partnerHotels.length} direct {partnerHotels.length === 1 ? "property" : "properties"}
+                    </span>
+                  </div>
+                  <p className="text-[13px] text-ink-muted -mt-1">
+                    Local properties listed directly by our partners. Send an enquiry and they&rsquo;ll
+                    confirm availability and pricing with you.
+                  </p>
+                  {partnerHotels.map((hotel) => (
+                    <PartnerHotelCard
+                      key={hotel.id}
+                      hotel={hotel}
+                      nights={nights}
+                      rooms={rooms}
+                      onEnquire={setEnquiryHotel}
+                    />
+                  ))}
+                </section>
+              )}
             </div>
           </div>
         </div>
       </main>
+
+      <PartnerHotelEnquiryModal
+        hotel={enquiryHotel}
+        open={Boolean(enquiryHotel)}
+        onClose={() => setEnquiryHotel(null)}
+        checkIn={checkIn}
+        checkOut={checkOut}
+        adults={adults}
+        childrenCount={children}
+      />
 
       {/* Mobile filter drawer */}
       <Drawer

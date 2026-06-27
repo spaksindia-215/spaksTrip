@@ -14,6 +14,8 @@ import Radio from "@/components/ui/Radio";
 import { useBookingStore } from "@/state/bookingStore";
 import { useAuthStore } from "@/state/authStore";
 import SignInGateModal from "@/components/auth/SignInGateModal";
+import GuestContinueModal from "@/components/auth/GuestContinueModal";
+import { authClient } from "@/lib/authClient";
 import { useToast } from "@/components/ui/Toast";
 import type { Traveler, TravelerType, Gender, GSTInfo, TravelerSSR } from "@/state/bookingStore";
 import { fetchSSR } from "@/services/flights";
@@ -76,6 +78,8 @@ function TravelerInner() {
   const { current, setTravelers, setContact, setAddOns, setGST, setSSRSelections, advanceStatus } = useBookingStore();
   const authedUser = useAuthStore((s) => s.user);
   const [showSignIn, setShowSignIn] = useState(false);
+  const [showGuest, setShowGuest] = useState(false);
+  const [checkingEmail, setCheckingEmail] = useState(false);
 
   const initial = useMemo(() => {
     if (!current) return [];
@@ -301,19 +305,33 @@ function TravelerInner() {
     return Object.keys(e).length === 0;
   };
 
-  const onContinue = () => {
+  const onContinue = async () => {
     if (!validate()) {
       toast.push({ title: "Please fix the highlighted fields", tone: "warn" });
       return;
     }
-    // Account capture: a trip must be attributed to an account so it lands in the
-    // customer's dashboard (guest bookings can't be claimed later). Validation has
-    // passed, so the entered details are safe; gate behind sign-in, then proceed.
-    if (!authedUser) {
-      setShowSignIn(true);
+    // Already signed in → straight through (booking attributed via session).
+    if (authedUser) {
+      proceedToPayment();
       return;
     }
-    proceedToPayment();
+    // Guest: route by whether the contact email already has an account.
+    //   existing account → must log in (so the trip attaches to it)
+    //   brand-new email  → may continue as guest and claim the trip by email later
+    setCheckingEmail(true);
+    try {
+      const exists = await authClient.emailStatus(email.trim());
+      if (exists) {
+        setShowSignIn(true);
+      } else {
+        setShowGuest(true);
+      }
+    } catch {
+      // If the lookup fails, fall back to sign-in rather than silently orphaning the trip.
+      setShowSignIn(true);
+    } finally {
+      setCheckingEmail(false);
+    }
   };
 
   const proceedToPayment = () => {
@@ -754,7 +772,7 @@ function TravelerInner() {
 
             <aside className="flex flex-col gap-4">
               <PriceBreakdown booking={current} />
-              <Button variant="accent" size="lg" onClick={onContinue} fullWidth>
+              <Button variant="accent" size="lg" onClick={onContinue} loading={checkingEmail} fullWidth>
                 Continue to payment
               </Button>
             </aside>
@@ -771,6 +789,16 @@ function TravelerInner() {
           proceedToPayment();
         }}
         prefillEmail={email}
+      />
+
+      <GuestContinueModal
+        open={showGuest}
+        onClose={() => setShowGuest(false)}
+        email={email.trim()}
+        onContinueAsGuest={() => {
+          setShowGuest(false);
+          proceedToPayment();
+        }}
       />
     </div>
   );

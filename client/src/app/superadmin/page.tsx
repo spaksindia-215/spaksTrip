@@ -12,6 +12,8 @@ import { ApiError } from "@/lib/api";
 import {
   adminClient,
   type AdminUser,
+  type AdminListing,
+  type AdminListingType,
   type NavbarVisibility,
   type PlatformMarkupConfig,
   type PlatformMarkupRule,
@@ -21,7 +23,6 @@ import type { UserRole } from "@/lib/authClient";
 // All public (non-partner-only) navbar items the admin can show/hide.
 const CONTROLLABLE_NAV_ITEMS: Array<{ key: string; label: string }> = [
   { key: "nav.flight", label: "Flight" },
-  { key: "Premium Hotel", label: "Premium Hotel" },
   { key: "Hotel", label: "Hotel" },
   { key: "nav.taxi_package", label: "Taxi Package" },
   { key: "nav.holiday_packages", label: "Holiday Packages" },
@@ -29,7 +30,6 @@ const CONTROLLABLE_NAV_ITEMS: Array<{ key: string; label: string }> = [
   { key: "nav.transport", label: "Transport" },
   { key: "nav.cruise", label: "Cruise" },
   { key: "nav.train", label: "Train" },
-  { key: "Rail Europe", label: "Rail Europe" },
   { key: "Events", label: "Events" },
   { key: "SightSeeing", label: "SightSeeing" },
   { key: "Transfer", label: "Transfer" },
@@ -55,6 +55,16 @@ const STATUS_TONE = {
   rejected: "danger",
 } as const;
 
+const LISTING_TYPE_FILTERS: Array<{ value: AdminListingType | "all"; label: string }> = [
+  { value: "all", label: "All" },
+  { value: "hotel", label: "Hotels" },
+  { value: "taxi", label: "Taxis" },
+  { value: "taxi_package", label: "Taxi Pkgs" },
+  { value: "tour", label: "Tours" },
+  { value: "tour_package", label: "Tour Pkgs" },
+  { value: "cruise", label: "Cruises" },
+];
+
 const USER_FILTERS: Array<{ value: UserRole | "all"; label: string }> = [
   { value: "all", label: "All" },
   { value: "customer", label: "Customers" },
@@ -79,10 +89,14 @@ export default function SuperadminPage() {
   const [password, setPassword] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
 
-  const [tab, setTab] = useState<"pending" | "users" | "navbar" | "markup">("pending");
+  const [tab, setTab] = useState<"pending" | "listings" | "users" | "navbar" | "markup">("pending");
 
   const [pending, setPending] = useState<AdminUser[]>([]);
   const [pendingLoading, setPendingLoading] = useState(true);
+
+  const [listings, setListings] = useState<AdminListing[]>([]);
+  const [listingsLoading, setListingsLoading] = useState(true);
+  const [listingType, setListingType] = useState<AdminListingType | "all">("all");
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [usersLoading, setUsersLoading] = useState(true);
@@ -141,6 +155,13 @@ export default function SuperadminPage() {
         if (tab === "pending") {
           const items = await adminClient.pending();
           if (active) setPending(items);
+        } else if (tab === "listings") {
+          setListingsLoading(true);
+          const items = await adminClient.listings.list({
+            status: "pending",
+            type: listingType === "all" ? undefined : listingType,
+          });
+          if (active) setListings(items);
         } else if (tab === "users") {
           const items = await adminClient.users(userFilter === "all" ? undefined : userFilter);
           if (active) setUsers(items);
@@ -163,6 +184,7 @@ export default function SuperadminPage() {
       } finally {
         if (active) {
           setPendingLoading(false);
+          setListingsLoading(false);
           setUsersLoading(false);
           setNavLoading(false);
           setMarkupLoading(false);
@@ -174,7 +196,7 @@ export default function SuperadminPage() {
     return () => {
       active = false;
     };
-  }, [session, tab, userFilter, toast]);
+  }, [session, tab, userFilter, listingType, toast]);
 
   const toggleNavItem = (key: string) => {
     setNavVisibility((prev) => ({ ...prev, [key]: !(prev[key] ?? true) }));
@@ -316,6 +338,34 @@ export default function SuperadminPage() {
     }
   };
 
+  const approveListing = async (listing: AdminListing) => {
+    setActionLoading(true);
+    try {
+      await adminClient.listings.approve(listing.type, listing.id);
+      toast.push({ title: "Listing approved", description: `${listing.title} is now live.`, tone: "success" });
+      setListings((prev) => prev.filter((l) => l.id !== listing.id));
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : "Approval failed";
+      toast.push({ title: "Error", description: message, tone: "danger" });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const rejectListing = async (listing: AdminListing) => {
+    setActionLoading(true);
+    try {
+      await adminClient.listings.reject(listing.type, listing.id);
+      toast.push({ title: "Listing rejected", description: `${listing.title} was sent back to the partner.`, tone: "success" });
+      setListings((prev) => prev.filter((l) => l.id !== listing.id));
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : "Rejection failed";
+      toast.push({ title: "Error", description: message, tone: "danger" });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   if (session === "checking") {
     return (
       <main className="grid min-h-screen place-items-center bg-[#0E1E3A] text-white/70">
@@ -364,9 +414,17 @@ export default function SuperadminPage() {
             </p>
             <h1 className="text-xl font-bold text-white">Superadmin Panel</h1>
           </div>
-          <Button type="button" variant="outline" size="sm" onClick={handleLogout}>
-            Sign Out
-          </Button>
+          <div className="flex items-center gap-2">
+            <a
+              href="/superadmin/packages"
+              className="rounded-lg border border-white/30 px-3 py-1.5 text-[13px] font-semibold text-white transition-colors hover:bg-white/10"
+            >
+              Packages
+            </a>
+            <Button type="button" variant="outline" size="sm" onClick={handleLogout}>
+              Sign Out
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -376,6 +434,7 @@ export default function SuperadminPage() {
           onChange={(value) => setTab(value)}
           items={[
             { value: "pending", label: "Pending Approvals" },
+            { value: "listings", label: "Partner Listings" },
             { value: "users", label: "All Users" },
             { value: "navbar", label: "Navbar Visibility" },
             { value: "markup", label: "Platform Markup" },
@@ -564,6 +623,72 @@ export default function SuperadminPage() {
                 ))}
               </div>
             )}
+          </section>
+        ) : tab === "listings" ? (
+          <section className="mt-6">
+            <Tabs
+              value={listingType}
+              onChange={(value) => setListingType(value)}
+              items={LISTING_TYPE_FILTERS}
+              variant="segmented"
+            />
+            <div className="mt-4">
+              {listingsLoading ? (
+                <p className="py-12 text-center text-sm text-ink-muted">Loading…</p>
+              ) : listings.length === 0 ? (
+                <EmptyState
+                  title="No listings awaiting review"
+                  subtitle="Hotels, taxis, tours, packages and cruises submitted by partners appear here for approval before they go live."
+                />
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {listings.map((listing) => {
+                    const partner = listing.partner;
+                    return (
+                      <article
+                        key={`${listing.type}-${listing.id}`}
+                        className="flex flex-col gap-3 rounded-xl border border-border-soft bg-white p-4 sm:flex-row sm:items-center sm:justify-between"
+                      >
+                        <div className="flex gap-3">
+                          {listing.thumbnail ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={listing.thumbnail}
+                              alt={listing.title}
+                              className="h-16 w-20 shrink-0 rounded-lg object-cover"
+                            />
+                          ) : (
+                            <div className="grid h-16 w-20 shrink-0 place-items-center rounded-lg bg-surface-muted text-[11px] text-ink-subtle">
+                              No image
+                            </div>
+                          )}
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[15px] font-semibold text-ink">{listing.title}</span>
+                              <Badge tone="brand" size="sm">{listing.typeLabel}</Badge>
+                            </div>
+                            {listing.subtitle && (
+                              <p className="text-[13px] text-ink-muted">{listing.subtitle}</p>
+                            )}
+                            <p className="text-[12px] text-ink-subtle">
+                              {partner ? `By ${partner.name ?? partner.email ?? "partner"}` : ""}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button type="button" variant="primary" size="sm" loading={actionLoading} onClick={() => approveListing(listing)}>
+                            Approve
+                          </Button>
+                          <Button type="button" variant="danger" size="sm" loading={actionLoading} onClick={() => rejectListing(listing)}>
+                            Reject
+                          </Button>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </section>
         ) : (
           <section className="mt-6">

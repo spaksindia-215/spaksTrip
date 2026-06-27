@@ -16,6 +16,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/partner/taxi-packages", label: "Taxi Packages", icon: "taxi" },
   { href: "/partner/tours", label: "Tours", icon: "tour" },
   { href: "/partner/tour-packages", label: "Tour Packages", icon: "package" },
+  { href: "/partner/packages", label: "Marketplace", icon: "package" },
   { href: "/partner/cruises", label: "Cruises", icon: "cruise" },
   { href: "/partner/bookings", label: "Bookings", icon: "bookings" },
 ];

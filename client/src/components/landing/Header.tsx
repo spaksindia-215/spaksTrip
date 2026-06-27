@@ -40,21 +40,21 @@ const NAV_ITEMS: NavItem[] = [
       { labelKey: "nav.international_tour_packages", href: "/international-tour-packages" },
     ],
   },
-  // Accommodation hidden from navbar
-  // {
-  //   labelKey: "nav.accommodation",
-  //   href: "#",
-  //   menu: [
-  //     { labelKey: "Hotel", href: "/hotel" },
-  //     { labelKey: "nav.homestay", href: "#" },
-  //     { labelKey: "nav.airbnb", href: "#" },
-  //     { labelKey: "nav.villa", href: "#" },
-  //     { labelKey: "nav.guest_house", href: "#" },
-  //     { labelKey: "nav.house_board", href: "#" },
-  //     { labelKey: "nav.hostels", href: "#" },
-  //     { labelKey: "nav.resorts", href: "#" },
-  //   ],
-  // },
+  // Visibility is controlled by the superadmin Navbar Visibility panel (key: "nav.accommodation").
+  {
+    labelKey: "nav.accommodation",
+    href: "#",
+    menu: [
+      { labelKey: "Hotel", href: "/hotel" },
+      { labelKey: "nav.homestay", href: "#" },
+      { labelKey: "nav.airbnb", href: "#" },
+      { labelKey: "nav.villa", href: "#" },
+      { labelKey: "nav.guest_house", href: "#" },
+      { labelKey: "nav.house_board", href: "#" },
+      { labelKey: "nav.hostels", href: "#" },
+      { labelKey: "nav.resorts", href: "#" },
+    ],
+  },
   {
     labelKey: "nav.transport",
     href: "#",
