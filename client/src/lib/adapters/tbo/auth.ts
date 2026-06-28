@@ -42,38 +42,26 @@ interface TokenEntry {
 let tokenCache: TokenEntry | null = null;
 let refreshPromise: Promise<string> | null = null;
 
-function getBaseUrl(): string {
-  const url = process.env.TBO_API_URL;
-  if (!url) throw new Error("TBO_API_URL not set in .env.local");
-  return url.replace(/\/$/, "");
-}
-
 /**
  * Returns the base URL for a given TBO service.
  *
- * Priority: explicit env var (e.g. TBO_SHARED_API_URL) → derive from TBO_API_URL
- * keeping its protocol but replacing the hostname with the service-specific host.
+ * Priority: explicit env var (e.g. TBO_SHARED_API_URL) → hardcoded PRODUCTION
+ * fallback base URL. We never derive from TBO_API_URL via hostname surgery — that
+ * silently dropped path segments (e.g. "/SharedAPI") and the protocol, which sent
+ * auth to the wrong host when the env var was absent.
  *
- * TBO hosts per service (production):
- *   shared → api.travelboutiqueonline.com/SharedAPI   (/SharedData.svc/rest/...)
- *   air    → tboapi.travelboutiqueonline.com          (/AirAPI_V10/AirService.svc/rest/...)
- *   book   → booking.travelboutiqueonline.com         (/AirAPI_V10/AirService.svc/rest/...)
- *   hotel  → api.tektravels.com                       (/HotelAPI/...)
+ * TBO base URLs per service (production):
+ *   shared → https://api.travelboutiqueonline.com/SharedAPI   (+ /SharedData.svc/rest/...)
+ *   air    → https://tboapi.travelboutiqueonline.com          (+ /AirAPI_V10/AirService.svc/rest/...)
+ *   book   → https://booking.travelboutiqueonline.com         (+ /AirAPI_V10/AirService.svc/rest/...)
+ *   hotel  → https://api.tektravels.com                       (+ /HotelAPI/...)
  *
- * Each service base is set explicitly via its env var, so regardless of TBO_API_URL
- * every service always reaches the correct endpoint.
+ * The fallbacks ARE production, so even with no env var set the codebase can never
+ * reach a certification/test host. Flip cert↔prod by setting the env vars.
  */
-function getServiceBaseUrl(envKey: string, fallbackHost: string): string {
+function getServiceBaseUrl(envKey: string, fallbackBaseUrl: string): string {
   const explicit = process.env[envKey];
-  if (explicit) return explicit.replace(/\/$/, "");
-  const base = getBaseUrl();
-  try {
-    const parsed = new URL(base);
-    parsed.hostname = fallbackHost;
-    return parsed.toString().replace(/\/$/, "");
-  } catch {
-    return `https://${fallbackHost}`;
-  }
+  return (explicit || fallbackBaseUrl).replace(/\/$/, "");
 }
 
 export function tboApiUrl(
@@ -83,12 +71,12 @@ export function tboApiUrl(
   const cleanPath = path.replace(/^\//, "");
   const baseUrl =
     service === "shared"
-      ? getServiceBaseUrl("TBO_SHARED_API_URL", "api.travelboutiqueonline.com/SharedAPI")
+      ? getServiceBaseUrl("TBO_SHARED_API_URL", "https://api.travelboutiqueonline.com/SharedAPI")
       : service === "hotel"
-        ? getServiceBaseUrl("TBO_HOTEL_API_URL", "api.tektravels.com")
+        ? getServiceBaseUrl("TBO_HOTEL_API_URL", "https://api.tektravels.com")
         : service === "book"
-          ? getServiceBaseUrl("TBO_BOOK_API_URL", "booking.travelboutiqueonline.com")
-          : getServiceBaseUrl("TBO_AIR_API_URL", "tboapi.travelboutiqueonline.com");
+          ? getServiceBaseUrl("TBO_BOOK_API_URL", "https://booking.travelboutiqueonline.com")
+          : getServiceBaseUrl("TBO_AIR_API_URL", "https://tboapi.travelboutiqueonline.com");
   return `${baseUrl}/${cleanPath}`;
 }
 

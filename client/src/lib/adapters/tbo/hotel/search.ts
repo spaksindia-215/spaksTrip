@@ -141,7 +141,7 @@ export async function tboSearchHotels(
   }
 
   return withRetry(async (token) => {
-    const url = tboApiUrl("HotelAPI/Hotel/HotelSearch");
+    const url = tboApiUrl("HotelAPI/Hotel/HotelSearch", "hotel");
     const reqBody = {
       ...tboBase(token),
       CityId: cityId,
