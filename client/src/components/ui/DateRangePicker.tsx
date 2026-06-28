@@ -140,7 +140,7 @@ export default function DateRangePicker({
         onClick={() => { setOpen((o) => !o); setPickingTo(false); }}
         aria-expanded={open}
         aria-controls={panelId}
-        className="flex w-full  gap-0 rounded-md border border-border bg-white h-12 items-center text-left hover:border-brand-500 shadow-sm transition-all"
+        className="flex w-full gap-0 rounded-md border border-border bg-white h-11 sm:h-12 items-center text-left hover:border-brand-500 shadow-sm transition-all"
       >
         <DateCell label={labelFrom} value={value.from} placeholder={placeholderFrom} />
         {mode === "range" && (
@@ -257,7 +257,7 @@ function Month({
       </div>
       <div className="grid grid-cols-7 gap-1.5">
         {DOW.map((d, i) => (
-          <div key={i} className="h-7 grid place-items-center text-[11px] tracking-wide uppercase font-semibold text-ink-subtle">
+          <div key={i} className="h-8 grid place-items-center text-[11px] tracking-wide uppercase font-semibold text-ink-subtle">
             {d}
           </div>
         ))}
@@ -274,7 +274,7 @@ function Month({
               disabled={disabled}
               onClick={() => onPick(d)}
               className={cn(
-  "h-9 w-full rounded-full text-[13px] font-semibold transition-all duration-150",
+  "h-10 w-full rounded-full text-[13px] font-semibold transition-all duration-150",
   "flex items-center justify-center",
 
   disabled && "text-ink-subtle cursor-not-allowed",

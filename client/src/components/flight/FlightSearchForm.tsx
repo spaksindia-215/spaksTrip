@@ -178,7 +178,7 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
     <div
       className={
         isHero
-          ? "rounded-2xl bg-white p-5 shadow-(--shadow-lg) md:p-6"
+          ? "rounded-2xl bg-white p-4 sm:p-5 md:p-6 shadow-(--shadow-lg)"
           : "rounded-xl bg-white p-4 shadow-(--shadow-sm) border border-border-soft"
       }
     >
@@ -212,7 +212,7 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
       </div>
 
       {tripType !== "MULTI" ? (
-        <div className="mt-4 grid gap-2 lg:grid-cols-[1fr_auto_1fr_1.5fr_1fr]">
+        <div className="mt-4 grid gap-2 grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr_1fr] lg:grid-cols-[1fr_auto_1fr_1.5fr_1fr]">
           <AirportField
             label="From"
             value={primaryLeg.from}
@@ -222,7 +222,7 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
             type="button"
             aria-label="Swap origin and destination"
             onClick={() => swapLeg(0)}
-            className="self-end  grid h-12 w-11 place-items-center rounded-md border border-border bg-white text-ink-soft hover:border-brand-500 hover:text-brand-600 transition-colors"
+            className="hidden md:grid self-end h-12 w-11 place-items-center rounded-md border border-border bg-white text-ink-soft hover:border-brand-500 hover:text-brand-600 transition-colors"
           >
             <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <polyline points="16 3 21 8 16 13" />
@@ -236,6 +236,21 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
             value={primaryLeg.to}
             onChange={(a) => setLeg(0, { to: a })}
           />
+          <div className="md:hidden flex items-end justify-center py-2">
+            <button
+              type="button"
+              aria-label="Swap origin and destination"
+              onClick={() => swapLeg(0)}
+              className="grid h-11 w-11 place-items-center rounded-md border border-border bg-white text-ink-soft hover:border-brand-500 hover:text-brand-600 transition-colors"
+            >
+              <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <polyline points="16 3 21 8 16 13" />
+                <line x1="21" y1="8" x2="4" y2="8" />
+                <polyline points="8 21 3 16 8 11" />
+                <line x1="3" y1="16" x2="20" y2="16" />
+              </svg>
+            </button>
+          </div>
           <div className="flex flex-col gap-1">
             <span className="text-[12px] font-medium text-ink-muted">
               {tripType === "ROUND" ? "Depart — Return" : "Departure"}
@@ -279,54 +294,71 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
       ) : (
         <div className="mt-4 flex flex-col gap-3">
           {legs.map((leg, i) => (
-            <div key={i} className="grid gap-2 lg:grid-cols-[1fr_auto_1fr_1fr_auto]">
-              <AirportField
-                label={`From (${i + 1})`}
-                value={leg.from}
-                onChange={(a) => setLeg(i, { from: a })}
-              />
-              <button
-                type="button"
-                aria-label="Swap"
-                onClick={() => swapLeg(i)}
-                className="self-end mb-0.75 grid h-11 w-11 place-items-center rounded-full border border-border bg-white text-ink-soft hover:border-brand-500 hover:text-brand-600"
-              >
-                <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
-                  <polyline points="16 3 21 8 16 13" />
-                  <line x1="21" y1="8" x2="4" y2="8" />
-                  <polyline points="8 21 3 16 8 11" />
-                  <line x1="3" y1="16" x2="20" y2="16" />
-                </svg>
-              </button>
-              <AirportField
-                label={`To (${i + 1})`}
-                value={leg.to}
-                onChange={(a) => setLeg(i, { to: a })}
-              />
-              <div className="flex flex-col gap-1">
-                <span className="text-[12px] font-medium text-ink-muted">Departure</span>
-                <DateRangePicker
-                  mode="single"
-                  value={{ from: leg.date ? new Date(leg.date) : null, to: null }}
-                  onChange={(v) => setLeg(i, { date: v.from ? toIsoDate(v.from) : null })}
-                  labelFrom="Departure"
-                  placeholderFrom="Pick date"
+            <div key={i}>
+              <div className="grid gap-2 grid-cols-1 md:grid-cols-[1fr_auto_1fr_1fr_auto]">
+                <AirportField
+                  label={`From (${i + 1})`}
+                  value={leg.from}
+                  onChange={(a) => setLeg(i, { from: a })}
                 />
+                <button
+                  type="button"
+                  aria-label="Swap"
+                  onClick={() => swapLeg(i)}
+                  className="hidden md:grid self-end h-11 w-11 place-items-center rounded-full border border-border bg-white text-ink-soft hover:border-brand-500 hover:text-brand-600"
+                >
+                  <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
+                    <polyline points="16 3 21 8 16 13" />
+                    <line x1="21" y1="8" x2="4" y2="8" />
+                    <polyline points="8 21 3 16 8 11" />
+                    <line x1="3" y1="16" x2="20" y2="16" />
+                  </svg>
+                </button>
+                <AirportField
+                  label={`To (${i + 1})`}
+                  value={leg.to}
+                  onChange={(a) => setLeg(i, { to: a })}
+                />
+                <div className="flex flex-col gap-1 md:row-span-1">
+                  <span className="text-[12px] font-medium text-ink-muted">Departure</span>
+                  <DateRangePicker
+                    mode="single"
+                    value={{ from: leg.date ? new Date(leg.date) : null, to: null }}
+                    onChange={(v) => setLeg(i, { date: v.from ? toIsoDate(v.from) : null })}
+                    labelFrom="Departure"
+                    placeholderFrom="Pick date"
+                  />
+                </div>
+                <div className="flex items-end gap-2">
+                  {legs.length > 2 && (
+                    <button
+                      type="button"
+                      onClick={() => removeLeg(i)}
+                      aria-label="Remove leg"
+                      className="h-11 px-3 rounded-md border border-border text-ink-soft hover:bg-danger-50 hover:text-danger-600"
+                    >
+                      <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} aria-hidden>
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-2 14H7L5 6" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="flex items-end gap-2">
-                {legs.length > 2 && (
-                  <button
-                    type="button"
-                    onClick={() => removeLeg(i)}
-                    aria-label="Remove leg"
-                    className="h-11 px-3 rounded-md border border-border text-ink-soft hover:bg-danger-50 hover:text-danger-600"
-                  >
-                    <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} aria-hidden>
-                      <polyline points="3 6 5 6 21 6" />
-                      <path d="M19 6l-2 14H7L5 6" />
-                    </svg>
-                  </button>
-                )}
+              <div className="md:hidden flex items-end justify-center py-2">
+                <button
+                  type="button"
+                  aria-label="Swap"
+                  onClick={() => swapLeg(i)}
+                  className="grid h-11 w-11 place-items-center rounded-md border border-border bg-white text-ink-soft hover:border-brand-500 hover:text-brand-600"
+                >
+                  <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
+                    <polyline points="16 3 21 8 16 13" />
+                    <line x1="21" y1="8" x2="4" y2="8" />
+                    <polyline points="8 21 3 16 8 11" />
+                    <line x1="3" y1="16" x2="20" y2="16" />
+                  </svg>
+                </button>
               </div>
             </div>
           ))}
@@ -424,14 +456,15 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
         </div>
       </div>
 
-      <div className="mt-5 flex items-center justify-between gap-3">
+      <div className="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <PopularRoutes />
         <Button
           onClick={onSearch}
           loading={submitting}
           size="xl"
           variant="accent"
-          className="min-w-45"
+          fullWidth
+          className="sm:min-w-45 sm:w-auto"
           leading={
             <svg viewBox="0 0 24 24" width={18} height={18} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <circle cx="11" cy="11" r="7" />

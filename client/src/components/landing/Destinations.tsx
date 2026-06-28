@@ -49,17 +49,13 @@ const DESTINATIONS: Destination[] = [
   },
 ];
 
-const VISIBLE = 4;
-
 export default function Destinations() {
   const { t } = useTranslate();
-  const [start, setStart] = useState(0);
+  const [current, setCurrent] = useState(0);
   const total = DESTINATIONS.length;
 
-  const visible = Array.from({ length: VISIBLE }, (_, i) => DESTINATIONS[(start + i) % total]);
-
-  const prev = () => setStart((s) => (s - 1 + total) % total);
-  const next = () => setStart((s) => (s + 1) % total);
+  const prev = () => setCurrent((s) => (s - 1 + total) % total);
+  const next = () => setCurrent((s) => (s + 1) % total);
 
   return (
     <section className="relative py-20">
@@ -87,10 +83,8 @@ export default function Destinations() {
             <Chevron direction="right" />
           </button>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {visible.map((d) => (
-              <DestinationCard key={d.name} destination={d} />
-            ))}
+          <div className="grid grid-cols-1 gap-6">
+            <DestinationCard destination={DESTINATIONS[current]} />
           </div>
         </div>
       </div>

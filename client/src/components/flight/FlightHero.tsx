@@ -23,7 +23,7 @@ export default function FlightHero() {
           <h1 className=" text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow">
             Find your next flight
           </h1>
-          
+
         </div>
       </div>
 
