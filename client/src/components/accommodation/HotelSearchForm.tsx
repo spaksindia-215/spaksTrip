@@ -88,8 +88,8 @@ export default function HotelSearchForm() {
   };
 
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-(--shadow-lg) md:p-6">
-      <div className="grid gap-3 md:grid-cols-[1fr_1fr_1.4fr_1fr] lg:grid-cols-[1fr_1fr_1.5fr_1fr_auto]">
+    <div className="rounded-2xl bg-white p-4 sm:p-5 md:p-6 shadow-(--shadow-lg)">
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-1 md:grid-cols-[1fr_1fr_1.4fr_1fr] lg:grid-cols-[1fr_1fr_1.5fr_1fr_auto]">
 
         <DestinationField 
           value={destination} 
@@ -144,7 +144,7 @@ export default function HotelSearchForm() {
           onChildrenChange={setChildren}
           onChildrenAgesChange={setChildrenAges}
         />
-        <div className="flex items-end">
+        <div className="flex items-end md:col-span-1">
           <Button onClick={onSearch} loading={submitting} size="xl" variant="accent" fullWidth>
             Search Hotels
           </Button>
@@ -152,11 +152,11 @@ export default function HotelSearchForm() {
       </div>
 
       {/* Nationality row — passed as GuestNationality to TBO API */}
-      <div className="mt-3 flex flex-wrap items-start gap-x-6 gap-y-2">
-        <div className="w-56">
+      <div className="mt-3 flex flex-col sm:flex-wrap sm:items-start gap-3 sm:gap-x-6 sm:gap-y-2">
+        <div className="w-full sm:w-56">
           <NationalitySelector value={nationality} onChange={setNationality} />
         </div>
-        <p className="self-end text-[11px] text-ink-muted pb-1 leading-tight max-w-xs">
+        <p className="text-[11px] text-ink-muted leading-tight max-w-xs">
           Affects hotel pricing and availability. International destinations require Indian nationality (TBO India).
         </p>
       </div>

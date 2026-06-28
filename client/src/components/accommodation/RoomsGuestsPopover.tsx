@@ -42,7 +42,7 @@ function Counter({
           onClick={() => onChange(Math.max(min, value - 1))}
           disabled={value <= min}
           aria-label={`Decrease ${label}`}
-          className="h-8 w-8 rounded-full border border-border flex items-center justify-center text-ink-soft hover:border-brand-500 hover:text-brand-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="h-10 w-10 rounded-full border border-border flex items-center justify-center text-ink-soft hover:border-brand-500 hover:text-brand-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <svg viewBox="0 0 24 24" width={14} height={14} fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" aria-hidden>
             <line x1="5" y1="12" x2="19" y2="12" />
@@ -54,7 +54,7 @@ function Counter({
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max}
           aria-label={`Increase ${label}`}
-          className="h-8 w-8 rounded-full border border-border flex items-center justify-center text-ink-soft hover:border-brand-500 hover:text-brand-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="h-10 w-10 rounded-full border border-border flex items-center justify-center text-ink-soft hover:border-brand-500 hover:text-brand-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <svg viewBox="0 0 24 24" width={14} height={14} fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" aria-hidden>
             <line x1="12" y1="5" x2="12" y2="19" />

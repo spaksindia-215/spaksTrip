@@ -37,7 +37,7 @@ export default function PassengerSelector({
           type="button"
           ref={ref}
           onClick={toggle}
-          className="flex min-w-[240px] h-12 flex-col justify-center gap-0.5 rounded-md border border-border bg-white shadow-sm px-4 text-left hover:border-brand-400 transition-colors"
+          className="flex w-full sm:min-w-[240px] h-11 sm:h-12 flex-col justify-center gap-0.5 rounded-md border border-border bg-white shadow-sm px-4 text-left hover:border-brand-400 transition-colors"
         >
           <span className="text-[11px] font-medium text-ink-muted">Travellers & Cabin</span>
           <span className="text-[14px] font-semibold text-ink truncate">
