@@ -225,7 +225,18 @@ export type AdminHotelListing = {
 };
 
 // Normalized listing from the unified review queue (any partner-resource type).
-export type AdminListingType = "hotel" | "taxi" | "taxi_package" | "tour" | "tour_package" | "cruise";
+export type AdminListingType =
+  | "hotel"
+  | "taxi"
+  | "taxi_package"
+  | "tour"
+  | "tour_package"
+  | "cruise"
+  | "sightseeing"
+  | "transfer"
+  | "self_drive"
+  | "islandhopper"
+  | "visa";
 export type AdminListing = {
   id: string;
   type: AdminListingType;

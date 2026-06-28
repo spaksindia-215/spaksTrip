@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import { BookingModel } from "../models/Booking";
 import { UserModel } from "../models/User";
+import { ServiceEnquiryModel } from "../models/partner/ServiceEnquiry";
+import { SERVICE_VERTICALS } from "../models/partner/_shared/enums";
 import { HttpError } from "../middleware/error";
 
 function ownerIdFrom(req: Request): string {
@@ -26,6 +28,24 @@ export async function listBookings(req: Request, res: Response, next: NextFuncti
   try {
     const ownerId = ownerIdFrom(req);
     const items = await BookingModel.find({ ownerId }).sort({ createdAt: -1 });
+    res.json({ items: items.map((i) => i.toJSON()) });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// GET /api/customer/enquiries?vertical=sightseeing — the customer's "My Enquiries"
+// list across the new partner-service modules (enquiry-first leads). Optional
+// ?vertical narrows to one module.
+export async function listEnquiries(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const ownerId = ownerIdFrom(req);
+    const filter: Record<string, unknown> = { customer: ownerId };
+    const vertical = typeof req.query.vertical === "string" ? req.query.vertical : "";
+    if (vertical && (SERVICE_VERTICALS as readonly string[]).includes(vertical)) filter.vertical = vertical;
+    const items = await ServiceEnquiryModel.find(filter)
+      .sort({ createdAt: -1 })
+      .populate("listing", "title slug images");
     res.json({ items: items.map((i) => i.toJSON()) });
   } catch (e) {
     next(e);

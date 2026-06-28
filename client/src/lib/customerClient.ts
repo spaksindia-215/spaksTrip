@@ -34,9 +34,29 @@ export type CustomerProfile = {
   createdAt: string;
 };
 
+// A customer's lead in one of the partner-service modules (generic ServiceEnquiry).
+export type CustomerEnquiry = {
+  id: string;
+  vertical: string;
+  listing: { id: string; title?: string; slug?: string; images?: { url: string }[] } | string;
+  status: "new" | "contacted" | "quoted" | "converted" | "closed" | "spam";
+  contact: { name: string; phone: string; email?: string };
+  travelDate?: string;
+  pax: { adults: number; children: number; infants: number };
+  message?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export const customerClient = {
   async bookings(): Promise<Booking[]> {
     const res = await api<{ items: Booking[] }>("/api/customer/bookings");
+    return res.items;
+  },
+
+  async enquiries(vertical?: string): Promise<CustomerEnquiry[]> {
+    const q = vertical ? `?vertical=${encodeURIComponent(vertical)}` : "";
+    const res = await api<{ items: CustomerEnquiry[] }>(`/api/customer/enquiries${q}`);
     return res.items;
   },
 

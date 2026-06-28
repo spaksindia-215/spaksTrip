@@ -13,20 +13,19 @@ const TOKEN_RENEW_BUFFER_MS = 5 * 60 * 1000;
 export const TBO_BOOK_TIMEOUT_MS = 300_000;
 export const TBO_DEFAULT_TIMEOUT_MS = 60_000;
 
-// Search & Book URL Validation (CLAUDE.md): TBO's docs name two services — a Search
-// service (BookingEngineService_Air) and a Booking service (BookingEngineService_AirBook).
-// We keep the routing centralised in these two constants so the split is one line to flip.
+// Search & Book URL Validation (CLAUDE.md): TBO splits the Air API across two hosts.
+// Production routing (per TBO live endpoints):
+//   Search host  → tboapi.travelboutiqueonline.com/AirAPI_V10/AirService.svc
+//     Methods: Search, FareRule, FareQuote, SSR, Calendar Fare, Price RBD
+//   Book host    → booking.travelboutiqueonline.com/AirAPI_V10/AirService.svc
+//     Methods: Book, Ticket, GetBookingDetails, SendChangeRequest, GetChangeRequest, ReleasePNR
 //
-// Confirmed against this account/host (api.tektravels.com): the "_AirBook" path is
-// NOT provisioned — FareQuote/Book there return "Invalid Resource Requested". Search
-// and every booking-flow method work on "_Air", which is what the certified samples
-// and the passing test cases use. So both constants point at BookingEngineService_Air.
-//
-// If TBO provisions a dedicated _AirBook host/path for production, change AIR_BOOK_SVC
-// to "BookingEngineService_AirBook/AirService.svc/rest" (and/or its host) and re-test
-// against the live endpoint before shipping.
-export const AIR_SEARCH_SVC = "BookingEngineService_Air/AirService.svc/rest";
-export const AIR_BOOK_SVC = "BookingEngineService_Air/AirService.svc/rest";
+// The path PREFIX is identical on both hosts (AirAPI_V10/AirService.svc/rest); only the
+// host differs, and the host is selected by the `service` arg to tboApiUrl ("air" vs "book").
+// Certification/Integration URLs differ from production (TBO support) — flip via env vars
+// (TBO_AIR_API_URL / TBO_BOOK_API_URL / TBO_SHARED_API_URL), not code.
+export const AIR_SEARCH_SVC = "AirAPI_V10/AirService.svc/rest";
+export const AIR_BOOK_SVC = "AirAPI_V10/AirService.svc/rest";
 
 function endOfDayMs(): number {
   const d = new Date();
@@ -58,14 +57,14 @@ function getBaseUrl(): string {
  * Priority: explicit env var (e.g. TBO_SHARED_API_URL) → derive from TBO_API_URL
  * keeping its protocol but replacing the hostname with the service-specific host.
  *
- * TBO hosts per service:
- *   shared → sharedapi.tektravels.com  (/SharedData.svc/rest/...)
- *   air    → api.tektravels.com        (/BookingEngineService_Air/...)
- *   hotel  → api.tektravels.com        (/HotelAPI/...)
+ * TBO hosts per service (production):
+ *   shared → api.travelboutiqueonline.com/SharedAPI   (/SharedData.svc/rest/...)
+ *   air    → tboapi.travelboutiqueonline.com          (/AirAPI_V10/AirService.svc/rest/...)
+ *   book   → booking.travelboutiqueonline.com         (/AirAPI_V10/AirService.svc/rest/...)
+ *   hotel  → api.tektravels.com                       (/HotelAPI/...)
  *
- * This ensures that regardless of whether TBO_API_URL is set to
- * api.tektravels.com, b2b.tektravels.com, or any other host, each service
- * always reaches the correct endpoint.
+ * Each service base is set explicitly via its env var, so regardless of TBO_API_URL
+ * every service always reaches the correct endpoint.
  */
 function getServiceBaseUrl(envKey: string, fallbackHost: string): string {
   const explicit = process.env[envKey];
@@ -82,15 +81,17 @@ function getServiceBaseUrl(envKey: string, fallbackHost: string): string {
 
 export function tboApiUrl(
   path: string,
-  service: "shared" | "air" | "hotel" = "air",
+  service: "shared" | "air" | "book" | "hotel" = "air",
 ): string {
   const cleanPath = path.replace(/^\//, "");
   const baseUrl =
     service === "shared"
-      ? getServiceBaseUrl("TBO_SHARED_API_URL", "sharedapi.tektravels.com")
+      ? getServiceBaseUrl("TBO_SHARED_API_URL", "api.travelboutiqueonline.com/SharedAPI")
       : service === "hotel"
         ? getServiceBaseUrl("TBO_HOTEL_API_URL", "api.tektravels.com")
-        : getServiceBaseUrl("TBO_AIR_API_URL", "api.tektravels.com");
+        : service === "book"
+          ? getServiceBaseUrl("TBO_BOOK_API_URL", "booking.travelboutiqueonline.com")
+          : getServiceBaseUrl("TBO_AIR_API_URL", "tboapi.travelboutiqueonline.com");
   return `${baseUrl}/${cleanPath}`;
 }
 

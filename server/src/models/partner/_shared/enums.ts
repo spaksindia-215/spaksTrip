@@ -22,6 +22,9 @@ export const HOTEL_TYPES = [
   "homestay",
   "apartment",
   "guest_house",
+  "airbnb",
+  "houseboat",
+  "hostel",
 ] as const;
 export type HotelType = (typeof HOTEL_TYPES)[number];
 
@@ -255,3 +258,120 @@ export const ENQUIRY_PAYMENT_STATUS = [
   "refunded",
 ] as const;
 export type EnquiryPaymentStatus = (typeof ENQUIRY_PAYMENT_STATUS)[number];
+
+// Verticals that route leads through the generic ServiceEnquiry model. Mirrors
+// the new partner-service modules (SightSeeing first; the rest land later).
+export const SERVICE_VERTICALS = [
+  "sightseeing",
+  "transfer",
+  "self_drive",
+  "islandhopper",
+  "visa",
+] as const;
+export type ServiceVertical = (typeof SERVICE_VERTICALS)[number];
+
+// ── SightSeeing ──────────────────────────────────────────────────────────────
+// Tours, activities, attractions and experiences listed by a partner. Mirrors the
+// Tour vertical; pricing follows a model (per-person / per-group / tiered).
+export const SIGHTSEEING_CATEGORIES = [
+  "tour",
+  "water_activity",
+  "adventure",
+  "cultural",
+  "nature",
+  "nightlife",
+  "family",
+  "attraction",
+  "other",
+] as const;
+export type SightseeingCategory = (typeof SIGHTSEEING_CATEGORIES)[number];
+
+export const SIGHTSEEING_DIFFICULTY = ["easy", "moderate", "challenging"] as const;
+export type SightseeingDifficulty = (typeof SIGHTSEEING_DIFFICULTY)[number];
+
+export const SIGHTSEEING_PRICING_MODELS = ["per_person", "per_group", "tiered"] as const;
+export type SightseeingPricingModel = (typeof SIGHTSEEING_PRICING_MODELS)[number];
+
+export const SIGHTSEEING_DURATION_UNITS = ["hours", "half_day", "full_day"] as const;
+export type SightseeingDurationUnit = (typeof SIGHTSEEING_DURATION_UNITS)[number];
+
+// Cancellation policy shared by the new service modules (matches the spec's
+// dropdown). "custom" leaves room for free-text terms in termsAndConditions.
+export const SERVICE_CANCELLATION_POLICIES = [
+  "free_24h",
+  "free_48h",
+  "free_72h",
+  "non_refundable",
+  "custom",
+] as const;
+export type ServiceCancellationPolicy = (typeof SERVICE_CANCELLATION_POLICIES)[number];
+
+// ── Transfer ─────────────────────────────────────────────────────────────────
+// Point-to-point airport / inter-city transfer services.
+export const TRANSFER_TYPES = [
+  "airport_pickup",
+  "airport_dropoff",
+  "round_trip",
+  "intercity",
+  "harbour",
+] as const;
+export type TransferType = (typeof TRANSFER_TYPES)[number];
+
+export const TRANSFER_VEHICLE_TYPES = [
+  "sedan",
+  "suv",
+  "van",
+  "minibus",
+  "bus",
+  "speedboat",
+] as const;
+export type TransferVehicleType = (typeof TRANSFER_VEHICLE_TYPES)[number];
+
+// ── Self-Drive ───────────────────────────────────────────────────────────────
+// Car / scooter / vehicle rental for self-drive exploration.
+export const SELF_DRIVE_CATEGORIES = [
+  "economy",
+  "compact",
+  "suv",
+  "luxury",
+  "scooter_bike",
+  "electric",
+] as const;
+export type SelfDriveCategory = (typeof SELF_DRIVE_CATEGORIES)[number];
+
+export const TRANSMISSION_TYPES = ["automatic", "manual"] as const;
+export type TransmissionType = (typeof TRANSMISSION_TYPES)[number];
+
+export const FUEL_TYPES = ["petrol", "diesel", "electric", "hybrid"] as const;
+export type FuelType = (typeof FUEL_TYPES)[number];
+
+export const MILEAGE_POLICIES = ["unlimited", "limited"] as const;
+export type MileagePolicy = (typeof MILEAGE_POLICIES)[number];
+
+export const FUEL_POLICIES = ["full_to_full", "same_to_same", "pre_purchase"] as const;
+export type FuelPolicyType = (typeof FUEL_POLICIES)[number];
+
+export const INSURANCE_TIERS = ["basic", "standard", "premium"] as const;
+export type InsuranceTier = (typeof INSURANCE_TIERS)[number];
+
+// ── Islandhopper ─────────────────────────────────────────────────────────────
+// Inter-island travel: domestic flight / seaplane / speedboat / ferry / yacht.
+export const ISLANDHOPPER_SERVICE_TYPES = [
+  "domestic_flight",
+  "seaplane",
+  "speedboat",
+  "ferry",
+  "yacht_charter",
+] as const;
+export type IslandhopperServiceType = (typeof ISLANDHOPPER_SERVICE_TYPES)[number];
+
+// ── Visa Consultancy ─────────────────────────────────────────────────────────
+// Consultancy/service model connecting users with visa experts.
+export const VISA_CATEGORIES = ["pr", "work", "study", "visit"] as const;
+export type VisaCategory = (typeof VISA_CATEGORIES)[number];
+
+export const VISA_CONSULTATION_MODES = ["in_person", "video", "phone", "email"] as const;
+export type VisaConsultationMode = (typeof VISA_CONSULTATION_MODES)[number];
+
+export const VISA_PAYMENT_STRUCTURES = ["full_upfront", "phased", "pay_after_approval"] as const;
+export type VisaPaymentStructure = (typeof VISA_PAYMENT_STRUCTURES)[number];

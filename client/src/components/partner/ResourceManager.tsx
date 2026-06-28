@@ -81,6 +81,19 @@ const TYPE_COPY: Record<
     tint: "hsl(347 74% 54%)",
     badge: "brand",
   },
+  // SightSeeing + the four service modules use their own dedicated managers; these
+  // entries exist only to satisfy the exhaustive Record<ResourceType> contract.
+  sightseeing: {
+    singular: "Activity",
+    plural: "Activities",
+    eyebrow: "Tours, activities and experiences",
+    tint: "hsl(188 70% 42%)",
+    badge: "info",
+  },
+  transfer: { singular: "Transfer", plural: "Transfers", eyebrow: "Airport & inter-city transfers", tint: "hsl(210 70% 45%)", badge: "info" },
+  self_drive: { singular: "Rental", plural: "Rentals", eyebrow: "Self-drive vehicle rentals", tint: "hsl(140 60% 40%)", badge: "success" },
+  islandhopper: { singular: "Route", plural: "Routes", eyebrow: "Inter-island flights & ferries", tint: "hsl(200 75% 45%)", badge: "info" },
+  visa: { singular: "Consultancy", plural: "Consultancies", eyebrow: "Visa consultancy services", tint: "hsl(265 55% 50%)", badge: "brand" },
 };
 
 // Valid per-type skeletons so the details editor starts from a correct shape
@@ -153,6 +166,17 @@ const DETAIL_TEMPLATES: Record<ResourceType, Record<string, unknown>> = {
     itinerary: [],
     inclusions: [],
   },
+  // Not used by this generic manager (these verticals have dedicated managers);
+  // kept only to satisfy the exhaustive Record<ResourceType> contract.
+  sightseeing: {
+    category: "tour",
+    island: "",
+    inclusions: [],
+  },
+  transfer: {},
+  self_drive: {},
+  islandhopper: {},
+  visa: {},
 };
 
 function buildInitialForm(type: ResourceType, item?: PartnerResource | null): FormState {
