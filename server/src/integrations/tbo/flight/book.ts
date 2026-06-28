@@ -299,7 +299,7 @@ export async function tboBookFlight(input: TboBookFlightInput): Promise<TboBookF
       return mapped;
     });
 
-    const url = tboApiUrl(`${AIR_BOOK_SVC}/Book`);
+    const url = tboApiUrl(`${AIR_BOOK_SVC}/Book`, "book");
     const reqBody = {
       ...tboBase(token),
       ResultIndex: input.resultIndex,

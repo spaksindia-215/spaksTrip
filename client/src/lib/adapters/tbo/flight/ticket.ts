@@ -105,7 +105,7 @@ async function tboNonLccTicket(
   pnr?: string,
 ): Promise<TicketResult> {
   return withRetry(async (token) => {
-    const url = tboApiUrl(`${AIR_BOOK_SVC}/Ticket`);
+    const url = tboApiUrl(`${AIR_BOOK_SVC}/Ticket`, "book");
     const reqBody = {
       ...tboBase(token),
       BookingId: bookingId,
@@ -205,7 +205,7 @@ async function tboLccTicket(input: LccTicketInput): Promise<TicketResult> {
       return mapped;
     });
 
-    const url = tboApiUrl(`${AIR_BOOK_SVC}/Ticket`);
+    const url = tboApiUrl(`${AIR_BOOK_SVC}/Ticket`, "book");
     // PreferredCurrency and IsBaseCurrencyRequired are required for LCC Ticket
     // per the certified sample (OB Ticket.txt / IB Ticket.txt).
     const reqBody = {

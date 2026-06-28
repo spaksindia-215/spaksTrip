@@ -1,0 +1,6 @@
+import ServiceListingManager from "@/components/partner/ServiceListingManager";
+import { SERVICE_MODULES } from "@/lib/serviceModules";
+
+export default function PartnerSelfDrivePage() {
+  return <ServiceListingManager config={SERVICE_MODULES.self_drive} />;
+}

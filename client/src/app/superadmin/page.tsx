@@ -63,6 +63,11 @@ const LISTING_TYPE_FILTERS: Array<{ value: AdminListingType | "all"; label: stri
   { value: "tour", label: "Tours" },
   { value: "tour_package", label: "Tour Pkgs" },
   { value: "cruise", label: "Cruises" },
+  { value: "sightseeing", label: "SightSeeing" },
+  { value: "transfer", label: "Transfers" },
+  { value: "self_drive", label: "Self-Drive" },
+  { value: "islandhopper", label: "Islandhopper" },
+  { value: "visa", label: "Visa" },
 ];
 
 const USER_FILTERS: Array<{ value: UserRole | "all"; label: string }> = [

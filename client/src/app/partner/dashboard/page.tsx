@@ -11,6 +11,7 @@ import { useToast } from "@/components/ui/Toast";
 import { ApiError } from "@/lib/api";
 import { useAuthStore } from "@/state/authStore";
 import { partnerClient, type PartnerResource, type ResourceType } from "@/lib/partnerClient";
+import { SERVICE_MODULES, servicePartnerApi } from "@/lib/serviceModules";
 
 // Per-vertical delete — each type lives in its own collection/endpoint.
 const REMOVE: Record<ResourceType, (id: string) => Promise<void>> = {
@@ -20,6 +21,11 @@ const REMOVE: Record<ResourceType, (id: string) => Promise<void>> = {
   tour: (id) => partnerClient.tours.remove(id),
   tour_package: (id) => partnerClient.tourPackages.remove(id),
   cruise: (id) => partnerClient.cruises.remove(id),
+  sightseeing: (id) => partnerClient.sightseeing.remove(id),
+  transfer: (id) => servicePartnerApi(SERVICE_MODULES.transfer).remove(id),
+  self_drive: (id) => servicePartnerApi(SERVICE_MODULES.self_drive).remove(id),
+  islandhopper: (id) => servicePartnerApi(SERVICE_MODULES.islandhopper).remove(id),
+  visa: (id) => servicePartnerApi(SERVICE_MODULES.visa).remove(id),
 };
 
 const RESOURCE_TYPES: ResourceType[] = [
@@ -29,6 +35,11 @@ const RESOURCE_TYPES: ResourceType[] = [
   "tour",
   "tour_package",
   "cruise",
+  "sightseeing",
+  "transfer",
+  "self_drive",
+  "islandhopper",
+  "visa",
 ];
 
 const META: Record<ResourceType, { label: string; href: string }> = {
@@ -38,6 +49,11 @@ const META: Record<ResourceType, { label: string; href: string }> = {
   tour: { label: "Tours", href: "/partner/tours" },
   tour_package: { label: "Tour Packages", href: "/partner/tour-packages" },
   cruise: { label: "Cruises", href: "/partner/cruises" },
+  sightseeing: { label: "SightSeeing", href: "/partner/sightseeing" },
+  transfer: { label: "Transfers", href: "/partner/transfer" },
+  self_drive: { label: "Self-Drive", href: "/partner/self-drive" },
+  islandhopper: { label: "Islandhopper", href: "/partner/islandhopper" },
+  visa: { label: "Visa Consultancy", href: "/partner/visa" },
 };
 
 const QUICK_ACTIONS: { label: string; href: string }[] = [
@@ -109,14 +125,27 @@ export default function PartnerDashboardPage() {
         // Hotels live in their own collection (/api/partner/hotels), not in the
         // generic PartnerResource store the other verticals use — so fetch them
         // separately and adapt into the same Row shape.
-        const [entries, hotelListings] = await Promise.all([
+        // Hotels, SightSeeing and the four enquiry-first service modules live in
+        // their own typed collections (not the generic PartnerResource store the
+        // other verticals use) — fetch them separately and adapt into the Row shape.
+        const SERVICE_TYPES: ResourceType[] = ["transfer", "self_drive", "islandhopper", "visa"];
+        const TYPED = new Set<ResourceType>(["hotel", "sightseeing", ...SERVICE_TYPES]);
+        const [entries, hotelListings, sightseeingListings, serviceEntries] = await Promise.all([
           Promise.all(
-            RESOURCE_TYPES.filter((type) => type !== "hotel").map(async (type) => {
+            RESOURCE_TYPES.filter((type) => !TYPED.has(type)).map(async (type) => {
               const items = await partnerClient.list(type);
               return [type, items] as const;
             }),
           ),
           partnerClient.hotels.list(),
+          partnerClient.sightseeing.list(),
+          Promise.all(
+            SERVICE_TYPES.map(async (type) => {
+              const key = type === "self_drive" ? "self_drive" : type;
+              const items = await servicePartnerApi(SERVICE_MODULES[key as keyof typeof SERVICE_MODULES]).list();
+              return [type, items] as const;
+            }),
+          ),
         ]);
 
         if (!active) return;
@@ -134,15 +163,45 @@ export default function PartnerDashboardPage() {
           typeLabel: META.hotel.label,
         }));
 
+        const sightseeingRows: Row[] = sightseeingListings.map((s) => ({
+          id: s.id,
+          partnerId: "",
+          type: "sightseeing",
+          title: s.title,
+          description: "",
+          price: 0,
+          metadata: { status: s.status },
+          createdAt: s.createdAt,
+          updatedAt: s.updatedAt,
+          typeLabel: META.sightseeing.label,
+        }));
+
+        const serviceRows: Row[] = serviceEntries.flatMap(([type, items]) =>
+          items.map((s) => ({
+            id: s.id,
+            partnerId: "",
+            type,
+            title: s.title,
+            description: "",
+            price: 0,
+            metadata: { status: s.status },
+            createdAt: s.createdAt,
+            updatedAt: s.updatedAt,
+            typeLabel: META[type].label,
+          })),
+        );
+
         const countMap = Object.fromEntries([
           ...entries.map(([type, items]) => [type, items.length]),
           ["hotel", hotelListings.length],
+          ["sightseeing", sightseeingListings.length],
+          ...serviceEntries.map(([type, items]) => [type, items.length]),
         ]) as Record<ResourceType, number>;
 
         const allRows: Row[] = entries.flatMap(([type, items]) =>
           items.map((item) => ({ ...item, typeLabel: META[type].label })),
         );
-        allRows.push(...hotelRows);
+        allRows.push(...hotelRows, ...sightseeingRows, ...serviceRows);
         allRows.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
         setCounts(countMap);

@@ -45,14 +45,16 @@ const NAV_ITEMS: NavItem[] = [
     labelKey: "nav.accommodation",
     href: "#",
     menu: [
-      { labelKey: "Hotel", href: "/hotel" },
-      { labelKey: "nav.homestay", href: "#" },
-      { labelKey: "nav.airbnb", href: "#" },
-      { labelKey: "nav.villa", href: "#" },
-      { labelKey: "nav.guest_house", href: "#" },
-      { labelKey: "nav.house_board", href: "#" },
-      { labelKey: "nav.hostels", href: "#" },
-      { labelKey: "nav.resorts", href: "#" },
+      // Partner-listed stays (enquiry-first). The top-level "Hotel" tab stays
+      // TBO-driven; these route to the partner Accommodation surface by type.
+      { labelKey: "Hotel", href: "/accommodation?type=hotel" },
+      { labelKey: "nav.homestay", href: "/accommodation?type=homestay" },
+      { labelKey: "nav.airbnb", href: "/accommodation?type=airbnb" },
+      { labelKey: "nav.villa", href: "/accommodation?type=villa" },
+      { labelKey: "nav.guest_house", href: "/accommodation?type=guest_house" },
+      { labelKey: "nav.house_board", href: "/accommodation?type=houseboat" },
+      { labelKey: "nav.hostels", href: "/accommodation?type=hostel" },
+      { labelKey: "nav.resorts", href: "/accommodation?type=resort" },
     ],
   },
   {

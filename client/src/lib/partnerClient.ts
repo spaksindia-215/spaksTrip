@@ -280,7 +280,7 @@ export type CruiseListingApi = {
 
 // Multipart request through the Next.js proxy (forwards cookies + raw body).
 // The browser sets the multipart Content-Type/boundary, so we don't.
-async function multipart<T>(path: string, method: "POST" | "PATCH", form: FormData): Promise<T> {
+async function multipart<T>(path: string, method: "POST" | "PATCH" | "PUT", form: FormData): Promise<T> {
   const response = await fetch(path, { method, body: form, credentials: "include" });
   const payload = await response.json().catch(() => null);
   if (!response.ok) {
@@ -291,13 +291,69 @@ async function multipart<T>(path: string, method: "POST" | "PATCH", form: FormDa
   return (payload as { item: T }).item;
 }
 
+// Typed SightseeingListing as returned by the backend (mirrors the model's toJSON).
+export type SightseeingListingApi = {
+  id: string;
+  partner: string;
+  status: "draft" | "pending" | "active" | "paused" | "suspended";
+  title: string;
+  slug: string;
+  category: string;
+  location: { address?: string; island?: string };
+  meetingPoint: { instructions?: string };
+  description?: string;
+  highlights: string[];
+  duration: { value?: number; unit: string };
+  difficulty?: string;
+  ageRestriction: { min?: number; max?: number };
+  groupSize: { min: number; max?: number };
+  inclusions: string[];
+  exclusions: string[];
+  whatToBring: string[];
+  pricingModel: string;
+  currency: string;
+  pricing: { adult?: number; child?: number; infant?: number; groupPrice?: number };
+  availableDays: string[];
+  timeSlots: string[];
+  cancellationPolicy: string;
+  bookingCutoffHours: number;
+  languages: string[];
+  accessibility: string[];
+  termsAndConditions?: string;
+  images: { url: string; caption?: string; isPrimary?: boolean }[];
+  videoUrl?: string;
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+// A lead routed to the partner (generic ServiceEnquiry, vertical=sightseeing).
+export type ServiceEnquiryApi = {
+  id: string;
+  vertical: string;
+  listing: { id: string; title?: string; slug?: string } | string;
+  status: "new" | "contacted" | "quoted" | "converted" | "closed" | "spam";
+  contact: { name: string; phone: string; email?: string };
+  travelDate?: string;
+  pax: { adults: number; children: number; infants: number };
+  message?: string;
+  internalNotes: { at: string; text: string }[];
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type ResourceType =
   | "hotel"
   | "cruise"
   | "taxi"
   | "taxi_package"
   | "tour"
-  | "tour_package";
+  | "tour_package"
+  | "sightseeing"
+  | "transfer"
+  | "self_drive"
+  | "islandhopper"
+  | "visa";
 
 export type PartnerResource = {
   id: string;
@@ -440,6 +496,55 @@ export const partnerClient = {
 
     async remove(id: string): Promise<void> {
       await api<null>(`/api/partner/tours/${id}`, { method: "DELETE" });
+    },
+  },
+
+  // SightSeeing (typed model; images to Cloudinary). create/update are multipart:
+  // a `data` JSON field + optional `images`. Enquiries are leads routed to the
+  // partner (generic ServiceEnquiry, vertical=sightseeing).
+  sightseeing: {
+    async list(): Promise<SightseeingListingApi[]> {
+      const response = await api<{ items: SightseeingListingApi[] }>("/api/partner/sightseeing");
+      return response.items;
+    },
+
+    async get(id: string): Promise<SightseeingListingApi> {
+      const response = await api<{ item: SightseeingListingApi }>(`/api/partner/sightseeing/${id}`);
+      return response.item;
+    },
+
+    async create(form: FormData): Promise<SightseeingListingApi> {
+      return multipart<SightseeingListingApi>("/api/partner/sightseeing", "POST", form);
+    },
+
+    async update(id: string, form: FormData): Promise<SightseeingListingApi> {
+      return multipart<SightseeingListingApi>(`/api/partner/sightseeing/${id}`, "PUT", form);
+    },
+
+    async setStatus(id: string, status: string): Promise<SightseeingListingApi> {
+      const response = await api<{ item: SightseeingListingApi }>(
+        `/api/partner/sightseeing/${id}/status`,
+        { method: "PATCH", body: { status } },
+      );
+      return response.item;
+    },
+
+    async remove(id: string): Promise<void> {
+      await api<null>(`/api/partner/sightseeing/${id}`, { method: "DELETE" });
+    },
+
+    async enquiries(status?: string): Promise<ServiceEnquiryApi[]> {
+      const q = status ? `?status=${encodeURIComponent(status)}` : "";
+      const response = await api<{ items: ServiceEnquiryApi[] }>(`/api/partner/sightseeing/enquiries${q}`);
+      return response.items;
+    },
+
+    async updateEnquiry(id: string, patch: { status?: string; note?: string }): Promise<ServiceEnquiryApi> {
+      const response = await api<{ item: ServiceEnquiryApi }>(
+        `/api/partner/sightseeing/enquiries/${id}`,
+        { method: "PATCH", body: patch },
+      );
+      return response.item;
     },
   },
 

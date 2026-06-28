@@ -41,6 +41,9 @@ const HOTEL_TYPES = [
   "Homestay",
   "Apartment",
   "Guest House",
+  "Airbnb",
+  "Houseboat",
+  "Hostel",
 ];
 
 const AMENITIES = [

@@ -153,7 +153,7 @@ export async function tboGetCalendarFare(
     };
 
     const data = await callCalendarEndpoint(
-      "BookingEngineService_Air/AirService.svc/rest/GetCalendarFare",
+      "AirAPI_V10/AirService.svc/rest/GetCalendarFare",
       "GetCalendarFare",
       body,
     );
@@ -194,7 +194,7 @@ export async function tboUpdateCalendarFareOfDay(
     };
 
     const data = await callCalendarEndpoint(
-      "BookingEngineService_Air/AirService.svc/rest/UpdateCalendarFareOfDay",
+      "AirAPI_V10/AirService.svc/rest/UpdateCalendarFareOfDay",
       "UpdateCalendarFareOfDay",
       body,
     );

@@ -20,6 +20,17 @@ import packagesRoutes from "./routes/packages.routes";
 import partnerHotelsRoutes from "./routes/partnerHotels.routes";
 import partnerPackagesRoutes from "./routes/partnerPackages.routes";
 import adminPackagesRoutes from "./routes/adminPackages.routes";
+import accommodationRoutes from "./routes/accommodation.routes";
+import partnerAccommodationRoutes from "./routes/partnerAccommodation.routes";
+import partnerSightseeingRoutes from "./routes/partnerSightseeing.routes";
+import sightseeingRoutes from "./routes/sightseeing.routes";
+import { makePartnerServiceRouter, makePublicServiceRouter } from "./routes/serviceRoutes";
+import {
+  transferController,
+  selfDriveController,
+  islandhopperController,
+  visaController,
+} from "./controllers/serviceControllers";
 import { errorHandler } from "./middleware/error";
 import { securityHeaders } from "./middleware/securityHeaders";
 import { apiRateLimiter } from "./middleware/rateLimit";
@@ -92,6 +103,15 @@ async function main(): Promise<void> {
   // /api/partner and /api/admin routers so they win.
   app.use("/api/partner/packages", partnerPackagesRoutes);
   app.use("/api/admin/packages", adminPackagesRoutes);
+  // Partner-service modules (SightSeeing first) — specific sub-paths before the
+  // generic /api/partner router. Admin moderation reuses /api/admin/listings.
+  app.use("/api/partner/sightseeing", partnerSightseeingRoutes);
+  app.use("/api/partner/transfer", makePartnerServiceRouter(transferController));
+  app.use("/api/partner/self-drive", makePartnerServiceRouter(selfDriveController));
+  app.use("/api/partner/islandhopper", makePartnerServiceRouter(islandhopperController));
+  app.use("/api/partner/visa", makePartnerServiceRouter(visaController));
+  // Partner accommodation lead inbox (listing CRUD stays on /api/partner/hotels).
+  app.use("/api/partner/accommodation", partnerAccommodationRoutes);
   app.use("/api/partner", partnerRoutes);
   app.use("/api/admin", adminRoutes);
   app.use("/api/customer", customerRoutes);
@@ -104,6 +124,16 @@ async function main(): Promise<void> {
   app.use("/api/events", eventsRoutes);
   // Public marketplace packages + customer/guest enquiry entrypoint.
   app.use("/api/packages", packagesRoutes);
+  // Public partner-accommodation discovery + customer/guest enquiry entrypoint
+  // (separate from TBO /hotel search, which is unchanged).
+  app.use("/api/accommodation", accommodationRoutes);
+  // Public SightSeeing discovery + customer/guest enquiry entrypoint.
+  app.use("/api/sightseeing", sightseeingRoutes);
+  // Public discovery + enquiry for the remaining enquiry-first service modules.
+  app.use("/api/transfer", makePublicServiceRouter(transferController));
+  app.use("/api/self-drive", makePublicServiceRouter(selfDriveController));
+  app.use("/api/islandhopper", makePublicServiceRouter(islandhopperController));
+  app.use("/api/visa", makePublicServiceRouter(visaController));
   app.use("/api/partner-hotels", partnerHotelsRoutes);
 
   app.use(errorHandler);

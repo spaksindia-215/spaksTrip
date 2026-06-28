@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatINR } from "@/lib/format";
+import EmptyState from "@/components/ui/EmptyState";
 import {
   listPackages,
   type PackageKind,
@@ -101,10 +102,11 @@ export default function MarketplaceGrid({ kind, scope, emptyHint }: Props) {
 
   if (items.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border px-6 py-12 text-center">
-        <p className="text-[15px] font-semibold text-ink">No packages available yet</p>
-        <p className="mt-1 text-[13px] text-ink-muted">{emptyHint ?? "Please check back soon — new packages are added regularly."}</p>
-      </div>
+      <EmptyState
+        title="No listings found"
+        emoji="🍂"
+        subtitle={emptyHint ?? "Try adjusting your search or category filters."}
+      />
     );
   }
 

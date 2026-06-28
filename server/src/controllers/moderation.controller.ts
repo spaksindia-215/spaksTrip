@@ -6,6 +6,11 @@ import { TaxiPackageModel } from "../models/partner/TaxiPackage";
 import { TourListingModel } from "../models/partner/TourListing";
 import { TourPackageModel } from "../models/partner/TourPackage";
 import { CruiseListingModel } from "../models/partner/CruiseListing";
+import { SightseeingListingModel } from "../models/partner/SightseeingListing";
+import { TransferListingModel } from "../models/partner/TransferListing";
+import { SelfDriveListingModel } from "../models/partner/SelfDriveListing";
+import { IslandhopperListingModel } from "../models/partner/IslandhopperListing";
+import { VisaListingModel } from "../models/partner/VisaListing";
 import { RESOURCE_STATUS } from "../models/partner/_shared/enums";
 import { HttpError } from "../middleware/error";
 
@@ -20,7 +25,12 @@ export type ListingType =
   | "taxi_package"
   | "tour"
   | "tour_package"
-  | "cruise";
+  | "cruise"
+  | "sightseeing"
+  | "transfer"
+  | "self_drive"
+  | "islandhopper"
+  | "visa";
 
 type AnyDoc = Record<string, unknown>;
 
@@ -110,6 +120,51 @@ const REGISTRY: Record<ListingType, RegistryEntry> = {
       title: str(d.cruiseName) ?? "Cruise",
       thumbnail: firstImageUrl(get(d, "vessel", "images")),
       subtitle: str(get(d, "route", "departurePort")),
+    }),
+  },
+  sightseeing: {
+    model: SightseeingListingModel,
+    label: "SightSeeing",
+    view: (d) => ({
+      title: str(d.title) ?? "Activity",
+      thumbnail: firstImageUrl(d.images),
+      subtitle: str(get(d, "location", "island")),
+    }),
+  },
+  transfer: {
+    model: TransferListingModel,
+    label: "Transfer",
+    view: (d) => ({
+      title: str(d.title) ?? "Transfer service",
+      thumbnail: firstImageUrl(d.images),
+      subtitle: str(get(d, "routes", "0", "from")),
+    }),
+  },
+  self_drive: {
+    model: SelfDriveListingModel,
+    label: "Self-Drive",
+    view: (d) => ({
+      title: str(d.title) ?? "Vehicle rental",
+      thumbnail: firstImageUrl(d.images),
+      subtitle: str(get(d, "pickupLocations", "0", "name")),
+    }),
+  },
+  islandhopper: {
+    model: IslandhopperListingModel,
+    label: "Islandhopper",
+    view: (d) => ({
+      title: str(d.title) ?? "Route",
+      thumbnail: firstImageUrl(d.images),
+      subtitle: str(get(d, "routes", "0", "origin")),
+    }),
+  },
+  visa: {
+    model: VisaListingModel,
+    label: "Visa Consultancy",
+    view: (d) => ({
+      title: str(d.title) ?? "Consultancy",
+      thumbnail: firstImageUrl(d.images),
+      subtitle: str(get(d, "countriesCovered", "0")),
     }),
   },
 };

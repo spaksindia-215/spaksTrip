@@ -41,7 +41,7 @@ export async function tboGetFlightBookingDetail(
   pnr?: string,
 ): Promise<BookingDetailResult> {
   return withRetry(async (token) => {
-    const url = tboApiUrl(`${AIR_BOOK_SVC}/GetBookingDetails`);
+    const url = tboApiUrl(`${AIR_BOOK_SVC}/GetBookingDetails`, "book");
     // PNR sent alongside BookingId to match the certified sample
     // (sampleVerificationLogs getBookingDetails*Request.txt). Only when available.
     const reqBody = { ...tboBase(token), BookingId: bookingId, ...(pnr ? { PNR: pnr } : {}) };

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import EventCard from "@/components/events/EventCard";
+import EmptyState from "@/components/ui/EmptyState";
 import { eventsService, type EventCard as EventCardType, type EventFilters } from "@/services/events";
 
 const CATEGORY_OPTIONS: { value: string; label: string }[] = [
@@ -116,16 +117,16 @@ export default function EventsBrowser() {
             </button>
           </div>
         ) : items.length === 0 ? (
-          <div className="rounded-2xl border border-gray-100 bg-[#F4F6F9] p-12 text-center">
-            <p className="text-lg font-semibold text-[#0E1E3A]">No events found</p>
-            <p className="mt-1 text-sm text-gray-500">
-              Try a different city or category — or{" "}
+          <EmptyState
+            title="No events found"
+            emoji="🍂"
+            subtitle="Try a different city or category."
+            cta={
               <Link href="/events/services" className="font-semibold text-[#C5A572] underline">
-                plan a private event
-              </Link>{" "}
-              with us.
-            </p>
-          </div>
+                Plan a private event with us
+              </Link>
+            }
+          />
         ) : (
           <>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
