@@ -233,46 +233,46 @@ const privacySections: PrivacySection[] = [
           more information contact our Privacy Compliance Officer.
         </ParagraphBlock>
         <div className="grid gap-6 sm:grid-cols-2">
-          <div className="rounded-lg bg-gradient-to-br from-[#fef2f2] to-[#f8fafc] p-5 ring-1 ring-[#E0382E]/10">
+          <div className="rounded-lg bg-gradient-to-br from-orange-50 to-[#F4F6F9] p-5 ring-1 ring-orange-200">
             <div className="flex items-start gap-3">
               <Mail className="mt-1 h-5 w-5 flex-shrink-0 text-[#E0382E]" />
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-[#64748b]">
+                <p className="text-xs font-semibold uppercase tracking-widest text-gray-600">
                   Email
                 </p>
                 <a
                   href="mailto:spakstrip@gmail.com"
-                  className="mt-2 block text-sm font-semibold text-[#E0382E] transition-colors hover:text-[#c73027]"
+                  className="mt-2 block text-sm font-semibold text-[#E0382E] transition-colors hover:text-orange-700"
                 >
                   spakstrip@gmail.com
                 </a>
               </div>
             </div>
           </div>
-          <div className="rounded-lg bg-gradient-to-br from-[#fef2f2] to-[#f8fafc] p-5 ring-1 ring-[#E0382E]/10">
+          <div className="rounded-lg bg-gradient-to-br from-blue-50 to-[#F4F6F9] p-5 ring-1 ring-blue-200">
             <div className="flex items-start gap-3">
-              <MapPin className="mt-1 h-5 w-5 flex-shrink-0 text-[#E0382E]" />
+              <MapPin className="mt-1 h-5 w-5 flex-shrink-0 text-[#0E1E3A]" />
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-[#64748b]">
+                <p className="text-xs font-semibold uppercase tracking-widest text-gray-600">
                   Address
                 </p>
-                <p className="mt-2 text-sm font-medium text-[#0e1e3a]">
+                <p className="mt-2 text-sm font-medium text-[#0E1E3A]">
                   E-38, Budh Vihar, Badarpur, New Delhi, Delhi -110044
                 </p>
               </div>
             </div>
           </div>
         </div>
-        <div className="rounded-lg bg-gradient-to-r from-[#fef2f2] via-[#f8fafc] to-[#fef2f2] p-6 ring-1 ring-[#E0382E]/20">
+        <div className="rounded-lg bg-gradient-to-r from-[#0E1E3A] to-[#1a2a47] p-6 text-white">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E0382E]/10">
-              <Shield className="h-6 w-6 text-[#E0382E]" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E0382E]">
+              <Shield className="h-6 w-6 text-white" />
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-[#64748b]">
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-300">
                 Privacy Compliance Officer
               </p>
-              <p className="mt-1 text-lg font-bold text-[#0e1e3a]">MR. S K Meena</p>
+              <p className="mt-1 text-lg font-bold text-white">MR. S K Meena</p>
             </div>
           </div>
         </div>
@@ -311,7 +311,7 @@ export default function PrivacyPolicyLanding() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-b from-[#f8fafc] to-[#f1f5f9]">
+    <div className="bg-[#F4F6F9]">
       <section className="relative isolate overflow-hidden">
         <div className="relative h-[270px] sm:h-[320px] lg:h-[390px]">
           <Image
@@ -321,7 +321,7 @@ export default function PrivacyPolicyLanding() {
             priority
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0E1E3A]/60 to-[#0E1E3A]/30" />
           <div className="relative flex h-full items-center justify-center px-4 text-center">
             <h1 className="text-[32px] font-bold tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)] sm:text-[42px] lg:text-[40px]">
               Privacy Policy
@@ -333,8 +333,8 @@ export default function PrivacyPolicyLanding() {
       <main className="mx-auto max-w-[1820px] px-4 py-8 sm:px-6 sm:py-10 lg:px-[66px] lg:py-14">
         <div className="grid gap-8 lg:grid-cols-4 lg:gap-12">
           <aside className="lg:col-span-1">
-            <div className="sticky top-20 rounded-lg bg-white p-5 shadow-sm ring-1 ring-slate-100">
-              <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-[#0e1e3a]">
+            <div className="sticky top-20 rounded-lg bg-white p-5 shadow-sm ring-1 ring-gray-200">
+              <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-[#0E1E3A]">
                 Quick Links
               </h3>
               <nav className="space-y-2">
@@ -345,7 +345,7 @@ export default function PrivacyPolicyLanding() {
                     className={`block w-full rounded px-3 py-2 text-left text-sm font-medium transition-all duration-200 ${
                       activeSection === section.id
                         ? "bg-[#E0382E] text-white"
-                        : "text-[#64748b] hover:bg-[#f1f5f9] hover:text-[#0e1e3a]"
+                        : "text-gray-600 hover:bg-[#F4F6F9] hover:text-[#0E1E3A]"
                     }`}
                   >
                     {section.title.split(" - ")[1] || section.title}
@@ -368,11 +368,11 @@ export default function PrivacyPolicyLanding() {
                       {section.icon}
                       <span>{section.title}</span>
                     </h2>
-                    <div className="mt-6 text-[#475569]">
+                    <div className="mt-6 text-gray-600">
                       {section.content}
                     </div>
                     {index < privacySections.length - 1 && (
-                      <div className="mt-10 border-t border-slate-100" />
+                      <div className="mt-10 border-t border-gray-200" />
                     )}
                   </section>
                 ))}
@@ -387,7 +387,7 @@ export default function PrivacyPolicyLanding() {
 
 function ParagraphBlock({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[16px] font-normal leading-[1.62] text-[#475569] sm:text-[17px]">
+    <p className="text-[16px] font-normal leading-[1.62] text-gray-600 sm:text-[17px]">
       {children}
     </p>
   );
