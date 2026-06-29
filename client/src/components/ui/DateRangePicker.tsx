@@ -56,6 +56,7 @@ export default function DateRangePicker({
   const [coords, setCoords] = useState<Coords | null>(null);
   const [viewMonth, setViewMonth] = useState<Date>(() => startOfMonth(value.from ?? new Date()));
   const [pickingTo, setPickingTo] = useState(false);
+  const [monthCount, setMonthCount] = useState(1);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const panelId = useId();
@@ -109,6 +110,14 @@ export default function DateRangePicker({
     };
   }, [open, computeCoords]);
 
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 768px)");
+    const update = () => setMonthCount(query.matches ? 2 : 1);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
   const minStripped = minDate ? stripTime(minDate) : stripTime(new Date());
 
   const onDayClick = (d: Date) => {
@@ -131,7 +140,8 @@ export default function DateRangePicker({
     setOpen(false);
   };
 
-  const months = [viewMonth, addMonths(viewMonth, 1)];
+  const months = [viewMonth];
+  if (monthCount === 2) months.push(addMonths(viewMonth, 1));
 
   return (
     <div ref={rootRef} className={cn("relative min-w-0", className)}>
@@ -182,7 +192,7 @@ export default function DateRangePicker({
               </svg>
             </button>
           </div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {months.map((m) => (
               <Month
                 key={m.toISOString()}

@@ -1,18 +1,37 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import {
+  Shield,
+  Lock,
+  Users,
+  CreditCard,
+  LinkIcon,
+  Eye,
+  Cookie,
+  AlertCircle,
+  Mail,
+  MapPin,
+} from "lucide-react";
 
 type PrivacySection = {
   title: string;
+  id: string;
+  icon: React.ReactNode;
   content: React.ReactNode;
 };
 
 const legalSectionTitleClass =
-  "text-[20px] font-bold leading-[1.35] tracking-tight text-[#0e1e3a] sm:text-[21px]";
+  "text-[22px] font-bold leading-[1.35] tracking-tight text-[#0e1e3a] sm:text-[24px] flex items-center gap-3";
 const legalSubheadingClass =
   "text-[17px] font-bold leading-[1.4] text-[#0e1e3a] sm:text-[18px]";
 
 const privacySections: PrivacySection[] = [
   {
     title: "1 - WHAT DO WE DO WITH YOUR INFORMATION ?",
+    id: "what-we-do",
+    icon: <Eye className="h-6 w-6 text-[#E0382E] flex-shrink-0" />,
     content: (
       <div className="space-y-10">
         <ParagraphBlock>
@@ -35,6 +54,8 @@ const privacySections: PrivacySection[] = [
   },
   {
     title: "2 - CONSENT",
+    id: "consent",
+    icon: <AlertCircle className="h-6 w-6 text-[#E0382E] flex-shrink-0" />,
     content: (
         <div className="space-y-10">
         <div className="space-y-4">
@@ -60,6 +81,8 @@ const privacySections: PrivacySection[] = [
   },
   {
     title: "3 - DISCLOSURE",
+    id: "disclosure",
+    icon: <Users className="h-6 w-6 text-[#E0382E] flex-shrink-0" />,
     content: (
       <ParagraphBlock>
         We may disclose your personal information if we are required by law to
@@ -69,6 +92,8 @@ const privacySections: PrivacySection[] = [
   },
   {
     title: "4 - PAYMENT",
+    id: "payment",
+    icon: <CreditCard className="h-6 w-6 text-[#E0382E] flex-shrink-0" />,
     content: (
       <div className="space-y-10">
         <ParagraphBlock>
@@ -102,6 +127,8 @@ const privacySections: PrivacySection[] = [
   },
   {
     title: "5 - THIRD-PARTY SERVICES",
+    id: "third-party",
+    icon: <LinkIcon className="h-6 w-6 text-[#E0382E] flex-shrink-0" />,
     content: (
       <div className="space-y-10">
         <ParagraphBlock>
@@ -146,6 +173,8 @@ const privacySections: PrivacySection[] = [
   },
   {
     title: "6 - SECURITY",
+    id: "security",
+    icon: <Lock className="h-6 w-6 text-[#E0382E] flex-shrink-0" />,
     content: (
       <ParagraphBlock>
         To protect your personal information, we take reasonable precautions
@@ -157,6 +186,8 @@ const privacySections: PrivacySection[] = [
   },
   {
     title: "7 - COOKIES",
+    id: "cookies",
+    icon: <Cookie className="h-6 w-6 text-[#E0382E] flex-shrink-0" />,
     content: (
       <ParagraphBlock>
         We use cookies to maintain session of your user. It is not used to
@@ -166,6 +197,8 @@ const privacySections: PrivacySection[] = [
   },
   {
     title: "8 - AGE OF CONSENT",
+    id: "age-consent",
+    icon: <AlertCircle className="h-6 w-6 text-[#E0382E] flex-shrink-0" />,
     content: (
       <ParagraphBlock>
         By using this site, you represent that you are at least the age of
@@ -178,6 +211,8 @@ const privacySections: PrivacySection[] = [
   },
   {
     title: "9 - CHANGES TO THIS PRIVACY POLICY",
+    id: "changes",
+    icon: <Shield className="h-6 w-6 text-[#E0382E] flex-shrink-0" />,
     content: (
       <ParagraphBlock>
         If our store is acquired or merged with another company, your
@@ -188,29 +223,58 @@ const privacySections: PrivacySection[] = [
   },
   {
     title: "QUESTIONS AND CONTACT INFORMATION",
+    id: "contact",
+    icon: <Mail className="h-6 w-6 text-[#E0382E] flex-shrink-0" />,
     content: (
-      <div className="space-y-10">
+      <div className="space-y-8">
         <ParagraphBlock>
           If you would like to: access, correct, amend or delete any personal
           information we have about you, register a complaint, or simply want
-          more information contact our Privacy Compliance Officer at{" "}
-          <a
-            href="mailto:spakstrip@gmail.com"
-            className="font-semibold text-[#E0382E] transition-colors hover:text-[#c73027]"
-          >
-            spakstrip@gmail.com
-          </a>{" "}
-          or by mail at{" "}
-          <span className="font-semibold text-[#0e1e3a]">
-            E-38, Budh Vihar, Badarpur, New Delhi, Delhi -110044
-          </span>
-          .
+          more information contact our Privacy Compliance Officer.
         </ParagraphBlock>
-        <div className="rounded-lg bg-[#f8fafc] px-5 py-4 ring-1 ring-slate-200/80">
-          <p className="text-[14px] text-[#64748b]">[ Privacy Compliance Officer ]</p>
-          <p className="mt-2 text-[18px] font-semibold text-[#0e1e3a]">
-            MR. S K Meena
-          </p>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <div className="rounded-lg bg-gradient-to-br from-[#fef2f2] to-[#f8fafc] p-5 ring-1 ring-[#E0382E]/10">
+            <div className="flex items-start gap-3">
+              <Mail className="mt-1 h-5 w-5 flex-shrink-0 text-[#E0382E]" />
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#64748b]">
+                  Email
+                </p>
+                <a
+                  href="mailto:spakstrip@gmail.com"
+                  className="mt-2 block text-sm font-semibold text-[#E0382E] transition-colors hover:text-[#c73027]"
+                >
+                  spakstrip@gmail.com
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg bg-gradient-to-br from-[#fef2f2] to-[#f8fafc] p-5 ring-1 ring-[#E0382E]/10">
+            <div className="flex items-start gap-3">
+              <MapPin className="mt-1 h-5 w-5 flex-shrink-0 text-[#E0382E]" />
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#64748b]">
+                  Address
+                </p>
+                <p className="mt-2 text-sm font-medium text-[#0e1e3a]">
+                  E-38, Budh Vihar, Badarpur, New Delhi, Delhi -110044
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="rounded-lg bg-gradient-to-r from-[#fef2f2] via-[#f8fafc] to-[#fef2f2] p-6 ring-1 ring-[#E0382E]/20">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E0382E]/10">
+              <Shield className="h-6 w-6 text-[#E0382E]" />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#64748b]">
+                Privacy Compliance Officer
+              </p>
+              <p className="mt-1 text-lg font-bold text-[#0e1e3a]">MR. S K Meena</p>
+            </div>
+          </div>
         </div>
       </div>
     ),
@@ -218,8 +282,36 @@ const privacySections: PrivacySection[] = [
 ];
 
 export default function PrivacyPolicyLanding() {
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      setActiveSection(id);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      for (const section of privacySections) {
+        const element = document.getElementById(section.id);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 100) {
+            setActiveSection(section.id);
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="bg-[#f5f5f5]">
+    <div className="bg-gradient-to-b from-[#f8fafc] to-[#f1f5f9]">
       <section className="relative isolate overflow-hidden">
         <div className="relative h-[270px] sm:h-[320px] lg:h-[390px]">
           <Image
@@ -229,7 +321,7 @@ export default function PrivacyPolicyLanding() {
             priority
             className="object-cover"
           />
-          
+          <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-black/20" />
           <div className="relative flex h-full items-center justify-center px-4 text-center">
             <h1 className="text-[32px] font-bold tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)] sm:text-[42px] lg:text-[40px]">
               Privacy Policy
@@ -239,18 +331,55 @@ export default function PrivacyPolicyLanding() {
       </section>
 
       <main className="mx-auto max-w-[1820px] px-4 py-8 sm:px-6 sm:py-10 lg:px-[66px] lg:py-14">
-        <article className="bg-white px-5 py-9 shadow-[0_1px_2px_rgba(15,23,42,0.05)] sm:px-8 lg:px-11 lg:py-14">
-          <div className="space-y-8 lg:space-y-10">
-            {privacySections.map((section) => (
-              <section key={section.title}>
-                <h2 className={legalSectionTitleClass}>
-                  {section.title}
-                </h2>
-                <div className="mt-4">{section.content}</div>
-              </section>
-            ))}
-          </div>
-        </article>
+        <div className="grid gap-8 lg:grid-cols-4 lg:gap-12">
+          <aside className="lg:col-span-1">
+            <div className="sticky top-20 rounded-lg bg-white p-5 shadow-sm ring-1 ring-slate-100">
+              <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-[#0e1e3a]">
+                Quick Links
+              </h3>
+              <nav className="space-y-2">
+                {privacySections.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => scrollToSection(section.id)}
+                    className={`block w-full rounded px-3 py-2 text-left text-sm font-medium transition-all duration-200 ${
+                      activeSection === section.id
+                        ? "bg-[#E0382E] text-white"
+                        : "text-[#64748b] hover:bg-[#f1f5f9] hover:text-[#0e1e3a]"
+                    }`}
+                  >
+                    {section.title.split(" - ")[1] || section.title}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </aside>
+
+          <article className="lg:col-span-3 space-y-1">
+            <div className="rounded-lg bg-white p-5 shadow-sm sm:p-8 lg:p-11">
+              <div className="space-y-12">
+                {privacySections.map((section, index) => (
+                  <section
+                    key={section.id}
+                    id={section.id}
+                    className="scroll-mt-24 border-l-4 border-[#E0382E] pl-6"
+                  >
+                    <h2 className={legalSectionTitleClass}>
+                      {section.icon}
+                      <span>{section.title}</span>
+                    </h2>
+                    <div className="mt-6 text-[#475569]">
+                      {section.content}
+                    </div>
+                    {index < privacySections.length - 1 && (
+                      <div className="mt-10 border-t border-slate-100" />
+                    )}
+                  </section>
+                ))}
+              </div>
+            </div>
+          </article>
+        </div>
       </main>
     </div>
   );

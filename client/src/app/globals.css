@@ -178,6 +178,10 @@ body {
 .scrollbar-thin::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
 
+/* Hide scrollbar (used by mobile service strip) */
+.scrollbar-hide { scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
 /* Keyframes shared by primitives */
 @keyframes st-fade-in  { from { opacity: 0 } to { opacity: 1 } }
 @keyframes st-pop-in   { from { opacity: 0; transform: translateY(4px) scale(.98) } to { opacity: 1; transform: none } }

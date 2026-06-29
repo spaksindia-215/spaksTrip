@@ -131,7 +131,7 @@ function FlightResultsInner() {
         onDateChange={handleDateChange}
       />
       <main className="flex-1">
-        <div className="mx-auto max-w-7xl px-4 md:px-6 py-5">
+        <div className="mx-auto max-w-sm px-4 md:px-4 py-4">
           <div className="grid lg:grid-cols-[280px_1fr] gap-6">
             <aside className="hidden lg:block sticky top-[calc(theme(spacing.0)+140px)] self-start rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
               <FlightFiltersPanel
