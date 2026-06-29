@@ -283,8 +283,17 @@ export default function HotelPartnerInfo({ data, onDataChange }: Props) {
             latitude={typeof data.latitude === "number" ? data.latitude : undefined}
             longitude={typeof data.longitude === "number" ? data.longitude : undefined}
             error={errors.latitude || errors.longitude}
-            onChange={({ latitude, longitude }) =>
-              onDataChange({ ...data, latitude, longitude })
+            onChange={({ latitude, longitude, address }) =>
+              onDataChange({
+                latitude,
+                longitude,
+                // Only overwrite address fields when the geocoder returned them.
+                ...(address?.street ? { address: address.street } : {}),
+                ...(address?.city ? { city: address.city } : {}),
+                ...(address?.state ? { state: address.state } : {}),
+                ...(address?.country ? { country: address.country } : {}),
+                ...(address?.postalCode ? { postalCode: address.postalCode } : {}),
+              })
             }
           />
         </div>

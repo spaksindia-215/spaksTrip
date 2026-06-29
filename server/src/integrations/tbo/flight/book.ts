@@ -1,4 +1,4 @@
-import { withRetry, tboBase, tboApiUrl, TBO_BOOK_TIMEOUT_MS, AIR_BOOK_SVC } from "../auth";
+import { withRetry, tboBase, tboApiUrl, tboFetch, TBO_BOOK_TIMEOUT_MS, AIR_BOOK_SVC } from "../auth";
 import { assertTboSuccess, TboFareExpiredError, TboBookingFailedError } from "../errors";
 import { getTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
@@ -310,7 +310,7 @@ export async function tboBookFlight(input: TboBookFlightInput): Promise<TboBookF
 
     let res: Response;
     try {
-      res = await fetch(url, {
+      res = await tboFetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(reqBody),

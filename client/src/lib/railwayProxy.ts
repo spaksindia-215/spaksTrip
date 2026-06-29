@@ -1,11 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 
 const RAILWAY = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:4000";
 
 export async function proxyToRailway(req: NextRequest, upstreamPath: string): Promise<NextResponse> {
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
+  // Read the raw Cookie header directly from the incoming request rather than going
+  // through cookies() — the Next.js store's .toString() can return an empty string
+  // for cookies set cross-origin or with mismatched attributes in some builds.
+  const cookieHeader = req.headers.get("cookie") ?? "";
 
   // Forward agent-context headers injected by middleware for subdomain requests.
   // Express booking handlers read these to stamp agentId and pricing tiers.

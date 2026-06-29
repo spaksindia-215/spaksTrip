@@ -263,8 +263,16 @@ export default function TaxiPackageManager() {
         </Section>
 
         <Section title="Availability">
-          <Input id="tp-startdates" label="Start dates (YYYY-MM-DD, comma separated)" value={form.startDates} onChange={(e) => setField("startDates", e.target.value)} placeholder="2026-07-01, 2026-08-15" />
-          <Input id="tp-blackout" label="Blackout dates (YYYY-MM-DD, comma separated)" value={form.blackoutDates} onChange={(e) => setField("blackoutDates", e.target.value)} />
+          <DateMultiPicker
+            label="Start dates"
+            value={form.startDates}
+            onChange={(v) => setField("startDates", v)}
+          />
+          <DateMultiPicker
+            label="Blackout dates"
+            value={form.blackoutDates}
+            onChange={(v) => setField("blackoutDates", v)}
+          />
           <Input id="tp-advance" label="Advance booking days" type="number" min="0" value={form.advanceBookingDays} onChange={(e) => setField("advanceBookingDays", e.target.value)} />
         </Section>
 
@@ -407,6 +415,67 @@ function StatCard({ label, value }: { label: string; value: string }) {
     <div className="rounded-xl border border-border-soft bg-surface-muted px-4 py-3">
       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-muted">{label}</p>
       <p className="mt-1 text-xl font-extrabold text-ink">{value}</p>
+    </div>
+  );
+}
+
+// Chip-based multi-date picker. Stores dates as a CSV string (the existing
+// TaxiPackageFormState shape) so no type changes are required.
+function DateMultiPicker({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (csv: string) => void;
+}) {
+  const today = new Date().toISOString().slice(0, 10);
+
+  const dates: string[] = value
+    ? value.split(",").map((d) => d.trim()).filter(Boolean)
+    : [];
+
+  function addDate(picked: string) {
+    if (!picked || dates.includes(picked)) return;
+    const next = [...dates, picked].sort();
+    onChange(next.join(", "));
+  }
+
+  function removeDate(date: string) {
+    const next = dates.filter((d) => d !== date);
+    onChange(next.join(", "));
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-[13px] font-medium text-ink-soft">{label}</span>
+      <input
+        type="date"
+        min={today}
+        className="h-10 w-full rounded-md border border-border bg-white px-3 text-[14px] text-ink outline-none transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+        onChange={(e) => { addDate(e.target.value); e.target.value = ""; }}
+      />
+      {dates.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {dates.map((d) => (
+            <span
+              key={d}
+              className="flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-0.5 text-[12px] font-medium text-brand-700"
+            >
+              {d}
+              <button
+                type="button"
+                onClick={() => removeDate(d)}
+                className="ml-0.5 text-brand-400 hover:text-brand-700"
+                aria-label={`Remove ${d}`}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

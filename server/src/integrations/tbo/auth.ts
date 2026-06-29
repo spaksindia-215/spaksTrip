@@ -1,6 +1,11 @@
 import { assertTboSuccess, TboInvalidSessionError } from "./errors";
 import { logRequest, logResponse, logError } from "./log";
+import { tboFetch } from "./proxyFetch";
 import type { TboAuthResponse } from "./types";
+
+// Re-exported so the flight modules can pull tboFetch from the same place as
+// tboApiUrl/withRetry without adding a separate import line each.
+export { tboFetch } from "./proxyFetch";
 
 // Per HTML FAQ Q3: token is valid from 00:00:00 till 23:59:59 of the current
 // day. Bullet on the page also notes "After 12:02 AM no new booking with old
@@ -114,7 +119,7 @@ async function authenticate(): Promise<string> {
 
   let res: Response;
   try {
-    res = await fetch(url, {
+    res = await tboFetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

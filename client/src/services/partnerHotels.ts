@@ -39,8 +39,27 @@ export type PartnerHotel = {
     taxPercentage?: number;
     currency?: string;
   };
+  // GeoJSON point as stored: coordinates are [longitude, latitude].
+  coordinates?: { type?: string; coordinates?: [number, number] };
+  promotions?: PartnerHotelPromotion[];
   contact?: { phone?: string; email?: string };
-  policies?: { checkIn?: string; checkOut?: string; cancellation?: string };
+  policies?: {
+    checkIn?: string;
+    checkOut?: string;
+    cancellation?: string;
+    child?: string;
+    pet?: string;
+    smoking?: string;
+  };
+};
+
+export type PartnerHotelPromotion = {
+  key?: string;
+  name?: string;
+  discountType?: "Percentage" | "Fixed Amount" | string;
+  discountValue?: number;
+  startDate?: string;
+  endDate?: string;
 };
 
 export type HotelEnquiryInput = {

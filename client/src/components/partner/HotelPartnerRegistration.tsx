@@ -94,17 +94,48 @@ export default function HotelPartnerRegistration() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [stepError, setStepError] = useState<string | null>(null);
 
   const steps: RegistrationStep[] = ["info", "rooms", "rates", "inventory", "pricing", "promotions", "review"];
   const stepIndex = steps.indexOf(currentStep);
 
+  function validateCurrentStep(): string | null {
+    switch (currentStep) {
+      case "info": {
+        const d = hotelData;
+        if (!d.hotelName?.trim()) return "Hotel name is required.";
+        if (!d.hotelType?.trim()) return "Hotel type is required.";
+        if (!d.city?.trim()) return "City is required.";
+        if (!d.contactNumber?.trim()) return "Contact number is required.";
+        if (!d.email?.trim()) return "Email is required.";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email.trim())) return "Enter a valid email address.";
+        if (!d.checkInTime?.trim()) return "Check-in time is required.";
+        if (!d.checkOutTime?.trim()) return "Check-out time is required.";
+        return null;
+      }
+      case "rooms":
+        if (rooms.length === 0) return "Add at least one room type before continuing.";
+        return null;
+      case "pricing":
+        if (!pricing.basePricePerNight || pricing.basePricePerNight <= 0)
+          return "Base price per night is required and must be greater than 0.";
+        return null;
+      default:
+        return null;
+    }
+  }
+
   const handleNext = () => {
+    const err = validateCurrentStep();
+    if (err) { setStepError(err); return; }
+    setStepError(null);
     if (stepIndex < steps.length - 1) {
       setCurrentStep(steps[stepIndex + 1]);
     }
   };
 
   const handlePrevious = () => {
+    setStepError(null);
     if (stepIndex > 0) {
       setCurrentStep(steps[stepIndex - 1]);
     }
@@ -141,16 +172,14 @@ export default function HotelPartnerRegistration() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit hotel registration");
+        const payload = await response.json().catch(() => null) as { error?: string; message?: string } | null;
+        throw new Error(payload?.error ?? payload?.message ?? `Server error ${response.status}`);
       }
 
       await response.json();
       setSubmitted(true);
     } catch (error) {
-      console.error("Error submitting hotel registration:", error);
-      setSubmitError(
-        "We couldn't submit your listing. Please check your connection and try again.",
-      );
+      setSubmitError(error instanceof Error ? error.message : "We couldn't submit your listing. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -240,13 +269,13 @@ export default function HotelPartnerRegistration() {
           {currentStep === "info" && (
             <HotelPartnerInfo
               data={hotelData as HotelData}
-              onDataChange={setHotelData}
+              onDataChange={(partial) => { setStepError(null); setHotelData((prev) => ({ ...prev, ...partial })); }}
             />
           )}
           {currentStep === "rooms" && (
             <HotelPartnerRooms
               rooms={rooms}
-              onRoomsChange={setRooms}
+              onRoomsChange={(r) => { setStepError(null); setRooms(r); }}
             />
           )}
           {currentStep === "rates" && (
@@ -266,7 +295,7 @@ export default function HotelPartnerRegistration() {
           {currentStep === "pricing" && (
             <HotelPartnerPricing
               data={pricing as PricingData}
-              onDataChange={setPricing}
+              onDataChange={(p) => { setStepError(null); setPricing((prev) => ({ ...prev, ...p })); }}
             />
           )}
           {currentStep === "promotions" && (
@@ -287,12 +316,12 @@ export default function HotelPartnerRegistration() {
           )}
         </div>
 
-        {submitError && (
+        {(stepError ?? submitError) && (
           <div
             role="alert"
             className="mt-6 rounded-md border border-danger-200 bg-danger-50 px-4 py-3 text-sm text-danger-700"
           >
-            {submitError}
+            {stepError ?? submitError}
           </div>
         )}
 
