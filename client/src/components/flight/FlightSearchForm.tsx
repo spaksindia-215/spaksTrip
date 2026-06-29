@@ -393,7 +393,7 @@ export default function FlightSearchForm({ variant = "hero" }: Props) {
         <span className="text-[11px] font-semibold text-ink-muted uppercase tracking-wide">
           Fare Type
         </span>
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className="mt-2 grid gap-2 md:flex md:flex-wrap grid-cols-1 sm:grid-cols-2">
           {FARE_CATEGORIES.map((cat) => {
             const active = fareCategory === cat.value;
             return (

@@ -17,33 +17,43 @@ const [caribbean, mediterranean, alaska, hawaiian, canary, northern, panama, bri
 
 export default function PopularDestinations() {
   return (
-    <section className="bg-[#F4F6F9] py-20">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="bg-[#F4F6F9] py-12 sm:py-16 md:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionHeading
           title="Popular Destinations"
           subtitle="Embark on unforgettable journeys to the world's most sought-after cruise ports"
         />
 
-        {/* Bento grid — 4 cols, Mediterranean spans 2 rows */}
-        <div
-          className="mt-12 grid gap-4"
-          style={{
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gridTemplateRows: "260px 260px",
-          }}
-        >
-          <Card d={caribbean} style={{ gridColumn: 1, gridRow: 1 }} />
-          <Card d={mediterranean} style={{ gridColumn: 2, gridRow: "1 / 3" }} />
-          <Card d={alaska} style={{ gridColumn: 3, gridRow: 1 }} />
-          <Card d={hawaiian} style={{ gridColumn: 4, gridRow: 1 }} />
-          <Card d={canary} style={{ gridColumn: 1, gridRow: 2 }} />
-          <Card d={northern} style={{ gridColumn: 3, gridRow: 2 }} />
-          <Card d={panama} style={{ gridColumn: 4, gridRow: 2 }} />
+        {/* Mobile: 1 column, Tablet: 2 columns, Desktop: 4 columns with bento layout */}
+        <div className="mt-8 sm:mt-10 md:mt-12">
+          {/* Mobile and Tablet view */}
+          <div className="grid gap-3 sm:gap-4 md:hidden grid-cols-1 sm:grid-cols-2">
+            {[caribbean, mediterranean, alaska, hawaiian, canary, northern, panama].map((dest, idx) => (
+              <Card key={idx} d={dest} className="h-48 sm:h-56" />
+            ))}
+          </div>
+
+          {/* Desktop Bento grid — 4 cols, Mediterranean spans 2 rows */}
+          <div
+            className="hidden md:grid gap-4"
+            style={{
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gridTemplateRows: "260px 260px",
+            }}
+          >
+            <Card d={caribbean} style={{ gridColumn: 1, gridRow: 1 }} />
+            <Card d={mediterranean} style={{ gridColumn: 2, gridRow: "1 / 3" }} />
+            <Card d={alaska} style={{ gridColumn: 3, gridRow: 1 }} />
+            <Card d={hawaiian} style={{ gridColumn: 4, gridRow: 1 }} />
+            <Card d={canary} style={{ gridColumn: 1, gridRow: 2 }} />
+            <Card d={northern} style={{ gridColumn: 3, gridRow: 2 }} />
+            <Card d={panama} style={{ gridColumn: 4, gridRow: 2 }} />
+          </div>
         </div>
 
         {/* British Isles — full-width accent row below */}
-        <div className="mt-4">
-          <Card d={british} className="h-52 w-full" />
+        <div className="mt-4 sm:mt-5 md:mt-4">
+          <Card d={british} className="h-40 sm:h-48 md:h-52 w-full" />
         </div>
       </div>
     </section>

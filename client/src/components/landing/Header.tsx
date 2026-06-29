@@ -442,6 +442,7 @@ export default function Header() {
   const [openDropdown, setOpenDropdown] = useState<OpenDropdown>(null);
   const [activeServiceMenu, setActiveServiceMenu] = useState<string | null>(null);
   const utilityBarRef = useRef<HTMLDivElement>(null);
+  const mobileBarRef = useRef<HTMLDivElement>(null);
   const serviceStripRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const user = useAuthStore((state) => state.user);
@@ -464,7 +465,9 @@ export default function Header() {
   );
 
   const toggleDropdown = useCallback(
-    (name: OpenDropdown) => setOpenDropdown((prev) => (prev === name ? null : name)),
+    (name: OpenDropdown) => {
+      setOpenDropdown((prev) => (prev === name ? null : name));
+    },
     [],
   );
 
@@ -486,7 +489,11 @@ export default function Header() {
 
   useEffect(() => {
     function handleOutside(event: MouseEvent) {
-      if (utilityBarRef.current && !utilityBarRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const inUtilityBar = utilityBarRef.current && utilityBarRef.current.contains(target);
+      const inMobileBar = mobileBarRef.current && mobileBarRef.current.contains(target);
+
+      if (!inUtilityBar && !inMobileBar) {
         setOpenDropdown(null);
       }
     }
@@ -693,7 +700,7 @@ export default function Header() {
       </div>
 
       {/* ── MOBILE COMPACT BAR (< sm): logo + locale selectors + auth ── */}
-      <div className="flex items-center justify-between gap-1 px-2 py-2.5 bg-gradient-to-r from-brand-900 via-[#0b1f4d] to-brand-900 sm:hidden min-h-[52px]">
+      <div ref={mobileBarRef} className="flex items-center justify-between gap-1 px-2 py-2.5 bg-gradient-to-r from-brand-900 via-[#0b1f4d] to-brand-900 sm:hidden min-h-[52px]">
         <Logo variant="header" />
 
         {/* Locale selectors (Country, Currency, Language) - compact layout */}
