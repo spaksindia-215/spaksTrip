@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { useTranslate } from "@tolgee/react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
@@ -438,11 +438,12 @@ function NavIcon({ labelKey, className }: { labelKey: string; className?: string
 export default function Header() {
   const { t } = useTranslate();
   const router = useRouter();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [hoveredDesktopMenu, setHoveredDesktopMenu] = useState<string | null>(null);
   const [openDropdown, setOpenDropdown] = useState<OpenDropdown>(null);
+  const [activeServiceMenu, setActiveServiceMenu] = useState<string | null>(null);
   const utilityBarRef = useRef<HTMLDivElement>(null);
+  const serviceStripRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const country = useLocaleStore((state) => state.country);
@@ -462,13 +463,25 @@ export default function Header() {
     [t],
   );
 
-  const toggleMobileSection = (label: string) => {
-    setMobileExpanded((current) => (current === label ? null : label));
-  };
-
   const toggleDropdown = useCallback(
     (name: OpenDropdown) => setOpenDropdown((prev) => (prev === name ? null : name)),
     [],
+  );
+
+  const isActive = useCallback(
+    (item: NavItem): boolean => {
+      if (!pathname) return false;
+      // Exact match or starts with path (handles /flight, /flight/search, etc.)
+      if (item.href && item.href !== "#" && item.href !== "/") {
+        return pathname === item.href || pathname.startsWith(item.href + "/");
+      }
+      // For items with submenus, check if any submenu item matches
+      if (item.menu) {
+        return item.menu.some((m) => m.href && m.href !== "#" && (pathname === m.href || pathname.startsWith(m.href + "/")));
+      }
+      return false;
+    },
+    [pathname],
   );
 
   useEffect(() => {
@@ -484,6 +497,20 @@ export default function Header() {
 
     return () => document.removeEventListener("mousedown", handleOutside);
   }, [openDropdown]);
+
+  useEffect(() => {
+    function handleOutsideServiceMenu(event: MouseEvent) {
+      if (serviceStripRef.current && !serviceStripRef.current.contains(event.target as Node)) {
+        setActiveServiceMenu(null);
+      }
+    }
+
+    if (activeServiceMenu) {
+      document.addEventListener("mousedown", handleOutsideServiceMenu);
+    }
+
+    return () => document.removeEventListener("mousedown", handleOutsideServiceMenu);
+  }, [activeServiceMenu]);
 
   useEffect(() => {
     fetch("/api/admin/navbar-settings", { cache: "no-store" })
@@ -524,7 +551,7 @@ export default function Header() {
     >
       <RoleGate />
 
-      <div className="px-3 pt-3 sm:px-6">
+      <div className="hidden sm:block px-3 pt-3 sm:px-6">
         <div
           ref={utilityBarRef}
           className="mx-auto flex max-w-7xl items-center justify-between rounded-full bg-gradient-to-r from-brand-900 via-[#0b1f4d] to-brand-900 px-5 py-2.5 text-[13px] text-white shadow-[0_6px_20px_-8px_rgba(11,31,77,0.45)] sm:px-7"
@@ -665,8 +692,212 @@ export default function Header() {
         </div>
       </div>
 
+      {/* ── MOBILE COMPACT BAR (< sm): logo + locale selectors + auth ── */}
+      <div className="flex items-center justify-between gap-1 px-2 py-2.5 bg-gradient-to-r from-brand-900 via-[#0b1f4d] to-brand-900 sm:hidden min-h-[52px]">
+        <Logo variant="header" />
+
+        {/* Locale selectors (Country, Currency, Language) - compact layout */}
+        <div className="flex items-center gap-1 flex-shrink-0">
+          <SelectDropdown
+            label=""
+            options={COUNTRIES.map((c) => ({ value: c, label: c }))}
+            value={country}
+            onChange={setCountry}
+            isOpen={openDropdown === "country"}
+            onToggle={() => toggleDropdown("country")}
+            showFlags
+          />
+          <span className="text-white/20 select-none text-[10px]">|</span>
+          <CurrencyDropdown
+            value={selectedCurrency}
+            onChange={setSelectedCurrency}
+            isOpen={openDropdown === "currency"}
+            onToggle={() => toggleDropdown("currency")}
+            ariaLabel={t("header.currency")}
+          />
+          <span className="text-white/20 select-none text-[10px]">|</span>
+          <SelectDropdown
+            label=""
+            options={languageOptionLabels}
+            value={language}
+            onChange={setLanguage}
+            isOpen={openDropdown === "language"}
+            onToggle={() => toggleDropdown("language")}
+            showLanguageIcon
+          />
+        </div>
+
+        {/* Auth section (User menu or Login button) */}
+        {user ? (
+          <div className="relative flex-shrink-0">
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => toggleDropdown("user")}
+              className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-2 py-1.5 text-[11px] font-semibold text-white/90 transition-colors duration-200 hover:bg-white/10 hover:text-white"
+              aria-label={`User menu: ${user.displayName}`}
+            >
+              <span className="max-w-[60px] truncate sm:max-w-none">{user.displayName}</span>
+              <svg
+                viewBox="0 0 24 24"
+                width={12}
+                height={12}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.4}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+                className={cn("transition-transform duration-200", openDropdown === "user" && "rotate-180")}
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </motion.button>
+
+            <AnimatePresence>
+              {openDropdown === "user" && (
+                <motion.div
+                  key="mobile-user-dropdown"
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  variants={dropdownVariants}
+                  className="absolute right-0 top-[calc(100%+10px)] z-50 min-w-[14rem] overflow-hidden rounded-2xl border border-slate-200/70 bg-white/95 p-2 text-ink shadow-[0_20px_45px_-15px_rgba(15,23,42,0.25)] backdrop-blur-xl ring-1 ring-black/5"
+                >
+                  <div className="border-b border-slate-100 px-3 py-2.5">
+                    <p className="text-[13px] font-semibold text-ink">{user.displayName}</p>
+                    <p className="text-[12px] text-ink-muted">{user.email}</p>
+                  </div>
+                  <div className="pt-2">
+                    <Link
+                      href={dashboardHref}
+                      className="block rounded-xl px-3 py-2 text-[13px] font-medium text-ink transition-colors hover:bg-blue-50 hover:text-brand-700"
+                      onClick={() => setOpenDropdown(null)}
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      href={profileHref}
+                      className="block rounded-xl px-3 py-2 text-[13px] font-medium text-ink transition-colors hover:bg-blue-50 hover:text-brand-700"
+                      onClick={() => setOpenDropdown(null)}
+                    >
+                      {t("header.profile")}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        setOpenDropdown(null);
+                        await logout();
+                        router.replace("/");
+                      }}
+                      className="block w-full rounded-xl px-3 py-2 text-left text-[13px] font-medium text-ink transition-colors hover:bg-blue-50 hover:text-brand-700"
+                    >
+                      {t("header.sign_out")}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <LoginPill label="Login / Register" href="/auth" />
+        )}
+      </div>
+
+      {/* ── MOBILE SERVICE STRIP (< lg): horizontal scrollable service pills ── */}
+      <div ref={serviceStripRef} className="lg:hidden border-b border-slate-100 bg-white">
+        <div className="flex gap-1 overflow-x-auto scrollbar-hide overscroll-x-contain scroll-smooth snap-x snap-mandatory px-3 py-2">
+          {visibleNavItems.filter((item) => !item.partnerOnly).map((item) => {
+            const active = isActive(item);
+            const label = t(item.labelKey);
+            const pillClass = cn(
+              "group flex flex-shrink-0 flex-col items-center gap-0.5 rounded-xl px-3 py-2 min-w-[60px] snap-center transition-all duration-200 relative",
+              active
+                ? "bg-brand-600 text-white shadow-[0_4px_12px_rgba(30,79,199,0.3)] scale-105"
+                : "text-ink hover:bg-blue-50",
+            );
+
+            const iconClass = cn(
+              "h-5 w-5 transition-all duration-200",
+              active ? "text-white scale-110" : "text-brand-600"
+            );
+            const iconWrapperClass = cn(
+              "grid h-8 w-8 place-items-center rounded-full transition-all duration-200",
+              active ? "bg-white/15" : "bg-blue-50 text-brand-600 group-hover:bg-blue-100"
+            );
+            return (
+              <div key={item.labelKey} className="flex-shrink-0">
+                {item.menu ? (
+                  <button
+                    type="button"
+                    aria-expanded={activeServiceMenu === item.labelKey}
+                    aria-label={label}
+                    onClick={() =>
+                      setActiveServiceMenu((prev) =>
+                        prev === item.labelKey ? null : item.labelKey,
+                      )
+                    }
+                    className={pillClass}
+                  >
+                    <span className={iconWrapperClass}>
+                      <NavIcon labelKey={item.labelKey} className={iconClass} />
+                    </span>
+                    <span className="text-[9px] font-semibold whitespace-nowrap">{label}</span>
+                    {active && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-6 bg-white rounded-t-full" />}
+                  </button>
+                ) : (
+                  <Link
+                    href={item.href}
+                    onClick={() => setActiveServiceMenu(null)}
+                    className={pillClass}
+                  >
+                    <span className={iconWrapperClass}>
+                      <NavIcon labelKey={item.labelKey} className={iconClass} />
+                    </span>
+                    <span className="text-[9px] font-semibold whitespace-nowrap">{label}</span>
+                    {active && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-6 bg-white rounded-t-full" />}
+                  </Link>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Sub-menu panel: slides open below strip when a menu-pill is tapped */}
+        <AnimatePresence>
+          {activeServiceMenu && (() => {
+            const activeItem = visibleNavItems.find((i) => i.labelKey === activeServiceMenu);
+            if (!activeItem?.menu) return null;
+            return (
+              <motion.div
+                key={activeServiceMenu}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                className="border-t border-slate-100 bg-white px-4 pb-3 pt-2 overflow-hidden"
+              >
+                <div className="grid grid-cols-2 gap-2">
+                  {activeItem.menu.map((m) => (
+                    <Link
+                      key={m.labelKey}
+                      href={m.href}
+                      onClick={() => setActiveServiceMenu(null)}
+                      className="rounded-xl border border-slate-200 px-3 py-2.5 text-[12px] font-medium text-ink transition-colors hover:bg-blue-50 hover:text-brand-700"
+                    >
+                      {t(m.labelKey)}
+                    </Link>
+                  ))}
+                </div>
+              </motion.div>
+            );
+          })()}
+        </AnimatePresence>
+      </div>
+
       <div className="border-b border-slate-100 bg-white">
-        <div className="mx-auto st-header-main-nav-inner max-w-7xl px-4 py-3 sm:px-6">
+        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <nav className="hidden lg:block flex-1">
             <ul className="flex flex-wrap items-center justify-center gap-1 text-ink">
               {visibleNavItems.map((item) => (
@@ -738,167 +969,9 @@ export default function Header() {
               ))}
             </ul>
           </nav>
-          <button
-            type="button"
-            aria-label={t("header.toggle_menu")}
-            onClick={() => {
-              setMobileOpen((value) => {
-                const next = !value;
-                if (!next) setMobileExpanded(null);
-                return next;
-              });
-            }}
-            className="lg:hidden grid h-10 w-10 place-items-center rounded-xl text-ink transition-colors hover:bg-blue-50 justify-self-end"
-          >
-            <svg viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden>
-              {mobileOpen ? (
-                <>
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </>
-              ) : (
-                <>
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <line x1="3" y1="12" x2="21" y2="12" />
-                  <line x1="3" y1="18" x2="21" y2="18" />
-                </>
-              )}
-            </svg>
-          </button>
         </div>
       </div>
 
-      <AnimatePresence>
-      {mobileOpen && (
-        <motion.nav
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="lg:hidden border-b border-slate-100 bg-white max-h-[70vh] overflow-y-auto scrollbar-thin"
-        >
-          <div className="grid grid-cols-3 gap-2 border-b border-slate-100 px-4 py-3 sm:px-6">
-            <MobileSelect label={t("header.country")} options={COUNTRIES.map((c) => ({ value: c, label: c }))} value={country} onChange={setCountry} showFlag />
-            <MobileCurrencySelect value={selectedCurrency} onChange={setSelectedCurrency} label={t("header.currency")} />
-            <MobileSelect label={t("header.language")} options={languageOptionLabels} value={language} onChange={setLanguage} showLanguageIcon />
-          </div>
-
-          <ul className="flex flex-col py-2">
-            {visibleNavItems.map((item) => {
-              const itemLabel = t(item.labelKey);
-              return (
-                <li key={item.labelKey}>
-                  {item.menu ? (
-                    <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 sm:px-6">
-                      <span className="flex items-center gap-3 text-[14px] font-semibold text-ink">
-                        <span className="grid h-8 w-8 place-items-center rounded-xl bg-blue-50 text-brand-600">
-                          <NavIcon labelKey={item.labelKey} className="h-[18px] w-[18px]" />
-                        </span>
-                        {itemLabel}
-                      </span>
-                      <button
-                        type="button"
-                        aria-label={t("header.toggle_section_menu", { label: itemLabel })}
-                        aria-expanded={mobileExpanded === item.labelKey}
-                        onClick={() => toggleMobileSection(item.labelKey)}
-                        className="grid h-8 w-8 place-items-center rounded-lg text-ink transition-colors hover:bg-blue-50"
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          width={16}
-                          height={16}
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={2.2}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          aria-hidden
-                          className={cn(
-                            "transition-transform duration-200",
-                            mobileExpanded === item.labelKey && "rotate-180",
-                          )}
-                        >
-                          <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                      </button>
-                    </div>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      className="flex items-center gap-3 border-b border-slate-100 px-4 py-3 text-[14px] font-semibold text-ink transition-colors hover:bg-blue-50 sm:px-6"
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      <span className="grid h-8 w-8 place-items-center rounded-xl bg-blue-50 text-brand-600">
-                        <NavIcon labelKey={item.labelKey} className="h-[18px] w-[18px]" />
-                      </span>
-                      {itemLabel}
-                    </Link>
-                  )}
-                  {item.menu && mobileExpanded === item.labelKey ? (
-                    <ul className="bg-slate-50/70">
-                      {item.menu.map((m) => (
-                        <li key={m.labelKey}>
-                          <Link
-                            href={m.href}
-                            className="block px-12 py-2.5 text-[13px] text-ink-soft transition-colors hover:text-brand-700 sm:px-14"
-                            onClick={() => {
-                              setMobileOpen(false);
-                              setMobileExpanded(null);
-                            }}
-                          >
-                            {t(m.labelKey)}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </li>
-              );
-            })}
-          </ul>
-
-          <div className="border-t border-slate-100 px-4 py-4 sm:px-6">
-            {user ? (
-              <div className="flex flex-col gap-2">
-                <Link
-                  href={dashboardHref}
-                  className="rounded-xl border border-slate-200 px-4 py-3 text-[14px] font-semibold text-ink transition-colors hover:bg-blue-50"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href={profileHref}
-                  className="rounded-xl border border-slate-200 px-4 py-3 text-[14px] font-semibold text-ink transition-colors hover:bg-blue-50"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Profile
-                </Link>
-                <button
-                  type="button"
-                  onClick={async () => {
-                    setMobileOpen(false);
-                    await logout();
-                    router.replace("/");
-                  }}
-                  className="rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 px-4 py-3 text-left text-[14px] font-semibold text-white shadow-sm transition-opacity hover:opacity-95"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <Link
-                href="/auth"
-                className="block rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 px-4 py-3 text-center text-[14px] font-semibold text-white shadow-sm transition-opacity hover:opacity-95"
-                onClick={() => setMobileOpen(false)}
-              >
-                Login / Register
-              </Link>
-            )}
-          </div>
-        </motion.nav>
-      )}
-      </AnimatePresence>
     </motion.header>
   );
 }
@@ -1344,15 +1417,16 @@ function MegaMenu({
 
 function LoginPill({ label, href }: { label: string; href: string }) {
   return (
-    <motion.div whileHover={{ scale: 1.04, y: -1 }} whileTap={{ scale: 0.97 }}>
+    <motion.div whileHover={{ scale: 1.04, y: -1 }} whileTap={{ scale: 0.97 }} className="flex-shrink-0">
       <Link
         href={href}
-        className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand-500 to-brand-700 px-4 py-1.5 text-[12px] font-semibold text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)] transition-shadow duration-200 hover:shadow-[0_6px_18px_rgba(37,99,235,0.45)]"
+        className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-500 to-brand-700 px-2 py-1.5 text-[11px] font-semibold text-white shadow-[0_4px_14px_rgba(37,99,235,0.35)] transition-shadow duration-200 hover:shadow-[0_6px_18px_rgba(37,99,235,0.45)] sm:px-4 sm:py-1.5 sm:text-[12px] sm:gap-1.5"
+        aria-label="Login or Register"
       >
-        <svg viewBox="0 0 24 24" width={14} height={14} aria-hidden fill="currentColor">
+        <svg viewBox="0 0 24 24" width={14} height={14} aria-hidden fill="currentColor" className="sm:w-[14px] sm:h-[14px]">
           <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-3.3 0-8 1.7-8 5v2h16v-2c0-3.3-4.7-5-8-5Z" />
         </svg>
-        {label}
+        <span className="hidden sm:inline">{label}</span>
       </Link>
     </motion.div>
   );

@@ -34,22 +34,22 @@ export default function FlightResultCard({ offer, searchParams, fareCategory = "
   const displayPrice = discounted ? Math.round(offer.basePrice * 0.95) : offer.basePrice;
 
   return (
-    <article className="rounded-xl bg-white border border-border-soft shadow-(--shadow-xs) hover:shadow-(--shadow-sm) transition-shadow overflow-hidden">
-      <div className="grid lg:grid-cols-[1fr_auto] gap-4">
-        <div className="p-5">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <AirlineLogo code={firstSeg.airlineCode} size={38} />
-              <div>
-                <div className="text-[14px] font-semibold text-ink">
+    <article className="w-full rounded-xl bg-white border border-border-soft shadow-(--shadow-xs) hover:shadow-(--shadow-sm) transition-shadow overflow-hidden">
+      <div className="grid lg:grid-cols-[1fr_auto] gap-0 lg:gap-4">
+        <div className="p-2.5 sm:p-4">
+          <div className="flex items-start justify-between gap-2 sm:gap-4 flex-wrap">
+            <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-1">
+              <AirlineLogo code={firstSeg.airlineCode} size={28} />
+              <div className="min-w-0">
+                <div className="text-[11px] sm:text-[14px] font-semibold text-ink truncate">
                   {airlineName(firstSeg.airlineCode)}
                 </div>
-                <div className="text-[11px] text-ink-muted">
-                  {firstSeg.flightNumber} · {firstSeg.aircraft}
+                <div className="text-[9px] sm:text-[11px] text-ink-muted truncate">
+                  {firstSeg.flightNumber}
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-2 flex-wrap justify-end">
+            <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
               {fareCategory !== "regular" && (
                 <Badge tone="info">{FARE_CATEGORY_LABEL[fareCategory]}</Badge>
               )}
@@ -60,66 +60,58 @@ export default function FlightResultCard({ offer, searchParams, fareCategory = "
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-[1fr_2fr_1fr] items-center gap-3">
-            <div>
-              <div className="text-[22px] font-bold text-ink leading-none">
+          <div className="mt-2 sm:mt-3 grid grid-cols-3 items-center gap-1.5 sm:gap-3">
+            <div className="text-center sm:text-left">
+              <div className="text-[14px] sm:text-[22px] font-bold text-ink leading-tight">
                 {formatTime(firstSeg.depart)}
               </div>
-              <div className="text-[12px] font-semibold text-ink-soft mt-1">
-                {firstSeg.from} · {getAirport(firstSeg.from)?.city}
+              <div className="text-[9px] sm:text-[12px] font-semibold text-ink-soft mt-0.5">
+                {firstSeg.from}
               </div>
               {firstSeg.fromTerminal && (
-                <div className="text-[11px] text-ink-muted">Terminal {firstSeg.fromTerminal}</div>
+                <div className="text-[8px] sm:text-[11px] text-ink-muted">T{firstSeg.fromTerminal}</div>
               )}
             </div>
 
             <div className="flex flex-col items-center">
-              <div className="text-[11px] text-ink-muted">{formatDuration(offer.totalDurationMin)}</div>
-              <div className="relative w-full my-1.5 flex items-center">
+              <div className="text-[8px] sm:text-[11px] text-ink-muted whitespace-nowrap">{formatDuration(offer.totalDurationMin)}</div>
+              <div className="relative w-full my-1 sm:my-1.5 flex items-center">
                 <span className="h-px flex-1 bg-border" />
-                <svg viewBox="0 0 24 24" width={16} height={16} fill="currentColor" aria-hidden className="text-brand-500 mx-1">
+                <svg viewBox="0 0 24 24" width={12} height={12} className="sm:w-4 sm:h-4 text-brand-500 flex-shrink-0" fill="currentColor" aria-hidden>
                   <path d="M22 16v-2l-8.5-5V3.5a1.5 1.5 0 0 0-3 0V9L2 14v2l8.5-2.5V19L8 20.5v1.5l4-1 4 1V20.5L13.5 19v-5.5L22 16z" />
                 </svg>
                 <span className="h-px flex-1 bg-border" />
               </div>
-              <div className="text-[11px] font-semibold">
+              <div className="text-[9px] sm:text-[11px] font-semibold">
                 {offer.stops === 0 ? (
                   <span className="text-success-600">Non-stop</span>
                 ) : (
                   <span className="text-warn-600">
-                    {offer.stops} stop{offer.stops > 1 ? "s" : ""}
-                    {offer.segments.length > 1 &&
-                      ` · ${offer.segments
-                        .slice(0, -1)
-                        .map((s) => s.to)
-                        .join(", ")}`}
+                    {offer.stops}S
                   </span>
                 )}
               </div>
             </div>
 
-            <div className="text-right">
-              <div className="text-[22px] font-bold text-ink leading-none">
+            <div className="text-center sm:text-right">
+              <div className="text-[14px] sm:text-[22px] font-bold text-ink leading-tight">
                 {formatTime(lastSeg.arrive)}
               </div>
-              <div className="text-[12px] font-semibold text-ink-soft mt-1">
-                {lastSeg.to} · {getAirport(lastSeg.to)?.city}
+              <div className="text-[9px] sm:text-[12px] font-semibold text-ink-soft mt-0.5">
+                {lastSeg.to}
               </div>
               {lastSeg.toTerminal && (
-                <div className="text-[11px] text-ink-muted">Terminal {lastSeg.toTerminal}</div>
+                <div className="text-[8px] sm:text-[11px] text-ink-muted">T{lastSeg.toTerminal}</div>
               )}
             </div>
           </div>
 
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            <Badge tone="neutral">Cabin {offer.baggage.cabin} kg</Badge>
-            <Badge tone="neutral">
-              Check-in {fareCategory === "student" ? offer.baggage.checkin + 5 : offer.baggage.checkin} kg
-              {fareCategory === "student" && (
-                <span className="ml-1 text-success-700 font-bold">+5kg</span>
-              )}
+          <div className="mt-2 flex flex-wrap gap-0.5 sm:gap-1.5">
+            <Badge tone="neutral" className="text-[8px] sm:text-[11px] px-1.5 sm:px-2 py-0.5">C {offer.baggage.cabin}kg</Badge>
+            <Badge tone="neutral" className="text-[8px] sm:text-[11px] px-1.5 sm:px-2 py-0.5">
+              K {fareCategory === "student" ? offer.baggage.checkin + 5 : offer.baggage.checkin}kg
             </Badge>
-            <Badge tone="info">{offer.cabin.replace("_", " ")}</Badge>
+            <Badge tone="info" className="text-[8px] sm:text-[11px] px-1.5 sm:px-2 py-0.5">{offer.cabin.replace("_", " ")}</Badge>
           </div>
 
           <button
@@ -176,28 +168,28 @@ export default function FlightResultCard({ offer, searchParams, fareCategory = "
           )}
         </div>
 
-        <div className="lg:border-l border-t lg:border-t-0 border-border-soft p-5 flex flex-col items-stretch lg:items-end justify-between gap-3 bg-surface-muted lg:bg-transparent">
-          <div className="text-right">
-            <div className="text-[11px] text-ink-muted">starting from</div>
+        <div className="lg:border-l border-t lg:border-t-0 border-border-soft p-2.5 sm:p-4 flex flex-col items-stretch lg:items-end justify-between gap-1.5 sm:gap-3 bg-surface-muted lg:bg-transparent">
+          <div className="text-center lg:text-right">
+            <div className="text-[8px] sm:text-[11px] text-ink-muted">from</div>
             {discounted && (
-              <div className="text-[12px] text-ink-muted line-through leading-none">
+              <div className="text-[9px] sm:text-[12px] text-ink-muted line-through leading-none">
                 {formatINR(offer.basePrice)}
               </div>
             )}
-            <div className="text-2xl font-extrabold text-ink leading-none">
+            <div className="text-lg sm:text-2xl font-extrabold text-ink leading-none">
               {formatINR(displayPrice)}
             </div>
             {discounted && (
-              <div className="text-[11px] font-semibold text-success-600">5% off applied</div>
+              <div className="text-[8px] sm:text-[11px] font-semibold text-success-600">5% off</div>
             )}
-            <div className="text-[11px] text-ink-muted mt-0.5">per adult, incl. taxes</div>
+            <div className="text-[8px] sm:text-[11px] text-ink-muted">per adult</div>
           </div>
-          <div className="flex flex-col gap-2 lg:min-w-45">
-            <Button variant="accent" onClick={() => setOpen(true)}>
+          <div className="flex flex-col gap-1 sm:gap-2 lg:min-w-45">
+            <Button variant="accent" onClick={() => setOpen(true)} className="py-1.5 sm:py-3 text-[12px] sm:text-[15px]">
               Book now
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
-              View fare options
+            <Button variant="ghost" size="sm" onClick={() => setOpen(true)} className="text-[11px] sm:text-[13px]">
+              View fares
             </Button>
           </div>
         </div>

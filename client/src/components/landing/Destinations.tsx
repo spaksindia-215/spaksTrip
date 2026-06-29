@@ -57,6 +57,8 @@ export default function Destinations() {
   const prev = () => setCurrent((s) => (s - 1 + total) % total);
   const next = () => setCurrent((s) => (s + 1) % total);
 
+  const visibleDestinations = Array.from({ length: 3 }, (_, index) => DESTINATIONS[(current + index) % total]);
+
   return (
     <section className="relative py-20">
       <div className="mx-auto max-w-7xl px-6">
@@ -83,8 +85,12 @@ export default function Destinations() {
             <Chevron direction="right" />
           </button>
 
-          <div className="grid grid-cols-1 gap-6">
-            <DestinationCard destination={DESTINATIONS[current]} />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            {visibleDestinations.map((destination, index) => (
+              <div key={`${destination.name}-${index}`} className={index === 0 ? "" : "hidden lg:block"}>
+                <DestinationCard destination={destination} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
