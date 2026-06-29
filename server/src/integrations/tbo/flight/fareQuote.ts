@@ -1,4 +1,4 @@
-import { withRetry, tboBase, tboApiUrl, TBO_DEFAULT_TIMEOUT_MS, AIR_BOOK_SVC } from "../auth";
+import { withRetry, tboBase, tboApiUrl, tboFetch, TBO_DEFAULT_TIMEOUT_MS, AIR_BOOK_SVC } from "../auth";
 import { assertTboSuccess, TboFareExpiredError } from "../errors";
 import { getTrace, storeTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
@@ -166,7 +166,7 @@ export async function tboFareQuote(
 
     let res: Response;
     try {
-      res = await fetch(url, {
+      res = await tboFetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

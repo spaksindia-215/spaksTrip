@@ -10,7 +10,19 @@ import "maplibre-gl/dist/maplibre-gl.css";
 // it is absent the component degrades to plain lat/lng number inputs so the form
 // still works before credentials are wired.
 
-export type LatLng = { latitude: number; longitude: number };
+export type LocationAddress = {
+  street?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  postalCode?: string;
+};
+
+export type LatLng = {
+  latitude: number;
+  longitude: number;
+  address?: LocationAddress;
+};
 
 type Props = {
   latitude?: number;
@@ -23,7 +35,15 @@ type Props = {
 
 type GeoFeature = {
   geometry: { coordinates: [number, number] };
-  properties: { formatted?: string; address_line1?: string };
+  properties: {
+    formatted?: string;
+    address_line1?: string;
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    postcode?: string;
+  };
 };
 
 const KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY;
@@ -42,19 +62,32 @@ export default function LocationPicker({ latitude, longitude, onChange, error, d
 
   const hasCoords = typeof latitude === "number" && typeof longitude === "number" && !Number.isNaN(latitude) && !Number.isNaN(longitude);
 
-  // Reverse-geocode a point into a human-readable address (best effort).
+  // Reverse-geocode a point, update the resolved label, and notify parent with address fields.
   async function reverseGeocode(lng: number, lat: number) {
     if (!KEY) return;
     try {
       const res = await fetch(`${GEOCODE}/reverse?lat=${lat}&lon=${lng}&format=geojson&apiKey=${KEY}`);
       const json = (await res.json()) as { features?: GeoFeature[] };
-      setResolved(json.features?.[0]?.properties.formatted ?? null);
+      const p = json.features?.[0]?.properties;
+      setResolved(p?.formatted ?? null);
+      onChange({
+        latitude: lat,
+        longitude: lng,
+        address: {
+          street: p?.street ?? p?.address_line1,
+          city: p?.city,
+          state: p?.state,
+          country: p?.country,
+          postalCode: p?.postcode,
+        },
+      });
     } catch {
       setResolved(null);
     }
   }
 
-  // Move the pin + notify the parent + refresh the resolved address.
+  // Move the pin for drag/click/geolocation — notify immediately with coords, then fill
+  // address fields once the async reverse-geocode resolves.
   function setPoint(lng: number, lat: number, fly = false) {
     const map = mapRef.current;
     if (markerRef.current) markerRef.current.setLngLat([lng, lat]);
@@ -83,6 +116,15 @@ export default function LocationPicker({ latitude, longitude, onChange, error, d
         zoom: hasCoords ? 14 : 4,
       });
       map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+
+      // Geoapify's osm-bright style references POI icons that may not be in the sprite;
+      // add a transparent 1×1 fallback so MapLibre doesn't spam the console.
+      map.on("styleimagemissing", (e: { id: string }) => {
+        if (!map.hasImage(e.id)) {
+          const blank = new ImageData(new Uint8ClampedArray(4), 1, 1);
+          map.addImage(e.id, blank);
+        }
+      });
 
       const marker = new maplibregl.Marker({ draggable: true, color: "#c1440e" })
         .setLngLat(center)
@@ -131,9 +173,24 @@ export default function LocationPicker({ latitude, longitude, onChange, error, d
 
   function pick(feature: GeoFeature) {
     const [lng, lat] = feature.geometry.coordinates;
-    setQuery(feature.properties.formatted ?? "");
+    const p = feature.properties;
+    setQuery(p.formatted ?? "");
     setResults([]);
-    setPoint(lng, lat, true);
+    setResolved(p.formatted ?? null);
+    // Address is already known from the forward-geocode result — fill immediately.
+    if (markerRef.current) markerRef.current.setLngLat([lng, lat]);
+    if (mapRef.current) mapRef.current.flyTo({ center: [lng, lat], zoom: Math.max(mapRef.current.getZoom(), 13) });
+    onChange({
+      latitude: lat,
+      longitude: lng,
+      address: {
+        street: p.street ?? p.address_line1,
+        city: p.city,
+        state: p.state,
+        country: p.country,
+        postalCode: p.postcode,
+      },
+    });
   }
 
   function useMyLocation() {

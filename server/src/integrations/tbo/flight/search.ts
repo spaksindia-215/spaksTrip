@@ -1,4 +1,4 @@
-import { withRetry, tboBase, tboApiUrl, TBO_DEFAULT_TIMEOUT_MS, AIR_SEARCH_SVC } from "../auth";
+import { withRetry, tboBase, tboApiUrl, tboFetch, TBO_DEFAULT_TIMEOUT_MS, AIR_SEARCH_SVC } from "../auth";
 import { assertTboSuccess } from "../errors";
 import { storeTrace } from "../traceCache";
 import { logRequest, logResponse, logError } from "../log";
@@ -213,7 +213,7 @@ export async function tboSearchFlights(
 
     let res: Response;
     try {
-      res = await fetch(url, {
+      res = await tboFetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

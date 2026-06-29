@@ -1,4 +1,4 @@
-import { withRetry, tboBase, tboApiUrl } from "../auth";
+import { withRetry, tboBase, tboApiUrl, tboFetch } from "../auth";
 import { logRequest, logResponse, logError } from "../log";
 
 const CABIN_TO_TBO: Record<string, string> = {
@@ -94,7 +94,7 @@ async function callCalendarEndpoint(
 
   let res: Response;
   try {
-    res = await fetch(url, {
+    res = await tboFetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

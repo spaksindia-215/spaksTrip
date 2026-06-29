@@ -1,4 +1,4 @@
-import { withRetry, tboBase, tboApiUrl, TBO_DEFAULT_TIMEOUT_MS, AIR_BOOK_SVC } from "../auth";
+import { withRetry, tboBase, tboApiUrl, tboFetch, TBO_DEFAULT_TIMEOUT_MS, AIR_BOOK_SVC } from "../auth";
 import { assertTboSuccess } from "../errors";
 import { logRequest, logResponse, logError } from "../log";
 import type { TboFlightBookingDetailResponse } from "../types";
@@ -48,7 +48,7 @@ export async function tboGetFlightBookingDetail(
 
     let res: Response;
     try {
-      res = await fetch(url, {
+      res = await tboFetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(reqBody),

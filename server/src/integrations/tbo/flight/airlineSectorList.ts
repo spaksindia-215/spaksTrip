@@ -1,5 +1,5 @@
 import refData from "../data/airportReference.json";
-import { withRetry, tboBase, tboApiUrl, getTboAgencyId } from "../auth";
+import { withRetry, tboBase, tboApiUrl, tboFetch, getTboAgencyId } from "../auth";
 import { logRequest, logResponse, logError } from "../log";
 
 // ─── GetAirlineSectorList ───────────────────────────────────────────────────────
@@ -61,7 +61,7 @@ export async function tboGetAirlineSectorList(): Promise<TboAirlineSectorRespons
 
     let res: Response;
     try {
-      res = await fetch(url, {
+      res = await tboFetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

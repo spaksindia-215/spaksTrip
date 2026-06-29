@@ -16,6 +16,7 @@ import {
   createTaxiListingEditorDraft,
   buildTaxiListingFormData,
   buildTaxiUpdatePatch,
+  serializeFiles,
   taxiViewFromApi,
   validateTaxiListingDraft,
   validateTaxiListingEditorDraft,
@@ -260,11 +261,26 @@ export default function TaxiManager() {
             </Section>
 
             <Section title="Documents & photos">
-              <FileField label="Vehicle photos" multiple onChange={(fl) => setFiles((c) => ({ ...c, vehiclePhotos: fl ? Array.from(fl) : [] }))} />
-              <FileField label="RC book" onChange={(fl) => setFiles((c) => ({ ...c, rcBook: fl?.[0] ?? null }))} />
-              <FileField label="Insurance" onChange={(fl) => setFiles((c) => ({ ...c, insurance: fl?.[0] ?? null }))} />
-              <FileField label="Pollution certificate" onChange={(fl) => setFiles((c) => ({ ...c, pollutionCertificate: fl?.[0] ?? null }))} />
-              <FileField label="Driving license" onChange={(fl) => setFiles((c) => ({ ...c, drivingLicense: fl?.[0] ?? null }))} />
+              <FileField label="Vehicle photos" multiple onChange={(fl) => {
+                setFiles((c) => ({ ...c, vehiclePhotos: fl ? Array.from(fl) : [] }));
+                setCreateField("vehiclePhotos", serializeFiles(fl));
+              }} />
+              <FileField label="RC book" onChange={(fl) => {
+                setFiles((c) => ({ ...c, rcBook: fl?.[0] ?? null }));
+                setCreateField("rcBook", serializeFiles(fl)[0] ?? null);
+              }} />
+              <FileField label="Insurance" onChange={(fl) => {
+                setFiles((c) => ({ ...c, insurance: fl?.[0] ?? null }));
+                setCreateField("insurance", serializeFiles(fl)[0] ?? null);
+              }} />
+              <FileField label="Pollution certificate" onChange={(fl) => {
+                setFiles((c) => ({ ...c, pollutionCertificate: fl?.[0] ?? null }));
+                setCreateField("pollutionCertificate", serializeFiles(fl)[0] ?? null);
+              }} />
+              <FileField label="Driving license" onChange={(fl) => {
+                setFiles((c) => ({ ...c, drivingLicense: fl?.[0] ?? null }));
+                setCreateField("drivingLicense", serializeFiles(fl)[0] ?? null);
+              }} />
             </Section>
 
             <Section title="Confirmation">
