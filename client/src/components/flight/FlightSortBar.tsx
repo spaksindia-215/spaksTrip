@@ -43,7 +43,7 @@ export default function FlightSortBar({
   total: number;
 }) {
   return (
-    <div className="rounded-xl bg-white border border-border-soft shadow-[var(--shadow-xs)] p-1 flex items-stretch overflow-hidden">
+    <div className="rounded-xl bg-white border border-border-soft shadow-[var(--shadow-xs)] p-1 flex flex-wrap lg:flex-nowrap items-stretch gap-1">
       {ITEMS.map((it) => {
         const active = it.v === value;
         return (
@@ -52,20 +52,20 @@ export default function FlightSortBar({
             type="button"
             onClick={() => onChange(it.v)}
             className={cn(
-              "flex-1 flex flex-col items-start px-4 py-2 rounded-md transition-colors",
+              "flex-1 min-w-[100px] lg:min-w-0 flex flex-col items-start px-2 sm:px-4 py-2 rounded-md transition-colors",
               active
                 ? "bg-brand-50 text-brand-700"
                 : "text-ink-soft hover:bg-surface-muted",
             )}
           >
-            <span className="text-[12px] font-semibold uppercase tracking-wide">
+            <span className="text-[10px] sm:text-[12px] font-semibold uppercase tracking-wide">
               {it.label}
             </span>
-            <span className="text-[14px] font-bold text-ink">{it.sub(offers)}</span>
+            <span className="text-[12px] sm:text-[14px] font-bold text-ink">{it.sub(offers)}</span>
           </button>
         );
       })}
-      <div className="hidden md:flex items-center px-4 text-[12px] font-semibold text-ink-muted border-l border-border-soft ml-1">
+      <div className="hidden lg:flex items-center px-4 text-[12px] font-semibold text-ink-muted border-l border-border-soft ml-1">
         {total} flights
       </div>
     </div>

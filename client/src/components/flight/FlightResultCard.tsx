@@ -34,9 +34,9 @@ export default function FlightResultCard({ offer, searchParams, fareCategory = "
   const displayPrice = discounted ? Math.round(offer.basePrice * 0.95) : offer.basePrice;
 
   return (
-    <article className="w-full rounded-xl bg-white border border-border-soft shadow-(--shadow-xs) hover:shadow-(--shadow-sm) transition-shadow overflow-hidden">
+    <article className="w-full rounded-lg sm:rounded-xl bg-white border border-border-soft shadow-(--shadow-xs) hover:shadow-(--shadow-sm) transition-shadow overflow-hidden">
       <div className="grid lg:grid-cols-[1fr_auto] gap-0 lg:gap-4">
-        <div className="p-2.5 sm:p-4">
+        <div className="p-2 sm:p-3 md:p-4">
           <div className="flex items-start justify-between gap-2 sm:gap-4 flex-wrap">
             <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-1">
               <AirlineLogo code={firstSeg.airlineCode} size={28} />

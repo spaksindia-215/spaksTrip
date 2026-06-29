@@ -130,10 +130,10 @@ function FlightResultsInner() {
         depart={depart}
         onDateChange={handleDateChange}
       />
-      <main className="flex-1">
-        <div className="mx-auto max-w-sm px-4 md:px-4 py-4">
-          <div className="grid lg:grid-cols-[280px_1fr] gap-6">
-            <aside className="hidden lg:block sticky top-[calc(theme(spacing.0)+140px)] self-start rounded-xl bg-white border border-border-soft p-5 shadow-(--shadow-xs)">
+      <main className="flex-1 bg-surface-muted">
+        <div className="mx-auto max-w-7xl px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+          <div className="grid lg:grid-cols-[260px_1fr] gap-3 sm:gap-4 lg:gap-6">
+            <aside className="hidden lg:block sticky top-[calc(theme(spacing.0)+140px)] self-start rounded-lg lg:rounded-xl bg-white border border-border-soft p-4 lg:p-5 shadow-(--shadow-xs)">
               <FlightFiltersPanel
                 offers={offers}
                 filters={filters}
@@ -144,7 +144,7 @@ function FlightResultsInner() {
 
             <section>
               <div ref={resultsTopRef} className="scroll-mt-40" />
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
                 <Button
                   variant="outline"
                   size="sm"
@@ -166,7 +166,7 @@ function FlightResultsInner() {
                 >
                   Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
                 </Button>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <FlightSortBar
                     value={sort}
                     onChange={changeSort}
@@ -186,7 +186,7 @@ function FlightResultsInner() {
                 <EmptyResults onClearFilters={() => changeFilters({})} />
               ) : (
                 <>
-                  <div className="flex items-center justify-between mb-3 text-[12px] text-ink-muted">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3 text-[11px] sm:text-[12px] text-ink-muted">
                     <span>
                       Showing <span className="font-semibold text-ink">{pageStart + 1}–{pageStart + paged.length}</span> of{" "}
                       <span className="font-semibold text-ink">{filtered.length}</span> flights
@@ -195,7 +195,7 @@ function FlightResultsInner() {
                       <span>Page {safePage} of {totalPages}</span>
                     )}
                   </div>
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-2 sm:gap-3">
                     {paged.map((o) => (
                       <FlightResultCard
                         key={o.id}
@@ -209,7 +209,7 @@ function FlightResultsInner() {
                     page={safePage}
                     totalPages={totalPages}
                     onChange={goToPage}
-                    className="mt-6"
+                    className="mt-4 sm:mt-6"
                   />
                 </>
               )}
@@ -246,15 +246,15 @@ function FlightResultsInner() {
 
 function EmptyResults({ onClearFilters }: { onClearFilters: () => void }) {
   return (
-    <div className="rounded-xl bg-white border border-border-soft p-10 text-center">
-      <div className="mx-auto h-14 w-14 grid place-items-center rounded-full bg-brand-50 text-brand-600 mb-3">
+    <div className="rounded-lg sm:rounded-xl bg-white border border-border-soft p-6 sm:p-10 text-center">
+      <div className="mx-auto h-12 sm:h-14 w-12 sm:w-14 grid place-items-center rounded-full bg-brand-50 text-brand-600 mb-3">
         <svg viewBox="0 0 24 24" width={24} height={24} fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden>
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
       </div>
-      <h3 className="text-[17px] font-bold text-ink">No flights match your filters</h3>
-      <p className="text-[13px] text-ink-muted mt-1">
+      <h3 className="text-[15px] sm:text-[17px] font-bold text-ink">No flights match your filters</h3>
+      <p className="text-[12px] sm:text-[13px] text-ink-muted mt-1">
         Try clearing a filter or broaden your search.
       </p>
       <div className="mt-4">

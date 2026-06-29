@@ -238,7 +238,7 @@ function HotelDetailInner() {
                       <button
                         type="button"
                         onClick={() => setActiveImg((prev) => (prev === 0 ? hotel.images.length - 1 : prev - 1))}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-all opacity-0 group-hover:opacity-100"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-all"
                         aria-label="Previous image"
                       >
                         <svg viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -248,7 +248,7 @@ function HotelDetailInner() {
                       <button
                         type="button"
                         onClick={() => setActiveImg((prev) => (prev === hotel.images.length - 1 ? 0 : prev + 1))}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-all opacity-0 group-hover:opacity-100"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-all"
                         aria-label="Next image"
                       >
                         <svg viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
