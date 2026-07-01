@@ -98,9 +98,35 @@ function HotelDetailInner() {
       return;
     }
 
+    // Validate room and occupancy restrictions
+    if (rooms > 6) {
+      toast.push({ title: "Maximum 6 rooms per booking allowed", tone: "warn" });
+      return;
+    }
+
+    const adultsPerRoom = Math.ceil(adults / rooms);
+    const childrenPerRoom = Math.ceil(children / rooms);
+
+    if (adultsPerRoom > 8) {
+      toast.push({ title: "Maximum 8 adults per room. Please adjust your search.", tone: "warn" });
+      return;
+    }
+    if (childrenPerRoom > 4) {
+      toast.push({ title: "Maximum 4 children per room. Please adjust your search.", tone: "warn" });
+      return;
+    }
+
     // Initialize booking with Search data (including childrenAges for multi-room support)
     const bookingData = { hotel, room, checkIn, checkOut, rooms, adults, children, childrenAges, guestNationality };
-    startHotelBooking(bookingData);
+    try {
+      startHotelBooking(bookingData);
+    } catch (error) {
+      toast.push({
+        title: error instanceof Error ? error.message : "Booking failed. Please try again.",
+        tone: "warn",
+      });
+      return;
+    }
 
     // We'll check session validity after getting current from store
     // Note: current will update after startHotelBooking, so we need to use the new booking's session time

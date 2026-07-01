@@ -1,20 +1,20 @@
 /**
- * TBO Hotel Search Occupancy Validation
+ * SpaksTrip Hotel Booking Occupancy Validation
  *
- * TBO API Limits:
- * - Max 8 rooms per search request
- * - Max 10 adults per room
- * - Max 6 children per room
+ * SpaksTrip Business Limits:
+ * - Max 6 rooms per booking
+ * - Max 8 adults per room
+ * - Max 4 children per room
  *
  * Note: More rooms/higher occupancy reduces available results because
  * not all supply partners support multi-room searches.
  */
 
 export const OCCUPANCY_LIMITS = {
-  MAX_ROOMS: 8,
-  MAX_ADULTS_PER_ROOM: 10,
-  MAX_CHILDREN_PER_ROOM: 6,
-  MAX_TOTAL_OCCUPANCY: 16, // 10 adults + 6 children
+  MAX_ROOMS: 6,
+  MAX_ADULTS_PER_ROOM: 8,
+  MAX_CHILDREN_PER_ROOM: 4,
+  MAX_TOTAL_OCCUPANCY: 12, // 8 adults + 4 children
 } as const;
 
 export type OccupancyValidation = {

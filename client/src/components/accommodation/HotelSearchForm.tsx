@@ -42,6 +42,25 @@ export default function HotelSearchForm() {
       toast.push({ title: "Check-out must be after check-in", tone: "warn" });
       return;
     }
+
+    // Validate booking restrictions
+    if (rooms > 6) {
+      toast.push({ title: "Maximum 6 rooms per booking allowed", tone: "warn" });
+      return;
+    }
+
+    const adultsPerRoom = Math.ceil(adults / rooms);
+    const childrenPerRoom = Math.ceil(children / rooms);
+
+    if (adultsPerRoom > 8) {
+      toast.push({ title: "Maximum 8 adults per room. Please adjust your search.", tone: "warn" });
+      return;
+    }
+    if (childrenPerRoom > 4) {
+      toast.push({ title: "Maximum 4 children per room. Please adjust your search.", tone: "warn" });
+      return;
+    }
+
     setSubmitting(true);
 
     const params = new URLSearchParams({
