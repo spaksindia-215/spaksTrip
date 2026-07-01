@@ -114,6 +114,21 @@ export const useHotelBookingStore = create<State & Actions>()(
       current: null,
       bookings: [],
       startHotelBooking: ({ hotel, room, checkIn, checkOut, rooms, adults, children, childrenAges, guestNationality }) => {
+        // Validate room and occupancy restrictions
+        // Max 8 adults and 4 children per room
+        const adultsPerRoom = Math.ceil(adults / rooms);
+        const childrenPerRoom = Math.ceil(children / rooms);
+
+        if (adultsPerRoom > 8) {
+          throw new Error("Maximum 8 adults allowed per room");
+        }
+        if (childrenPerRoom > 4) {
+          throw new Error("Maximum 4 children allowed per room");
+        }
+        if (rooms > 6) {
+          throw new Error("Maximum 6 rooms per booking");
+        }
+
         const nights = nightsBetween(checkIn, checkOut);
         const addOns: HotelBooking["addOns"] = { breakfast: room.breakfast, insurance: false };
         const { taxes, total } = computeHotelTotals(room, nights, rooms, addOns);

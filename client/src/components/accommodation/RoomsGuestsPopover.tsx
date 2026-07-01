@@ -133,7 +133,7 @@ export default function RoomsGuestsPopover({ rooms, adults, children, childrenAg
               />
               <Counter
                 label="Adults"
-                sub="Age 18+ (max 10 per room)"
+                sub="Age 18+ (max 8 per room)"
                 value={adults}
                 min={1}
                 max={maxAdultsTotal}
@@ -141,7 +141,7 @@ export default function RoomsGuestsPopover({ rooms, adults, children, childrenAg
               />
               <Counter
                 label="Children"
-                sub="Age 0–17 (max 6 per room)"
+                sub="Age 0–17 (max 4 per room)"
                 value={children}
                 min={0}
                 max={maxChildrenTotal}
