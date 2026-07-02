@@ -6,6 +6,7 @@ import {
   adminCreateTemplate,
   adminListPackages,
   adminGetPackage,
+  adminComparePackage,
   adminUpdatePackage,
   adminSetPackageStatus,
   adminDeletePackage,
@@ -40,6 +41,8 @@ router.patch("/enquiries/:id", adminUpdateEnquiry);
 router.get("/", adminListPackages);
 router.post("/", uploadAny, adminCreateTemplate);
 router.get("/:id", adminGetPackage);
+// §5.3 — compare a partner submission against the closest platform template.
+router.get("/:id/compare", adminComparePackage);
 router.put("/:id", uploadAny, adminUpdatePackage);
 router.patch("/:id/status", adminSetPackageStatus);
 router.delete("/:id", adminDeletePackage);

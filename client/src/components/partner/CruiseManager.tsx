@@ -161,7 +161,7 @@ export default function CruiseManager() {
           </Select>
           <Select id="c-status" label="Status" value={form.status} onChange={(e) => setField("status", e.target.value as CruiseFormState["status"])}>
             <option value="draft">Draft</option>
-            <option value="active">Active</option>
+            <option value="active">Active (still needs admin approval to go live)</option>
           </Select>
           <Input id="c-tags" label="Tags (comma separated)" value={form.tags} onChange={(e) => setField("tags", e.target.value)} />
           <TextArea id="c-desc" label="Description" value={form.description} onChange={(v) => setField("description", v)} />

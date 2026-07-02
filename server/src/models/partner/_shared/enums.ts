@@ -219,15 +219,43 @@ export type EventBookingSource = (typeof EVENT_BOOKING_SOURCE)[number];
 // customer enquiry is a lead routed to the chosen operator + the platform.
 
 // Vertical the package belongs to. "holiday" is split national/international via
-// PACKAGE_SCOPE; the four taxi/tour variants mirror the existing partner models.
+// PACKAGE_SCOPE; the taxi/tour variants mirror the existing partner models. The
+// service verticals (cruise/sightseeing/transfer/self_drive/islandhopper/visa)
+// also flow through the unified Package template + PackageOffer marketplace.
 export const PACKAGE_KINDS = [
   "taxi",
   "taxi_package",
   "tour",
   "tour_package",
   "holiday",
+  "cruise",
+  "sightseeing",
+  "transfer",
+  "self_drive",
+  "islandhopper",
+  "visa",
+  // A composite bundle combining several of a partner's own services (stay +
+  // transfer + sightseeing + …) into one sellable, single-priced package. Its
+  // pieces live in Package.components; see LISTING_REF_MODELS.
+  "bundle",
 ] as const;
 export type PackageKind = (typeof PACKAGE_KINDS)[number];
+
+// Mongoose model names a bundle component may link to — a partner's real listing
+// in that vertical. Free-form ("custom") components carry no ref/refModel.
+export const LISTING_REF_MODELS = [
+  "TaxiListing",
+  "TourListing",
+  "HotelListing",
+  "SightseeingListing",
+  "TransferListing",
+  "SelfDriveListing",
+  "IslandhopperListing",
+  "VisaListing",
+  "CruiseListing",
+  "EventListing",
+] as const;
+export type ListingRefModel = (typeof LISTING_REF_MODELS)[number];
 
 // Geographic scope — drives the national vs international holiday/tour surfaces.
 export const PACKAGE_SCOPES = ["domestic", "international"] as const;

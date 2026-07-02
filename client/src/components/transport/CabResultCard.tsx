@@ -62,7 +62,7 @@ export default function CabResultCard({ cab, searchParams }: Props) {
           <div className="flex items-center gap-3">
             <span className="text-[12px] text-ink-muted">ETA {cab.eta} min</span>
             <Link
-              href={`/cabs/${encodeURIComponent(cab.id)}/booking?${searchParams}`}
+              href={`/taxi/${encodeURIComponent(cab.id)}/booking?${searchParams}`}
               className="rounded-lg bg-accent-500 px-4 py-2 text-[13px] font-bold text-white hover:bg-accent-600 transition-colors"
             >
               Book Now

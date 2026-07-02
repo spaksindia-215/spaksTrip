@@ -11,6 +11,7 @@ import {
   partnerDeletePackage,
   partnerSetPackageStatus,
   partnerBrowseCatalog,
+  partnerListMyServices,
   partnerUpsertOffer,
   partnerListOffers,
   partnerUpdateOffer,
@@ -38,6 +39,9 @@ function uploadAny(req: Request, res: Response, next: NextFunction): void {
 
 // Catalog the partner can attach offers to (templates + others' active packages).
 router.get("/catalog", partnerBrowseCatalog);
+
+// The partner's own listings across every vertical — component source for bundles.
+router.get("/my-services", partnerListMyServices);
 
 // Offers (JSON; no files). Declared before the `/:id` package routes.
 router.get("/offers", partnerListOffers);

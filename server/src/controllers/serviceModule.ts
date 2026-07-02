@@ -159,7 +159,9 @@ export function makeServiceModule(cfg: ServiceModuleConfig): ServiceModuleHandle
         const doc = await ownedListing(req);
         const newImages = await uploadImages(req);
         const input = cfg.validate(listingBody(req));
+        const prevStatus = doc.status; // a field edit never changes approval state (§2.3)
         Object.assign(doc, input);
+        doc.status = prevStatus; // publishing goes through submit → admin approval, not this edit
         if (newImages.length > 0) doc.images = newImages.map((url, i) => ({ url, isPrimary: i === 0 }));
         await doc.save();
         res.json({ item: doc.toJSON() });

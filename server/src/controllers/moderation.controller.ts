@@ -271,6 +271,42 @@ export async function adminRejectListing(req: Request, res: Response, next: Next
   }
 }
 
+// POST /api/admin/listings/:type/:id/status — admin sets any lifecycle status
+// (active / paused / suspended / draft / pending). Powers the unified management
+// dashboard's Pause / Activate / Suspend actions across every vertical.
+export async function adminSetListingStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const entry = entryFor(paramStr(req.params.type));
+    const id = paramStr(req.params.id);
+    if (!mongoose.isValidObjectId(id)) throw new HttpError(400, "Invalid id");
+    const target = (req.body as Record<string, unknown>)?.status;
+    if (typeof target !== "string" || !(RESOURCE_STATUS as readonly string[]).includes(target)) {
+      throw new HttpError(400, `status must be one of: ${RESOURCE_STATUS.join(", ")}`);
+    }
+    const doc = await entry.model.findById(id);
+    if (!doc) throw new HttpError(404, `${entry.label} not found`);
+    doc.status = target;
+    await doc.save();
+    res.json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// DELETE /api/admin/listings/:type/:id — hard-delete a listing of any vertical.
+export async function adminDeleteListing(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const entry = entryFor(paramStr(req.params.type));
+    const id = paramStr(req.params.id);
+    if (!mongoose.isValidObjectId(id)) throw new HttpError(400, "Invalid id");
+    const doc = await entry.model.findByIdAndDelete(id);
+    if (!doc) throw new HttpError(404, `${entry.label} not found`);
+    res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
+}
+
 // POST /api/partner/listings/:type/:id/submit — owner sends a listing for review
 // (draft/paused/suspended → pending). Scoped to the authenticated partner.
 export async function partnerSubmitListing(req: Request, res: Response, next: NextFunction): Promise<void> {

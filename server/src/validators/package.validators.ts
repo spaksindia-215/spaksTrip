@@ -1,13 +1,16 @@
 import { HttpError } from "../middleware/error";
+import { Types } from "mongoose";
 import {
   PACKAGE_KINDS,
   PACKAGE_SCOPES,
   CURRENCY_CODES,
+  LISTING_REF_MODELS,
   type PackageKind,
   type PackageScope,
   type CurrencyCode,
+  type ListingRefModel,
 } from "../models/partner/_shared/enums";
-import type { IPackage, PackageItineraryDay, PackageRoute } from "../models/partner/Package";
+import type { IPackage, PackageComponent, PackageItineraryDay, PackageRoute } from "../models/partner/Package";
 import type { IPackageOffer, OfferContact } from "../models/partner/PackageOffer";
 import type { EnquiryContact, EnquiryPax } from "../models/partner/PackageEnquiry";
 
@@ -63,6 +66,7 @@ export type ValidatedPackage = Pick<
   | "tags"
   | "route"
   | "itinerary"
+  | "components"
   | "inclusions"
   | "exclusions"
   | "specs"
@@ -101,9 +105,45 @@ function validateItinerary(raw: unknown): PackageItineraryDay[] {
   });
 }
 
+// Bundle components: each piece may link to one of the partner's real listings
+// (ref + refModel) or be a free-form entry (title only). Only kept for kind
+// "bundle"; other kinds discard any components sent.
+function validateComponents(raw: unknown): PackageComponent[] {
+  if (!Array.isArray(raw)) return [];
+  const out: PackageComponent[] = [];
+  for (const entry of raw) {
+    const o = isObject(entry) ? entry : {};
+    const title = optStr(o, "title");
+    if (!title) continue; // a component without a title is meaningless — drop it
+    const refModelRaw = optStr(o, "refModel");
+    const refModel =
+      refModelRaw && (LISTING_REF_MODELS as readonly string[]).includes(refModelRaw)
+        ? (refModelRaw as ListingRefModel)
+        : undefined;
+    const refRaw = optStr(o, "ref");
+    // A ref is only honoured alongside a valid refModel and a valid ObjectId.
+    const ref = refModel && refRaw && Types.ObjectId.isValid(refRaw) ? new Types.ObjectId(refRaw) : undefined;
+    const qty = optNum(o, "quantity");
+    out.push({
+      category: optStr(o, "category") ?? "Other",
+      refModel: ref ? refModel : undefined,
+      ref,
+      title,
+      description: optStr(o, "description"),
+      quantity: qty !== undefined && qty >= 1 ? Math.floor(qty) : 1,
+      included: o.included === false ? false : true,
+    });
+  }
+  return out;
+}
+
 export function validatePackage(input: PackageRawInput): ValidatedPackage {
   const b = input.body;
   const kind = inEnum<PackageKind>("package", PACKAGE_KINDS, b.kind, "kind");
+  const components = kind === "bundle" ? validateComponents(b.components) : [];
+  if (kind === "bundle" && components.length === 0) {
+    fail("package", "a bundle must include at least one component");
+  }
   const scope = b.scope === undefined || b.scope === ""
     ? ("domestic" as PackageScope)
     : inEnum<PackageScope>("package", PACKAGE_SCOPES, b.scope, "scope");
@@ -124,6 +164,7 @@ export function validatePackage(input: PackageRawInput): ValidatedPackage {
     tags: strArr(b, "tags"),
     route: validateRoute(b.route),
     itinerary: validateItinerary(b.itinerary),
+    components,
     inclusions: strArr(b, "inclusions"),
     exclusions: strArr(b, "exclusions"),
     specs: isObject(b.specs) ? b.specs : {},

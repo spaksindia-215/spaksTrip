@@ -171,7 +171,14 @@ export const adminClient = {
     async reject(type: string, id: string): Promise<void> {
       await api(`/api/admin/listings/${type}/${id}/reject`, { method: "POST", skipRefresh: true });
     },
+    async setStatus(type: string, id: string, status: string): Promise<void> {
+      await api(`/api/admin/listings/${type}/${id}/status`, { method: "PATCH", body: { status }, skipRefresh: true });
+    },
+    async remove(type: string, id: string): Promise<void> {
+      await api(`/api/admin/listings/${type}/${id}`, { method: "DELETE", skipRefresh: true });
+    },
   },
+
 
   // ── Marketplace packages (fixed templates + moderation + leads) ───────────────
   packages: {
@@ -192,6 +199,10 @@ export const adminClient = {
     async setStatus(id: string, status: string): Promise<AdminPackage> {
       const res = await api<{ item: AdminPackage }>(`/api/admin/packages/${id}/status`, { method: "PATCH", body: { status }, skipRefresh: true });
       return res.item;
+    },
+    // §5.3 — closest-template diff for a pending partner submission.
+    async compare(id: string): Promise<PackageComparison> {
+      return api<PackageComparison>(`/api/admin/packages/${id}/compare`, { skipRefresh: true });
     },
     async remove(id: string): Promise<void> {
       await api<null>(`/api/admin/packages/${id}`, { method: "DELETE", skipRefresh: true });
@@ -249,17 +260,44 @@ export type AdminListing = {
   createdAt: string;
 };
 
+export type AdminTourListing = {
+  id: string;
+  slug: string;
+  title: string;
+  category: string;
+  basedIn: string;
+  status: "draft" | "pending" | "active" | "paused" | "suspended";
+  images: { url: string }[];
+  pricing: { label: string; price: number; currency: string }[];
+  durationDays?: number;
+  durationNights?: number;
+  durationHours?: number;
+  partner?: { id: string; name?: string; companyName?: string; email?: string } | null;
+  createdAt: string;
+};
+
 export type AdminPackage = {
   id: string;
   kind: string;
   scope: string;
   origin: "platform" | "partner";
-  status: "draft" | "active" | "paused" | "suspended";
+  status: "draft" | "pending" | "active" | "paused" | "suspended";
   title: string;
   slug: string;
   thumbnail?: string;
   route: { destinations: string[]; durationDays: number; durationNights: number };
+  components?: { category: string; title: string; quantity: number; included: boolean }[];
   author?: { id: string; name?: string; companyName?: string } | string;
+};
+
+// §5.3 — result of comparing a partner submission against the closest platform
+// template. `fields` is a per-field diff; `likelyDuplicate` flags an unmodified copy.
+export type PackageComparison = {
+  package: AdminPackage;
+  template: AdminPackage | null;
+  similarity: number;
+  likelyDuplicate: boolean;
+  fields: { field: string; partnerValue: string; templateValue: string; identical: boolean }[];
 };
 
 export type AdminEnquiry = {

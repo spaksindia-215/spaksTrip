@@ -102,7 +102,7 @@ function CabBookingInner() {
               <p className="text-[12px] text-ink-muted">{date} at {time}</p>
               <p className="text-[15px] font-extrabold text-ink mt-2">{formatINR(cab.basePrice)}</p>
             </div>
-            <a href="/cabs" className="text-brand-600 hover:underline text-[14px] font-semibold">Book another cab</a>
+            <a href="/taxi" className="text-brand-600 hover:underline text-[14px] font-semibold">Book another taxi</a>
           </div>
         </main>
         <Footer />

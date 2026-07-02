@@ -109,8 +109,8 @@ const tourListingSchema = new Schema<ITourListing>(
     partner: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: [true, "partner is required"],
       index: true,
+      default: null,
     },
     status: { type: String, enum: RESOURCE_STATUS, default: "draft", index: true },
     title: { type: String, required: [true, "title is required"], trim: true },

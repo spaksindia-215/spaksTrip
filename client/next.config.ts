@@ -18,7 +18,7 @@ const csp = [
   "img-src 'self' data: blob: https:",
   "font-src 'self' data: https:",
   "connect-src 'self' https: wss:",
-  "frame-src https://*.razorpay.com https://api.razorpay.com",
+  "frame-src https://*.razorpay.com https://api.razorpay.com https://*.google.com https://maps.google.com",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",

@@ -186,7 +186,7 @@ export default function TourPackageManager() {
           </Select>
           <Select id="tp-status" label="Status" value={form.status} onChange={(e) => setField("status", e.target.value as TourPackageFormState["status"])}>
             <option value="draft">Draft</option>
-            <option value="active">Active</option>
+            <option value="active">Active (still needs admin approval to go live)</option>
           </Select>
           <Select id="tp-diff" label="Difficulty (optional)" value={form.difficultyLevel} onChange={(e) => setField("difficultyLevel", e.target.value)}>
             <option value="">—</option>

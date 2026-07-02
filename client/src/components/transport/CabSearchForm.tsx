@@ -32,7 +32,7 @@ export default function CabSearchForm() {
     setSubmitting(true);
     const params = new URLSearchParams({ from: from.trim(), to: to.trim(), date, time, mode });
     if (mode === "round" && returnDate) params.set("return", returnDate);
-    router.push(`/cabs/results?${params.toString()}`);
+    router.push(`/taxi/results?${params.toString()}`);
   };
 
   return (
@@ -42,7 +42,7 @@ export default function CabSearchForm() {
       <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
       <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-12 sm:px-6">
         <Badge tone="accent" className="mb-3 w-fit bg-white/14 text-white ring-1 ring-white/25">
-          SpaksTrip Cabs
+          SpaksTrip Taxi
         </Badge>
         <h1 className="max-w-2xl text-3xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-4xl">
           Book a cab for airport runs, city rides and outstation trips
@@ -100,7 +100,7 @@ export default function CabSearchForm() {
             />
             <div className="flex items-end sm:col-span-2 lg:col-span-1">
               <Button onClick={onSearch} loading={submitting} size="xl" variant="accent" fullWidth>
-                Search Cabs
+                Search Taxi
               </Button>
             </div>
           </div>

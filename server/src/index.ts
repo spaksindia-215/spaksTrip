@@ -24,6 +24,7 @@ import accommodationRoutes from "./routes/accommodation.routes";
 import partnerAccommodationRoutes from "./routes/partnerAccommodation.routes";
 import partnerSightseeingRoutes from "./routes/partnerSightseeing.routes";
 import sightseeingRoutes from "./routes/sightseeing.routes";
+import tourListingsRoutes from "./routes/tourListings.routes";
 import { makePartnerServiceRouter, makePublicServiceRouter } from "./routes/serviceRoutes";
 import {
   transferController,
@@ -135,6 +136,8 @@ async function main(): Promise<void> {
   app.use("/api/islandhopper", makePublicServiceRouter(islandhopperController));
   app.use("/api/visa", makePublicServiceRouter(visaController));
   app.use("/api/partner-hotels", partnerHotelsRoutes);
+  // Public tour-listing browse (destination grid → operator cards → detail).
+  app.use("/api/tour-listings", tourListingsRoutes);
 
   app.use(errorHandler);
 

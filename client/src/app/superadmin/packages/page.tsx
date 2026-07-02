@@ -4,87 +4,102 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
-import Select from "@/components/ui/Select";
-import Textarea from "@/components/ui/Textarea";
 import Chip from "@/components/ui/Chip";
 import Modal from "@/components/ui/Modal";
 import { useToast } from "@/components/ui/Toast";
-import { adminClient, type AdminPackage, type AdminEnquiry } from "@/lib/adminClient";
+import { adminClient, type AdminPackage, type AdminEnquiry, type PackageComparison } from "@/lib/adminClient";
+import PackageTemplateModal from "@/components/superadmin/PackageTemplateModal";
 
 type Tab = "templates" | "enquiries";
 
 const STATUS_TONE: Record<string, "neutral" | "success" | "warn" | "danger"> = {
-  active: "success", draft: "neutral", paused: "warn", suspended: "danger",
+  active: "success", draft: "neutral", pending: "warn", paused: "warn", suspended: "danger",
 };
 
-const KINDS = [
-  { value: "holiday", label: "Holiday" },
-  { value: "tour_package", label: "Tour Package" },
-  { value: "tour", label: "Tour" },
-  { value: "taxi_package", label: "Taxi Package" },
-  { value: "taxi", label: "Taxi" },
+const STATUS_FILTERS: { value: string; label: string }[] = [
+  { value: "pending", label: "Pending review" },
+  { value: "active", label: "Live" },
+  { value: "", label: "All" },
 ];
 
-function TemplateModal({ open, onClose, onSaved }: { open: boolean; onClose: () => void; onSaved: () => void }) {
-  const toast = useToast();
-  const [title, setTitle] = useState("");
-  const [kind, setKind] = useState("holiday");
-  const [scope, setScope] = useState("domestic");
-  const [destinations, setDestinations] = useState("");
-  const [days, setDays] = useState("4");
-  const [nights, setNights] = useState("3");
-  const [description, setDescription] = useState("");
-  const [highlights, setHighlights] = useState("");
-  const [images, setImages] = useState<FileList | null>(null);
-  const [saving, setSaving] = useState(false);
+const FIELD_LABELS: Record<string, string> = {
+  title: "Title", description: "Description", highlights: "Highlights",
+  inclusions: "Inclusions", exclusions: "Exclusions", destinations: "Destinations",
+  duration: "Duration", itinerary: "Itinerary", referencePrice: "Reference price",
+};
 
-  const save = async () => {
-    if (!title.trim()) { toast.push({ title: "Enter a title", tone: "warn" }); return; }
-    setSaving(true);
-    try {
-      const data = {
-        title: title.trim(), kind, scope,
-        description: description.trim() || undefined,
-        highlights: highlights.split("\n").map((x) => x.trim()).filter(Boolean),
-        route: { destinations: destinations.split(",").map((x) => x.trim()).filter(Boolean), durationDays: Number(days) || 1, durationNights: Number(nights) || 0 },
-      };
-      const form = new FormData();
-      form.append("data", JSON.stringify(data));
-      if (images) Array.from(images).forEach((f) => form.append("images", f));
-      await adminClient.packages.createTemplate(form);
-      toast.push({ title: "Template created", tone: "success" });
-      onSaved(); onClose();
-      setTitle(""); setDestinations(""); setDescription(""); setHighlights(""); setImages(null);
-    } catch (e) {
-      toast.push({ title: "Could not create template", description: e instanceof Error ? e.message : undefined, tone: "danger" });
-    } finally { setSaving(false); }
+// §5.3 — side-by-side review of a partner submission vs the closest platform
+// template. Surfaces a duplicate warning so the reviewer rejects unmodified copies.
+function CompareModal({
+  pkg, onClose, onApprove, onReject,
+}: {
+  pkg: AdminPackage | null;
+  onClose: () => void;
+  onApprove: (p: AdminPackage) => void;
+  onReject: (p: AdminPackage) => void;
+}) {
+  const toast = useToast();
+  const [data, setData] = useState<PackageComparison | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [acting, setActing] = useState(false);
+
+  useEffect(() => {
+    if (!pkg) { setData(null); return; }
+    setLoading(true);
+    adminClient.packages
+      .compare(pkg.id)
+      .then(setData)
+      .catch((e) => toast.push({ title: "Could not load comparison", description: e instanceof Error ? e.message : undefined, tone: "danger" }))
+      .finally(() => setLoading(false));
+  }, [pkg, toast]);
+
+  const act = async (fn: (p: AdminPackage) => void) => {
+    if (!pkg) return;
+    setActing(true);
+    try { fn(pkg); onClose(); } finally { setActing(false); }
   };
 
   return (
-    <Modal open={open} onClose={onClose} title="New fixed template" size="lg"
-      footer={<div className="flex justify-end gap-3"><Button variant="ghost" onClick={onClose}>Cancel</Button><Button variant="accent" onClick={save} loading={saving}>Create</Button></div>}>
-      <div className="flex flex-col gap-3 p-1">
-        <Input label="Title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Delhi to Ladakh 3N/4D" />
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Select label="Type" value={kind} onChange={(e) => setKind(e.target.value)}>{KINDS.map((k) => <option key={k.value} value={k.value}>{k.label}</option>)}</Select>
-          <Select label="Scope" value={scope} onChange={(e) => setScope(e.target.value)}><option value="domestic">Domestic</option><option value="international">International</option></Select>
+    <Modal open={!!pkg} onClose={onClose} title="Review partner submission" size="lg"
+      footer={
+        <div className="flex justify-end gap-3">
+          <Button variant="ghost" onClick={() => act(onReject)} loading={acting} disabled={!pkg}>Reject (back to draft)</Button>
+          <Button variant="accent" onClick={() => act(onApprove)} loading={acting} disabled={!pkg}>Approve &amp; publish</Button>
         </div>
-        <Input label="Destinations (comma-separated)" value={destinations} onChange={(e) => setDestinations(e.target.value)} placeholder="Leh, Nubra, Pangong" />
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Input label="Days" type="number" value={days} onChange={(e) => setDays(e.target.value)} />
-          <Input label="Nights" type="number" value={nights} onChange={(e) => setNights(e.target.value)} />
+      }>
+      {loading && <div className="h-40 animate-pulse rounded-xl bg-border-soft/60" />}
+      {!loading && data && (
+        <div className="flex flex-col gap-3 p-1">
+          {data.template ? (
+            <div className={`rounded-lg border p-3 text-[13px] ${data.likelyDuplicate ? "border-red-300 bg-red-50 text-red-700" : "border-border-soft bg-surface-soft text-ink-soft"}`}>
+              {data.likelyDuplicate
+                ? `⚠ Likely duplicate — ${Math.round(data.similarity * 100)}% identical to template “${data.template.title}”. Reject unless the partner genuinely modified it.`
+                : `${Math.round(data.similarity * 100)}% similar to the closest template “${data.template.title}”.`}
+            </div>
+          ) : (
+            <div className="rounded-lg border border-border-soft bg-surface-soft p-3 text-[13px] text-ink-soft">
+              No comparable platform template for this kind — this is an original partner package.
+            </div>
+          )}
+          <div className="grid grid-cols-[120px_1fr_1fr] gap-x-3 gap-y-1 text-[12px]">
+            <div className="font-bold text-ink">Field</div>
+            <div className="font-bold text-ink">Partner submission</div>
+            <div className="font-bold text-ink">Closest template</div>
+            {data.fields.map((f) => (
+              <div key={f.field} className="contents">
+                <div className="py-1.5 font-semibold text-ink-soft">{FIELD_LABELS[f.field] ?? f.field}</div>
+                <div className={`py-1.5 wrap-break-word ${f.identical ? "text-red-600" : "text-ink"}`}>{f.partnerValue || <span className="text-ink-muted">—</span>}</div>
+                <div className="py-1.5 wrap-break-word text-ink-muted">{f.templateValue || "—"}</div>
+              </div>
+            ))}
+          </div>
+          <p className="text-[11px] text-ink-muted">Fields shown in red are identical to the template.</p>
         </div>
-        <Textarea label="Description" value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
-        <Textarea label="Highlights (one per line)" value={highlights} onChange={(e) => setHighlights(e.target.value)} rows={3} />
-        <div className="flex flex-col gap-1">
-          <label className="text-[13px] font-medium text-ink-soft">Images</label>
-          <input type="file" accept="image/*" multiple onChange={(e) => setImages(e.target.files)} className="text-[13px]" />
-        </div>
-      </div>
+      )}
     </Modal>
   );
 }
+
 
 export default function AdminPackagesPage() {
   const toast = useToast();
@@ -94,6 +109,8 @@ export default function AdminPackagesPage() {
   const [enquiries, setEnquiries] = useState<AdminEnquiry[]>([]);
   const [loading, setLoading] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>("pending");
+  const [reviewPkg, setReviewPkg] = useState<AdminPackage | null>(null);
 
   useEffect(() => {
     adminClient.me().then(() => setSession("in")).catch(() => setSession("out"));
@@ -103,12 +120,12 @@ export default function AdminPackagesPage() {
     if (session !== "in") return;
     setLoading(true);
     try {
-      if (tab === "templates") setPackages(await adminClient.packages.list());
+      if (tab === "templates") setPackages(await adminClient.packages.list({ status: statusFilter || undefined }));
       else setEnquiries(await adminClient.packages.enquiries());
     } catch (e) {
       toast.push({ title: "Failed to load", description: e instanceof Error ? e.message : undefined, tone: "danger" });
     } finally { setLoading(false); }
-  }, [tab, session, toast]);
+  }, [tab, session, statusFilter, toast]);
 
   useEffect(() => { void refresh(); }, [refresh]);
 
@@ -123,8 +140,14 @@ export default function AdminPackagesPage() {
   }
 
   const setStatus = async (p: AdminPackage, status: string) => {
-    try { await adminClient.packages.setStatus(p.id, status); setPackages((prev) => prev.map((x) => (x.id === p.id ? { ...x, status: status as AdminPackage["status"] } : x))); }
-    catch (e) { toast.push({ title: "Update failed", description: e instanceof Error ? e.message : undefined, tone: "danger" }); }
+    try {
+      await adminClient.packages.setStatus(p.id, status);
+      setPackages((prev) =>
+        statusFilter && status !== statusFilter
+          ? prev.filter((x) => x.id !== p.id) // fell out of the current filter view
+          : prev.map((x) => (x.id === p.id ? { ...x, status: status as AdminPackage["status"] } : x)),
+      );
+    } catch (e) { toast.push({ title: "Update failed", description: e instanceof Error ? e.message : undefined, tone: "danger" }); }
   };
 
   const setEnquiryStatus = async (id: string, status: string) => {
@@ -151,18 +174,36 @@ export default function AdminPackagesPage() {
         ))}
       </div>
 
+      {tab === "templates" && (
+        <div className="mt-4 flex gap-2">
+          {STATUS_FILTERS.map((f) => (
+            <Chip key={f.value || "all"} active={statusFilter === f.value} onClick={() => setStatusFilter(f.value)}>{f.label}</Chip>
+          ))}
+        </div>
+      )}
+
       {loading && <div className="mt-5 h-40 animate-pulse rounded-xl bg-border-soft/60" />}
 
       {!loading && tab === "templates" && (
         <div className="mt-5 grid gap-3">
-          {packages.length === 0 ? <p className="text-[14px] text-ink-muted">No packages yet.</p> : packages.map((p) => (
+          {packages.length === 0 ? <p className="text-[14px] text-ink-muted">No packages in this view.</p> : packages.map((p) => (
             <div key={p.id} className="flex items-center justify-between gap-3 rounded-xl border border-border-soft bg-white p-4">
               <div className="min-w-0">
                 <p className="truncate text-[14px] font-bold text-ink">{p.title}</p>
-                <p className="text-[12px] text-ink-muted">{p.kind} · {p.scope} · {p.origin}{p.route.destinations.length ? ` · ${p.route.destinations.join(", ")}` : ""}</p>
+                <p className="text-[12px] text-ink-muted">
+                  {p.kind} · {p.scope} · {p.origin}
+                  {p.kind === "bundle" && p.components ? ` · ${p.components.length} component(s)` : ""}
+                  {p.route.destinations.length ? ` · ${p.route.destinations.join(", ")}` : ""}
+                </p>
               </div>
               <div className="flex items-center gap-2">
+                {p.kind === "bundle" && <Badge tone="neutral" size="sm">Bundle</Badge>}
+                {p.origin === "partner" && <Badge tone="info" size="sm">Partner</Badge>}
                 <Badge tone={STATUS_TONE[p.status] ?? "neutral"} size="sm">{p.status}</Badge>
+                {/* Partner submissions get the §5.3 review (diff vs template) as the primary action. */}
+                {p.origin === "partner" && p.status === "pending" && (
+                  <Button variant="accent" size="sm" onClick={() => setReviewPkg(p)}>Review</Button>
+                )}
                 {p.status !== "active" && <Button variant="ghost" size="sm" onClick={() => setStatus(p, "active")}>Activate</Button>}
                 {p.status === "active" && <Button variant="ghost" size="sm" onClick={() => setStatus(p, "suspended")}>Suspend</Button>}
               </div>
@@ -194,7 +235,13 @@ export default function AdminPackagesPage() {
         </div>
       )}
 
-      <TemplateModal open={formOpen} onClose={() => setFormOpen(false)} onSaved={refresh} />
+      <PackageTemplateModal open={formOpen} onClose={() => setFormOpen(false)} onSaved={refresh} />
+      <CompareModal
+        pkg={reviewPkg}
+        onClose={() => setReviewPkg(null)}
+        onApprove={(p) => setStatus(p, "active")}
+        onReject={(p) => setStatus(p, "draft")}
+      />
     </div>
   );
 }

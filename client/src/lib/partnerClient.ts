@@ -280,8 +280,24 @@ export type CruiseListingApi = {
 
 // Multipart request through the Next.js proxy (forwards cookies + raw body).
 // The browser sets the multipart Content-Type/boundary, so we don't.
+// Mirrors the api() refresh-and-retry: if the access token is expired,
+// call /api/auth/refresh once, then retry the original request.
 async function multipart<T>(path: string, method: "POST" | "PATCH" | "PUT", form: FormData): Promise<T> {
-  const response = await fetch(path, { method, body: form, credentials: "include" });
+  async function attempt(): Promise<Response> {
+    return fetch(path, { method, body: form, credentials: "include" });
+  }
+
+  let response = await attempt();
+
+  if (response.status === 401) {
+    try {
+      await fetch("/api/auth/refresh", { method: "POST", credentials: "include" });
+    } catch {
+      // refresh failed — let the retry surface the 401
+    }
+    response = await attempt();
+  }
+
   const payload = await response.json().catch(() => null);
   if (!response.ok) {
     const message =

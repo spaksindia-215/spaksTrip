@@ -507,7 +507,9 @@ export async function updateTaxiPackage(
     const doc = await TaxiPackageModel.findOne({ _id: id, partner: partnerId });
     if (!doc) throw new HttpError(404, "Taxi package not found");
 
+    const prevStatus = doc.status; // a field edit never changes approval state (§2.3)
     doc.set(fields);
+    doc.status = prevStatus; // publishing goes through submit → admin approval, not this edit
 
     const files = (req.files as Express.Multer.File[] | undefined) ?? [];
     const { thumbnail, imageUrls } = await uploadTaxiPackageMedia(files);
@@ -606,7 +608,9 @@ export async function updateTourListing(
     const doc = await TourListingModel.findOne({ _id: id, partner: partnerId });
     if (!doc) throw new HttpError(404, "Tour not found");
 
+    const prevStatus = doc.status; // a field edit never changes approval state (§2.3)
     doc.set(fields);
+    doc.status = prevStatus; // publishing goes through submit → admin approval, not this edit
 
     const files = (req.files as Express.Multer.File[] | undefined) ?? [];
     const imageUrls = await uploadManyToCloudinary(
@@ -747,7 +751,9 @@ export async function updateTourPackage(
     const doc = await TourPackageModel.findOne({ _id: id, partner: partnerId });
     if (!doc) throw new HttpError(404, "Tour package not found");
 
+    const prevStatus = doc.status; // a field edit never changes approval state (§2.3)
     doc.set(fields);
+    doc.status = prevStatus; // publishing goes through submit → admin approval, not this edit
     doc.includes = await resolveTourPackageIncludes(partnerId, includeIds);
 
     const files = (req.files as Express.Multer.File[] | undefined) ?? [];
@@ -847,7 +853,9 @@ export async function updateCruiseListing(
       ? vesselImageUrls.map((url, i) => ({ url, isPrimary: i === 0 }))
       : doc.vessel.images;
 
+    const prevStatus = doc.status; // a field edit never changes approval state (§2.3)
     doc.set(fields);
+    doc.status = prevStatus; // publishing goes through submit → admin approval, not this edit
     await doc.save();
     res.json({ item: doc.toJSON() });
   } catch (e) {

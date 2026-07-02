@@ -198,7 +198,7 @@ export default function TourManager() {
           </Select>
           <Select id="t-status" label="Status" value={form.status} onChange={(e) => setField("status", e.target.value as TourFormState["status"])}>
             <option value="draft">Draft</option>
-            <option value="active">Active</option>
+            <option value="active">Active (still needs admin approval to go live)</option>
           </Select>
           <Input id="t-languages" label="Languages (comma separated)" value={form.languages} onChange={(e) => setField("languages", e.target.value)} placeholder="English, Hindi" />
           <TextArea id="t-description" label="Description" value={form.description} onChange={(v) => setField("description", v)} />

@@ -5,11 +5,13 @@ import {
   PACKAGE_SCOPES,
   PACKAGE_ORIGINS,
   CURRENCY_CODES,
+  LISTING_REF_MODELS,
   type ResourceStatus,
   type PackageKind,
   type PackageScope,
   type PackageOrigin,
   type CurrencyCode,
+  type ListingRefModel,
 } from "./_shared/enums";
 import { ImageSchema, type Image } from "./_shared/subdocs";
 import { attachSlug } from "./_shared/schemaHelpers";
@@ -36,6 +38,20 @@ export interface PackageRoute {
   durationNights: number;
 }
 
+// One piece of a composite bundle (kind "bundle"). `ref`/`refModel` link to one of
+// the partner's real listings (a TaxiListing, HotelListing, …); a free-form piece
+// omits both. `title` is a snapshot so the bundle reads correctly even if the source
+// listing later changes. `included` = bundled into the price vs an optional add-on.
+export interface PackageComponent {
+  category: string; // display grouping, e.g. "Stay", "Transfer", "Sightseeing"
+  refModel?: ListingRefModel;
+  ref?: Types.ObjectId;
+  title: string;
+  description?: string;
+  quantity: number;
+  included: boolean;
+}
+
 export interface IPackage {
   kind: PackageKind;
   scope: PackageScope;
@@ -51,6 +67,7 @@ export interface IPackage {
   tags: string[];
   route: PackageRoute;
   itinerary: PackageItineraryDay[];
+  components: PackageComponent[]; // populated only for kind "bundle"
   inclusions: string[];
   exclusions: string[];
   // Small per-kind spec block (vehicleType/seating for taxi; languages/maxGroupSize
@@ -79,6 +96,19 @@ const itinerarySchema = new Schema<PackageItineraryDay>(
   { _id: false },
 );
 
+const componentSchema = new Schema<PackageComponent>(
+  {
+    category: { type: String, required: [true, "component category is required"], trim: true },
+    refModel: { type: String, enum: LISTING_REF_MODELS },
+    ref: { type: Schema.Types.ObjectId, refPath: "components.refModel" },
+    title: { type: String, required: [true, "component title is required"], trim: true },
+    description: { type: String, trim: true },
+    quantity: { type: Number, default: 1, min: [1, "quantity must be at least 1"] },
+    included: { type: Boolean, default: true },
+  },
+  { _id: false },
+);
+
 const packageSchema = new Schema<IPackage>(
   {
     kind: { type: String, enum: PACKAGE_KINDS, required: [true, "kind is required"], index: true },
@@ -100,6 +130,7 @@ const packageSchema = new Schema<IPackage>(
       durationNights: { type: Number, default: 0, min: [0, "durationNights cannot be negative"] },
     },
     itinerary: { type: [itinerarySchema], default: [] },
+    components: { type: [componentSchema], default: [] },
     inclusions: { type: [String], default: [] },
     exclusions: { type: [String], default: [] },
     specs: { type: Schema.Types.Mixed, default: {} },

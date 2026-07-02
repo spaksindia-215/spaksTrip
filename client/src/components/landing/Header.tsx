@@ -31,13 +31,25 @@ function normalizeAriaText(input: string) {
 const NAV_ITEMS: NavItem[] = [
   { labelKey: "nav.flight", href: "/flight" },
   { labelKey: "Hotel", href: "/hotel" },
-  { labelKey: "nav.taxi_package", href: "/taxi-package" },
+  // §3.1 — Holiday Packages are their own standalone type, split National/International,
+  // built by linking existing Tour/Taxi Packages (see Packages group below).
   {
     labelKey: "nav.holiday_packages",
     href: "#",
     menu: [
-      { labelKey: "nav.national_tour_packages", href: "/national-tour-packages" },
       { labelKey: "nav.international_tour_packages", href: "/international-tour-packages" },
+      { labelKey: "nav.national_tour_packages", href: "/national-tour-packages" },
+    ],
+  },
+  // §3.2 — Standalone Packages: individually enquirable Tour/Taxi packages that are
+  // also reused inside Holiday Packages. Taxi Packages keeps its dedicated landing (§8).
+  {
+    labelKey: "Packages",
+    href: "#",
+    menu: [
+      { labelKey: "Tour Packages", href: "/packages?kind=tour_package" },
+      { labelKey: "Taxi Packages", href: "/taxi-package" },
+      { labelKey: "Tours", href: "/tours" },
     ],
   },
   // Visibility is controlled by the superadmin Navbar Visibility panel (key: "nav.accommodation").
@@ -61,7 +73,7 @@ const NAV_ITEMS: NavItem[] = [
     labelKey: "nav.transport",
     href: "#",
     menu: [
-      { labelKey: "nav.cabs", href: "/cabs" },
+      { labelKey: "Taxi", href: "/taxi" },
       { labelKey: "nav.tour_bus", href: "/bus" },
     ],
   },
@@ -106,12 +118,6 @@ const NAV_ITEMS: NavItem[] = [
       { labelKey: "Bookings", href: "/self-drive/bookings" },
     ],
   },
-  { labelKey: "Packages", href: "/partner/tour-packages", partnerOnly: true },
-  { labelKey: "Queues", href: "/queues", partnerOnly: true },
-  { labelKey: "Accounts", href: "/accounts", partnerOnly: true },
-  { labelKey: "Reports", href: "/reports", partnerOnly: true },
-  { labelKey: "Admin", href: "/admin", partnerOnly: true },
-  { labelKey: "GST", href: "/gst", partnerOnly: true },
   { labelKey: "Islandhopper", href: "/islandhopper" },
   {
     labelKey: "nav.visa_consultancy",
@@ -1279,6 +1285,10 @@ const MEGA_DESCRIPTIONS: Record<string, string> = {
   "nav.tickets": "Manage your booked tickets",
   "nav.change_request": "Modify journey details",
   "nav.file_tdr_online": "Raise refund requests easily",
+  "Tours": "Day tours & guided experiences by local operators",
+  "Tour Packages": "Multi-day curated tour packages",
+  "Taxi Packages": "Outstation, airport & sightseeing taxi deals",
+  "Taxi": "Book a cab for local or outstation travel",
   "nav.national_tour_packages": "Curated trips across India",
   "nav.international_tour_packages": "Worldwide getaways & escapes",
   "nav.homestay": "Live local, stay homely",

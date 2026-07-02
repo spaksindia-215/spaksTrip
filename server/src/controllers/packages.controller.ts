@@ -1,8 +1,18 @@
 import { Request, Response, NextFunction } from "express";
-import mongoose, { Types } from "mongoose";
+import mongoose, { Types, type Model } from "mongoose";
 import { PackageModel, type PackageDoc } from "../models/partner/Package";
 import { PackageOfferModel, type PackageOfferDoc } from "../models/partner/PackageOffer";
 import { PackageEnquiryModel } from "../models/partner/PackageEnquiry";
+import { TaxiListingModel } from "../models/partner/TaxiListing";
+import { TourListingModel } from "../models/partner/TourListing";
+import { HotelListingModel } from "../models/partner/HotelListing";
+import { SightseeingListingModel } from "../models/partner/SightseeingListing";
+import { TransferListingModel } from "../models/partner/TransferListing";
+import { SelfDriveListingModel } from "../models/partner/SelfDriveListing";
+import { IslandhopperListingModel } from "../models/partner/IslandhopperListing";
+import { VisaListingModel } from "../models/partner/VisaListing";
+import { CruiseListingModel } from "../models/partner/CruiseListing";
+import { EventListingModel } from "../models/partner/EventListing";
 import { validatePackage, validateOffer, validateEnquiry } from "../validators/package.validators";
 import { uploadManyToCloudinary } from "../lib/cloudinary";
 import { resolveOptionalUser } from "../middleware/auth";
@@ -14,6 +24,7 @@ import {
   ENQUIRY_STATUS,
   type ResourceStatus,
   type EnquiryStatus,
+  type ListingRefModel,
 } from "../models/partner/_shared/enums";
 
 // Marketplace package endpoints across three permission tiers:
@@ -94,7 +105,10 @@ export async function partnerCreatePackage(req: Request, res: Response, next: Ne
       ...input,
       origin: "partner",
       author: partnerId,
-      status: "active", // partners self-publish (status field allows future moderation)
+      // §2.3 — every partner-created package must be approved before it goes live.
+      // Starts pending; the superadmin queue surfaces it, and admin approval flips
+      // it to "active". Partners can never self-publish (see partnerSetPackageStatus).
+      status: "pending",
     });
     res.status(201).json({ item: doc.toJSON() });
   } catch (e) {
@@ -160,8 +174,14 @@ export async function partnerSetPackageStatus(req: Request, res: Response, next:
   try {
     const doc = await ownedPackage(req);
     const target = (req.body as Record<string, unknown>)?.status;
-    if (typeof target !== "string" || !(RESOURCE_STATUS as readonly string[]).includes(target)) {
-      throw new HttpError(400, `status must be one of: ${RESOURCE_STATUS.join(", ")}`);
+    // Partners may pause/unpublish/archive their own package, but never self-approve
+    // to "active" (reserved for admin) or "pending" (use the submit action).
+    const allowed: ResourceStatus[] = ["draft", "paused", "suspended"];
+    if (typeof target !== "string" || !(allowed as readonly string[]).includes(target)) {
+      throw new HttpError(400, `status must be one of: ${allowed.join(", ")}`);
+    }
+    if (doc.status === "active" && target !== "paused" && target !== "suspended") {
+      throw new HttpError(409, "An active package can only be paused or suspended");
     }
     doc.status = target as ResourceStatus;
     await doc.save();
@@ -183,6 +203,71 @@ export async function partnerBrowseCatalog(req: Request, res: Response, next: Ne
     if (typeof q.q === "string" && q.q.trim()) filter.$text = { $search: q.q.trim() };
     const items = await PackageModel.find(filter).sort({ createdAt: -1 }).limit(200);
     res.json({ items: await withOfferStats(items) });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// ── Bundle building — the partner's own service inventory ───────────────────────
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyListingModel = Model<any>;
+
+// Every vertical a bundle component can link to, with the field that holds its
+// display name (a few models use `name`/`cruiseName`/`vehicle.model` instead of
+// `title`). Drives GET /my-services below.
+const SERVICE_LISTING_REGISTRY: {
+  refModel: ListingRefModel;
+  model: AnyListingModel;
+  category: string;
+  titleField: string;
+}[] = [
+  { refModel: "TaxiListing", model: TaxiListingModel, category: "Taxi", titleField: "vehicle.model" },
+  { refModel: "TourListing", model: TourListingModel, category: "Tour", titleField: "title" },
+  { refModel: "HotelListing", model: HotelListingModel, category: "Stay", titleField: "name" },
+  { refModel: "SightseeingListing", model: SightseeingListingModel, category: "Sightseeing", titleField: "title" },
+  { refModel: "TransferListing", model: TransferListingModel, category: "Transfer", titleField: "title" },
+  { refModel: "SelfDriveListing", model: SelfDriveListingModel, category: "Self-Drive", titleField: "title" },
+  { refModel: "IslandhopperListing", model: IslandhopperListingModel, category: "Island Hopping", titleField: "title" },
+  { refModel: "VisaListing", model: VisaListingModel, category: "Visa", titleField: "title" },
+  { refModel: "CruiseListing", model: CruiseListingModel, category: "Cruise", titleField: "cruiseName" },
+  { refModel: "EventListing", model: EventListingModel, category: "Event", titleField: "title" },
+];
+
+function readPath(obj: Record<string, unknown>, path: string): string {
+  const v = path.split(".").reduce<unknown>((acc, key) => (acc && typeof acc === "object" ? (acc as Record<string, unknown>)[key] : undefined), obj);
+  return typeof v === "string" ? v : "";
+}
+
+// GET /api/partner/packages/my-services — the partner's own listings across every
+// vertical, grouped, so the bundle builder can pick real components. Excludes
+// soft-deleted (suspended) listings.
+export async function partnerListMyServices(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const partnerId = userIdFrom(req);
+    const groups = await Promise.all(
+      SERVICE_LISTING_REGISTRY.map(async (r) => {
+        const docs = (await r.model
+          .find({ partner: partnerId, status: { $ne: "suspended" } })
+          .select(`${r.titleField} slug images status`)
+          .sort({ createdAt: -1 })
+          .lean()) as Record<string, unknown>[];
+        const items = docs.map((d) => {
+          const images = d.images as { url?: string }[] | undefined;
+          return {
+            refModel: r.refModel,
+            id: String(d._id),
+            title: readPath(d, r.titleField) || "(untitled)",
+            slug: typeof d.slug === "string" ? d.slug : undefined,
+            status: d.status,
+            category: r.category,
+            thumbnail: images?.[0]?.url,
+          };
+        });
+        return { refModel: r.refModel, category: r.category, items };
+      }),
+    );
+    res.json({ groups: groups.filter((g) => g.items.length > 0) });
   } catch (e) {
     next(e);
   }
@@ -482,6 +567,86 @@ export async function adminSetPackageStatus(req: Request, res: Response, next: N
     doc.status = target as ResourceStatus;
     await doc.save();
     res.json({ item: doc.toJSON() });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// ── §5.3 Duplicate-detection ────────────────────────────────────────────────
+// Superadmin must reject a partner submission that merely copies a platform
+// template without real modification. This auto-matches the closest same-kind
+// template (by normalized field similarity) and returns a field-by-field diff so
+// the reviewer can eyeball the differences and see a duplicate-likelihood score.
+const COMPARE_FIELDS = [
+  "title",
+  "description",
+  "highlights",
+  "inclusions",
+  "exclusions",
+  "destinations",
+  "duration",
+  "itinerary",
+  "referencePrice",
+] as const;
+
+function normText(v: unknown): string {
+  if (Array.isArray(v)) return v.map((x) => normText(x)).join(" | ");
+  if (v && typeof v === "object") return JSON.stringify(v);
+  return String(v ?? "").toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+function packageFieldValues(p: PackageDoc): Record<string, string> {
+  return {
+    title: normText(p.title),
+    description: normText(p.description),
+    highlights: normText(p.highlights),
+    inclusions: normText(p.inclusions),
+    exclusions: normText(p.exclusions),
+    destinations: normText(p.route?.destinations),
+    duration: normText(`${p.route?.durationDays ?? ""}d/${p.route?.durationNights ?? ""}n`),
+    itinerary: normText((p.itinerary ?? []).map((d) => ({ t: d.title, d: d.description }))),
+    referencePrice: normText(p.referencePrice),
+  };
+}
+
+// GET /api/admin/packages/:id/compare — closest template match + diff for review.
+export async function adminComparePackage(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const pkg = await adminPackage(req);
+    const candidates = await PackageModel.find({
+      origin: "platform",
+      kind: pkg.kind,
+      _id: { $ne: pkg._id },
+    });
+    const pv = packageFieldValues(pkg);
+    let best: { doc: PackageDoc; tv: Record<string, string>; score: number } | null = null;
+    for (const c of candidates) {
+      const tv = packageFieldValues(c);
+      let matches = 0;
+      let considered = 0;
+      for (const f of COMPARE_FIELDS) {
+        const a = pv[f];
+        const b = tv[f];
+        if (!a && !b) continue; // both empty — not a meaningful signal
+        considered += 1;
+        if (a === b) matches += 1;
+      }
+      const score = considered > 0 ? matches / considered : 0;
+      if (!best || score > best.score) best = { doc: c, tv, score };
+    }
+    const fields = COMPARE_FIELDS.map((f) => ({
+      field: f,
+      partnerValue: pv[f],
+      templateValue: best ? best.tv[f] : "",
+      identical: best ? pv[f] === best.tv[f] && (pv[f] !== "" || best.tv[f] !== "") : false,
+    }));
+    res.json({
+      package: pkg.toJSON(),
+      template: best ? best.doc.toJSON() : null,
+      similarity: best ? Number(best.score.toFixed(2)) : 0,
+      likelyDuplicate: best ? best.score >= 0.9 : false,
+      fields,
+    });
   } catch (e) {
     next(e);
   }

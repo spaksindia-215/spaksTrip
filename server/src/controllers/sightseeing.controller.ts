@@ -119,7 +119,9 @@ export async function partnerUpdate(req: Request, res: Response, next: NextFunct
     const doc = await ownedListing(req);
     const newImages = await uploadImages(req);
     const input = validateSightseeingListing(listingBody(req));
+    const prevStatus = doc.status; // a field edit never changes approval state (§2.3)
     Object.assign(doc, input);
+    doc.status = prevStatus; // publishing goes through submit → admin approval, not this edit
     if (newImages.length > 0) {
       doc.images = newImages.map((url, i) => ({ url, isPrimary: i === 0 }));
     }
