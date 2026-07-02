@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ToastProvider } from "@/components/ui/Toast";
 import TranslationProvider from "@/i18n/TranslationProvider";
 import { AgentBrandingProvider, type AgentBranding } from "@/lib/agentBranding";
+import { SITE_CONFIG, GOOGLE_ANALYTICS, GOOGLE_TAG_MANAGER } from "@/lib/seo/constants";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,6 +34,9 @@ export async function generateMetadata(): Promise<Metadata> {
     title:       "SpaksTrip — Flights, Hotels, Holidays & More",
     description: "Book flights, hotels, holiday packages, visas and more. Powered by SpaksTrip.",
     icons:       { icon: "/logo.svg" },
+    verification: {
+      google: SITE_CONFIG.googleSearchConsoleVerification,
+    },
   };
 }
 
@@ -65,7 +70,39 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       style={agentStyle}
     >
+      <head>
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS.id}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GOOGLE_ANALYTICS.id}');`}
+        </Script>
+
+        {/* Google Tag Manager */}
+        <Script id="google-tag-manager" strategy="afterInteractive">
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','${GOOGLE_TAG_MANAGER.id}');`}
+        </Script>
+      </head>
       <body className="min-h-full flex flex-col bg-surface text-ink">
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GOOGLE_TAG_MANAGER.id}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+
         <ToastProvider>
           <TranslationProvider>
             <AgentBrandingProvider value={branding}>
