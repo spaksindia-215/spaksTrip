@@ -13,12 +13,12 @@ const isProd = process.env.NODE_ENV === "production";
 // many supplier/CDN origins this OTA talks to.
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://*.razorpay.com",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://*.razorpay.com https://www.googletagmanager.com https://www.google-analytics.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data: https:",
   "connect-src 'self' https: wss:",
-  "frame-src https://*.razorpay.com https://api.razorpay.com https://*.google.com https://maps.google.com",
+  "frame-src https://*.razorpay.com https://api.razorpay.com https://*.google.com https://maps.google.com https://www.googletagmanager.com",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",

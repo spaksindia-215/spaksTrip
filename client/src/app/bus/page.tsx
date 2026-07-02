@@ -7,6 +7,7 @@ import BackToTop from "@/components/landing/BackToTop";
 import BusSearchForm from "@/components/bus/BusSearchForm";
 import { toIsoDate } from "@/lib/format";
 import { openRedbusSearch } from "@/lib/redbus";
+import { ServiceSchema } from "@/lib/seo/schemas";
 
 const today = toIsoDate(new Date());
 
@@ -44,6 +45,11 @@ export default function BusPage() {
 
   return (
     <div className="min-h-screen bg-surface-muted">
+      <ServiceSchema
+        serviceType="Bus Booking"
+        url="https://www.spakstrip.com/bus"
+        description="Reserve bus tickets for comfortable intercity travel."
+      />
       <Header />
       <main>
         <section className="relative overflow-hidden bg-ink lg:min-h-[calc(100svh-7rem)]">

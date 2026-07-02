@@ -11,6 +11,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import { browseSightseeing, type SightseeingFilters } from "@/lib/sightseeingClient";
 import type { SightseeingListingApi } from "@/lib/partnerClient";
 import { SIGHTSEEING_CATEGORIES, CATEGORY_LABELS } from "@/lib/sightseeingForm";
+import { ServiceSchema } from "@/lib/seo/schemas";
 
 function priceLabel(item: SightseeingListingApi): string {
   const v = item.pricing?.adult ?? item.pricing?.groupPrice;
@@ -57,6 +58,11 @@ export default function SightseeingLandingPage() {
 
   return (
     <div className="min-h-screen bg-white text-[#0E1E3A]">
+      <ServiceSchema
+        serviceType="Sightseeing"
+        url="https://www.spakstrip.com/sightseeing"
+        description="Book guided sightseeing tours in popular destinations."
+      />
       <Header />
       <main className="mx-auto max-w-7xl px-6 py-12">
         <h1 className="text-[28px] font-extrabold">SightSeeing</h1>
