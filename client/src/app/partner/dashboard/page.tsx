@@ -56,6 +56,113 @@ const META: Record<ResourceType, { label: string; href: string }> = {
   visa: { label: "Visa Consultancy", href: "/partner/visa" },
 };
 
+function IconBadge({ children, color }: { children: React.ReactNode; color: string }) {
+  return (
+    <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${color}`}>
+      {children}
+    </div>
+  );
+}
+
+const HotelIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M9 22V12h6v10M9 7h1m5 0h1M9 11h1m5 0h1" />
+  </svg>
+);
+
+const CarIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M5 17H3a2 2 0 01-2-2V9a2 2 0 012-2h1l2-3h10l2 3h1a2 2 0 012 2v6a2 2 0 01-2 2h-2" />
+    <circle cx="7" cy="17" r="2" />
+    <circle cx="17" cy="17" r="2" />
+  </svg>
+);
+
+const ShipIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M2 21c.6.5 1.2 1 2.5 1C7 22 7 20 9.5 20s2.5 2 5 2 2.5-2 5-2c1.3 0 1.9.5 2.5 1" />
+    <path d="M19.38 20A11.6 11.6 0 0021 14l-9-4-9 4a11.6 11.6 0 001.62 6" />
+    <path d="M10 14L9 7h6l-1 7" />
+    <path d="M12 7V3" />
+    <path d="M10 3H8" />
+  </svg>
+);
+
+const CameraIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M14.5 4h-5L7 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2h-3z" />
+    <circle cx="12" cy="13" r="3" />
+  </svg>
+);
+
+const PlaneIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 2c-2-2-4-2-5.5-.5L10 5 1.8 6.2a1 1 0 00-.6 1.7l2.3 2.3L2 14l2.3 1.4 1.4-2.8 2.8-1.4L10 14l1.4 2.3L14 18l-1.4 1.4 2.3 2.3a1 1 0 001.7-.6z" />
+  </svg>
+);
+
+const GlobeIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <circle cx="12" cy="12" r="10" />
+    <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+  </svg>
+);
+
+const SteeringIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <circle cx="12" cy="12" r="10" />
+    <circle cx="12" cy="12" r="3" />
+    <path d="M12 9V3M9.5 11.5L4.2 8M14.5 11.5L19.8 8" />
+  </svg>
+);
+
+const PackageIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M16.5 9.4l-9-5.19" />
+    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+    <path d="M3.27 6.96L12 12.01l8.73-5.05" />
+    <path d="M12 22.08V12" />
+  </svg>
+);
+
+const CompassIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <circle cx="12" cy="12" r="10" />
+    <path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z" />
+  </svg>
+);
+
+const BackpackIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M4 20V10a4 4 0 014-4h8a4 4 0 014 4v10" />
+    <path d="M4 10h16" />
+    <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+    <path d="M9 14h6" />
+  </svg>
+);
+
+const TransferIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3" />
+    <path d="M21 15a2 2 0 01-2 2H9a2 2 0 01-2-2v-5a2 2 0 012-2h10a2 2 0 012 2v5z" />
+  </svg>
+);
+
+const ICONS: Record<ResourceType, React.ReactNode> = {
+  hotel:        <IconBadge color="bg-blue-50 text-blue-600"><HotelIcon /></IconBadge>,
+  taxi:         <IconBadge color="bg-amber-50 text-amber-600"><CarIcon /></IconBadge>,
+  taxi_package: <IconBadge color="bg-orange-50 text-orange-600"><PackageIcon /></IconBadge>,
+  tour:         <IconBadge color="bg-green-50 text-green-600"><CompassIcon /></IconBadge>,
+  tour_package: <IconBadge color="bg-teal-50 text-teal-600"><BackpackIcon /></IconBadge>,
+  cruise:       <IconBadge color="bg-sky-50 text-sky-600"><ShipIcon /></IconBadge>,
+  sightseeing:  <IconBadge color="bg-purple-50 text-purple-600"><CameraIcon /></IconBadge>,
+  transfer:     <IconBadge color="bg-indigo-50 text-indigo-600"><TransferIcon /></IconBadge>,
+  self_drive:   <IconBadge color="bg-lime-50 text-lime-600"><SteeringIcon /></IconBadge>,
+  islandhopper: <IconBadge color="bg-pink-50 text-pink-600"><PlaneIcon /></IconBadge>,
+  visa:         <IconBadge color="bg-rose-50 text-rose-600"><GlobeIcon /></IconBadge>,
+};
+
 const QUICK_ACTIONS: { label: string; href: string }[] = [
   { label: "Add hotel", href: "/partner/hotels/new" },
   { label: "Add taxi", href: "/partner/taxis" },
@@ -122,21 +229,25 @@ export default function PartnerDashboardPage() {
       setLoading(true);
       setError(null);
       try {
-        // Hotels live in their own collection (/api/partner/hotels), not in the
-        // generic PartnerResource store the other verticals use — so fetch them
-        // separately and adapt into the same Row shape.
-        // Hotels, SightSeeing and the four enquiry-first service modules live in
-        // their own typed collections (not the generic PartnerResource store the
-        // other verticals use) — fetch them separately and adapt into the Row shape.
+        // Every vertical has its own typed collection — fetch them directly.
+        // The generic partnerClient.list(type) queries /api/partner/resources which
+        // is a separate catch-all store; taxis/packages/tours/cruises are NOT in it.
         const SERVICE_TYPES: ResourceType[] = ["transfer", "self_drive", "islandhopper", "visa"];
-        const TYPED = new Set<ResourceType>(["hotel", "sightseeing", ...SERVICE_TYPES]);
-        const [entries, hotelListings, sightseeingListings, serviceEntries] = await Promise.all([
-          Promise.all(
-            RESOURCE_TYPES.filter((type) => !TYPED.has(type)).map(async (type) => {
-              const items = await partnerClient.list(type);
-              return [type, items] as const;
-            }),
-          ),
+        const [
+          taxiListings,
+          taxiPackages,
+          tourListings,
+          tourPackages,
+          cruiseListings,
+          hotelListings,
+          sightseeingListings,
+          serviceEntries,
+        ] = await Promise.all([
+          partnerClient.taxis.list(),
+          partnerClient.taxiPackages.list(),
+          partnerClient.tours.list(),
+          partnerClient.tourPackages.list(),
+          partnerClient.cruises.list(),
           partnerClient.hotels.list(),
           partnerClient.sightseeing.list(),
           Promise.all(
@@ -150,10 +261,75 @@ export default function PartnerDashboardPage() {
 
         if (!active) return;
 
+        const taxiRows: Row[] = taxiListings.map((t) => ({
+          id: t.id,
+          partnerId: t.partner,
+          type: "taxi" as const,
+          title: `${t.vehicle.make} ${t.vehicle.model}`,
+          description: t.description ?? "",
+          price: 0,
+          metadata: { status: t.status },
+          createdAt: t.createdAt,
+          updatedAt: t.updatedAt,
+          typeLabel: META.taxi.label,
+        }));
+
+        const taxiPackageRows: Row[] = taxiPackages.map((p) => ({
+          id: p.id,
+          partnerId: p.partner,
+          type: "taxi_package" as const,
+          title: p.title,
+          description: p.description ?? "",
+          price: p.pricing.basePrice,
+          metadata: { status: p.status },
+          createdAt: p.createdAt,
+          updatedAt: p.updatedAt,
+          typeLabel: META.taxi_package.label,
+        }));
+
+        const tourRows: Row[] = tourListings.map((t) => ({
+          id: t.id,
+          partnerId: t.partner,
+          type: "tour" as const,
+          title: t.title,
+          description: t.description ?? "",
+          price: 0,
+          metadata: { status: t.status },
+          createdAt: t.createdAt,
+          updatedAt: t.updatedAt,
+          typeLabel: META.tour.label,
+        }));
+
+        const tourPackageRows: Row[] = tourPackages.map((p) => ({
+          id: p.id,
+          partnerId: p.partner,
+          type: "tour_package" as const,
+          title: p.title,
+          description: p.description ?? "",
+          price: p.pricing.basePrice,
+          metadata: { status: p.status },
+          createdAt: p.createdAt,
+          updatedAt: p.updatedAt,
+          typeLabel: META.tour_package.label,
+        }));
+
+        const cruiseRows: Row[] = cruiseListings.map((c) => ({
+          id: c.id,
+          partnerId: c.partner,
+          type: "cruise" as const,
+          title: c.cruiseName,
+          description: c.description ?? "",
+          price: 0,
+          metadata: { status: c.status },
+          createdAt: c.createdAt,
+          updatedAt: c.updatedAt,
+          typeLabel: META.cruise.label,
+        }));
+
         const hotelRows: Row[] = hotelListings.map((h) => ({
           id: h.id,
           partnerId: "",
-          type: "hotel",
+          type: "hotel" as const,
           title: h.name,
           description: "",
           price: 0,
@@ -166,7 +342,7 @@ export default function PartnerDashboardPage() {
         const sightseeingRows: Row[] = sightseeingListings.map((s) => ({
           id: s.id,
           partnerId: "",
-          type: "sightseeing",
+          type: "sightseeing" as const,
           title: s.title,
           description: "",
           price: 0,
@@ -191,17 +367,21 @@ export default function PartnerDashboardPage() {
           })),
         );
 
-        const countMap = Object.fromEntries([
-          ...entries.map(([type, items]) => [type, items.length]),
-          ["hotel", hotelListings.length],
-          ["sightseeing", sightseeingListings.length],
-          ...serviceEntries.map(([type, items]) => [type, items.length]),
-        ]) as Record<ResourceType, number>;
+        const countMap: Record<ResourceType, number> = {
+          taxi: taxiListings.length,
+          taxi_package: taxiPackages.length,
+          tour: tourListings.length,
+          tour_package: tourPackages.length,
+          cruise: cruiseListings.length,
+          hotel: hotelListings.length,
+          sightseeing: sightseeingListings.length,
+          ...Object.fromEntries(serviceEntries.map(([type, items]) => [type, items.length])),
+        } as Record<ResourceType, number>;
 
-        const allRows: Row[] = entries.flatMap(([type, items]) =>
-          items.map((item) => ({ ...item, typeLabel: META[type].label })),
-        );
-        allRows.push(...hotelRows, ...sightseeingRows, ...serviceRows);
+        const allRows: Row[] = [
+          ...taxiRows, ...taxiPackageRows, ...tourRows, ...tourPackageRows, ...cruiseRows,
+          ...hotelRows, ...sightseeingRows, ...serviceRows,
+        ];
         allRows.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
         setCounts(countMap);
@@ -279,6 +459,7 @@ export default function PartnerDashboardPage() {
             label={META[type].label}
             value={counts?.[type] ?? 0}
             href={META[type].href}
+            icon={ICONS[type]}
           />
         ))}
       </div>

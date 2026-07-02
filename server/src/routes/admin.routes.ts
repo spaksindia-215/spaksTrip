@@ -20,6 +20,8 @@ import {
   adminListListings,
   adminApproveListing,
   adminRejectListing,
+  adminSetListingStatus,
+  adminDeleteListing,
 } from "../controllers/moderation.controller";
 import { adminSessionMiddleware } from "../middleware/adminSession";
 import { authRateLimiter } from "../middleware/rateLimit";
@@ -47,6 +49,9 @@ router.post("/hotel-listings/:id/reject", adminSessionMiddleware, rejectHotelLis
 router.get("/listings", adminSessionMiddleware, adminListListings);
 router.post("/listings/:type/:id/approve", adminSessionMiddleware, adminApproveListing);
 router.post("/listings/:type/:id/reject", adminSessionMiddleware, adminRejectListing);
+// Full lifecycle management (Pause / Activate / Suspend) + delete, any vertical.
+router.patch("/listings/:type/:id/status", adminSessionMiddleware, adminSetListingStatus);
+router.delete("/listings/:type/:id", adminSessionMiddleware, adminDeleteListing);
 
 // Navbar visibility — GET is public (read by all visitors), PUT requires admin session.
 router.get("/navbar-settings", getNavbarSettings);

@@ -5,7 +5,7 @@ type Context = { params: Promise<{ slug: string[] }> };
 
 async function handler(req: NextRequest, { params }: Context): Promise<NextResponse> {
   const { slug } = await params;
-  return proxyToRailway(req, `/api/partner/${slug.join("/")}`);
+  return proxyToRailway(req, `/api/partner/${slug.join("/")}${req.nextUrl.search}`);
 }
 
 export const GET = handler;

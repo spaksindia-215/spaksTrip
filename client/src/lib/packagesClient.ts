@@ -5,8 +5,45 @@ import { api } from "@/lib/api";
 // (guests allowed); the enquiry is attributed to the user when a session cookie
 // is present.
 
-export type PackageKind = "taxi" | "taxi_package" | "tour" | "tour_package" | "holiday";
+export type PackageKind =
+  | "taxi"
+  | "taxi_package"
+  | "tour"
+  | "tour_package"
+  | "holiday"
+  | "cruise"
+  | "sightseeing"
+  | "transfer"
+  | "self_drive"
+  | "islandhopper"
+  | "visa"
+  | "bundle";
 export type PackageScope = "domestic" | "international";
+
+// Mongoose model names a bundle component may link to (mirrors server enums).
+export type ListingRefModel =
+  | "TaxiListing"
+  | "TourListing"
+  | "HotelListing"
+  | "SightseeingListing"
+  | "TransferListing"
+  | "SelfDriveListing"
+  | "IslandhopperListing"
+  | "VisaListing"
+  | "CruiseListing"
+  | "EventListing";
+
+// One piece of a composite bundle. `ref`/`refModel` link to a partner's real listing;
+// free-form pieces omit both.
+export type PackageComponent = {
+  category: string;
+  refModel?: ListingRefModel;
+  ref?: string;
+  title: string;
+  description?: string;
+  quantity: number;
+  included: boolean;
+};
 
 export type PackageImage = { url: string; caption?: string; isPrimary?: boolean };
 
@@ -42,6 +79,7 @@ export type PackageSummary = {
 
 export type PackageDetail = PackageSummary & {
   itinerary: PackageItineraryDay[];
+  components: PackageComponent[]; // populated only for kind "bundle"
   inclusions: string[];
   exclusions: string[];
   specs: Record<string, unknown>;
@@ -124,6 +162,13 @@ export function kindLabel(kind: PackageKind, scope?: PackageScope): string {
     tour: "Tour",
     tour_package: "Tour Package",
     holiday: scope === "international" ? "International Holiday" : "Holiday",
+    cruise: "Cruise",
+    sightseeing: "Sightseeing",
+    transfer: "Transfer",
+    self_drive: "Self-Drive",
+    islandhopper: "Islandhopper",
+    visa: "Visa Consultancy",
+    bundle: "Bundle",
   };
   return base[kind];
 }

@@ -108,8 +108,8 @@ function CabResultsContent({
                 <InventoryUnavailable
                   title="Cab inventory is currently unavailable"
                   subtitle="This cab flow no longer uses generated vehicles. Connect a live supplier to restore results."
-                  href="/cabs"
-                  ctaLabel="Back to Cab Search"
+                  href="/taxi"
+                  ctaLabel="Back to Taxi Search"
                 />
               ) : (
                 displayed.map((cab) => (

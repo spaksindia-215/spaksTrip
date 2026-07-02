@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
@@ -19,13 +20,14 @@ import {
   type PlatformMarkupRule,
 } from "@/lib/adminClient";
 import type { UserRole } from "@/lib/authClient";
+import PackageTemplateModal from "@/components/superadmin/PackageTemplateModal";
 
 // All public (non-partner-only) navbar items the admin can show/hide.
 const CONTROLLABLE_NAV_ITEMS: Array<{ key: string; label: string }> = [
   { key: "nav.flight", label: "Flight" },
   { key: "Hotel", label: "Hotel" },
-  { key: "nav.taxi_package", label: "Taxi Package" },
   { key: "nav.holiday_packages", label: "Holiday Packages" },
+  { key: "Packages", label: "Packages" },
   { key: "nav.accommodation", label: "Accommodation" },
   { key: "nav.transport", label: "Transport" },
   { key: "nav.cruise", label: "Cruise" },
@@ -70,6 +72,24 @@ const LISTING_TYPE_FILTERS: Array<{ value: AdminListingType | "all"; label: stri
   { value: "visa", label: "Visa" },
 ];
 
+// §5.1 — per-type "Add" in Partner Listings maps to a platform Package template
+// of the matching kind. Types without a Package kind (hotel/all) open the picker.
+const TEMPLATE_KIND_FOR: Record<string, string> = {
+  taxi: "taxi", taxi_package: "taxi_package", tour: "tour", tour_package: "tour_package",
+  cruise: "cruise", sightseeing: "sightseeing", transfer: "transfer", self_drive: "self_drive",
+  islandhopper: "islandhopper", visa: "visa",
+};
+const ADD_LABEL: Record<string, string> = {
+  all: "template", hotel: "template", taxi: "taxi", taxi_package: "taxi package",
+  tour: "tour", tour_package: "tour package", cruise: "cruise", sightseeing: "sightseeing",
+  transfer: "transfer", self_drive: "self-drive", islandhopper: "islandhopper", visa: "visa consultancy",
+};
+
+const LISTING_STATUS_TONE: Record<string, "neutral" | "success" | "warn" | "danger"> = {
+  active: "success", draft: "neutral", pending: "warn", paused: "warn", suspended: "danger",
+};
+const LISTING_STATUS_FILTERS = ["all", "pending", "active", "draft", "paused", "suspended"] as const;
+
 const USER_FILTERS: Array<{ value: UserRole | "all"; label: string }> = [
   { value: "all", label: "All" },
   { value: "customer", label: "Customers" },
@@ -94,7 +114,10 @@ export default function SuperadminPage() {
   const [password, setPassword] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
 
-  const [tab, setTab] = useState<"pending" | "listings" | "users" | "navbar" | "markup">("pending");
+  const router = useRouter();
+  // "packages" is a nav-only tab: selecting it routes to the dedicated Packages &
+  // Enquiries surface (§5.3 review lives there); it never becomes the active tab.
+  const [tab, setTab] = useState<"pending" | "listings" | "users" | "navbar" | "markup" | "packages">("pending");
 
   const [pending, setPending] = useState<AdminUser[]>([]);
   const [pendingLoading, setPendingLoading] = useState(true);
@@ -102,6 +125,9 @@ export default function SuperadminPage() {
   const [listings, setListings] = useState<AdminListing[]>([]);
   const [listingsLoading, setListingsLoading] = useState(true);
   const [listingType, setListingType] = useState<AdminListingType | "all">("all");
+  const [listingStatus, setListingStatus] = useState<string>("all");
+  const [listingsReloadKey, setListingsReloadKey] = useState(0);
+  const [templateOpen, setTemplateOpen] = useState(false);
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [usersLoading, setUsersLoading] = useState(true);
@@ -163,7 +189,7 @@ export default function SuperadminPage() {
         } else if (tab === "listings") {
           setListingsLoading(true);
           const items = await adminClient.listings.list({
-            status: "pending",
+            status: listingStatus,
             type: listingType === "all" ? undefined : listingType,
           });
           if (active) setListings(items);
@@ -201,7 +227,7 @@ export default function SuperadminPage() {
     return () => {
       active = false;
     };
-  }, [session, tab, userFilter, listingType, toast]);
+  }, [session, tab, userFilter, listingType, listingStatus, listingsReloadKey, toast]);
 
   const toggleNavItem = (key: string) => {
     setNavVisibility((prev) => ({ ...prev, [key]: !(prev[key] ?? true) }));
@@ -343,14 +369,46 @@ export default function SuperadminPage() {
     }
   };
 
+  const reloadListings = () => setListingsReloadKey((k) => k + 1);
+
   const approveListing = async (listing: AdminListing) => {
     setActionLoading(true);
     try {
       await adminClient.listings.approve(listing.type, listing.id);
       toast.push({ title: "Listing approved", description: `${listing.title} is now live.`, tone: "success" });
-      setListings((prev) => prev.filter((l) => l.id !== listing.id));
+      reloadListings();
     } catch (error) {
       const message = error instanceof ApiError ? error.message : "Approval failed";
+      toast.push({ title: "Error", description: message, tone: "danger" });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // Pause / Activate / Suspend across any vertical (unified management dashboard).
+  const setListingStatusAction = async (listing: AdminListing, status: string) => {
+    setActionLoading(true);
+    try {
+      await adminClient.listings.setStatus(listing.type, listing.id, status);
+      toast.push({ title: `Status set to ${status}`, tone: "success" });
+      reloadListings();
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : "Update failed";
+      toast.push({ title: "Error", description: message, tone: "danger" });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const deleteListing = async (listing: AdminListing) => {
+    if (!window.confirm(`Delete "${listing.title}"? This cannot be undone.`)) return;
+    setActionLoading(true);
+    try {
+      await adminClient.listings.remove(listing.type, listing.id);
+      toast.push({ title: "Deleted", tone: "success" });
+      reloadListings();
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : "Delete failed";
       toast.push({ title: "Error", description: message, tone: "danger" });
     } finally {
       setActionLoading(false);
@@ -362,7 +420,7 @@ export default function SuperadminPage() {
     try {
       await adminClient.listings.reject(listing.type, listing.id);
       toast.push({ title: "Listing rejected", description: `${listing.title} was sent back to the partner.`, tone: "success" });
-      setListings((prev) => prev.filter((l) => l.id !== listing.id));
+      reloadListings();
     } catch (error) {
       const message = error instanceof ApiError ? error.message : "Rejection failed";
       toast.push({ title: "Error", description: message, tone: "danger" });
@@ -420,12 +478,6 @@ export default function SuperadminPage() {
             <h1 className="text-xl font-bold text-white">Superadmin Panel</h1>
           </div>
           <div className="flex items-center gap-2">
-            <a
-              href="/superadmin/packages"
-              className="rounded-lg border border-white/30 px-3 py-1.5 text-[13px] font-semibold text-white transition-colors hover:bg-white/10"
-            >
-              Packages
-            </a>
             <Button type="button" variant="outline" size="sm" onClick={handleLogout}>
               Sign Out
             </Button>
@@ -436,10 +488,14 @@ export default function SuperadminPage() {
       <div className="mx-auto max-w-5xl px-6 py-6">
         <Tabs
           value={tab}
-          onChange={(value) => setTab(value)}
+          onChange={(value) => {
+            if (value === "packages") { router.push("/superadmin/packages"); return; }
+            setTab(value);
+          }}
           items={[
             { value: "pending", label: "Pending Approvals" },
             { value: "listings", label: "Partner Listings" },
+            { value: "packages", label: "Packages & Enquiries" },
             { value: "users", label: "All Users" },
             { value: "navbar", label: "Navbar Visibility" },
             { value: "markup", label: "Platform Markup" },
@@ -637,13 +693,40 @@ export default function SuperadminPage() {
               items={LISTING_TYPE_FILTERS}
               variant="segmented"
             />
+            {/* Status filter + counts — full lifecycle management for every vertical. */}
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap gap-2">
+                {LISTING_STATUS_FILTERS.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setListingStatus(s)}
+                    className={`rounded-full px-3.5 py-1.5 text-[13px] font-semibold capitalize transition-colors ${
+                      listingStatus === s ? "bg-brand-600 text-white" : "bg-surface-muted text-ink-soft hover:bg-border-soft"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl border border-border-soft bg-surface-muted px-4 py-2 text-center">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-ink-muted">Shown</p>
+                  <p className="text-[16px] font-extrabold text-ink">{listings.length}</p>
+                </div>
+                <div className="rounded-xl border border-border-soft bg-surface-muted px-4 py-2 text-center">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-ink-muted">Pending</p>
+                  <p className="text-[16px] font-extrabold text-accent-600">{listings.filter((l) => l.status === "pending").length}</p>
+                </div>
+              </div>
+            </div>
             <div className="mt-4">
               {listingsLoading ? (
                 <p className="py-12 text-center text-sm text-ink-muted">Loading…</p>
               ) : listings.length === 0 ? (
                 <EmptyState
-                  title="No listings awaiting review"
-                  subtitle="Hotels, taxis, tours, packages and cruises submitted by partners appear here for approval before they go live."
+                  title={listingStatus === "all" ? "No listings yet" : `No ${listingStatus} listings`}
+                  subtitle="Manage every partner & platform listing here — approve/reject pending submissions and pause, activate, suspend or delete live ones across all verticals."
                 />
               ) : (
                 <div className="flex flex-col gap-3">
@@ -668,7 +751,8 @@ export default function SuperadminPage() {
                             </div>
                           )}
                           <div className="space-y-1">
-                            <div className="flex items-center gap-2">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <Badge tone={LISTING_STATUS_TONE[listing.status] ?? "neutral"} size="sm">{listing.status}</Badge>
                               <span className="text-[15px] font-semibold text-ink">{listing.title}</span>
                               <Badge tone="brand" size="sm">{listing.typeLabel}</Badge>
                             </div>
@@ -680,12 +764,34 @@ export default function SuperadminPage() {
                             </p>
                           </div>
                         </div>
-                        <div className="flex gap-2">
-                          <Button type="button" variant="primary" size="sm" loading={actionLoading} onClick={() => approveListing(listing)}>
-                            Approve
-                          </Button>
-                          <Button type="button" variant="danger" size="sm" loading={actionLoading} onClick={() => rejectListing(listing)}>
-                            Reject
+                        <div className="flex shrink-0 flex-wrap gap-2">
+                          {listing.status === "pending" && (
+                            <>
+                              <Button type="button" variant="primary" size="sm" loading={actionLoading} onClick={() => approveListing(listing)}>
+                                Approve
+                              </Button>
+                              <Button type="button" variant="secondary" size="sm" loading={actionLoading} onClick={() => rejectListing(listing)}>
+                                Reject
+                              </Button>
+                            </>
+                          )}
+                          {listing.status === "active" && (
+                            <Button type="button" variant="secondary" size="sm" loading={actionLoading} onClick={() => setListingStatusAction(listing, "paused")}>
+                              Pause
+                            </Button>
+                          )}
+                          {(listing.status === "paused" || listing.status === "draft" || listing.status === "suspended") && (
+                            <Button type="button" variant="primary" size="sm" loading={actionLoading} onClick={() => setListingStatusAction(listing, "active")}>
+                              Activate
+                            </Button>
+                          )}
+                          {listing.status !== "suspended" && listing.status !== "pending" && (
+                            <Button type="button" variant="secondary" size="sm" loading={actionLoading} onClick={() => setListingStatusAction(listing, "suspended")}>
+                              Suspend
+                            </Button>
+                          )}
+                          <Button type="button" variant="danger" size="sm" loading={actionLoading} onClick={() => deleteListing(listing)}>
+                            Delete
                           </Button>
                         </div>
                       </article>
@@ -694,6 +800,25 @@ export default function SuperadminPage() {
                 </div>
               )}
             </div>
+            {/* §5.1 — create a platform template for the selected listing type.
+                Fixed to the viewport so it's always reachable while reviewing a long list. */}
+            <div className="fixed bottom-6 right-6 z-40">
+              <Button
+                type="button"
+                variant="accent"
+                onClick={() => setTemplateOpen(true)}
+                className="shadow-(--shadow-lg)"
+              >
+                + Add {ADD_LABEL[listingType] ?? "listing"}
+              </Button>
+            </div>
+            <PackageTemplateModal
+              open={templateOpen}
+              onClose={() => setTemplateOpen(false)}
+              onSaved={() => setTemplateOpen(false)}
+              initialKind={TEMPLATE_KIND_FOR[listingType] ?? "holiday"}
+              lockKind={Boolean(TEMPLATE_KIND_FOR[listingType])}
+            />
           </section>
         ) : (
           <section className="mt-6">

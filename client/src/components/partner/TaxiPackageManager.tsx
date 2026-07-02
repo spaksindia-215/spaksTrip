@@ -181,7 +181,7 @@ export default function TaxiPackageManager() {
           <Input id="tp-title" label="Title" value={form.title} onChange={(e) => setField("title", e.target.value)} placeholder="Delhi–Shimla–Manali 6D/5N" />
           <Select id="tp-status" label="Status" value={form.status} onChange={(e) => setField("status", e.target.value as TaxiPackageFormState["status"])}>
             <option value="draft">Draft</option>
-            <option value="active">Active</option>
+            <option value="active">Active (still needs admin approval to go live)</option>
           </Select>
           <TextArea id="tp-description" label="Description" value={form.description} onChange={(v) => setField("description", v)} placeholder="What makes this circuit special." />
           <Input id="tp-highlights" label="Highlights (comma separated)" value={form.highlights} onChange={(e) => setField("highlights", e.target.value)} placeholder="Hill stations, Snow points" />

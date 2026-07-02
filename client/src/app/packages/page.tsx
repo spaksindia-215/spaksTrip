@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import Chip from "@/components/ui/Chip";
@@ -13,10 +13,24 @@ const TABS: { key: PackageKind; label: string }[] = [
   { key: "tour", label: "Tours" },
   { key: "taxi_package", label: "Taxi Packages" },
   { key: "taxi", label: "Taxis" },
+  { key: "cruise", label: "Cruises" },
+  { key: "sightseeing", label: "Sightseeing" },
+  { key: "transfer", label: "Transfers" },
+  { key: "self_drive", label: "Self-Drive" },
+  { key: "islandhopper", label: "Islandhopper" },
+  { key: "visa", label: "Visa" },
 ];
 
 export default function PackagesBrowsePage() {
   const [kind, setKind] = useState<PackageKind>("holiday");
+
+  // Honour a ?kind= deep-link (e.g. the navbar's "Tour Packages" entry) so the
+  // matching tab is preselected. Read on mount to avoid the useSearchParams
+  // Suspense requirement and any hydration mismatch.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("kind");
+    if (q && TABS.some((t) => t.key === q)) setKind(q as PackageKind);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-[#0E1E3A]">

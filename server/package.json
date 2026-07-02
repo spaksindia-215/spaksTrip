@@ -11,6 +11,7 @@
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "seed:dev": "tsx --env-file=.env scripts/seed-dev-users.ts",
+    "seed:demo": "tsx --env-file=.env scripts/seed-demo-partner.ts",
     "smoke:events": "tsx --env-file=.env scripts/events-smoke.ts",
     "generate:slugs": "tsx --env-file=.env scripts/generate-agent-slugs.ts",
     "update:airports": "tsx --env-file=.env scripts/updateAirportData.ts"

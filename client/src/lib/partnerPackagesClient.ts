@@ -4,6 +4,7 @@ import type {
   PackageSummary,
   PackageKind,
   PackageScope,
+  ListingRefModel,
   Operator,
 } from "@/lib/packagesClient";
 
@@ -44,6 +45,18 @@ export type PartnerEnquiry = {
   createdAt: string;
 };
 
+// A single service listing the partner owns (component source for bundles).
+export type MyServiceItem = {
+  refModel: ListingRefModel;
+  id: string;
+  title: string;
+  slug?: string;
+  status: string;
+  category: string;
+  thumbnail?: string;
+};
+export type MyServiceGroup = { refModel: ListingRefModel; category: string; items: MyServiceItem[] };
+
 export type OfferInput = {
   packageId: string;
   price: number;
@@ -82,6 +95,11 @@ export const partnerPackagesClient = {
   },
   async remove(id: string): Promise<void> {
     await api<null>(`/api/partner/packages/${id}`, { method: "DELETE" });
+  },
+
+  // ── The partner's own service inventory (component source for bundles) ────────
+  async myServices(): Promise<MyServiceGroup[]> {
+    return (await api<{ groups: MyServiceGroup[] }>("/api/partner/packages/my-services")).groups;
   },
 
   // ── Catalog the partner can offer on (templates + every active package) ───────

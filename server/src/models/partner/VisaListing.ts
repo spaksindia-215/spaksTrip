@@ -117,7 +117,11 @@ const visaListingSchema = new Schema<IVisaListing>(
   { timestamps: true, strict: true },
 );
 
-visaListingSchema.index({ countriesCovered: 1, visaTypesOffered: 1, status: 1 });
+// NOTE: countriesCovered and visaTypesOffered are both arrays; MongoDB cannot
+// index two array fields in one compound index ("parallel arrays", code 171),
+// so they must live in separate indexes.
+visaListingSchema.index({ countriesCovered: 1, status: 1 });
+visaListingSchema.index({ visaTypesOffered: 1, status: 1 });
 visaListingSchema.index({ partner: 1, status: 1 });
 visaListingSchema.index({ createdAt: -1 });
 visaListingSchema.index({ title: "text", description: "text", tags: "text" });
