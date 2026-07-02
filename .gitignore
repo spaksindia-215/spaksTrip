@@ -1,5 +1,10 @@
 .codex
 /.claude/
+# Secrets — cover dot-less variants (server/env.local) too
+.env
+.env.local
+env.local
+**/env.local
 summary.md
 TBO_Postman_Collection.json
 graphify-out
